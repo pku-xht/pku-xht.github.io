@@ -1,13 +1,13 @@
 # Personal homepage direction
 
 ## Visual thesis
-A compact, contemporary personal introduction: paper-white space, a modest name heading, readable text, one clear blue accent, and closely spaced academic records.
+An academic homepage with density close to the advisor and Yingfei Xiong reference sites, with a little more breathing room: a paper-white surface, a 36px name, readable 16px body text, one blue accent, and closely spaced records.
 
 ## Content plan
-1. A compact personal greeting and a short, factual identity line, followed by the primary link; leave room for actual records within the first screen.
+1. A small name heading and a short, factual identity line with an inline primary link.
 2. A concise introduction that gives the name context.
-3. Education, internships, publications, teaching, and awards, displayed as compact records with dates.
-4. Direct email and GitHub contact links.
+3. Education, internships, publications, teaching, and awards, with dates in a narrow column and short titles/subtitles on the same line. Use 10px gaps between records and roughly 16px section padding, without row dividers.
+4. Direct email and GitHub contact links on one compact line.
 
 The first release uses personal information confirmed by the owner. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
 
