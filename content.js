@@ -137,6 +137,11 @@ window.SITE_CONTENT = {
         subtitle: { zh: "北京大学", en: "Peking University" },
         period: { zh: "2024、2025", en: "2024, 2025" },
       },
+      {
+        title: { zh: "全国青少年信息学奥林匹克竞赛（NOI）", en: "NOI" },
+        subtitle: { zh: "银牌", en: "Silver Medal" },
+        period: { zh: "2020", en: "2020" },
+      },
     ],
     teaching: [
       {
