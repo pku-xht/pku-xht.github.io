@@ -220,6 +220,17 @@
           if (period) article.appendChild(node("p", "record-period", period));
           const copy = node("div", "record-copy");
           copy.appendChild(node("h3", "record-title", title));
+          if (Array.isArray(entry.authors)) {
+            const authors = entry.authors.filter(function (author) { return typeof author === "string" && author.trim(); });
+            if (authors.length) {
+              const authorLine = node("p", "record-authors");
+              authors.forEach(function (author, index) {
+                if (index) authorLine.appendChild(document.createTextNode(", "));
+                authorLine.appendChild(node(author === entry.highlightAuthor ? "strong" : "span", "", author));
+              });
+              copy.appendChild(authorLine);
+            }
+          }
           const subtitle = localized(entry.subtitle);
           if (subtitle) copy.appendChild(node("p", "record-subtitle", subtitle));
           const description = localized(entry.description);

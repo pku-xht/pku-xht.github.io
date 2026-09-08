@@ -6,13 +6,13 @@ A compact, contemporary personal introduction: paper-white space, a modest name 
 ## Content plan
 1. A compact personal greeting and a short, factual identity line, followed by the primary link; leave room for actual records within the first screen.
 2. A concise introduction that gives the name context.
-3. Selected work and experiences, shown as open editorial rows when real entries are supplied.
-4. Personal interests when supplied, then a direct contact destination.
+3. Education, internships, publications, teaching, and awards, displayed as compact records with dates.
+4. Direct email and GitHub contact links.
 
-The first release uses only verified identity information. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
+The first release uses personal information confirmed by the owner. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
 
 ## Interaction thesis
-- A short staggered entrance establishes the greeting and oversized signature.
+- A short staggered entrance establishes the name and introduction.
 - Gentle section reveals help the reader follow the page while scrolling.
 - Link underlines and the language selector respond clearly to focus and hover.
 - All animation respects reduced-motion preferences.
@@ -36,4 +36,4 @@ The first release uses only verified identity information. Optional sections wit
 - `.reveal` marks below-the-fold elements for an optional, accessible entrance animation.
 
 ## Release status
-Local preview implemented and checked at desktop, tablet, and mobile widths. Selected English proper names and further CV records remain pending the owner's confirmation before public deployment.
+The initial public content is confirmed, including English terminology and contact links. The compact bilingual layout has been checked at desktop, tablet, and mobile widths. GitHub Pages serves this static site from the root of the `main` branch.

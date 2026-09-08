@@ -41,7 +41,7 @@ window.SITE_CONTENT = {
       recordLink: "查看详情",
       contactLabel: "联系",
       contactHeading: "保持联系",
-      contactIntro: "你可以在 GitHub 找到我。",
+      contactIntro: "欢迎通过邮件联系我，也可以在 GitHub 找到我。",
       footerNote: "个人主页",
       languageLabel: "选择界面语言",
     },
@@ -82,7 +82,7 @@ window.SITE_CONTENT = {
       recordLink: "View details",
       contactLabel: "Contact",
       contactHeading: "Let's connect",
-      contactIntro: "You can find me on GitHub.",
+      contactIntro: "Feel free to reach me by email or find me on GitHub.",
       footerNote: "Personal homepage",
       languageLabel: "Choose display language",
     },
@@ -95,7 +95,7 @@ window.SITE_CONTENT = {
     },
     about: {
       zh: "本科就读于北京大学图灵班，学习信息与计算科学。2026 年夏在 DeepSeek Harness 组实习，现为北京大学计算机学院博士生。",
-      en: "I studied Information and Computing Science in the Turing Class at Peking University. After a summer internship with the DeepSeek Harness team in 2026, I am now a PhD student at Peking University.",
+      en: "I studied Information and Computer Science in the Turing Class at Peking University. After a summer internship with the DeepSeek Harness team in 2026, I am now a PhD student at Peking University.",
     },
     advisor: {
       name: { zh: "谢辽夏", en: "Sergey Mechtaev" },
@@ -118,7 +118,7 @@ window.SITE_CONTENT = {
           en: "School of Electronics Engineering and Computer Science · Turing Class",
         },
         period: { zh: "2022.09–2026.06", en: "Sep 2022 – Jun 2026" },
-        description: { zh: "本科 · 信息与计算科学专业", en: "Undergraduate studies in Information and Computing Science" },
+        description: { zh: "本科 · 信息与计算科学专业", en: "Undergraduate studies in Information and Computer Science" },
       },
     ],
     internships: [
@@ -130,7 +130,19 @@ window.SITE_CONTENT = {
         linkLabel: { zh: "DeepSeek Harness · 开源项目", en: "DeepSeek Harness · Open-source project" },
       },
     ],
-    publications: [],
+    publications: [
+      {
+        title: "Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation",
+        authors: ["Yihan Dai", "Sijie Liang", "Haotian Xu", "Peichu Xie", "Sergey Mechtaev"],
+        highlightAuthor: "Haotian Xu",
+        period: "OOPSLA 2026",
+        description: { zh: "已录用", en: "Accepted" },
+        links: [
+          { label: { zh: "论文", en: "Paper" }, url: "https://arxiv.org/abs/2511.12288" },
+          { label: { zh: "代码", en: "Code" }, url: "https://github.com/msv-lab/just-tri-it" },
+        ],
+      },
+    ],
     awards: [
       {
         title: { zh: "John Hopcroft 奖学金", en: "John Hopcroft Scholarship" },
@@ -178,6 +190,7 @@ window.SITE_CONTENT = {
     ],
   },
   contacts: [
+    { label: "xht@stu.pku.edu.cn", url: "mailto:xht@stu.pku.edu.cn" },
     { label: { zh: "GitHub", en: "GitHub" }, url: "https://github.com/pku-xht" },
   ],
 };

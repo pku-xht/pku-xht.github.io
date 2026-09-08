@@ -15,9 +15,11 @@ Open `http://127.0.0.1:8789/`. No package installation or build step is required
 ## Editing content
 
 Edit `content.js`. Each text field can contain `{ zh: "中文", en: "English" }`.
+Keep the matching Chinese content in `index.html` synchronized so the no-JavaScript fallback stays current.
 
 - `profile`: name, introduction, biography and advisor.
 - `records`: education, internships, publications, teaching and awards.
+- Publications may include `authors`, `highlightAuthor`, and `links` (each link has a bilingual `label` and a `url`).
 - `contacts`: public contact destinations.
 - Empty record groups are automatically hidden along with their navigation links.
 - Add only facts approved for public display. Do not commit CV drafts or private review notes.

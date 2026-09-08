@@ -420,11 +420,17 @@ a:hover > .work-link-arrow {
   overflow-wrap: anywhere;
 }
 
-.record-subtitle {
+.record-subtitle,
+.record-authors {
   margin-top: 4px;
   color: var(--secondary);
   font-size: 14px;
   line-height: 1.7;
+}
+
+.record-authors strong {
+  color: var(--ink);
+  font-weight: 650;
 }
 
 .record-description,
@@ -760,6 +766,7 @@ html.reveal-ready .reveal:not(.is-visible) {
   }
 
   .record-subtitle,
+  .record-authors,
   .record-description {
     font-size: 13px;
   }
