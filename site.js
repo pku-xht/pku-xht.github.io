@@ -106,6 +106,22 @@
     container.appendChild(link);
   }
 
+  function appendRecordLinks(container, entry, title) {
+    if (!Array.isArray(entry.links)) {
+      appendDetailsLink(container, safeURL(entry.url), title, "record-link", "recordLink", entry.linkLabel);
+      return;
+    }
+    const group = node("div", "record-links");
+    entry.links.forEach(function (entryLink) {
+      if (!entryLink || typeof entryLink !== "object") return;
+      const url = safeURL(entryLink.url);
+      const label = localized(entryLink.label);
+      if (!url || !label) return;
+      appendDetailsLink(group, url, title, "record-link", "recordLink", label);
+    });
+    if (group.childElementCount) container.appendChild(group);
+  }
+
   function renderUI() {
     document.querySelectorAll("[data-i18n]").forEach(function (element) {
       const text = uiText(element.dataset.i18n);
@@ -208,7 +224,7 @@
           if (subtitle) copy.appendChild(node("p", "record-subtitle", subtitle));
           const description = localized(entry.description);
           if (description) copy.appendChild(node("p", "record-description", description));
-          appendDetailsLink(copy, safeURL(entry.url), title, "record-link", "recordLink", entry.linkLabel);
+          appendRecordLinks(copy, entry, title);
           article.appendChild(copy);
           fragment.appendChild(article);
         });

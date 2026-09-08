@@ -1,10 +1,10 @@
 # Personal homepage direction
 
 ## Visual thesis
-A quiet, contemporary personal introduction: paper-white space, oversized ink typography, one clear blue accent, and a memorable typographic XHT signature.
+A compact, contemporary personal introduction: paper-white space, a modest name heading, readable text, one clear blue accent, and closely spaced academic records.
 
 ## Content plan
-1. A personal greeting and a short, factual identity line, followed by the primary link.
+1. A compact personal greeting and a short, factual identity line, followed by the primary link; leave room for actual records within the first screen.
 2. A concise introduction that gives the name context.
 3. Selected work and experiences, shown as open editorial rows when real entries are supplied.
 4. Personal interests when supplied, then a direct contact destination.
