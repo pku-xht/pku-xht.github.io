@@ -138,6 +138,16 @@ window.SITE_CONTENT = {
         period: { zh: "2024、2025", en: "2024, 2025" },
       },
       {
+        title: { zh: "ICPC 亚洲区域赛昆明站", en: "ICPC Asia Kunming Regional Contest" },
+        subtitle: { zh: "金牌（打星）", en: "Gold Medal (unofficial participation)" },
+        period: { zh: "2024", en: "2024" },
+      },
+      {
+        title: { zh: "北京大学程序设计竞赛", en: "Peking University Programming Contest" },
+        subtitle: { zh: "二等奖", en: "Second Prize" },
+        period: { zh: "2024", en: "2024" },
+      },
+      {
         title: { zh: "全国青少年信息学奥林匹克竞赛（NOI）", en: "NOI" },
         subtitle: { zh: "银牌", en: "Silver Medal" },
         period: { zh: "2020", en: "2020" },
@@ -145,7 +155,7 @@ window.SITE_CONTENT = {
     ],
     teaching: [
       {
-        title: { zh: "计算概论 A", en: "Introduction to Computing (A)" },
+        title: { zh: "计算概论 A", en: "Introduction to Computation (A)" },
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
         period: { zh: "2026 秋季 · 正在担任", en: "Fall 2026 · Current" },
       },
@@ -157,7 +167,7 @@ window.SITE_CONTENT = {
         linkLabel: { zh: "2026 秋季课程主页", en: "Fall 2026 course website" },
       },
       {
-        title: { zh: "计算概论 A", en: "Introduction to Computing (A)" },
+        title: { zh: "计算概论 A", en: "Introduction to Computation (A)" },
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
         period: { zh: "2025 秋季", en: "Fall 2025" },
         description: {
