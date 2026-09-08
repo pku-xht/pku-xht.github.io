@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f8f8f5"/>
+  <path d="M72 94h1056" stroke="#dcded8"/>
+  <text x="72" y="66" fill="#202422" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="-2">xht<tspan fill="#245bea">/</tspan></text>
+  <path d="M72 183h28" stroke="#245bea" stroke-width="3"/>
+  <text x="115" y="189" fill="#666b67" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="18" letter-spacing="3">个人主页</text>
+  <text x="63" y="396" fill="#202422" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="160" font-weight="600" letter-spacing="-8">徐皓天<tspan fill="#245bea" font-family="Arial, sans-serif">.</tspan></text>
+  <path d="M72 506h1056" stroke="#dcded8"/>
+  <text x="72" y="559" fill="#666b67" font-family="Arial, sans-serif" font-size="22">pku-xht.github.io</text>
+  <path d="m1082 550 29-29m-29 0h29v29" fill="none" stroke="#245bea" stroke-width="3"/>
+</svg>
