@@ -124,7 +124,7 @@ window.SITE_CONTENT = {
     internships: [
       {
         title: { zh: "DeepSeek", en: "DeepSeek" },
-        subtitle: { zh: "实习生 · Harness 组", en: "Intern · Harness team" },
+        subtitle: { zh: "AGI 实习生 · Harness 组", en: "AGI Intern · Harness team" },
         period: { zh: "2026.07.06–2026.09.09", en: "Jul 6 – Sep 9, 2026" },
         url: "https://github.com/deepseek-ai/deepseek-harness",
         linkLabel: { zh: "DeepSeek Harness · 开源项目", en: "DeepSeek Harness · Open-source project" },
