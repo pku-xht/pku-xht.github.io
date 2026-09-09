@@ -1,18 +1,18 @@
 # Personal homepage direction
 
 ## Visual thesis
-An academic homepage with density close to the advisor and Yingfei Xiong reference sites, with a little more breathing room: a paper-white surface, a 36px name, readable 16px body text, one blue accent, and closely spaced records.
+The approved A direction is a compact academic page: white paper, dark blue-gray text, restrained blue links, a 30px name, and a single 960px text column. Its typography draws on al-folio, and its publication-first hierarchy draws on Jon Barron's homepage.
 
 ## Content plan
-1. A small name heading without decorative punctuation and a short, factual identity line.
-2. A concise introduction that gives the name context.
-3. Education, internships, publications, teaching, and awards, with dates in a narrow column and short titles/subtitles on the same line. Use 10px gaps between records and roughly 16px section padding, without row dividers.
+1. A small name heading with its alternate-language name alongside, followed by identity, advisor, and a brief biography.
+2. Publications, then education, internships, teaching, and awards. Each heading sits above its records. Desktop dates align on the right; mobile dates follow the record text.
+3. Each publication shows its title, authors, and an inline row for venue, acceptance status, paper, and code. Typography uses 15px body text, 17px section headings, 13px secondary text, and 12px dates. Sections use 14px vertical padding and records use 10px total separation. At mobile widths the name is 28px and record details stack naturally.
 4. A simple Contact heading followed directly by email and GitHub links on one compact line. The personal GitHub link appears only here, at the end of the page.
 
 The first release uses personal information confirmed by the owner. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
 
 ## Interaction thesis
-- A short staggered entrance establishes the name and introduction.
+- Six compact navigation anchors provide direct access to the page sections.
 - Gentle section reveals help the reader follow the page while scrolling.
 - Link underlines and the language selector respond clearly to focus and hover.
 - All animation respects reduced-motion preferences.
@@ -29,11 +29,17 @@ The first release uses personal information confirmed by the owner. Optional sec
 - `data-i18n` keys correspond to `SITE_CONTENT.ui[language]` strings; optional HTML is not accepted.
 - `[data-lang]` buttons select `zh` or `en` and expose `aria-pressed` state.
 - `[data-profile-name]`, `[data-profile-intro]`, `[data-profile-about]` show profile strings from `SITE_CONTENT.profile`, falling back to `pku-xht` and a factual greeting.
+- `[data-profile-alternate]` shows the other name with its matching `lang` attribute. `#top`, `#about`, and `#main` remain valid navigation targets.
+- Generic `.record-item` elements contain `.record-copy` followed by `.record-period`. CSS places dates on the right on desktop and after the text on mobile.
+- Publication metadata lives in `.publication-meta`, retaining `.record-period`, `.record-description`, and `.record-links` selectors.
 - `[data-work-list]` renders verified `SITE_CONTENT.work` entries; hide `[data-work-section]` and `[data-work-nav]` when empty.
 - `[data-interest-list]` renders verified `SITE_CONTENT.interests`; hide `[data-interest-section]` and `[data-interest-nav]` when empty.
 - `[data-contact-list]` renders `SITE_CONTENT.contacts`; only allow safe `https:`, `http:`, and `mailto:` URLs.
 - `[data-year]` shows the current year.
 - `.reveal` marks below-the-fold elements for an optional, accessible entrance animation.
 
-## Release status
-The initial public content is confirmed, including English terminology and contact links. The compact bilingual layout has been checked at desktop, tablet, and mobile widths. GitHub Pages serves this static site from the root of the `main` branch.
+## Design references
+- [al-folio](https://alshedivat.github.io/al-folio/): restrained academic typography and clear section hierarchy.
+- [Jon Barron](https://jonbarron.info/): compact publication entries and readable author/resource lines.
+
+The final layout uses its own HTML and CSS. The reference sites inform the hierarchy rather than supplying copied code or personal content. GitHub Pages serves this static site from the root of the `main` branch.

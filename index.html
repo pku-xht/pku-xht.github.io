@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <meta name="theme-color" content="#f8f8f5" />
+    <meta name="theme-color" content="#ffffff" />
     <title>徐皓天 · 个人主页</title>
-    <meta name="description" content="徐皓天，北京大学计算机学院 2026 级博士生。个人经历、教学与联系方式。" />
+    <meta name="description" content="徐皓天 — 北京大学计算机学院 2026 级博士生。" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="徐皓天 · 个人主页" />
-    <meta property="og:description" content="徐皓天，北京大学计算机学院 2026 级博士生。个人经历、教学与联系方式。" />
+    <meta property="og:description" content="徐皓天 — 北京大学计算机学院 2026 级博士生。" />
     <meta property="og:url" content="https://pku-xht.github.io/" />
     <meta property="og:site_name" content="徐皓天" />
     <meta property="og:locale" content="zh_CN" />
@@ -19,11 +19,13 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="徐皓天 · 个人主页" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="徐皓天 · 个人主页" />
+    <meta name="twitter:description" content="徐皓天 — 北京大学计算机学院 2026 级博士生。" />
     <link rel="canonical" href="https://pku-xht.github.io/" />
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css?v=3" />
-    <script defer src="content.js?v=3"></script>
-    <script defer src="site.js"></script>
+    <link rel="stylesheet" href="styles.css?v=4" />
+    <script defer src="content.js?v=4"></script>
+    <script defer src="site.js?v=4"></script>
   </head>
   <body>
     <a class="skip-link" href="#main" data-i18n="skip">跳到正文</a>
@@ -31,13 +33,12 @@
     <header class="site-header">
       <div class="header-inner page-width">
         <a class="wordmark" href="#top" aria-label="pku-xht">
-          <span>xht</span><span class="wordmark-slash" aria-hidden="true">/</span>
+          <span>xht</span>
         </a>
         <nav class="main-nav" aria-label="主导航" data-i18n-aria-label="navLabel">
-          <a href="#about" data-i18n="navAbout">关于</a>
+          <a href="#publications" data-i18n="navPublications" data-record-nav="publications">论文</a>
           <a href="#education" data-i18n="navEducation" data-record-nav="education">教育</a>
           <a href="#internships" data-i18n="navInternships" data-record-nav="internships">实习</a>
-          <a href="#publications" data-i18n="navPublications" data-record-nav="publications">论文</a>
           <a href="#teaching" data-i18n="navTeaching" data-record-nav="teaching">教学</a>
           <a href="#awards" data-i18n="navAwards" data-record-nav="awards">获奖</a>
           <a href="#contact" data-i18n="navContact">联系</a>
@@ -51,26 +52,33 @@
     </header>
 
     <main id="main">
-      <section class="hero" id="top" aria-labelledby="hero-name">
-        <div class="hero-inner page-width">
-          <h1 class="hero-name hero-enter" id="hero-name"><span data-profile-name>徐皓天</span></h1>
-          <div class="hero-bottom hero-enter">
-            <div class="hero-copy">
-              <p class="hero-intro" data-profile-intro>北京大学计算机学院 2026 级博士生。</p>
-            </div>
-            <a class="hero-scroll" href="#about"><span data-i18n="heroScroll">了解更多</span><span aria-hidden="true">↓</span></a>
-          </div>
+      <section class="profile-section page-width" id="top" aria-labelledby="hero-name">
+        <div class="profile-identity" id="about">
+          <h1 class="profile-name" id="hero-name"><span data-profile-name>徐皓天</span> <span class="profile-alternate" data-profile-alternate lang="en">Haotian Xu</span></h1>
+          <p class="profile-intro hero-intro" data-profile-intro>北京大学计算机学院 2026 级博士生。</p>
+          <p class="advisor-line"><span class="advisor-label" data-i18n="advisorLabel">导师</span><a class="text-link" data-profile-advisor href="https://mechtaev.com/" target="_blank" rel="noopener noreferrer">谢辽夏</a></p>
+          <p class="profile-about" data-profile-about>本科就读于北京大学图灵班，学习信息与计算科学。2026 年夏在 DeepSeek Harness 组实习，现为北京大学计算机学院博士生。</p>
         </div>
       </section>
 
       <div class="page-width sections">
-        <section class="content-section about-section reveal" id="about" aria-labelledby="about-heading">
-          <div class="section-heading">
-            <h2 id="about-heading" data-i18n="aboutHeading">关于我</h2>
-          </div>
-          <div class="about-copy">
-            <p class="about-intro" data-profile-about>本科就读于北京大学图灵班，学习信息与计算科学。2026 年夏在 DeepSeek Harness 组实习，现为北京大学计算机学院博士生。</p>
-            <p class="advisor-line"><span class="advisor-label" data-i18n="advisorLabel">导师</span><a class="text-link" data-profile-advisor href="https://mechtaev.com/" target="_blank" rel="noopener noreferrer">谢辽夏</a></p>
+        <section class="content-section reveal" id="publications" aria-labelledby="publications-heading" data-record-section="publications">
+          <div class="section-heading"><h2 id="publications-heading" data-i18n="publicationsHeading">论文发表</h2></div>
+          <div class="record-list" data-record-list="publications">
+            <article class="record-item publication-item">
+              <div class="record-copy">
+                <h3 class="record-title">Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation</h3>
+                <p class="record-authors"><span>Yihan Dai</span>, <span>Sijie Liang</span>, <strong>Haotian Xu</strong>, <span>Peichu Xie</span>, <span>Sergey Mechtaev</span></p>
+                <div class="publication-meta">
+                  <p class="record-period publication-venue">OOPSLA 2026</p>
+                  <p class="record-description publication-status">已录用</p>
+                  <div class="record-links">
+                    <a class="record-link" href="https://arxiv.org/abs/2511.12288" target="_blank" rel="noopener noreferrer" aria-label="论文: Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation">论文<span class="record-link-arrow" aria-hidden="true">↗</span></a>
+                    <a class="record-link" href="https://github.com/msv-lab/just-tri-it" target="_blank" rel="noopener noreferrer" aria-label="代码: Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation">代码<span class="record-link-arrow" aria-hidden="true">↗</span></a>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
         </section>
 
@@ -78,12 +86,12 @@
           <div class="section-heading"><h2 id="education-heading" data-i18n="educationHeading">教育经历</h2></div>
           <div class="record-list" data-record-list="education">
             <article class="record-item">
-              <p class="record-period">2026–至今</p>
               <div class="record-copy"><h3 class="record-title">北京大学</h3><p class="record-subtitle">计算机学院 · 博士研究生</p></div>
+              <p class="record-period">2026–至今</p>
             </article>
             <article class="record-item">
-              <p class="record-period">2022.09–2026.06</p>
               <div class="record-copy"><h3 class="record-title">北京大学</h3><p class="record-subtitle">信息科学技术学院 · 图灵班</p><p class="record-description">本科 · 信息与计算科学专业</p></div>
+              <p class="record-period">2022.09–2026.06</p>
             </article>
           </div>
         </section>
@@ -92,30 +100,12 @@
           <div class="section-heading"><h2 id="internships-heading" data-i18n="internshipsHeading">实习经历</h2></div>
           <div class="record-list" data-record-list="internships">
             <article class="record-item">
-              <p class="record-period">2026.07.06–2026.09.09</p>
               <div class="record-copy">
                 <h3 class="record-title">DeepSeek</h3>
                 <p class="record-subtitle">实习生 · Harness 组</p>
-                <a class="record-link" href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener noreferrer">DeepSeek Harness · 开源项目<span class="record-link-arrow" aria-hidden="true">↗</span></a>
+                <a class="record-link" href="https://github.com/deepseek-ai/deepseek-harness" target="_blank" rel="noopener noreferrer" aria-label="DeepSeek Harness · 开源项目: DeepSeek">DeepSeek Harness · 开源项目<span class="record-link-arrow" aria-hidden="true">↗</span></a>
               </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="content-section reveal" id="publications" aria-labelledby="publications-heading" data-record-section="publications">
-          <div class="section-heading"><h2 id="publications-heading" data-i18n="publicationsHeading">论文发表</h2></div>
-          <div class="record-list" data-record-list="publications">
-            <article class="record-item">
-              <p class="record-period">OOPSLA 2026</p>
-              <div class="record-copy">
-                <h3 class="record-title">Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation</h3>
-                <p class="record-authors">Yihan Dai, Sijie Liang, <strong>Haotian Xu</strong>, Peichu Xie, Sergey Mechtaev</p>
-                <p class="record-description">已录用</p>
-                <div class="record-links">
-                  <a class="record-link" href="https://arxiv.org/abs/2511.12288" target="_blank" rel="noopener noreferrer">论文<span class="record-link-arrow" aria-hidden="true">↗</span></a>
-                  <a class="record-link" href="https://github.com/msv-lab/just-tri-it" target="_blank" rel="noopener noreferrer">代码<span class="record-link-arrow" aria-hidden="true">↗</span></a>
-                </div>
-              </div>
+              <p class="record-period">2026.07.06–2026.09.09</p>
             </article>
           </div>
         </section>
@@ -124,24 +114,24 @@
           <div class="section-heading"><h2 id="teaching-heading" data-i18n="teachingHeading">教学经历</h2></div>
           <div class="record-list" data-record-list="teaching">
             <article class="record-item">
-              <p class="record-period">2026 秋季 · 正在担任</p>
               <div class="record-copy"><h3 class="record-title">计算概论 A</h3><p class="record-subtitle">北京大学 · 助教</p></div>
+              <p class="record-period">2026 秋季 · 正在担任</p>
             </article>
             <article class="record-item">
-              <p class="record-period">2026 秋季 · 正在担任</p>
               <div class="record-copy">
                 <h3 class="record-title">软件分析技术</h3>
                 <p class="record-subtitle">北京大学 · 助教</p>
-                <a class="record-link" href="https://xiongyingfei.github.io/SA_new/2026/" target="_blank" rel="noopener noreferrer">2026 秋季课程主页<span class="record-link-arrow" aria-hidden="true">↗</span></a>
+                <a class="record-link" href="https://xiongyingfei.github.io/SA_new/2026/" target="_blank" rel="noopener noreferrer" aria-label="2026 秋季课程主页: 软件分析技术">2026 秋季课程主页<span class="record-link-arrow" aria-hidden="true">↗</span></a>
               </div>
+              <p class="record-period">2026 秋季 · 正在担任</p>
             </article>
             <article class="record-item">
-              <p class="record-period">2025 秋季</p>
               <div class="record-copy">
                 <h3 class="record-title">计算概论 A</h3>
                 <p class="record-subtitle">北京大学 · 助教</p>
                 <p class="record-description">主要负责期中与期末考试命题。</p>
               </div>
+              <p class="record-period">2025 秋季</p>
             </article>
           </div>
         </section>
@@ -150,20 +140,20 @@
           <div class="section-heading"><h2 id="awards-heading" data-i18n="awardsHeading">获奖经历</h2></div>
           <div class="record-list" data-record-list="awards">
             <article class="record-item">
-              <p class="record-period">2024、2025</p>
               <div class="record-copy"><h3 class="record-title">John Hopcroft 奖学金</h3><p class="record-subtitle">北京大学</p></div>
+              <p class="record-period">2024、2025</p>
             </article>
             <article class="record-item">
-              <p class="record-period">2024</p>
               <div class="record-copy"><h3 class="record-title">ICPC 亚洲区域赛昆明站</h3><p class="record-subtitle">金牌（打星）</p></div>
-            </article>
-            <article class="record-item">
               <p class="record-period">2024</p>
-              <div class="record-copy"><h3 class="record-title">北京大学程序设计竞赛</h3><p class="record-subtitle">二等奖</p></div>
             </article>
             <article class="record-item">
-              <p class="record-period">2020</p>
+              <div class="record-copy"><h3 class="record-title">北京大学程序设计竞赛</h3><p class="record-subtitle">二等奖</p></div>
+              <p class="record-period">2024</p>
+            </article>
+            <article class="record-item">
               <div class="record-copy"><h3 class="record-title">全国青少年信息学奥林匹克竞赛（NOI）</h3><p class="record-subtitle">银牌</p></div>
+              <p class="record-period">2020</p>
             </article>
           </div>
         </section>
@@ -182,7 +172,6 @@
 
     <footer class="site-footer page-width">
       <p>© <span data-year>2026</span> <span data-profile-name>徐皓天</span></p>
-      <p data-i18n="footerNote">个人主页</p>
     </footer>
   </body>
 </html>

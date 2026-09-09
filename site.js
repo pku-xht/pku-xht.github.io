@@ -3,7 +3,7 @@
 
   const content = window.SITE_CONTENT || {};
   const storageKey = "pku-xht-language";
-  const recordGroups = ["education", "internships", "publications", "awards", "teaching"];
+  const recordGroups = ["publications", "education", "internships", "teaching", "awards"];
   let currentLanguage = "zh";
 
   function languageCode(value) {
@@ -145,6 +145,14 @@
     const intro = localized(profile.intro, currentLanguage === "zh" ? "欢迎来到我的个人主页。" : "Welcome to my personal homepage.");
     const about = localized(profile.about, currentLanguage === "zh" ? "这是我的个人主页。你可以在 GitHub 找到我。" : "This is my personal homepage. You can find me on GitHub.");
     setText("[data-profile-name]", name);
+    const alternateLanguage = currentLanguage === "zh" ? "en" : "zh";
+    const alternateName = profile.name && typeof profile.name === "object" ? profile.name[alternateLanguage] : "";
+    document.querySelectorAll("[data-profile-alternate]").forEach(function (element) {
+      const text = typeof alternateName === "string" ? alternateName.trim() : "";
+      element.textContent = text;
+      element.hidden = !text || text === name;
+      element.lang = alternateLanguage === "zh" ? "zh-CN" : "en";
+    });
     setText("[data-profile-intro]", intro);
     setText("[data-profile-about]", about);
 
@@ -215,9 +223,9 @@
         const fragment = document.createDocumentFragment();
         entries.forEach(function (entry) {
           const title = localized(entry.title);
-          const article = node("article", "record-item");
+          const isPublication = group === "publications";
+          const article = node("article", isPublication ? "record-item publication-item" : "record-item");
           const period = localized(entry.period);
-          if (period) article.appendChild(node("p", "record-period", period));
           const copy = node("div", "record-copy");
           copy.appendChild(node("h3", "record-title", title));
           if (Array.isArray(entry.authors)) {
@@ -234,9 +242,18 @@
           const subtitle = localized(entry.subtitle);
           if (subtitle) copy.appendChild(node("p", "record-subtitle", subtitle));
           const description = localized(entry.description);
-          if (description) copy.appendChild(node("p", "record-description", description));
-          appendRecordLinks(copy, entry, title);
+          if (isPublication) {
+            const metadata = node("div", "publication-meta");
+            if (period) metadata.appendChild(node("p", "record-period publication-venue", period));
+            if (description) metadata.appendChild(node("p", "record-description publication-status", description));
+            appendRecordLinks(metadata, entry, title);
+            if (metadata.childElementCount) copy.appendChild(metadata);
+          } else {
+            if (description) copy.appendChild(node("p", "record-description", description));
+            appendRecordLinks(copy, entry, title);
+          }
           article.appendChild(copy);
+          if (!isPublication && period) article.appendChild(node("p", "record-period", period));
           fragment.appendChild(article);
         });
         list.replaceChildren(fragment);
