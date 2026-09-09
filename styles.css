@@ -183,6 +183,19 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
 }
 .record-subtitle::before { content: " · "; }
 .record-description { margin-top: 2px; overflow-wrap: anywhere; }
+#education .record-copy:has(.record-description) .record-subtitle,
+#education .record-description,
+#teaching .record-copy:has(.record-description) .record-subtitle,
+#teaching .record-description {
+  display: inline;
+  margin-top: 0;
+}
+#education .record-copy:has(.record-description) .record-subtitle::before,
+#education .record-description::before,
+#teaching .record-copy:has(.record-description) .record-subtitle::before,
+#teaching .record-description::before {
+  content: " · ";
+}
 .record-authors { margin-block: 3px; }
 .record-authors strong { color: var(--ink); font-weight: 600; }
 .record-link { display: inline-block; font-size: 12px; }
