@@ -252,12 +252,6 @@ html:lang(zh) .hero-name {
   letter-spacing: -0.04em;
 }
 
-.name-period {
-  display: inline-block;
-  margin-left: 0.015em;
-  color: var(--blue);
-}
-
 .hero-bottom {
   display: flex;
   align-items: flex-end;
@@ -300,11 +294,6 @@ html:lang(zh) .hero-name {
 .record-link:hover,
 .work-link:hover {
   text-decoration-color: currentColor;
-}
-
-.hero-link {
-  margin-top: 0;
-  font-size: 13px;
 }
 
 .link-arrow,
@@ -527,12 +516,6 @@ a:hover > .work-link-arrow {
   padding-bottom: 15px;
 }
 
-.contact-intro {
-  margin-bottom: 0;
-  color: var(--secondary);
-  font-size: 14px;
-}
-
 .contact-list {
   display: flex;
   flex-wrap: wrap;
@@ -590,11 +573,6 @@ a:hover > .work-link-arrow {
 .site-footer a:hover {
   color: var(--blue);
   text-decoration: underline;
-}
-
-.footer-separator {
-  margin-inline: 14px;
-  color: #a1a69f;
 }
 
 .hero-enter {
@@ -738,11 +716,6 @@ html.reveal-ready .reveal:not(.is-visible) {
     line-height: 1.5;
   }
 
-  .hero-link {
-    margin-top: 0;
-    font-size: 13px;
-  }
-
   .hero-scroll {
     display: none;
   }
@@ -805,11 +778,6 @@ html.reveal-ready .reveal:not(.is-visible) {
     padding-bottom: 14px;
   }
 
-  .contact-intro {
-    margin-bottom: 0;
-    font-size: 14px;
-  }
-
   .contact-link {
     min-height: 32px;
     font-size: 15px;
@@ -856,9 +824,6 @@ html.reveal-ready .reveal:not(.is-visible) {
     font-size: 10px;
   }
 
-  .footer-separator {
-    margin-inline: 9px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
