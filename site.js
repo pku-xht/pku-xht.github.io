@@ -103,6 +103,9 @@
     const arrow = node("span", className + "-arrow", "↗");
     arrow.setAttribute("aria-hidden", "true");
     link.appendChild(arrow);
+    if (container.tagName === "P" || (container.classList.contains("record-links") && container.childElementCount)) {
+      container.appendChild(document.createTextNode(" "));
+    }
     container.appendChild(link);
   }
 
@@ -111,7 +114,7 @@
       appendDetailsLink(container, safeURL(entry.url), title, "record-link", "recordLink", entry.linkLabel);
       return;
     }
-    const group = node("div", "record-links");
+    const group = node(container.tagName === "P" ? "span" : "div", "record-links");
     entry.links.forEach(function (entryLink) {
       if (!entryLink || typeof entryLink !== "object") return;
       const url = safeURL(entryLink.url);
@@ -119,7 +122,10 @@
       if (!url || !label) return;
       appendDetailsLink(group, url, title, "record-link", "recordLink", label);
     });
-    if (group.childElementCount) container.appendChild(group);
+    if (group.childElementCount) {
+      if (container.tagName === "P") container.appendChild(document.createTextNode(" "));
+      container.appendChild(group);
+    }
   }
 
   function renderUI() {
@@ -227,7 +233,12 @@
           const article = node("article", isPublication ? "record-item publication-item" : "record-item");
           const period = localized(entry.period);
           const copy = node("div", "record-copy");
-          copy.appendChild(node("h3", "record-title", title));
+          const subtitle = localized(entry.subtitle);
+          const description = localized(entry.description);
+          const inlineDescription = (group === "education" || group === "teaching") && Boolean(description);
+          const line = isPublication ? copy : node("p", inlineDescription ? "record-line record-line-inline" : "record-line");
+          line.appendChild(node(isPublication ? "h3" : "strong", "record-title", title));
+          if (!isPublication) copy.appendChild(line);
           if (Array.isArray(entry.authors)) {
             const authors = entry.authors.filter(function (author) { return typeof author === "string" && author.trim(); });
             if (authors.length) {
@@ -239,18 +250,22 @@
               copy.appendChild(authorLine);
             }
           }
-          const subtitle = localized(entry.subtitle);
-          if (subtitle) copy.appendChild(node("p", "record-subtitle", subtitle));
-          const description = localized(entry.description);
           if (isPublication) {
+            if (subtitle) copy.appendChild(node("p", "record-subtitle", subtitle));
             const metadata = node("div", "publication-meta");
             if (period) metadata.appendChild(node("p", "record-period publication-venue", period));
             if (description) metadata.appendChild(node("p", "record-description publication-status", description));
             appendRecordLinks(metadata, entry, title);
             if (metadata.childElementCount) copy.appendChild(metadata);
           } else {
-            if (description) copy.appendChild(node("p", "record-description", description));
-            appendRecordLinks(copy, entry, title);
+            [[subtitle, "record-subtitle"], [description, "record-description"]].forEach(function (detail) {
+              if (!detail[0]) return;
+              if (detail[1] === "record-subtitle" || inlineDescription) {
+                line.appendChild(node("span", "record-separator", " · "));
+              }
+              line.appendChild(node("span", detail[1], detail[0]));
+            });
+            appendRecordLinks(line, entry, title);
           }
           article.appendChild(copy);
           if (!isPublication && period) article.appendChild(node("p", "record-period", period));

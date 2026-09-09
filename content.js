@@ -104,17 +104,21 @@ window.SITE_CONTENT = {
     education: [
       {
         title: { zh: "北京大学", en: "Peking University" },
-        subtitle: { zh: "计算机学院 · 博士研究生", en: "School of Computer Science · PhD student" },
+        subtitle: { zh: "计算机学院", en: "School of Computer Science" },
+        description: {
+          zh: "博士研究生 · 计算机科学与技术专业 · 编程语言与理论班",
+          en: "PhD student in Computer Science and Technology · Programming Languages and Theory Class",
+        },
         period: { zh: "2026–至今", en: "2026–Present" },
       },
       {
         title: { zh: "北京大学", en: "Peking University" },
         subtitle: {
-          zh: "信息科学技术学院 · 图灵班",
-          en: "School of Electronics Engineering and Computer Science · Turing Class",
+          zh: "信息科学技术学院",
+          en: "School of Electronics Engineering and Computer Science",
         },
         period: { zh: "2022.09–2026.06", en: "Sep 2022 – Jun 2026" },
-        description: { zh: "本科 · 信息与计算科学专业", en: "Undergraduate studies in Information and Computer Science" },
+        description: { zh: "本科 · 信息与计算科学专业 · 图灵班", en: "Undergraduate studies in Information and Computer Science · Turing Class" },
       },
     ],
     internships: [
@@ -179,8 +183,8 @@ window.SITE_CONTENT = {
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
         period: { zh: "2025 秋季", en: "Fall 2025" },
         description: {
-          zh: "主要负责期中与期末考试命题。",
-          en: "Primarily responsible for writing the midterm and final exams.",
+          zh: "主要负责期中与期末考试命题",
+          en: "Primarily responsible for writing the midterm and final exams",
         },
       },
     ],

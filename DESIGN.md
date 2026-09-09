@@ -31,6 +31,7 @@ The first release uses personal information confirmed by the owner. Optional sec
 - `[data-profile-name]`, `[data-profile-intro]`, `[data-profile-about]` show profile strings from `SITE_CONTENT.profile`, falling back to `pku-xht` and a factual greeting.
 - `[data-profile-alternate]` shows the other name with its matching `lang` attribute. `#top`, `#about`, and `#main` remain valid navigation targets.
 - Generic `.record-item` elements contain `.record-copy` followed by `.record-period`. CSS places dates on the right on desktop and after the text on mobile.
+- Each ordinary record uses one `.record-line` paragraph with a bold title, inline detail spans, and real text separators, so selecting and copying a visually continuous line preserves its text and separators. Education details and teaching descriptions remain inline at all widths and wrap naturally.
 - Publication metadata lives in `.publication-meta`, retaining `.record-period`, `.record-description`, and `.record-links` selectors.
 - `[data-work-list]` renders verified `SITE_CONTENT.work` entries; hide `[data-work-section]` and `[data-work-nav]` when empty.
 - `[data-interest-list]` renders verified `SITE_CONTENT.interests`; hide `[data-interest-section]` and `[data-interest-nav]` when empty.
