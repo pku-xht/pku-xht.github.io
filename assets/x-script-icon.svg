@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Calligraphic X</title>
+  <desc id="desc">A calligraphic capital X with a broad curved downstroke, a fine crossing stroke, and restrained looping terminals.</desc>
+  <rect width="256" height="256" rx="52" fill="#2b5f9e"/>
+  <g fill="#ffffff">
+    <path d="M56 88C33 75 39 45 66 43C92 40 110 62 123 91L158 175C167 194 176 206 190 201C200 197 205 186 202 175C208 192 197 211 180 215C157 222 142 206 131 181L94 94C84 71 74 55 62 56C48 56 44 72 56 82C62 88 72 86 75 77C77 89 66 95 56 88Z"/>
+    <path d="M43 185C32 199 42 217 59 208C80 196 93 175 118 146C143 116 164 84 188 59C202 44 220 40 226 50C233 64 218 80 205 76" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>
