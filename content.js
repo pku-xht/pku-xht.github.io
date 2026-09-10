@@ -126,21 +126,17 @@ window.SITE_CONTENT = {
         title: { zh: "DeepSeek", en: "DeepSeek" },
         subtitle: { zh: "AGI 实习生 · Harness 组", en: "AGI Intern · Harness team" },
         period: { zh: "2026.07.06–2026.09.09", en: "Jul 6 – Sep 9, 2026" },
-        url: "https://github.com/deepseek-ai/deepseek-harness",
-        linkLabel: { zh: "DeepSeek Harness · 开源项目", en: "DeepSeek Harness · Open-source project" },
+        description: {
+          zh: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression · 技术报告共同作者：Haotian Xu",
+          en: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression · Technical report co-author: Haotian Xu",
+        },
+        links: [
+          { label: { zh: "DeepSeek Harness · 开源项目", en: "DeepSeek Harness · Open-source project" }, url: "https://github.com/deepseek-ai/deepseek-harness" },
+          { label: { zh: "技术报告", en: "Technical report" }, url: "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf" },
+        ],
       },
     ],
     publications: [
-      {
-        title: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
-        authors: ["DeepSeek-AI"],
-        subtitle: { zh: "共同作者：Haotian Xu", en: "Co-author: Haotian Xu" },
-        period: "2026",
-        description: { zh: "技术报告", en: "Technical report" },
-        links: [
-          { label: { zh: "报告", en: "Report" }, url: "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf" },
-        ],
-      },
       {
         title: "Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation",
         authors: ["Yihan Dai", "Sijie Liang", "Haotian Xu", "Peichu Xie", "Sergey Mechtaev"],
