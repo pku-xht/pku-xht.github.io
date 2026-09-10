@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">X — geometric mark</title>
+  <desc id="desc">A blue geometric X with a continuous rising stroke and two inset diagonal arms, on a transparent background.</desc>
+  <path fill="#2b5f9e" d="M38 15H49L26 49H15Z M15 15H26L30.79 22.08L25.29 30.22Z M38.71 33.78L49 49H38L33.21 41.92Z"/>
+</svg>

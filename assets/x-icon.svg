@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">X — geometric icon</title>
+  <desc id="desc">A white geometric X on a blue rounded square. A continuous rising stroke crosses two inset diagonal arms.</desc>
+  <rect width="64" height="64" rx="15" fill="#2b5f9e"/>
+  <path fill="#ffffff" d="M38 15H49L26 49H15Z M15 15H26L30.79 22.08L25.29 30.22Z M38.71 33.78L49 49H38L33.21 41.92Z"/>
+</svg>
