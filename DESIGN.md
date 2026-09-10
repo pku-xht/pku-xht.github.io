@@ -3,6 +3,8 @@
 ## Visual thesis
 The approved A direction is a compact academic page: white paper, dark blue-gray text, restrained blue links, a 30px name, and a single 960px text column. Its typography draws on al-folio, and its publication-first hierarchy draws on Jon Barron's homepage.
 
+The approved personal mark is a calligraphic capital X in the site's blue (`#2b5f9e`), with a broad curved downstroke, a fine crossing stroke, and looping terminals. `assets/x-script-mark.svg` is the transparent master; `assets/x-script-icon.svg` strengthens the fine stroke for small sizes. The favicon uses that approved icon, with a versioned URL for browser cache refresh. Earlier geometric designs remain as archived candidates.
+
 ## Content plan
 1. A small name heading with its alternate-language name alongside, followed by identity, advisor, and a brief biography.
 2. Publications, then education, internships, teaching, and awards. Each heading sits above its records. Desktop dates align on the right; mobile dates follow the record text.
