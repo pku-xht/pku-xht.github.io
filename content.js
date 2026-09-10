@@ -200,7 +200,7 @@ window.SITE_CONTENT = {
     ],
   },
   contacts: [
-    { label: "xht@stu.pku.edu.cn", url: "mailto:xht@stu.pku.edu.cn" },
+    { label: "Email: xht@stu.pku.edu.cn", url: "mailto:xht@stu.pku.edu.cn" },
     { label: { zh: "Github: pku-xht", en: "Github: pku-xht" }, url: "https://github.com/pku-xht" },
   ],
 };
