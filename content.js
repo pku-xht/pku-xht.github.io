@@ -132,6 +132,16 @@ window.SITE_CONTENT = {
     ],
     publications: [
       {
+        title: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
+        authors: ["DeepSeek-AI"],
+        subtitle: { zh: "共同作者：Haotian Xu", en: "Co-author: Haotian Xu" },
+        period: "2026",
+        description: { zh: "技术报告", en: "Technical report" },
+        links: [
+          { label: { zh: "报告", en: "Report" }, url: "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf" },
+        ],
+      },
+      {
         title: "Reducing Hallucinations in LLM-Generated Code via Semantic Triangulation",
         authors: ["Yihan Dai", "Sijie Liang", "Haotian Xu", "Peichu Xie", "Sergey Mechtaev"],
         highlightAuthor: "Haotian Xu",
