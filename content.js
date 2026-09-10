@@ -179,7 +179,11 @@ window.SITE_CONTENT = {
       {
         title: { zh: "计算概论 A", en: "Introduction to Computation (A)" },
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
-        period: { zh: "2026 秋季 · 正在担任", en: "Fall 2026 · Current" },
+        period: { zh: "2025 秋季、2026 秋季（正在担任）", en: "Fall 2025, Fall 2026 (current)" },
+        description: {
+          zh: "2025 秋季主要负责期中与期末考试命题",
+          en: "Primarily responsible for writing the midterm and final exams in Fall 2025",
+        },
       },
       {
         title: { zh: "软件分析技术", en: "Software Analysis" },
@@ -187,15 +191,6 @@ window.SITE_CONTENT = {
         period: { zh: "2026 秋季 · 正在担任", en: "Fall 2026 · Current" },
         url: "https://xiongyingfei.github.io/SA_new/2026/",
         linkLabel: { zh: "2026 秋季课程主页", en: "Fall 2026 course website" },
-      },
-      {
-        title: { zh: "计算概论 A", en: "Introduction to Computation (A)" },
-        subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
-        period: { zh: "2025 秋季", en: "Fall 2025" },
-        description: {
-          zh: "主要负责期中与期末考试命题",
-          en: "Primarily responsible for writing the midterm and final exams",
-        },
       },
     ],
   },
