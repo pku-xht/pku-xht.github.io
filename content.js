@@ -178,8 +178,8 @@ window.SITE_CONTENT = {
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
         period: { zh: "2025 秋季、2026 秋季", en: "Fall 2025, Fall 2026" },
         description: {
-          zh: "2025 秋季主要负责期中与期末考试命题",
-          en: "Primarily responsible for writing the midterm and final exams in Fall 2025",
+          zh: "主要负责期中与期末考试命题",
+          en: "Primarily responsible for writing the midterm and final exams",
         },
       },
       {
