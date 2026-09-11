@@ -109,7 +109,7 @@ window.SITE_CONTENT = {
           zh: "博士研究生 · 计算机科学与技术专业 · 编程语言与理论班",
           en: "PhD student in Computer Science and Technology · Programming Languages and Theory Class",
         },
-        period: { zh: "2026–至今", en: "2026 – Present" },
+        period: { zh: "2026 至今", en: "2026 – Present" },
       },
       {
         title: { zh: "北京大学", en: "Peking University" },
