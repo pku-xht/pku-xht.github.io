@@ -162,11 +162,6 @@ window.SITE_CONTENT = {
         period: { zh: "2024", en: "2024" },
       },
       {
-        title: { zh: "北京大学程序设计竞赛", en: "Peking University Programming Contest" },
-        subtitle: { zh: "二等奖", en: "Second Prize" },
-        period: { zh: "2024", en: "2024" },
-      },
-      {
         title: { zh: "全国青少年信息学奥林匹克竞赛（NOI）", en: "National Olympiad in Informatics (NOI)" },
         subtitle: { zh: "银牌", en: "Silver Medal" },
         period: { zh: "2020", en: "2020" },
