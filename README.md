@@ -20,7 +20,7 @@ Keep the matching Chinese content in `index.html` synchronized so the no-JavaScr
 - `profile`: name, introduction, biography and advisor.
 - `records`: education, internships, publications, teaching and awards.
 - Publications may include `authors`, `highlightAuthor`, and `links` (each link has a bilingual `label` and a `url`).
-- Other records may include a `report` with a bilingual `title`, `url`, `authors`, and `highlightAuthor`; it appears on a separate, concise report line.
+- Other records may include a `report` with a bilingual `title`, `url`, `authors`, and `highlightAuthor`; it follows the record links inline and wraps naturally on narrow screens.
 - `contacts`: public contact destinations.
 - Empty record groups are automatically hidden along with their navigation links.
 - Add only facts approved for public display. Do not commit CV drafts or private review notes.

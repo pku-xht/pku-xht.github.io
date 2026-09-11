@@ -132,7 +132,7 @@
     if (!report || typeof report !== "object") return;
     const title = localized(report.title);
     if (!title) return;
-    const line = node("p", "record-description record-report");
+    const line = node("span", "record-description record-report");
     const url = safeURL(report.url);
     line.appendChild(url ? prepareLink(node("a", "text-link", title), url) : node("span", "", title));
     const authors = Array.isArray(report.authors) ? report.authors.filter(function (author) {
@@ -149,6 +149,7 @@
       authorList.appendChild(document.createTextNode(currentLanguage === "zh" ? "）" : ")"));
       line.appendChild(authorList);
     }
+    container.appendChild(document.createTextNode(" "));
     container.appendChild(line);
   }
 
@@ -290,7 +291,7 @@
               line.appendChild(node("span", detail[1], detail[0]));
             });
             appendRecordLinks(line, entry, title);
-            appendReport(copy, entry.report);
+            appendReport(line, entry.report);
           }
           article.appendChild(copy);
           if (!isPublication && period) article.appendChild(node("p", "record-period", period));

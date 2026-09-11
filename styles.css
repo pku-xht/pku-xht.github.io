@@ -191,6 +191,7 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
 }
 .record-authors { margin-block: 3px; }
 .record-authors strong, .record-report strong { color: var(--ink); font-weight: 600; }
+.record-line > .record-report { display: inline; margin: 0 0 0 10px; }
 .report-authors { white-space: nowrap; }
 .record-link { display: inline-block; font-size: 12px; }
 .record-line > .record-link,
@@ -253,6 +254,7 @@ html.reveal-ready .reveal:not(.is-visible) { opacity: 0; transform: translateY(6
   .record-line:not(.record-line-inline) > .record-separator { display: none; }
   .record-line > .record-link,
   .record-line > .record-links { display: flex; width: fit-content; margin-left: 0; }
+  .record-line > .record-report { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
