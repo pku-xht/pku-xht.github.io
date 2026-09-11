@@ -32,7 +32,7 @@ window.SITE_CONTENT = {
       internshipsLabel: "实习",
       internshipsHeading: "实习经历",
       publicationsLabel: "论文",
-      publicationsHeading: "论文发表",
+      publicationsHeading: "论文",
       awardsLabel: "获奖",
       awardsHeading: "获奖经历",
       teachingLabel: "教学",
@@ -87,11 +87,11 @@ window.SITE_CONTENT = {
     name: { zh: "徐皓天", en: "Haotian Xu" },
     intro: {
       zh: "北京大学计算机学院 2026 级博士生。",
-      en: "PhD student at the School of Computer Science, Peking University, starting in 2026.",
+      en: "PhD student at the School of Computer Science, Peking University (since 2026).",
     },
     about: {
-      zh: "本科就读于北京大学图灵班，学习信息与计算科学。2026 年夏在 DeepSeek Harness 组实习，现为北京大学计算机学院博士生。",
-      en: "I studied Information and Computer Science in the Turing Class at Peking University. After a summer internship with the DeepSeek Harness team in 2026, I am now a PhD student at Peking University.",
+      zh: "本科就读于北京大学图灵班，专业为信息与计算科学。2026 年夏在 DeepSeek Harness 组实习。",
+      en: "I studied Information and Computer Science in the Turing Class at Peking University and interned with the DeepSeek Harness team in summer 2026.",
     },
     advisor: {
       name: { zh: "谢辽夏", en: "Sergey Mechtaev" },
@@ -109,7 +109,7 @@ window.SITE_CONTENT = {
           zh: "博士研究生 · 计算机科学与技术专业 · 编程语言与理论班",
           en: "PhD student in Computer Science and Technology · Programming Languages and Theory Class",
         },
-        period: { zh: "2026–至今", en: "2026–Present" },
+        period: { zh: "2026–至今", en: "2026 – Present" },
       },
       {
         title: { zh: "北京大学", en: "Peking University" },
@@ -126,13 +126,14 @@ window.SITE_CONTENT = {
         title: { zh: "DeepSeek", en: "DeepSeek" },
         subtitle: { zh: "AGI 实习生 · Harness 组", en: "AGI Intern · Harness team" },
         period: { zh: "2026.07.06–2026.09.09", en: "Jul 6 – Sep 9, 2026" },
-        description: {
-          zh: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression · 技术报告共同作者：Haotian Xu",
-          en: "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression · Technical report co-author: Haotian Xu",
+        report: {
+          title: { zh: "DeepSeek-V4.1-Flash 技术报告", en: "DeepSeek-V4.1-Flash technical report" },
+          url: "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf",
+          authors: ["…", "Haotian Xu", "…"],
+          highlightAuthor: "Haotian Xu",
         },
         links: [
-          { label: { zh: "DeepSeek Harness · 开源项目", en: "DeepSeek Harness · Open-source project" }, url: "https://github.com/deepseek-ai/deepseek-harness" },
-          { label: { zh: "技术报告", en: "Technical report" }, url: "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/DeepSeek_V41_Tech_Report.pdf" },
+          { label: "DeepSeek Harness", url: "https://github.com/deepseek-ai/deepseek-harness" },
         ],
       },
     ],
@@ -157,7 +158,7 @@ window.SITE_CONTENT = {
       },
       {
         title: { zh: "ICPC 亚洲区域赛昆明站", en: "ICPC Asia Kunming Regional Contest" },
-        subtitle: { zh: "金牌（打星）", en: "Gold Medal (unofficial participation)" },
+        subtitle: { zh: "打星参赛，成绩达到金牌线", en: "Gold-medal-level performance (unofficial participation)" },
         period: { zh: "2024", en: "2024" },
       },
       {
@@ -166,7 +167,7 @@ window.SITE_CONTENT = {
         period: { zh: "2024", en: "2024" },
       },
       {
-        title: { zh: "全国青少年信息学奥林匹克竞赛（NOI）", en: "NOI" },
+        title: { zh: "全国青少年信息学奥林匹克竞赛（NOI）", en: "National Olympiad in Informatics (NOI)" },
         subtitle: { zh: "银牌", en: "Silver Medal" },
         period: { zh: "2020", en: "2020" },
       },
@@ -175,7 +176,7 @@ window.SITE_CONTENT = {
       {
         title: { zh: "计算概论 A", en: "Introduction to Computation (A)" },
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
-        period: { zh: "2025 秋季、2026 秋季（正在担任）", en: "Fall 2025, Fall 2026 (current)" },
+        period: { zh: "2025 秋季、2026 秋季", en: "Fall 2025, Fall 2026" },
         description: {
           zh: "2025 秋季主要负责期中与期末考试命题",
           en: "Primarily responsible for writing the midterm and final exams in Fall 2025",
@@ -184,14 +185,14 @@ window.SITE_CONTENT = {
       {
         title: { zh: "软件分析技术", en: "Software Analysis" },
         subtitle: { zh: "北京大学 · 助教", en: "Peking University · Teaching Assistant" },
-        period: { zh: "2026 秋季 · 正在担任", en: "Fall 2026 · Current" },
+        period: { zh: "2026 秋季", en: "Fall 2026" },
         url: "https://xiongyingfei.github.io/SA_new/2026/",
-        linkLabel: { zh: "2026 秋季课程主页", en: "Fall 2026 course website" },
+        linkLabel: { zh: "课程主页", en: "Course website" },
       },
     ],
   },
   contacts: [
     { label: "Email: xht@stu.pku.edu.cn", url: "mailto:xht@stu.pku.edu.cn" },
-    { label: { zh: "Github: pku-xht", en: "Github: pku-xht" }, url: "https://github.com/pku-xht" },
+    { label: "GitHub: pku-xht", url: "https://github.com/pku-xht" },
   ],
 };

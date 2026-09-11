@@ -128,6 +128,30 @@
     }
   }
 
+  function appendReport(container, report) {
+    if (!report || typeof report !== "object") return;
+    const title = localized(report.title);
+    if (!title) return;
+    const line = node("p", "record-description record-report");
+    const url = safeURL(report.url);
+    line.appendChild(url ? prepareLink(node("a", "text-link", title), url) : node("span", "", title));
+    const authors = Array.isArray(report.authors) ? report.authors.filter(function (author) {
+      return typeof author === "string" && author.trim();
+    }) : [];
+    if (authors.length) {
+      if (currentLanguage !== "zh") line.appendChild(document.createTextNode(" "));
+      const authorList = node("span", "report-authors");
+      authorList.appendChild(document.createTextNode(currentLanguage === "zh" ? "（" : "("));
+      authors.forEach(function (author, index) {
+        if (index) authorList.appendChild(document.createTextNode(" "));
+        authorList.appendChild(node(author === report.highlightAuthor ? "strong" : "span", "", author));
+      });
+      authorList.appendChild(document.createTextNode(currentLanguage === "zh" ? "）" : ")"));
+      line.appendChild(authorList);
+    }
+    container.appendChild(line);
+  }
+
   function renderUI() {
     document.querySelectorAll("[data-i18n]").forEach(function (element) {
       const text = uiText(element.dataset.i18n);
@@ -266,6 +290,7 @@
               line.appendChild(node("span", detail[1], detail[0]));
             });
             appendRecordLinks(line, entry, title);
+            appendReport(copy, entry.report);
           }
           article.appendChild(copy);
           if (!isPublication && period) article.appendChild(node("p", "record-period", period));

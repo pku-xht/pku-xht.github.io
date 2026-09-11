@@ -171,6 +171,7 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
   white-space: nowrap;
 }
 .record-title, .record-subtitle { display: inline; }
+.record-line { text-wrap: pretty; }
 .record-title {
   font-size: 15px;
   font-weight: 600;
@@ -189,7 +190,8 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
   margin-top: 0;
 }
 .record-authors { margin-block: 3px; }
-.record-authors strong { color: var(--ink); font-weight: 600; }
+.record-authors strong, .record-report strong { color: var(--ink); font-weight: 600; }
+.report-authors { white-space: nowrap; }
 .record-link { display: inline-block; font-size: 12px; }
 .record-line > .record-link,
 .record-line > .record-links { margin-left: 10px; }
