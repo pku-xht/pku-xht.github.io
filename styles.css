@@ -171,7 +171,7 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
   white-space: nowrap;
 }
 .record-title, .record-subtitle { display: inline; }
-.record-line { text-wrap: pretty; }
+.record-line { font-size: 13px; text-wrap: pretty; }
 .record-title {
   font-size: 15px;
   font-weight: 600;
@@ -193,7 +193,7 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
 .record-authors strong, .record-report strong { color: var(--ink); font-weight: 600; }
 .record-line > .record-report { display: inline; margin: 0 0 0 10px; }
 .report-authors { white-space: nowrap; }
-.record-link { display: inline-block; font-size: 12px; }
+.record-link { display: inline-block; font-size: inherit; }
 .record-line > .record-link,
 .record-line > .record-links { margin-left: 10px; }
 .record-links {
@@ -208,6 +208,7 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
 .publication-item .record-title { display: block; font-size: 16px; }
 .publication-meta {
   display: flex;
+  font-size: 12px;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 2px 15px;
