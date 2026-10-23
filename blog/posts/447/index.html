@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF555E Case of Computer Network 题解 · 徐皓天</title><meta name="description" content="CF555E Case of Computer Network">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/447/">
+<meta property="og:title" content="CF555E Case of Computer Network 题解 · 徐皓天"><meta property="og:description" content="CF555E Case of Computer Network">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/447/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF555E Case of Computer Network 题解</h1><p class="post-meta"><time datetime="2019-12-02T01:13:20+08:00">2019 年 12 月 2 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 7 月 28 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/555/problem/E" target="_blank" rel="noopener noreferrer">CF555E Case of Computer Network</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一张 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个点 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 条边的无向图。</li>
+<li>给定 <span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span> 组有向点对 <span class="math-inline" data-original-math="$(s, t)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>s</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(s, t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">s</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span>。</li>
+<li>询问是否存在<strong>使得所有 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 都能到达 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span></strong> 的无向图中每条边的定向方案。</li>
+<li><span class="math-inline" data-original-math="$n,m,q \le 2 \times 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo separator="true">,</mo><mi>q</mi><mo>≤</mo><mn>2</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n,m,q \le 2 \times 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>先求边双，缩点变成森林。</p>
+<p>判定时先求 lca，树上差分一下即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, m, q;
+int h[N], e[N&lt;&lt;1], t[N&lt;&lt;1], p = 1;
+int dfn[N], low[N], num;
+int b[N&lt;&lt;1], c[N], k;
+int hc[N], ec[N&lt;&lt;1], tc[N&lt;&lt;1], pc = 1;
+int v[N], w, f[N][20], d[N], g1[N], g2[N];
+
+inline void add(int x, int y, int z = 1) {
+    e[++p] = y;
+    t[p] = h[x];
+    h[x] = p;
+    if (z) add(y, x, 0);
+}
+
+void tarjan(int x, int f) {
+    dfn[x] = low[x] = ++num;
+    for (int i = h[x]; i; i = t[i]) {
+        if (i == f) continue;
+        int y = e[i];
+        if (dfn[y]) low[x] = min(low[x], dfn[y]);
+        else {
+            tarjan(y, i ^ 1), low[x] = min(low[x], low[y]);
+            if (low[y] &gt; dfn[x]) b[i] = b[i^1] = 1;
+        }
+    }
+}
+
+void dfs(int x) {
+    c[x] = k;
+    for (int i = h[x]; i; i = t[i]) {
+        if (b[i]) continue;
+        int y = e[i];
+        if (c[y]) continue;
+        dfs(y);
+    }
+}
+
+inline void addc(int x, int y, int z = 1) {
+    ec[++pc] = y;
+    tc[pc] = hc[x];
+    hc[x] = pc;
+    if (z) addc(y, x, 0);
+}
+
+void dfsc(int x) {
+    v[x] = w;
+    for (int i = hc[x]; i; i = tc[i]) {
+        int y = ec[i];
+        if (y == f[x][0]) continue;
+        f[y][0] = x, d[y] = d[x] + 1;
+        for (int j = 0; f[y][j]; j++)
+            f[y][j+1] = f[f[y][j]][j];
+        dfsc(y);
+    }
+}
+
+inline int lca(int x, int y) {
+    if (d[x] &gt; d[y]) swap(x, y);
+    for (int i = 19; ~i; i--)
+        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+    if (x == y) return x;
+    for (int i = 19; ~i; i--)
+        if (f[x][i] ^ f[y][i]) x = f[x][i], y = f[y][i];
+    return f[x][0];
+}
+
+bool dfspd(int x) {
+    for (int i = hc[x]; i; i = tc[i]) {
+        int y = ec[i];
+        if (y == f[x][0]) continue;
+        if (!dfspd(y) || (g1[y] &amp;&amp; g2[y])) return 0;
+        g1[x] += g1[y], g2[x] += g2[y];
+    }
+    return 1;
+}
+
+int main() {
+    rd(n), rd(m), rd(q);
+    for (int i = 1, x, y; i &lt;= m; i++)
+        rd(x), rd(y), add(x, y);
+    for (int i = 1; i &lt;= n; i++)
+        if (!dfn[i]) tarjan(i, 0);
+    for (int i = 1; i &lt;= n; i++)
+        if (!c[i]) ++k, dfs(i);
+    for (int x = 1; x &lt;= n; x++)
+        for (int i = h[x]; i; i = t[i]) {
+            int y = e[i];
+            if (c[x] &gt;= c[y]) continue;
+            addc(c[x], c[y]);
+        }
+    for (int i = 1; i &lt;= k; i++)
+        if (!v[i]) ++w, d[i] = 1, dfsc(i);
+    for (int i = 1, x, y; i &lt;= q; i++) {
+        rd(x), rd(y), x = c[x], y = c[y];
+        if (x == y) continue;
+        if (v[x] != v[y]) return prints("No"), 0;
+        int z = lca(x, y);
+        ++g1[x], --g1[z], ++g2[y], --g2[z];
+    }
+    for (int i = 1; i &lt;= n; i++)
+        if (d[i] == 1 &amp;&amp; !dfspd(i)) return prints("No"), 0;
+    prints("Yes");
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf555e-case-of-computer-network-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="107">Tarjan</span>、<span data-source-tag="43">前缀和/差分</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/449/"><span>较新一篇</span>CF611G New Year and Cake 题解</a><a class="rel-next" rel="next" href="/blog/posts/445/"><span>较早一篇</span>CF585F Digits of Number Pi 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

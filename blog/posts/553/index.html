@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Educational Codeforces Round 80 (Rated for Div. 2) 题解 · 徐皓天</title><meta name="description" content="Educational Codeforces Round 80 (Rated for Div. 2)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/553/">
+<meta property="og:title" content="Educational Codeforces Round 80 (Rated for Div. 2) 题解 · 徐皓天"><meta property="og:description" content="Educational Codeforces Round 80 (Rated for Div. 2)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/553/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Educational Codeforces Round 80 (Rated for Div. 2) 题解</h1><p class="post-meta"><time datetime="2020-01-15T21:05:38+08:00">2020 年 1 月 15 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Deadline</a></li><li class="toc-level-2"><a href="#section-2">Yet Another Meme Problem</a></li><li class="toc-level-2"><a href="#section-3">Two Arrays</a></li><li class="toc-level-2"><a href="#section-4">Minimax Problem</a></li><li class="toc-level-2"><a href="#section-5">Messenger Simulator</a></li><li class="toc-level-2"><a href="#section-6">Red-Blue Graph</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1288" target="_blank" rel="noopener noreferrer">Educational Codeforces Round 80 (Rated for Div. 2)</a>
+</p></blockquote>
+<h2 id="section-1">Deadline</h2>
+<p>在 <span class="math-inline" data-original-math="$\sqrt d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mi>d</mi></msqrt></mrow><annotation encoding="application/x-tex">\sqrt d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.04em;vertical-align:-0.1078em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="padding-left:0.833em;">d</span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span></span></span> 附近枚举。</p>
+<pre tabindex="0"><code class="language-cpp">inline void solve() {
+    int n, d;
+    rd(n), rd(d);
+    int x = sqrt(d);
+    for (int i = max(0, x - 10); i &lt;= x + 10; i++) {
+        if (i + d / (i + 1) + (d % (i + 1) != 0) &lt;= n)
+            return prints("YES"), void();
+    }
+    prints("NO");
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Yet Another Meme Problem</h2>
+<p>枚举 <span class="math-inline" data-original-math="$b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 的位数。</p>
+<pre tabindex="0"><code class="language-cpp">inline void solve() {
+    ll a, b;
+    rd(a), rd(b);
+    ll ans = 0;
+    for (ll k = 10; k &lt;= b + 1; k *= 10) ans += a;
+    print(ans);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Two Arrays</h2>
+<p>可以 dp 也可以推公式发现答案就是 <span class="math-inline" data-original-math="$\binom{n+2m-1}{2m}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>n</mi><mo>+</mo><mn>2</mn><mi>m</mi><mo>−</mo><mn>1</mn></mrow><mrow><mn>2</mn><mi>m</mi></mrow></mfrac><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\binom{n+2m-1}{2m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2451em;vertical-align:-0.35em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8951em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mord mathnormal mtight">m</span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">+</span><span class="mord mtight">2</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e3 + 7, M = 13;
+int n, m;
+modint f[M][N], ans;
+
+int main() {
+    rd(n), rd(m);
+    f[0][1] = 1;
+    for (int i = 0; i &lt; m; i++)
+        for (int j = 1; j &lt;= n; j++)
+            for (int k = j; k &lt;= n; k++)
+                f[i+1][k] += f[i][j];
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = i; j &lt;= n; j++)
+            ans += f[m][i] * f[m][n-j+1];
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Minimax Problem</h2>
+<p>贪心 + 状压，复杂度 <span class="math-inline" data-original-math="$\mathcal O(n2^m)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><msup><mn>2</mn><mi>m</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n2^m)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7, M = 9;
+int n, m, a[N][M], s[N], b[1&lt;&lt;M|1], S;
+pq &lt;pair &lt;int, pi&gt; &gt; q;
+
+int main() {
+    rd(n), rd(m), S = (1 &lt;&lt; m) - 1;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 0; j &lt; m; j++)
+            rd(a[i][j]), q.push(mp(a[i][j], mp(i, j)));
+    while (q.size()) {
+        int x = q.top().se.fi, y = q.top().se.se;
+        q.pop();
+        if (b[S^(s[x]|(1&lt;&lt;y))]) {
+            print(x, ' '), print(b[S^(s[x]|(1&lt;&lt;y))]);
+            return 0;
+        }
+        b[1&lt;&lt;y] = x;
+        for (int k = s[x]; k; k = (k - 1) &amp; s[x]) b[k|(1&lt;&lt;y)] = x;
+        s[x] |= 1 &lt;&lt; y;
+        if (s[x] == S) {
+            print(x, ' '), print(x);
+            return 0;
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">Messenger Simulator</h2>
+<p>树状数组维护即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7;
+int n, m, p[N], c1[N], c2[N], v[N], ans[N];
+
+inline void add(int *c, int n, int x, int o) {
+    while (x &lt;= n) c[x] += o, x += x &amp; -x;
+}
+
+inline int ask(int *c, int x) {
+    int o = 0;
+    while (x) o += c[x], x -= x &amp; -x;
+    return o;
+}
+
+int main() {
+    rd(n), rd(m);
+    for (int i = 1, x; i &lt;= m; i++) {
+        rd(x);
+        if (!v[x]) {
+            v[x] = 1;
+            ans[x] = x + ask(c1, n) - ask(c1, x);
+            add(c1, n, x, 1);
+            add(c2, m, p[x] = i, 1);
+            continue;
+        }
+        ans[x] = max(ans[x], 1 + ask(c2, i - 1) - ask(c2, p[x]));
+        add(c2, m, p[x], -1);
+        add(c2, m, p[x] = i, 1);
+    }
+    for (int x = 1; x &lt;= n; x++)
+        if (!v[x]) ans[x] = x + ask(c1, n) - ask(c1, x);
+        else ans[x] = max(ans[x], 1 + ask(c2, m) - ask(c2, p[x]));
+    for (int x = 1; x &lt;= n; x++)
+        print(v[x] ? 1 : x, ' '), print(ans[x]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-6">Red-Blue Graph</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/educational-codeforces-round-80-rated-for-div-2-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="34">树状数组</span>、<span data-source-tag="91">状压</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/557/"><span>较新一篇</span>CF521D Shop 题解</a><a class="rel-next" rel="next" href="/blog/posts/552/"><span>较早一篇</span>CF568E Longest Increasing Subsequence 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

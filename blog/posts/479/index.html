@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF576E Painting Edges 题解 · 徐皓天</title><meta name="description" content="CF576E Painting Edges">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/479/">
+<meta property="og:title" content="CF576E Painting Edges 题解 · 徐皓天"><meta property="og:description" content="CF576E Painting Edges">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/479/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF576E Painting Edges 题解</h1><p class="post-meta"><time datetime="2019-12-10T20:42:31+08:00">2019 年 12 月 10 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 12 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/576/problem/E" target="_blank" rel="noopener noreferrer">CF576E Painting Edges</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一张 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个点 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 条边的无向图。</li>
+<li>一共有 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 种颜色，一开始，每条边都没有颜色。</li>
+<li>定义<strong>合法状态</strong>为仅保留<strong>染成 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 种颜色中的任何一种颜色</strong>的边，图都是一张二分图。</li>
+<li>有 <span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span> 次操作，第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 次操作将第 <span class="math-inline" data-original-math="$e_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">e_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 条边的颜色染成 <span class="math-inline" data-original-math="$c_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">c_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>。</li>
+<li>但并不是每次操作都会被<strong>执行</strong>，只有当执行后仍然合法，才会执行本次操作。</li>
+<li>你需要判断每次操作是否会被执行。</li>
+<li><span class="math-inline" data-original-math="$n,m,q \le 5 \times 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo separator="true">,</mo><mi>q</mi><mo>≤</mo><mn>5</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n,m,q \le 5 \times 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="math-inline" data-original-math="$k \le 50$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>≤</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">k \le 50</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">50</span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>类似 <a href="https://www.luogu.com.cn/problem/P5787" target="_blank" rel="noopener noreferrer">P5787 二分图 /【模板】线段树分治</a>（<a href="/blog/posts/478/">学习笔记 &amp; 题解</a>）。</p>
+<p>只是一个可撤销并查集变成了 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个，以及要多加一个判断。</p>
+<p>这个判断不太好弄，考虑把判断和区间操作分开进行。</p>
+<p>区间操作其实就是，对于一条边的两次染色 <span class="math-inline" data-original-math="$x,y$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x,y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span>，染色区间为 <span class="math-inline" data-original-math="$[x+1,y-1]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[x+1,y-1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span></span>，颜色有两种可能：</p>
+<ol>
+<li>染上去了，则颜色是 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 染色时的颜色。</li>
+<li>没染上去，则颜色是上一次染色的颜色。</li>
+</ol>
+<p>那么判断变成一个单点判断了，分治到那个叶子的时候进行判断就好了。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(m \log n \log q)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>q</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(m \log n \log q)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mclose">)</span></span></span></span></span>。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7, K = 51;
+int n, m, k, q, f[K][N&lt;&lt;1], d[K][N&lt;&lt;1], u[N], v[N], a[N], c[N], p[N];
+struct T {
+    int l, r;
+    vi e;
+} t[N&lt;&lt;2];
+struct S {
+    int c, x, z;
+    inline S() {}
+    inline S(int c, int x, int z) : c(c), x(x), z(z) {}
+};
+stack&lt; S &gt; s;
+
+void build(int p, int l, int r) {
+    t[p].l = l, t[p].r = r;
+    if (l == r) return;
+    build(ls, l, md), build(rs, md + 1, r);
+}
+
+void ins(int p, int l, int r, int x) {
+    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].e.pb(x), void();
+    if (l &lt;= md) ins(ls, l, r, x);
+    if (r &gt; md) ins(rs, l, r, x);
+}
+
+inline int get(int o, int x) {
+    while (x ^ f[o][x]) x = f[o][x];
+    return x;
+}
+
+inline void merge(int o, int x, int y) {
+    if (x == y) return;
+    if (d[o][x] &gt; d[o][y]) swap(x, y);
+    int z = d[o][x] == d[o][y];
+    s.push(S(o, x, z)), f[o][x] = y, d[o][y] += z;
+}
+
+void dfs(int p, int l, int r) {
+    ui o = s.size();
+    for (ui i = 0; i &lt; t[p].e.size(); i++) {
+        int x = t[p].e[i], a = ::a[x], c = ::c[x], u = ::u[a], v = ::v[a];
+        if (c) merge(c, get(c, u + n), get(c, v)), merge(c, get(c, v + n), get(c, u));
+    }
+    if (l == r) {
+        int a = ::a[l], c = ::c[l], u = ::u[a], v = ::v[a];
+        if (get(c, u) == get(c, v)) prints("NO"), ::c[l] = ::p[a];
+        else prints("YES"), ::p[a] = ::c[l];
+    } else dfs(ls, l, md), dfs(rs, md + 1, r);
+    while (s.size() &gt; o) {
+        int c = s.top().c, x = s.top().x, z = s.top().z;
+        s.pop(), d[c][f[c][x]] -= z, f[c][x] = x;
+    }
+}
+
+int main() {
+    rd(n), rd(m), rd(k), rd(q);
+    build(1, 1, q);
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= k; j++)
+            f[j][i] = i, f[j][i+n] = i + n;
+    for (int i = 1; i &lt;= m; i++) rd(u[i]), rd(v[i]), p[i] = q + 1;
+    for (int i = 1; i &lt;= q; i++) rd(a[i]), rd(c[i]);
+    for (int i = q; i; i--) {
+        int a = ::a[i];
+        if (i &lt; p[a] - 1) ins(1, i + 1, p[a] - 1, i);
+        p[a] = i;
+    }
+    for (int i = 1; i &lt;= m; i++) p[i] = 0;
+    dfs(1, 1, q);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf576e-painting-edges-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="82">二分图</span>、<span data-source-tag="175">可回退化</span>、<span data-source-tag="64">并查集</span>、<span data-source-tag="115">线段树分治</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/481/"><span>较新一篇</span>同余最短路 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/478/"><span>较早一篇</span>线段树分治 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

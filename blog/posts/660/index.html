@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #622 (Div. 2) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #622 (Div. 2)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/660/">
+<meta property="og:title" content="Codeforces Round #622 (Div. 2) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #622 (Div. 2)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/660/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #622 (Div. 2) 题解</h1><p class="post-meta"><time datetime="2020-02-23T22:40:53+08:00">2020 年 2 月 23 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Fast Food Restaurant</a></li><li class="toc-level-2"><a href="#section-2">Different Rules</a></li><li class="toc-level-2"><a href="#section-3">Skyscrapers</a></li><li class="toc-level-2"><a href="#section-4">Happy New Year</a></li><li class="toc-level-2"><a href="#section-5">Concatenation with intersection</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1313" target="_blank" rel="noopener noreferrer">Codeforces Round #622 (Div. 2)</a>
+</p></blockquote>
+<h2 id="section-1">Fast Food Restaurant</h2>
+<p>贪心。</p>
+<pre tabindex="0"><code class="language-cpp">inline void solve() {
+    int a, b, c;
+    rd(a), rd(b), rd(c);
+    int ans = 0;
+    if (a) ++ans, --a;
+    if (b) ++ans, --b;
+    if (c) ++ans, --c;
+    vi p;
+    p.pb(a), p.pb(b), p.pb(c);
+    sort(p.begin(), p.end());
+    a = p[2], b = p[1], c = p[0];
+    if (a &amp;&amp; b) ++ans, --a, --b;
+    if (a &amp;&amp; c) ++ans, --a, --c;
+    if (b &amp;&amp; c) ++ans, --b, --c;
+    if (a &amp;&amp; b &amp;&amp; c) ++ans;
+    print(ans);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Different Rules</h2>
+<p>屑贪心结论题。</p>
+<pre tabindex="0"><code class="language-cpp">inline void solve() {
+    ll n, x, y;
+    rd(n), rd(x), rd(y);
+    print(min(n, max(1ll, x + y - n + 1)), ' '), print(min(n, x + y - 1));
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Skyscrapers</h2>
+<p>st 表求区间最小值，每次从区间最小值的位置左右分治，取更优的决策向上传递。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7;
+int n, a[N], b[N], f[N][21], ans[N];
+
+inline int ask(int l, int r) {
+    int k = log2(r - l + 1);
+    return a[f[l][k]] &lt; a[f[r-(1&lt;&lt;k)+1][k]] ? f[l][k] : f[r-(1&lt;&lt;k)+1][k];
+}
+
+inline ll solve(int l, int r) {
+    if (l &gt; r) return 0;
+    if (l == r) return a[l];
+    int o = ask(l, r);
+    ll L = 1ll * (o - l + 1) * a[o] + solve(o + 1, r);
+    ll R = 1ll * (r - o + 1) * a[o] + solve(l, o - 1);
+    b[o] = L &lt; R;
+    return max(L, R);
+}
+
+inline void work(int l, int r) {
+    if (l &gt; r) return;
+    if (l == r) return ans[l] = a[l], void();
+    int o = ask(l, r);
+    if (b[o]) {
+        for (int i = o; i &lt;= r; i++) ans[i] = a[o];
+        work(l, o - 1);
+    } else {
+        for (int i = l; i &lt;= o; i++) ans[i] = a[o];
+        work(o + 1, r);
+    }
+}
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]), f[i][0] = i;
+    int w = log2(n);
+    for (int j = 1; j &lt;= w; j++)
+        for (int i = 1; i+(1&lt;&lt;(j-1)) &lt;= n; i++)
+            f[i][j] = a[f[i][j-1]] &lt; a[f[i+(1&lt;&lt;(j-1))][j-1]] ? f[i][j-1] : f[i+(1&lt;&lt;(j-1))][j-1];
+    solve(1, n);
+    work(1, n);
+    for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Happy New Year</h2>
+<p>垃圾离散化 + 状压 dp。</p>
+<h2 id="section-5">Concatenation with intersection</h2>
+<p>exkmp 求出 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 的每个后缀和 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 的 LCP，以及 <span class="math-inline" data-original-math="$b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 的每个后缀和 <span class="math-inline" data-original-math="$s^r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>s</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">s^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6644em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span></span></span></span></span></span></span></span></span></span></span></span> 的 LCP。</p>
+<p>统计每个 <span class="math-inline" data-original-math="$a_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">a_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 开头的方案数，two pointers 在 <span class="math-inline" data-original-math="$b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 上扫到对应的区间，树状数组维护即可。</p>
+<p>设 <span class="math-inline" data-original-math="$n,m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">n,m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 同阶，总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>，<span class="math-inline" data-original-math="$\log$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\log</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span></span></span></span></span> 在树状数组上而不在求 LCP 上，常数较小。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, m, p[N], q[N], d[N], z[N];
+ll c[N], ans;
+char a[N], b[N], s[N];
+
+inline void Z(char *s, int n) {
+    for (int i = 1; i &lt;= n; i++) z[i] = 0;
+    z[1] = n;
+    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+    }
+}
+
+inline void exkmp(char *s, int n, char *t, int m, int *p) {
+    Z(t, m);
+    for (int i = 1; i &lt;= n; i++) p[i] = 0;
+    for (int i = 1, l = 0, r = 0; i &lt;= n; i++) {
+        if (i &lt;= r) p[i] = min(z[i-l+1], r - i + 1);
+        while (i + p[i] &lt;= n &amp;&amp; s[i+p[i]] == t[p[i]+1]) ++p[i];
+        if (i + p[i] - 1 &gt; r) l = i, r = i + p[i] - 1;
+    }
+}
+
+inline void add(int x, int k) {
+    if (!x) return;
+    while (x &lt;= m) c[x] += k, d[x] += k &gt; 0 ? 1 : -1, x += x &amp; -x;
+}
+
+inline pair&lt;ll, int&gt; ask(int x) {
+    ll k = 0;
+    int p = 0;
+    while (x) k += c[x], p += d[x], x -= x &amp; -x;
+    return mp(k, p);
+}
+
+int main() {
+    rd(n), rd(m);
+    rds(a, n), rds(b, n), rds(s, m);
+    exkmp(a, n, s, m, p);
+    reverse(b + 1, b + n + 1);
+    reverse(s + 1, s + m + 1);
+    exkmp(b, n, s, m, q);
+    reverse(q + 1, q + n + 1);
+    for (int i = 1, j = 0; i &lt;= n; i++) {
+        while (j + 1 &lt;= n &amp;&amp; j + 1 &lt; i + m - 1) {
+            if (q[++j] == m) --q[j];
+            add(q[j], q[j]);
+        }
+        if (p[i] == m) --p[i];
+        pair&lt;ll, int&gt; x = ask(m), y = ask(m - p[i] - 1);
+        ans += x.fi - y.fi - 1ll * (x.se - y.se) * (m - p[i] - 1);
+        add(q[i], -q[i]);
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-622-div-2-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="150">exKMP</span>、<span data-source-tag="151">ST 表</span>、<span data-source-tag="110">Two Pointers</span>、<span data-source-tag="34">树状数组</span>、<span data-source-tag="91">状压</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/663/"><span>较新一篇</span>Codeforces Round #623 (Div. 1, based on VK Cup 2019-2020 – Elimination Round, Engine) 题解</a><a class="rel-next" rel="next" href="/blog/posts/656/"><span>较早一篇</span>Lyndon 分解 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

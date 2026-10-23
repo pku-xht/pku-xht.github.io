@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>EA 的练习赛 题解 · 徐皓天</title><meta name="description" content="EA 的练习赛">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/594/">
+<meta property="og:title" content="EA 的练习赛 题解 · 徐皓天"><meta property="og:description" content="EA 的练习赛">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/594/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>EA 的练习赛 题解</h1><p class="post-meta"><time datetime="2020-02-03T18:35:21+08:00">2020 年 2 月 3 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">后缀树 suffix</a></li><li class="toc-level-2"><a href="#section-2">纯粹容器 senpai</a></li><li class="toc-level-2"><a href="#section-3">丝之割 silksong</a></li><li class="toc-level-2"><a href="#section-4">最优性剪枝 search</a></li><li class="toc-level-2"><a href="#section-5">燔祭 sacrificial</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://www.luogu.com.cn/contest/26233" target="_blank" rel="noopener noreferrer">EA 的练习赛</a>
+</p></blockquote>
+<h2 id="section-1">后缀树 suffix</h2>
+<p><span class="math-inline" data-original-math="$ans = 26 \times 25^{n-1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>26</mn><mo>×</mo><msup><mn>25</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">ans = 26 \times 25^{n-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">26</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">2</span><span class="mord"><span class="mord">5</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span></span></span></span></span>，快速幂即可。</p>
+<pre tabindex="0"><code class="language-cpp">int main() {
+    int n;
+    rd(n);
+    print(((modint)25 ^ (n - 1)) * 26);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">纯粹容器 senpai</h2>
+<p>分四种情况讨论一下，有一种情况要期望 dp，复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^4)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>4</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^4)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 53;
+int n, a[N], p[N];
+modint f[N][N][N];
+
+inline modint DP(int o, int l, int r) {
+    for (int i = 0; i &lt; n; i++)
+        for (int j = 0; j &lt;= o - l; j++)
+            for (int k = 0; k &lt;= r - o; k++)
+                f[i][j][k] = 0;
+    f[0][o-l][r-o] = 1;
+    modint ret = 0;
+    for (int i = 0; i &lt; n - 1; i++)
+        for (int j = 0; j &lt;= o - l; j++)
+            for (int k = 0; k &lt;= r - o; k++) {
+                if (!f[i][j][k]) continue;
+                if (!j || !k) ret += (i - 1) * f[i][j][k];
+                else {
+                    int w = n - 1 - i - j - k;
+                    f[i+1][j-1][k] += f[i][j][k] * j / (j + k + w);
+                    f[i+1][j][k-1] += f[i][j][k] * k / (j + k + w);
+                    f[i+1][j][k] += f[i][j][k] * w / (j + k + w);
+                }
+            }
+    return ret;
+}
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    for (int i = 1; i &lt;= n; i++) {
+        int l = i, r = i;
+        while (l &amp;&amp; a[l] &lt;= a[i]) --l;
+        while (r &lt;= n &amp;&amp; a[r] &lt;= a[i]) ++r;
+        if (!l &amp;&amp; r &gt; n) print(n - 1, ' ');
+        else if (!l) print((modint)(n - r + i - 1) * (r - i) / (r - i + 1) + (r - i - 1), ' ');
+        else if (r &gt; n) print((modint)(n - i + l - 1) * (i - l) / (i - l + 1) + (i - l - 1), ' ');
+        else print(DP(i, l, r), ' ');
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">丝之割 silksong</h2>
+<p><span class="math-inline" data-original-math="$n^2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>n</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">n^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span> 的 dp，注意到转移是一个一次函数，斜率优化 + 单调队列做到 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7;
+int n, m, c[N], t, l, r, qu[N];
+pi p[N];
+pair&lt;ll, ll&gt; q[N];
+ll a[N], b[N], f[N];
+
+inline ld calc(pair&lt;ll, ll&gt; a, pair&lt;ll, ll&gt; b) {
+    return 1.0L * (b.se - a.se) / (a.fi - b.fi);
+}
+
+int main() {
+    rd(n), rd(m);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    for (int i = 2; i &lt;= n; i++) a[i] = min(a[i], a[i-1]);
+    for (int i = 1; i &lt;= n; i++) rd(b[i]);
+    for (int i = n - 1; i; i--) b[i] = min(b[i], b[i+1]);
+    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), c[x] = max(c[x], y);
+    for (int i = 2, j = 0; i &lt;= n; i++)
+        if (c[i] &gt; j) j = c[i], p[++t] = mp(i, j);
+    p[t+1].fi = n + 1;
+    q[0] = mp(a[p[1].fi-1], 0), qu[0] = 0;
+    for (int i = 1; i &lt;= t; i++) {
+        while (l &lt; r &amp;&amp; calc(q[l], q[l+1]) &lt; b[p[i].se+1]) ++l;
+        f[i] = q[l].fi * b[p[i].se+1] + q[l].se;
+        pair&lt;ll, ll&gt; o = mp(a[p[i+1].fi-1], f[i]);
+        while (l &lt; r &amp;&amp; calc(q[r-1], q[r]) &gt; calc(q[r], o)) --r;
+        if (o.fi != q[r].fi) q[++r] = o, qu[r] = i;
+    }
+    print(f[t]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">最优性剪枝 search</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-5">燔祭 sacrificial</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/ea-%e7%9a%84%e7%bb%83%e4%b9%a0%e8%b5%9b-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="63">单调队列</span>、<span data-source-tag="141">斜率优化</span>、<span data-source-tag="68">概率期望</span>、<span data-source-tag="55">组合计数</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/592/"><span>较新一篇</span>Codeforces Round #616 (Div. 1) 题解</a><a class="rel-next" rel="next" href="/blog/posts/589/"><span>较早一篇</span>CF603E Pastoral Oddities 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

@@ -10,10 +10,10 @@ import subprocess
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "migration/sources/notes-2026-10-23.json"
+SOURCE = ROOT / "migration/sources/public-2026-10-23.json"
 ALLOWED = set("p br strong em b i u s del h1 h2 h3 h4 h5 h6 ul ol li a code pre blockquote hr img table thead tbody tr th td sup sub span div".split())
 VOID = {"br", "hr", "img"}
 
@@ -173,6 +173,60 @@ def safe_url(value):
     return value
 
 
+def local_target(value, routes, media):
+    """Resolve only checked, public routes and saved resource aliases."""
+    parts = urlsplit(value)
+    fragment = "#" + parts.fragment if parts.fragment else ""
+    resource_url = value.split("#", 1)[0]
+    if resource_url in media:
+        return media[resource_url]["path"] + fragment
+    # Old content mixes http/https for the same public upload.
+    for alternate in ("https:" + resource_url[5:] if resource_url.startswith("http:") else "", "http:" + resource_url[6:] if resource_url.startswith("https:") else ""):
+        if alternate in media:
+            return media[alternate]["path"] + fragment
+    if parts.hostname in {"www.xht37.com", "xht37.com"} or (not parts.scheme and value.startswith("/")):
+        query = parse_qs(parts.query)
+        for key, prefix in [("p", "post:"), ("page_id", "page:")]:
+            if query.get(key) and prefix + query[key][0] in routes:
+                return routes[prefix + query[key][0]] + fragment
+        if normal_path(value) in routes:
+            return routes[normal_path(value)] + fragment
+    return value
+
+
+def add_legacy_anchors(documents, routes, media):
+    """Keep verified old heading fragments used by the migrated public corpus."""
+    by_route = {post["route"]: post for post in documents}
+    normalize = lambda value: re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+    evidence = json.loads((ROOT / "migration/sources/legacy-anchors.json").read_text(encoding="utf-8"))
+    assert evidence["visibility"] == "anonymous-public-only"
+    verified = {(row["post_id"], row["fragment"]): row["heading_text"] for row in evidence["anchors"]}
+    for post in documents:
+        for node in walk(post["tree"]):
+            if not isinstance(node, Element) or node.tag != "a":
+                continue
+            original = node.attrs.get("href", "")
+            resolved = local_target(original, routes, media)
+            parts = urlsplit(resolved)
+            target = post if resolved.startswith("#") else by_route.get(parts.path)
+            if not parts.fragment or not target or parts.scheme or parts.netloc:
+                continue
+            fragment = unquote(parts.fragment)
+            if any(isinstance(n, Element) and n.attrs.get("id") == fragment for n in walk(target["tree"])):
+                continue
+            headings = target["headings"]
+            needle = normalize(fragment)
+            if (target["id"], fragment) in verified:
+                candidates = [h for h in headings if text(h).strip() == verified[(target["id"], fragment)]]
+            else:
+                candidates = [h for h in headings if needle and (normalize(text(h)) == needle or normalize(text(h)).endswith("_" + needle))]
+            if len(candidates) != 1:
+                raise ValueError(f"Unverified old heading fragment from {post['id']} to {target['id']}: {fragment!r}")
+            aliases = candidates[0].attrs.setdefault("_aliases", [])
+            if fragment not in aliases:
+                aliases.append(fragment)
+
+
 def serialize(node, post, routes, media, in_toc=False):
     if isinstance(node, str):
         return html.escape(node, quote=False)
@@ -186,17 +240,16 @@ def serialize(node, post, routes, media, in_toc=False):
         attrs["id"] = node.attrs["id"]
     if tag == "a":
         url = safe_url(node.attrs.get("href", ""))
-        parts = urlsplit(url)
-        if parts.hostname in {"www.xht37.com", "xht37.com"} and normal_path(url) in routes:
-            url = routes[normal_path(url)] + ("#" + parts.fragment if parts.fragment else "")
+        url = local_target(url, routes, media)
         attrs["href"] = url
         if url.startswith(("https:", "http:")):
             attrs.update(target="_blank", rel="noopener noreferrer")
     if tag == "img":
         url = node.attrs["src"]
-        if url not in media:
+        local = local_target(url, routes, media)
+        if not local.startswith("/blog/media/"):
             raise ValueError("Image has not been saved locally: " + url)
-        attrs.update(src=media[url]["path"], alt=node.attrs.get("alt") or post["title"] + "：原文插图", loading="lazy", decoding="async")
+        attrs.update(src=local, alt=node.attrs.get("alt") or post["title"] + "：原文插图", loading="lazy", decoding="async")
     if tag == "code":
         classes = re.findall(r"language-[\w+-]+", node.attrs.get("class", ""))
         if classes:
@@ -205,9 +258,17 @@ def serialize(node, post, routes, media, in_toc=False):
         attrs["tabindex"] = "0"
     if tag in {"td", "th"} and node.attrs.get("align") in {"left", "center", "right"}:
         attrs["class"] = "align-" + node.attrs["align"]
+    if tag in {"td", "th"}:
+        for key in ["colspan", "rowspan"]:
+            if key in node.attrs and re.fullmatch(r"[1-9]\d{0,3}", node.attrs[key]):
+                attrs[key] = node.attrs[key]
+    if tag == "ol" and "start" in node.attrs and re.fullmatch(r"-?\d+", node.attrs["start"]):
+        attrs["start"] = node.attrs["start"]
     rendered_attrs = "".join(f' {key}="{escape(value)}"' for key, value in attrs.items())
     rendered = f"<{tag}{rendered_attrs}>"
     if tag not in VOID:
+        if not in_toc:
+            rendered += "".join(f'<span id="{escape(alias)}" class="legacy-anchor" aria-hidden="true"></span>' for alias in node.attrs.get("_aliases", []))
         rendered += "".join(serialize(ch, post, routes, media, in_toc) for ch in node.children) + f"</{tag}>"
     if tag == "table":
         rendered = '<div class="table-scroll" tabindex="0">' + rendered + "</div>"
@@ -257,20 +318,35 @@ def write(route, content):
 
 def main():
     batch = json.loads(SOURCE.read_text(encoding="utf-8"))
-    posts = batch["posts"]
+    assert batch["visibility"] == "anonymous-public-only"
+    posts = sorted(batch["posts"], key=lambda p: (p["date"], p["id"]), reverse=True)
+    pages = sorted(batch.get("pages", []), key=lambda p: (p["date"], p["id"]), reverse=True)
+    documents = posts + pages
+    assert len(posts) == len({p["id"] for p in posts}) == batch["count"]
+    assert len(pages) == len({p["id"] for p in pages})
+    assert len({p["id"] for p in documents}) == len(documents)
+    categories = {c["id"]: {**c, "name": html.unescape(c["name"])} for c in batch["categories"]}
+    tags = {tag["id"]: {**tag, "name": html.unescape(tag["name"])} for tag in batch.get("tags", [])}
     summaries = json.loads((ROOT / "migration/sources/note-summaries.json").read_text(encoding="utf-8"))
-    assert len(posts) == len({p["id"] for p in posts}) == batch["count"] == 29
     media_list = json.loads((ROOT / "migration/sources/media.json").read_text(encoding="utf-8"))
     media = {m["original_url"]: m for m in media_list}
     for item in media_list:
         assert hashlib.sha256((ROOT / item["path"].lstrip("/")).read_bytes()).hexdigest() == item["sha256"]
-    routes = {normal_path(p["link"]): f'/blog/posts/{p["id"]}/' for p in posts}
+        if item.get("download_url"):
+            media.setdefault(item["download_url"], item)
+    routes = {"": "/blog/"}
+    for post in documents:
+        assert post["type"] in {"post", "page"}
+        post["route"] = f'/blog/{"posts" if post["type"] == "post" else "pages"}/{post["id"]}/'
+        routes[normal_path(post["link"])] = post["route"]
+        routes[post["type"] + ":" + str(post["id"])] = post["route"]
     formulas = {}
-    for post in posts:
-        assert post["status"] == "publish" and not post["protected"] and 13 in post["categories"]
+    for post in documents:
+        assert post["status"] == "publish" and not post["protected"]
+        assert all(category in categories for category in post["categories"])
+        assert all(tag in tags for tag in post.get("tags", []))
         assert hashlib.sha256(post["content_html"].encode()).hexdigest() == post["content_sha256"]
         post["title"] = html.unescape(post["title"])
-        post["route"] = routes[normal_path(post["link"])]
         root = parse(post["content_html"])
         paragraphs = [text(n).strip() for n in walk(root) if isinstance(n, Element) and n.tag == "p" and text(n).strip()]
         excerpt = paragraphs[0] if paragraphs else post["title"]
@@ -286,12 +362,14 @@ def main():
             shift = 2 - min(int(n.tag[1]) for n in headings)
             for i, heading in enumerate(headings, 1):
                 heading.tag = "h" + str(min(6, int(heading.tag[1]) + shift))
-                heading.attrs["id"] = f"section-{i}"
+                # Existing author-supplied anchors remain valid after migration.
+                heading.attrs.setdefault("id", f"section-{i}")
         post["headings"] = headings
         post["tree"] = root
         for n in walk(root):
             if isinstance(n, Math):
                 formulas[(n.tex, n.display)] = None
+    add_legacy_anchors(documents, routes, media)
     keys = list(formulas)
     result = subprocess.run(["node", str(ROOT / "tools/render_math.cjs")], input=json.dumps([{"tex": k[0], "display": k[1]} for k in keys]), text=True, encoding="utf-8", capture_output=True, check=True)
     rendered = json.loads(result.stdout)
@@ -301,9 +379,45 @@ def main():
             print(repr(key), error)
         raise ValueError(f"{len(errors)} unique TeX expressions failed")
     formulas = {key: row["html"] for key, row in zip(keys, rendered)}
-    report = {"batch": "public-notes-2026-10-23", "design": "C", "publication": "local-only", "posts": []}
-    cards = []
-    for index, post in enumerate(posts):
+    report = {"batch": "public-2026-10-23", "source": str(SOURCE.relative_to(ROOT)).replace("\\", "/"), "design": "C", "publication": "local-only", "posts": [], "pages": [], "categories": []}
+
+    def category_route(category_id):
+        return f"/blog/categories/{category_id}/"
+
+    def metadata(post):
+        modified = "" if post["date"][:10] == post["modified"][:10] else f'<span>更新于 {display_date(post["modified"])}</span>'
+        labels = "".join(f'<a href="{category_route(cid)}">{escape(categories[cid]["name"])}</a>' for cid in post["categories"])
+        if post["type"] == "page":
+            labels = '<span>旧站历史页</span>'
+        return f'<p class="post-meta"><time datetime="{post["date"]}+08:00">{display_date(post["date"])}</time>{labels}{modified}</p>'
+
+    def card(post):
+        labels = " ".join(categories[cid]["name"] for cid in post["categories"])
+        source_tags = " ".join(tags[tid]["name"] for tid in post.get("tags", []))
+        search_text = post["title"] + " " + post["excerpt"] + " " + labels + " " + source_tags
+        return f'<article class="post-card" data-search="{escape(search_text)}"><h2><a href="{post["route"]}">{escape(post["title"])}</a></h2>{metadata(post)}<p class="post-excerpt">{escape(post["excerpt"])}</p></article>'
+
+    def category_navigation(selected=None):
+        links = [f'<a href="/blog/"' + (' aria-current="page"' if selected is None else '') + f'>全部文章 <span>{len(posts)}</span></a>']
+        for cid, category in categories.items():
+            count = sum(cid in p["categories"] for p in posts)
+            if count:
+                current = ' aria-current="page"' if selected == cid else ""
+                links.append(f'<a href="{category_route(cid)}"{current}>{escape(category["name"])} <span>{count}</span></a>')
+        return '<nav class="category-nav" aria-label="文章分类">' + "".join(links) + '</nav>'
+
+    def historical_pages():
+        if not pages:
+            return ""
+        links = "".join(f'<li><a href="{p["route"]}">{escape(p["title"])}</a></li>' for p in pages)
+        return '<nav class="historical-pages" aria-label="旧站历史页面"><span>旧站历史页</span><ul class="historical-pages-list">' + links + '</ul></nav>'
+
+    def search_list(items):
+        count = len(items)
+        search = '<form class="search-form" role="search" hidden><label for="blog-search">查找文章</label><input id="blog-search" type="search" aria-label="搜索文章" placeholder="搜索标题、摘要或标签" autocomplete="off"><button id="clear-search" type="button">清空</button></form>'
+        return search + f'<p id="search-count" aria-live="polite">{count} 篇文章</p><div class="post-list">' + "".join(card(p) for p in items) + '</div><p id="no-results" hidden>没有找到匹配的文章。</p>'
+
+    for post in documents:
         root = post["tree"]
         for n in walk(root):
             if isinstance(n, Math):
@@ -314,37 +428,46 @@ def main():
             # Heading text can contain source links; a contents entry has only its local anchor.
             toc_items = "".join(f'<li class="toc-level-{h.tag[1]}"><a href="#{h.attrs["id"]}">' + "".join(serialize(c, post, routes, media, in_toc=True) for c in h.children) + '</a></li>' for h in headings)
             toc = f'<details class="article-toc"{" open" if len(headings) <= 10 else ""}><summary>本文目录（{len(headings)} 节）</summary><ol>{toc_items}</ol></details>'
-        modified = "" if post["date"][:10] == post["modified"][:10] else f'<span>更新于 {display_date(post["modified"])}</span>'
-        meta = f'<p class="post-meta"><time datetime="{post["date"]}+08:00">{display_date(post["date"])}</time><span>笔记</span>{modified}</p>'
         navigation = []
-        if index > 0:
-            prev = posts[index - 1]
-            navigation.append(f'<a class="rel-prev" rel="prev" href="{prev["route"]}"><span>较新一篇</span>{escape(prev["title"])}</a>')
-        if index + 1 < len(posts):
-            nxt = posts[index + 1]
-            navigation.append(f'<a class="rel-next" rel="next" href="{nxt["route"]}"><span>较早一篇</span>{escape(nxt["title"])}</a>')
+        if post["type"] == "post":
+            index = posts.index(post)
+            if index > 0:
+                prev = posts[index - 1]
+                navigation.append(f'<a class="rel-prev" rel="prev" href="{prev["route"]}"><span>较新一篇</span>{escape(prev["title"])}</a>')
+            if index + 1 < len(posts):
+                nxt = posts[index + 1]
+                navigation.append(f'<a class="rel-next" rel="next" href="{nxt["route"]}"><span>较早一篇</span>{escape(nxt["title"])}</a>')
+        navigation.append('<a class="all-posts" href="/blog/">返回全部文章</a>')
         body_html = serialize(root, post, routes, media)
         image_credit = ''
         if any(isinstance(n, Element) and n.tag == 'img' and n.attrs['src'].startswith('https://oiwiki.org/') for n in walk(root)):
             image_credit = '<span class="image-credit">插图：<a href="https://oi-wiki.org/geometry/convex-hull/" target="_blank" rel="noopener noreferrer">OI Wiki 项目组</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> / <a href="https://github.com/zTrix/sata-license">SATA</a>），原图未修改。</span>'
-        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{meta}</header>{toc}<div class="prose">{body_html}</div><p class="source-note">本文迁自 <a href="{escape(post["link"])}" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。{image_credit}</p><nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
+        history_note = '<aside class="historical-note">这是旧站的历史页面，内容保留原站历次更新。当前个人信息请以<a href="/">主页</a>为准。</aside>' if post["type"] == "page" else ""
+        source_tags = '<p class="source-tags">原站标签：' + "、".join(f'<span data-source-tag="{tid}">{escape(tags[tid]["name"])}</span>' for tid in post.get("tags", [])) + '</p>' if post.get("tags") else ""
+        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}</header>{history_note}{toc}<div class="prose">{body_html}</div><p class="source-note">本文迁自 <a href="{escape(post["link"])}" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。{image_credit}</p>{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
         math_count = sum(isinstance(n, Math) for n in walk(root))
         write(post["route"], page(post["title"], post["excerpt"], post["route"], body, has_math=math_count > 0))
-        cards.append(f'<article class="post-card" data-search="{escape(post["title"] + " " + post["excerpt"] + " 笔记")}"><h2><a href="{post["route"]}">{escape(post["title"])}</a></h2>{meta}<p class="post-excerpt">{escape(post["excerpt"])}</p></article>')
-        report["posts"].append({"id": post["id"], "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root))})
-    search = '<form class="search-form" role="search" hidden><label for="blog-search">查找文章</label><input id="blog-search" type="search" aria-label="搜索文章" placeholder="搜索标题或摘要" autocomplete="off"><button id="clear-search" type="button">清空</button></form><p id="search-count" aria-live="polite">29 篇笔记</p>'
-    body = '<section class="page-intro"><p class="eyebrow">BLOG / NOTES</p><h1>文章与记录</h1><p>留下一些想明白的事。</p></section>' + search + '<div class="post-list">' + "".join(cards) + '</div><p id="no-results" hidden>没有找到匹配的文章。</p>'
-    write("/blog/", page("博客", "徐皓天的算法、数学与学习笔记。", "/blog/", body))
+        report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
+    body = '<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p></section>' + category_navigation() + historical_pages() + search_list(posts)
+    write("/blog/", page("博客", "徐皓天的算法、数学、学习笔记与生活记录。", "/blog/", body))
     years = {}
     for post in posts:
         years.setdefault(post["date"][:4], []).append(post)
-    archive = '<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>29 篇笔记，按原始发布日期排列。</p></section>'
+    archive = f'<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>{len(posts)} 篇文章，按原始发布日期排列。</p></section>' + category_navigation() + historical_pages()
     for year, items in years.items():
         archive += f'<section class="archive-year"><h2>{year}</h2><ul class="archive-list">' + "".join(f'<li><time datetime="{p["date"]}+08:00">{p["date"][5:10]}</time><a href="{p["route"]}">{escape(p["title"])}</a></li>' for p in items) + '</ul></section>'
     write("/blog/archive/", page("文章归档", "按原始发布日期排列的公开文章。", "/blog/archive/", archive, active="归档"))
-    report["totals"] = {key: sum(p[key] for p in report["posts"]) for key in ["formulas", "code_blocks", "headings", "images"]}
-    (ROOT / "migration/notes-batch1.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"posts": len(posts), "unique_formulas": len(formulas), **report["totals"]}, ensure_ascii=False))
+    for cid, category in categories.items():
+        items = [post for post in posts if cid in post["categories"]]
+        if not items:
+            continue
+        route = category_route(cid)
+        body = f'<section class="page-intro"><p class="eyebrow">CATEGORY</p><h1>{escape(category["name"])}</h1><p>{len(items)} 篇文章，按原始发布日期排列。</p></section>' + category_navigation(cid) + search_list(items)
+        write(route, page(category["name"], f'{category["name"]}分类的全部公开文章。', route, body))
+        report["categories"].append({"id": cid, "name": category["name"], "path": route, "count": len(items)})
+    report["totals"] = {key: sum(p[key] for p in report["posts"] + report["pages"]) for key in ["formulas", "code_blocks", "headings", "images"]}
+    (ROOT / "migration/public-batch.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"posts": len(posts), "pages": len(pages), "categories": len(report["categories"]), "unique_formulas": len(formulas), **report["totals"]}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

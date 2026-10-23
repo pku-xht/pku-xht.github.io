@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>P6122 [Neerc2016]Mole Tunnels 题解 · 徐皓天</title><meta name="description" content="P6122 [Neerc2016]Mole Tunnels">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/891/">
+<meta property="og:title" content="P6122 [Neerc2016]Mole Tunnels 题解 · 徐皓天"><meta property="og:description" content="P6122 [Neerc2016]Mole Tunnels">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/891/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>P6122 [Neerc2016]Mole Tunnels 题解</h1><p class="post-meta"><time datetime="2020-05-04T22:38:28+08:00">2020 年 5 月 4 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 7 月 8 日</span></p></header><div class="prose"><blockquote><p>
+  <a href="https://www.luogu.com.cn/problem/P6122" target="_blank" rel="noopener noreferrer">P6122 [Neerc2016]Mole Tunnels</a>
+</p></blockquote>
+<p>大概是模拟费用流模板题。</p>
+<p>考虑建出费用流的图：</p>
+<ul>
+<li>对于每条树边 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span>，建边 <span class="math-inline" data-original-math="$(x,y,+\infty,1),(y,x,+\infty,1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mo>+</mo><mi mathvariant="normal">∞</mi><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mi>x</mi><mo separator="true">,</mo><mo>+</mo><mi mathvariant="normal">∞</mi><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,+\infty,1),(y,x,+\infty,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">+</span><span class="mord">∞</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">+</span><span class="mord">∞</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>。</li>
+<li>对于每个点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span>，建边 <span class="math-inline" data-original-math="$(i, T, c_i, 0)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>T</mi><mo separator="true">,</mo><msub><mi>c</mi><mi>i</mi></msub><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i, T, c_i, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span></span>。</li>
+<li>对于每只鼹鼠，依次建边 <span class="math-inline" data-original-math="$(S, p_i, 1, 0)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>S</mi><mo separator="true">,</mo><msub><mi>p</mi><mi>i</mi></msub><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(S, p_i, 1, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span></span>。</li>
+</ul>
+<p>则答案即为最小费用最大流。</p>
+<p>由于 <span class="math-inline" data-original-math="$n,m \le 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo>≤</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n,m \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，因此直接跑费用流肯定是不行的。</p>
+<p>考虑模拟费用流，本质上即是一个带悔贪心。显然每次选择费用最小的洞。</p>
+<p>在费用流中每条边有一个容量和边权，考虑直接维护这两个信息。</p>
+<p>每次加入一个鼹鼠之后，枚举洞和鼹鼠的 LCA，找到最小费用对应的洞的位置，更新答案。</p>
+<p>由于树上的路径最长也只有 <span class="math-inline" data-original-math="$\mathcal O(\log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>，因此暴力模拟费用流的更新方式更新信息即可。</p>
+<p>在实现中，由于正向边的容量都是 <span class="math-inline" data-original-math="$+\infty$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">∞</span></span></span></span></span> 边权都是 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，反向边的边权都是 <span class="math-inline" data-original-math="$-1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span></span>，因此不用维护，只维护反向边的容量即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7, inf = 1e9;
+int n, m, c[N], ans;
+int f[N], g[N], d[N][3];
+
+inline void upd(int p) {
+    f[p] = c[p] ? 0 : inf, g[p] = c[p] ? p : 0;
+    if (ls &lt;= n &amp;&amp; f[p] &gt; f[ls] + (d[p][0] ? -1 : 1))
+        f[p] = f[ls] + (d[p][0] ? -1 : 1), g[p] = g[ls];
+    if (rs &lt;= n &amp;&amp; f[p] &gt; f[rs] + (d[p][1] ? -1 : 1))
+        f[p] = f[rs] + (d[p][1] ? -1 : 1), g[p] = g[rs];
+}
+
+int main() {
+    rd(n, m), rda(c, n);
+    for (int i = n; i; i--) upd(i);
+    for (int i = 1, x; i &lt;= m; i++) {
+        rd(x);
+        int s = f[x], t = g[x], lca = x;
+        int o = 0, p = x;
+        while (p &gt; 1) {
+            o += d[p][2] ? -1 : 1, p &gt;&gt;= 1;
+            if (s &gt; o + f[p]) s = o + f[p], t = g[p], lca = p;
+        }
+        print(ans += s, " \n"[i==m]);
+        --c[t];
+        p = x;
+        while (p != lca) {
+            if (d[p][2]) --d[p][2];
+            else ++d[p&gt;&gt;1][p&amp;1];
+            p &gt;&gt;= 1;
+        }
+        p = t;
+        while (p != lca) {
+            if (d[p&gt;&gt;1][p&amp;1]) --d[p&gt;&gt;1][p&amp;1];
+            else ++d[p][2];
+            p &gt;&gt;= 1;
+        }
+        p = x;
+        while (p) upd(p), p &gt;&gt;= 1;
+        p = t;
+        while (p) upd(p), p &gt;&gt;= 1;
+    }
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/p6122-neerc2016mole-tunnels-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="179">模拟费用流</span>、<span data-source-tag="147">网络流</span>、<span data-source-tag="32">贪心</span>、<span data-source-tag="145">费用流</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/896/"><span>较新一篇</span>P4173 残缺的字符串 题解</a><a class="rel-next" rel="next" href="/blog/posts/880/"><span>较早一篇</span>Codeforces Round #638 (Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

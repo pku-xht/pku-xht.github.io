@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov! 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov!">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/798/">
+<meta property="og:title" content="Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov! 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov!">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/798/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov! 题解</h1><p class="post-meta"><time datetime="2020-04-04T11:27:58+08:00">2020 年 4 月 4 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Dreamoon Likes Coloring</a></li><li class="toc-level-2"><a href="#section-2">Dreamoon Likes Sequences</a></li><li class="toc-level-2"><a href="#section-3">Drazil Likes Heap</a></li><li class="toc-level-2"><a href="#section-4">Dreamoon Likes Strings</a></li><li class="toc-level-2"><a href="#section-5">Dreamoon Loves AA</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1329" target="_blank" rel="noopener noreferrer">Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov!</a>
+</p></blockquote>
+<h2 id="section-1">Dreamoon Likes Coloring</h2>
+<p>简单构造题。</p>
+<p>首先判无解，无解的情况只有两种，要么所有数的和加起来 <span class="math-inline" data-original-math="$&lt;n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">&lt;n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span>，要么第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个数大于 <span class="math-inline" data-original-math="$n-i+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n-i+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>。</p>
+<p>然后倒着构造，每次先尽量不重复的覆盖，若第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个颜色的左端点 <span class="math-inline" data-original-math="$&lt; i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">&lt; i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span>，则将左端点手动设置为 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 即可。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">#define Fail return print(-1), 0
+const int N = 1e5 + 7;
+int n, m, a[N], b[N];
+ll s;
+
+int main() {
+    rd(n), rd(m), rda(a, m);
+    for (int i = 1; i &lt;= m; i++) s += a[i];
+    if (s &lt; n) Fail;
+    for (int i = 1; i &lt;= m; i++)
+        if (a[i] &gt; n - i + 1) Fail;
+    for (int i = m, j = n + 1; i; i--) {
+        b[i] = j -= a[i];
+        if (b[i] &lt; i) b[i] = j = i;
+    }
+    for (int i = 1; i &lt;= m; i++) print(b[i], " \n"[i==m]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Dreamoon Likes Sequences</h2>
+<p>简单计数题。</p>
+<p>由于要求 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 递增且前缀异或和也要递增，因此在二进制下，后一个数要比前一个数至少多一位。</p>
+<p>因此将每一个位数的数的个数乘起来，注意由于可以不选这个位数，因此个数要 <span class="math-inline" data-original-math="$+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">1</span></span></span></span></span>，然后由于最后至少要有一个数，所以最后再 <span class="math-inline" data-original-math="$-1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span></span>。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(T \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>T</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(T \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">int n;
+
+inline void solve() {
+    rd(n), rd(P);
+    if (P == 1) return print(0);
+    modint ans = 1;
+    int t = 1;
+    while (t &lt;= n) ans *= min(n, (t &lt;&lt; 1) - 1) - t + 2, t &lt;&lt;= 1;
+    print(ans - 1);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Drazil Likes Heap</h2>
+<p>贪心，从大到小依次考虑每个数，如果这个数可以删就删，不能跳过。</p>
+<p>判断是否能删的方式为，删除这个数受到影响的最深的节点的深度是否 <span class="math-inline" data-original-math="$&gt; g$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">&gt; g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span></span></span></span></span>，如果 <span class="math-inline" data-original-math="$&gt; g$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">&gt; g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span></span></span></span></span> 则说明可以删除。</p>
+<p>但这题有个很大的坑点，给定的代码中要访问到编号为 <span class="math-inline" data-original-math="$2^h \sim 2^{h+1}-1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mi>h</mi></msup><mo>∼</mo><msup><mn>2</mn><mrow><mi>h</mi><mo>+</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">2^h \sim 2^{h+1}-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8491em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9324em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">h</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的节点，然后又是多测，所以要清空两倍长度的数组。</p>
+<p>然后就有大概一半人都因此 FST 了。。。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1 &lt;&lt; 21 | 1;
+int h, g, a[N], d[N], p[N], t;
+pq&lt;int&gt; q;
+
+inline int find(int p) {
+    if (!a[ls] &amp;&amp; !a[rs]) return p;
+    if (a[ls] &gt; a[rs]) return find(ls);
+    return find(rs);
+}
+
+inline void work(int p) {
+    if (!a[ls] &amp;&amp; !a[rs]) return;
+    if (a[ls] &gt; a[rs]) return swap(a[p], a[ls]), ::p[a[p]] = p, work(ls);
+    swap(a[p], a[rs]), ::p[a[p]] = p, work(rs);
+}
+
+inline int work() {
+    while (d[find(p[q.top()])] == g) q.pop();
+    int p = ::p[q.top()];
+    q.pop();
+    a[p] = 0, work(p);
+    return p;
+}
+
+inline void solve() {
+    rd(h), rd(g);
+    for (int i = 1; i &lt; (1 &lt;&lt; (h + 1)); i++) a[i] = 0;
+    rda(a, (1 &lt;&lt; h) - 1), t = 0;
+    d[1] = 1;
+    for (int i = 2; i &lt; (1 &lt;&lt; h); i++) d[i] = d[i&gt;&gt;1] + 1;
+    while (q.size()) q.pop();
+    for (int i = 1; i &lt; (1 &lt;&lt; h); i++) q.push(a[i]), p[a[i]] = i;
+    vi p;
+    for (int i = 1; i &lt;= (1 &lt;&lt; h) - (1 &lt;&lt; g); i++) p.pb(work());
+    ll ans = 0;
+    for (int i = 1; i &lt; (1 &lt;&lt; g); i++) ans += a[i];
+    print(ans);
+    for (int x : p) print(x, ' ');
+    prints("");
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Dreamoon Likes Strings</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-5">Dreamoon Loves AA</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-631-div-1-thanks-denis-aramis-shitov-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="16">构造</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/789/"><span>较新一篇</span>组合计数 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/434/"><span>较早一篇</span>生成函数 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

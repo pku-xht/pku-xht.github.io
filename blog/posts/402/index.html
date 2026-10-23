@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>【LGR-065】洛谷 11 月月赛 III Div.2 题解 · 徐皓天</title><meta name="description" content="【LGR-065】洛谷 11 月月赛 III Div.2">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/402/">
+<meta property="og:title" content="【LGR-065】洛谷 11 月月赛 III Div.2 题解 · 徐皓天"><meta property="og:description" content="【LGR-065】洛谷 11 月月赛 III Div.2">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/402/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>【LGR-065】洛谷 11 月月赛 III Div.2 题解</h1><p class="post-meta"><time datetime="2019-11-14T23:41:00+08:00">2019 年 11 月 14 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2019 年 11 月 19 日</span></p></header><details class="article-toc" open><summary>本文目录（4 节）</summary><ol><li class="toc-level-2"><a href="#section-1">基础字符串练习题</a></li><li class="toc-level-2"><a href="#section-2">基础最短路练习题</a></li><li class="toc-level-2"><a href="#section-3">基础博弈练习题</a></li><li class="toc-level-2"><a href="#section-4">基础最优化练习题</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://www.luogu.org/contest/23456" target="_blank" rel="noopener noreferrer">【LGR-065】洛谷 11 月月赛 III Div.2</a>
+</p></blockquote>
+<h2 id="section-1">基础字符串练习题</h2>
+<p>前缀和 + 贪心。</p>
+<p>注意「非空子串」。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, ans = -1;
+char s[N];
+
+int main() {
+    rds(s, n);
+    for (int i = 1, o = 0, k = 0; i &lt;= n; i++) {
+        k += (s[i] == '0' ? 1 : -1);
+        ans = Max(ans, k - o);
+        o = Min(o, k);
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">基础最短路练习题</h2>
+<p>由于「保证 <span class="math-inline" data-original-math="$G$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span></span> 中不存在简单环使得边权异或和不为 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>」，因此随便找一条路径即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, m, q, v[N], d[N];
+vector&lt; pi &gt; e[N];
+
+void dfs(int x) {
+    v[x] = 1;
+    for (ui i = 0; i &lt; e[x].size(); i++) {
+        int y = e[x][i].fi;
+        if (v[y]) continue;
+        d[y] = d[x] ^ e[x][i].se;
+        dfs(y);
+    }
+}
+
+int main() {
+    rd(n), rd(m), rd(q);
+    for (int i = 1, x, y, z; i &lt;= m; i++) {
+        rd(x), rd(y), rd(z);
+        e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+    }
+    dfs(1);
+    for (int i = 1, x, y; i &lt;= q; i++) {
+        rd(x), rd(y);
+        print(d[x] ^ d[y]);
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">基础博弈练习题</h2>
+<p>首先只跟 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 的奇偶性有关。</p>
+<p>其次如果 <span class="math-inline" data-original-math="$a_l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>l</mi></msub></mrow><annotation encoding="application/x-tex">a_l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 为偶数则先手必胜。</p>
+<p>否则 <span class="math-inline" data-original-math="$l \sim r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>∼</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">l \sim r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 中最右边的一个先手必败的位置一定是最右边的奇数位置，而它上一个先手必败的位置一定是这个位置的 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 个位置以前的最右边的奇数位置，依次类推。</p>
+<p>可以发现这个关系形成一个树形结构，那么判断最右边的奇数位置在不在 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 的子树中即可，可以用 dfs 序判断。</p>
+<pre tabindex="0"><code class="language-cpp">const ui N = 1e6 + 7;
+int n, m, q, o, a[N], p[N], L[N], R[N], num, A, B, C, P;
+ui ans;
+vector&lt; int &gt; e[N];
+
+inline int rnd() {
+    return A = (A * B + C) % P;
+}
+
+void dfs(int x) {
+    L[x] = ++num;
+    for (ui i = 0; i &lt; e[x].size(); i++) dfs(e[x][i]);
+    R[x] = num;
+}
+
+int main() {
+    rd(n), rd(m), ++m, rd(q), rd(o);
+    for (int i = 1, j = 0; i &lt;= n; i++) {
+        rd(a[i]), a[i] &amp;= 1;
+        if (a[i]) {
+            j = i;
+            e[p[Max(0,i-m)]].pb(i);
+        }
+        p[i] = j;
+    }
+    dfs(0);
+    if (o) rd(A), rd(B), rd(C), rd(P);
+    for (int i = 1; i &lt;= q; i++) {
+        int l, r;
+        if (o) {
+            l = rnd() % n + 1, r = rnd() % n + 1;
+            if (l &gt; r) swap(l, r);
+        } else rd(l), rd(r);
+        if (!a[l] || L[l] &gt; L[p[r]] || L[p[r]] &gt; R[l]) ans += 1ll * i * i;
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">基础最优化练习题</h2>
+<p>首先不考虑 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 的限制，那么一个位置是加是减取决于这个位置对答案的贡献是正是负，而对答案的贡献显然为 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span> 的后缀和。</p>
+<p>再考虑 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 的限制，如果一个位置超出了限制，则应该不断地从之前贡献最小的位置减掉贡献，直到不超出，用一个堆维护即可。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, k, a[N], now;
+ll b[N], ans;
+pq&lt; pi &gt; q;
+
+int main() {
+    rd(n), rd(k);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    for (int i = 1; i &lt;= n; i++) rd(b[i]);
+    for (int i = n; i; i--) b[i] += b[i+1];
+    for (int i = 1; i &lt;= n; i++) {
+        if (b[i] &gt;= 0) now += k, ans += k * b[i], q.push(mp(-b[i], k &lt;&lt; 1));
+        else now -= k, ans -= k * b[i];
+        while (now &gt; a[i]) {
+            pi o = q.top();
+            q.pop();
+            int w = Min(o.se, now - a[i]);
+            now -= w, ans += w * o.fi;
+            if ((o.se -= w)) q.push(o);
+        }
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/%e3%80%90lgr-065%e3%80%91%e6%b4%9b%e8%b0%b7-11-%e6%9c%88%e6%9c%88%e8%b5%9b-iii-div-2-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="88">博弈论</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/404/"><span>较新一篇</span>CSP2019 游记</a><a class="rel-next" rel="next" href="/blog/posts/401/"><span>较早一篇</span>2011~2018 年 NOIP 真题分析</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

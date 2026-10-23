@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/682/">
+<meta property="og:title" content="Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/682/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round) 题解</h1><p class="post-meta"><time datetime="2020-03-02T16:10:57+08:00">2020 年 3 月 2 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 7 月 28 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Journey Planning</a></li><li class="toc-level-2"><a href="#section-2">Navigation System</a></li><li class="toc-level-2"><a href="#section-3">World of Darkraft: Battle for Azathoth</a></li><li class="toc-level-2"><a href="#section-4">Reachable Strings</a></li><li class="toc-level-2"><a href="#section-5">Treeland and Viruses</a></li><li class="toc-level-2"><a href="#section-6">Blocks and Sensors</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1320" target="_blank" rel="noopener noreferrer">Codeforces Round #625 (Div. 1, based on Technocup 2020 Final Round)</a>
+</p></blockquote>
+<h2 id="section-1">Journey Planning</h2>
+<p>两个数可以同时选当且仅当<strong>下标差等于值的差</strong>，也就是<strong>值减下标</strong>要相等。</p>
+<p>那么把值减下标相同的值加起来即可，由于值减下标可能为负，为了方便，使用 map 即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n;
+ll a[N], ans;
+
+int main() {
+    rd(n), rda(a, n);
+    map&lt;ll, ll&gt; f;
+    for (int i = 1; i &lt;= n; i++) f[a[i]-i] += a[i];
+    for (auto o : f) ans = max(ans, o.se);
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Navigation System</h2>
+<p>当一次决策不是最优的时候，必须 rebuild。</p>
+<p>当一次决策是最优的，但是同时还有其他最优的决策，可以 rebuild。</p>
+<p>当一次决策是最优的，同时没有其他最优的决策，不能 rebuild。</p>
+<p>因此建反图跑一遍最短路，由于边权为 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，bfs 即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, m, k, v[N], a[N], d[N];
+vi e[N], g[N];
+queue&lt;int&gt; q;
+
+int main() {
+    rd(n), rd(m);
+    for (int i = 1, x, y; i &lt;= m; i++)
+        rd(x), rd(y), e[x].pb(y), g[y].pb(x);
+    rd(k), rda(a, k);
+    q.push(a[k]), v[a[k]] = 1;
+    while (q.size()) {
+        int x = q.front();
+        q.pop();
+        for (auto y : g[x])
+            if (!v[y]) q.push(y), d[y] = d[x] + 1, v[y] = 1;
+    }
+    int c1 = 0, c2 = 0;
+    for (int i = 1; i &lt; k; i++) {
+        int x = a[i], y = a[i+1];
+        bool b1 = 0, b2 = 0;
+        for (auto z : e[x])
+            if (d[z] &lt; d[y]) b1 = 1;
+            else if (y != z &amp;&amp; d[z] == d[y]) b2 = 1;
+        if (b1) ++c1;
+        else if (b2) ++c2;
+    }
+    print(c1, ' '), print(c1 + c2);
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">World of Darkraft: Battle for Azathoth</h2>
+<p>以攻击值为横坐标，防御值为纵坐标，问题变成：</p>
+<ul>
+<li>平面上有一些点，每个点都有一个权值，每个横纵坐标都有一个代价。</li>
+<li>你要选择一个横坐标和一个纵坐标，使<strong>严格在它们和坐标轴构成的矩形内的点的权值和</strong>减去<strong>这两个坐标的代价</strong>最大。</li>
+</ul>
+<p>考虑扫描线，在当前横坐标选择每个纵坐标的贡献，每次取最大贡献减去当前横坐标的代价。</p>
+<p>加入一个点相当于一个区间加的操作，询问相当于全局 <span class="math-inline" data-original-math="$\max$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\max</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mop">max</span></span></span></span></span> 的操作，因此线段树维护即可。</p>
+<p>由于值域只有 <span class="math-inline" data-original-math="$10^6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>6</mn></msup></mrow><annotation encoding="application/x-tex">10^6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span></span></span></span></span></span></span></span></span>，因此甚至不用离散化。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7, M = 1e6 + 1;
+const ll inf = 1e18;
+int n, m, k;
+ll a[M], b[M];
+vector&lt;pi&gt; p[M];
+
+struct T {
+    int l, r;
+    ll x, z;
+} t[M*5];
+
+void build(int p, int l, int r) {
+    t[p].l = l, t[p].r = r;
+    if (l == r) return t[p].x = -b[l], void();
+    build(ls, l, md), build(rs, md + 1, r);
+    t[p].x = max(t[ls].x, t[rs].x);
+}
+
+void spd(int p) {
+    if (t[p].z) {
+        t[ls].x += t[p].z;
+        t[ls].z += t[p].z;
+        t[rs].x += t[p].z;
+        t[rs].z += t[p].z;
+        t[p].z = 0;
+    }
+}
+
+void add(int p, int l, int r, ll k) {
+    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
+    spd(p);
+    if (l &lt;= md) add(ls, l, r, k);
+    if (r &gt; md) add(rs, l, r, k);
+    t[p].x = max(t[ls].x, t[rs].x);
+}
+
+int main() {
+    rd(n), rd(m), rd(k);
+    for (int i = 1; i &lt; M; i++) a[i] = b[i] = inf;
+    for (int i = 1, x, y; i &lt;= n; i++)
+        rd(x), rd(y), a[x] = min(a[x], 1ll * y);
+    for (int i = 1, x, y; i &lt;= m; i++)
+        rd(x), rd(y), b[x] = min(b[x], 1ll * y);
+    for (int i = 1, x, y, z; i &lt;= k; i++)
+        rd(x), rd(y), rd(z), p[x].pb(mp(y, z));
+    build(1, 1, M - 1);
+    ll ans = -inf;
+    for (int i = 1; i &lt; M; i++) {
+        ans = max(ans, t[1].x - a[i]);
+        for (pi o : p[i]) if (o.fi != M - 1) add(1, o.fi + 1, M, o.se);
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Reachable Strings</h2>
+<p><code>011</code> 和 <code>110</code> 可以相互转化，相当于每次可以将每个 <code>0</code> 向左右移动两个单位，因此每个 <code>0</code> 的位置下标的奇偶性不会变。</p>
+<p>但是当出现 <code>00</code> 时，左边的 <code>0</code> 无法移到右边，右边的 <code>0</code> 无法移到左边，也就是<strong>无法跨越奇偶性不同的 <code>0</code></strong>。</p>
+<p>换句话说，两个字符串可以相互转化，当且仅当<strong>每个 <code>0</code> 所在的位置下标的奇偶性一一对应</strong>。</p>
+<p>比如一个字符串中有 <span class="math-inline" data-original-math="$6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn></mrow><annotation encoding="application/x-tex">6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">6</span></span></span></span></span> 个 <code>0</code>，位置分别在 <span class="math-inline" data-original-math="$1,2,3,4,6,7$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>6</mn><mo separator="true">,</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">1,2,3,4,6,7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">7</span></span></span></span></span>，则它一定可以转化为 <code>0</code> 的位置分别在 <span class="math-inline" data-original-math="$1,10,101,102,1000,10101$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>10</mn><mo separator="true">,</mo><mn>101</mn><mo separator="true">,</mo><mn>102</mn><mo separator="true">,</mo><mn>1000</mn><mo separator="true">,</mo><mn>10101</mn></mrow><annotation encoding="application/x-tex">1,10,101,102,1000,10101</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">10</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">101</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">102</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1000</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">10101</span></span></span></span></span> 的字符串。</p>
+<p>那么，每次询问相当于求出一个区间内每个 <code>0</code> 在<strong>以这个区间开头为奇下标</strong>时的奇偶性。</p>
+<p>我们对这个奇偶性进行 hash，就能快速比较两个区间内的信息是否一致了。</p>
+<p>通常我在 CF 写 Hash 会写一个双 base 单 mod 的确定 Hash，然而被 Hack 了，改成随机 Hash 就过了。</p>
+<pre tabindex="0"><code class="language-cpp">#define Hash pair&lt;modint, modint&gt;
+Hash B;
+inline Hash operator + (Hash a, Hash b) { return mp(a.fi + b.fi, a.se + b.se); }
+inline Hash operator - (Hash a, Hash b) { return mp(a.fi - b.fi, a.se - b.se); }
+inline Hash operator * (Hash a, Hash b) { return mp(a.fi * b.fi, a.se * b.se); }
+inline Hash operator + (Hash a, int b) { return mp(a.fi + b, a.se + b); }
+
+const int N = 2e5 + 7;
+int n, q, c[N];
+char s[N];
+Hash h[N][2], p[N];
+
+inline Hash H(int l, int r, int o) {
+    return h[r][o] - h[l-1][o] * p[c[r]-c[l-1]];
+}
+
+int main() {
+    P = rdm((int)1e8, (int)1e9), B = mp(rdm(131, 1331), rdm(1331, 13331));
+    rd(n), rds(s, n), rd(q);
+    p[0] = mp((modint)1, (modint)1);
+    for (int i = 1; i &lt;= n; i++) {
+        if (s[i] != '0') h[i][0] = h[i-1][0], h[i][1] = h[i-1][1], c[i] = c[i-1];
+        else h[i][0] = h[i-1][0] * B + ('0' + (i &amp; 1)), h[i][1] = h[i-1][1] * B + ('0' + ((i &amp; 1) ^ 1)), c[i] = c[i-1] + 1;
+        p[i] = p[i-1] * B;
+    }
+    while (q--) {
+        int l1, l2, len;
+        rd(l1), rd(l2), rd(len);
+        int r1 = l1 + len - 1, r2 = l2 + len - 1;
+        prints(H(l1, r1, l1 &amp; 1) == H(l2, r2, l2 &amp; 1) ? "Yes" : "No");
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">Treeland and Viruses</h2>
+<p>树上数据结构问题，多组询问，所有询问涉及的总点数与树的大小同阶。</p>
+<p>这玩意儿就是在明示虚树嘛……</p>
+<p>虚树建出来后，问题相当于<strong>树上多源最短路</strong>，dijkstra 即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, q, dfn[N], tot, f[N][21], d[N], s[N], t;
+vi e[N], g[N];
+
+void dfs(int x) {
+    dfn[x] = ++tot;
+    for (int y : e[x]) 
+        if (y != f[x][0]) {
+            d[y] = d[x] + 1, f[y][0] = x;
+            for (int i = 1; f[y][i-1]; i++)
+                f[y][i] = f[f[y][i-1]][i-1];
+            dfs(y);
+        }
+}
+
+inline int lca(int x, int y) {
+    if (d[x] &gt; d[y]) swap(x, y);
+    for (int i = 20; ~i; i--)
+        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+    if (x == y) return x;
+    for (int i = 20; ~i; i--)
+        if (f[x][i] != f[y][i])
+            x = f[x][i], y = f[y][i];
+    return f[x][0];
+}
+
+inline void virtual_tree(vi &amp;p) {
+    sort(p.begin(), p.end(), [](int x, int y) { return dfn[x] &lt; dfn[y]; });
+    p.erase(unique(p.begin(), p.end()), p.end());
+    vi q = p;
+    for (int x : p) {
+        int lca = ::lca(x, s[t]);
+        if (lca != s[t]) {
+            while (t &amp;&amp; d[s[t-1]] &gt;= d[lca])
+                g[s[t]].pb(s[t-1]), g[s[t-1]].pb(s[t]), --t;
+            if (s[t] != lca)
+                g[s[t]].pb(lca), g[lca].pb(s[t]), s[t] = lca, q.pb(lca);
+        }
+        s[++t] = x;
+    }
+    if (t) while (--t) g[s[t]].pb(s[t+1]), g[s[t+1]].pb(s[t]);
+    p = q;
+}
+
+int w[N];
+bool v[N];
+struct P {
+    int d, i, x, r;
+    inline P() {}
+    inline P(int d, int i, int x) : d(d), i(i), x(x) {
+        r = d ? (d - 1) / w[x] : -1;
+    }
+    inline bool operator &lt; (const P o) const {
+        return r == o.r ? i &lt; o.i : r &lt; o.r;
+    }
+    inline P operator - () const {
+        P o = *this;
+        o.r *= -1, o.i *= -1;
+        return o;
+    }
+} u[N];
+
+inline void dijkstra(vi a, vi b, vi p) {
+    pq&lt;pair&lt;P, int&gt;&gt; q;
+    for (int x : p) u[x].r = u[x].i = n, v[x] = 0;
+    for (ui i = 0; i &lt; a.size(); i++)
+        u[a[i]] = P(0, i, a[i]), q.push(mp(-u[a[i]], a[i]));
+    while (q.size()) {
+        int x = q.top().se;
+        q.pop();
+        if (v[x]) continue;
+        v[x] = 1;
+        for (int y : g[x]) {
+            P o = P(u[x].d + abs(d[x] - d[y]), u[x].i, u[x].x);
+            if (o &lt; u[y]) u[y] = o, q.push(mp(-u[y], y));
+        }
+    }
+    for (int x : b) print(u[x].i + 1, ' ');
+    prints("");
+}
+
+int main() {
+    rd(n);
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+    d[1] = 1, dfs(1);
+    rd(q);
+    while (q--) {
+        int A, B;
+        rd(A), rd(B);
+        vi a, b, p;
+        for (int i = 1, x, y; i &lt;= A; i++)
+            rd(x), rd(y), a.pb(x), p.pb(x), w[x] = y;
+        for (int i = 1, x; i &lt;= B; i++)
+            rd(x), b.pb(x), p.pb(x);
+        virtual_tree(p);
+        dijkstra(a, b, p);
+        for (int x : p) g[x].clear();
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-6">Blocks and Sensors</h2>
+<p>题面太长了……</p>
+<p>听说是暴力模拟贪心？那扔了（</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-625-div-1-based-on-technocup-2020-final-round-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="29">Hash</span>、<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="70">扫描线</span>、<span data-source-tag="85">最短路</span>、<span data-source-tag="27">线段树</span>、<span data-source-tag="154">虚树</span>、<span data-source-tag="32">贪心</span>、<span data-source-tag="78">随机化</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/680/"><span>较新一篇</span>CF704D Captain America 题解</a><a class="rel-next" rel="next" href="/blog/posts/677/"><span>较早一篇</span>CF671D Roads in Yusland 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

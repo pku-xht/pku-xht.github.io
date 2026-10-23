@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF611G New Year and Cake 题解 · 徐皓天</title><meta name="description" content="CF611G New Year and Cake">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/449/">
+<meta property="og:title" content="CF611G New Year and Cake 题解 · 徐皓天"><meta property="og:description" content="CF611G New Year and Cake">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/449/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF611G New Year and Cake 题解</h1><p class="post-meta"><time datetime="2019-12-02T14:32:59+08:00">2019 年 12 月 2 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 2 月 20 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/611/problem/G" target="_blank" rel="noopener noreferrer">CF611G New Year and Cake</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一个 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个顶点的严格凸多边形。</li>
+<li>要求 <span class="math-inline" data-original-math="$\frac{n(n-3)}2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>3</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{n(n-3)}2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">3</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 个<strong>由对角线将多边形割成两个部分的面积差 <span class="math-inline" data-original-math="$\times 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\times 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">×</span><span class="mord">2</span></span></span></span></span></strong> 之和。</li>
+<li><span class="math-inline" data-original-math="$n \le 5 \times 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>5</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 5 \times 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，答案对 <span class="math-inline" data-original-math="$10^9+7$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>9</mn></msup><mo>+</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">10^9+7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span></span> 取模。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>双指针扫一遍，动态维护对角线隔开的最大面积以及面积对答案的贡献和，其中贡献需要利用叉积的分配率维护有贡献的向量和。</p>
+<p>注意本题根据写法不同可能需要开 <code>unsigned long long</code>，但同时需要对答案取模，因此细节很多。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">struct Po {
+    int x, y;
+    inline Po &amp;operator -= (Po o) { return x -= o.x, y -= o.y, *this; }
+    inline friend Po operator - (Po a, Po b) { return a -= b; }
+    inline friend ll operator % (Po a, Po b) { return 1ll * a.x * b.y - 1ll * a.y * b.x; }
+};
+
+inline pair&lt; modint, modint &gt; &amp;operator += (pair&lt; modint, modint &gt; &amp;a, Po b) {
+    return a.fi += (b.x % P + P) % P, a.se += (b.y % P + P) % P, a;
+}
+
+inline modint operator % (pair&lt; modint, modint &gt; a, Po b) {
+    return a.fi * ((b.y % P + P) % P) - a.se * ((b.x % P + P) % P);
+}
+
+inline pair&lt; modint, modint &gt; operator * (modint a, Po b) {
+    return mp(a * ((b.x % P + P) % P), a * ((b.y % P + P) % P));
+}
+
+inline pair&lt; modint, modint &gt; &amp;operator -= (pair&lt; modint, modint &gt; &amp;a, pair&lt; modint, modint &gt; b) {
+    return a.fi -= b.fi, a.se -= b.se, a;
+}
+
+const int N = 5e5 + 7;
+int n, cnt;
+Po a[N];
+modint ans, o;
+pair&lt; modint, modint &gt; p;
+ul s, m;
+
+int main() {
+    rd(n);
+    for (int i = 0; i &lt; n; i++) rd(a[i].x), rd(a[i].y);
+    for (int i = 2; i &lt; n; i++) s += (a[i] - a[0]) % (a[i-1] - a[0]);
+    for (int i = 0, j = 0; i &lt; n; i++) {
+        while (1) {
+            int k = (j + 1) % n;
+            ul w = (a[k] - a[i]) % (a[j] - a[i]);
+            if (2 * (m + w) &gt;= s) {
+                if (2 * (m + w) == s) ++cnt;
+                break;
+            }
+            o += (m += w) % P;
+            p += a[k] - a[i];
+            j = k;
+        }
+        ans -= o * 2;
+        int k = (i + 1) % n;
+        m -= (a[j] - a[i]) % (a[k] - a[i]);
+        o -= p % (a[k] - a[i]);
+        p -= (modint)((j - i + n) % n) * (a[k] - a[i]);
+    }
+    ans += (modint)((1ll * n * (n - 3) - cnt) / 2 % P) * (modint)(s % P);
+    print(ans);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf611g-new-year-and-cake-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="110">Two Pointers</span>、<span data-source-tag="89">计算几何</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/451/"><span>较新一篇</span>CF582E Boolean Function 题解</a><a class="rel-next" rel="next" href="/blog/posts/447/"><span>较早一篇</span>CF555E Case of Computer Network 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

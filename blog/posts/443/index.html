@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF578E Walking! 题解 · 徐皓天</title><meta name="description" content="CF578E Walking!">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/443/">
+<meta property="og:title" content="CF578E Walking! 题解 · 徐皓天"><meta property="og:description" content="CF578E Walking!">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/443/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF578E Walking! 题解</h1><p class="post-meta"><time datetime="2019-11-30T18:28:18+08:00">2019 年 11 月 30 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 2 月 20 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/578/problem/E" target="_blank" rel="noopener noreferrer">CF578E Walking!</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一个长度为 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 的只包含 <code>L,R</code> 的字符串 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>。</li>
+<li>构造一个 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 排列 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 满足 <span class="math-inline" data-original-math="$s[p_i] \ne s[p_{i+1}](1 \le i &lt; n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo stretchy="false">[</mo><msub><mi>p</mi><mi>i</mi></msub><mo stretchy="false">]</mo><mo mathvariant="normal">≠</mo><mi>s</mi><mo stretchy="false">[</mo><msub><mi>p</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">]</mo><mo stretchy="false">(</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">s[p_i] \ne s[p_{i+1}](1 \le i &lt; n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</li>
+<li>最小化 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 中 <span class="math-inline" data-original-math="$p_i &gt; p_{i+1}(1 \le i &lt; n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>&gt;</mo><msub><mi>p</mi><mrow><mi>i</mi><mo>+</mo><mn>1</mn></mrow></msub><mo stretchy="false">(</mo><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_i &gt; p_{i+1}(1 \le i &lt; n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 的数量。</li>
+<li><span class="math-inline" data-original-math="$n \le 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，数据保证有解。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>问题等价于，将 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 划分成尽可能少的 <code>L,R</code> 交替的非连续子序列。</p>
+<p>考虑贪心，每添加一个字符，就在前面划分好的子序列中找一个可以接到末尾的接进去，没有可以接的就新开一个子序列。</p>
+<p>最后要将若干个子序列拼接在一起，分类讨论一下即可。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, t[N];
+char s[N];
+vi e[2], Ans;
+vector&lt; pi &gt; g[4], ans;
+
+int main() {
+    rds(s, n);
+    map&lt; char, int &gt; p;
+    p['L'] = 0, p['R'] = 1;
+    for (int i = 1; i &lt;= n; i++) {
+        int c = p[s[i]];
+        if (e[c^1].size()) {
+            t[i] = e[c^1].back();
+            e[c^1].pop_back();
+        }
+        e[c].pb(i);
+    }
+    print(e[0].size() + e[1].size() - 1);
+    for (ui i = 0; i &lt; e[0].size(); i++) {
+        int x = e[0][i], y = x;
+        while (t[y]) y = t[y];
+        g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
+    }
+    for (ui i = 0; i &lt; e[1].size(); i++) {
+        int x = e[1][i], y = x;
+        while (t[y]) y = t[y];
+        g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
+    }
+    while (g[1].size() &gt; 1u) {
+        pi x = g[1].back();
+        g[1].pop_back(); 
+        t[x.fi] = g[1].back().se;
+        g[1].back().se = x.se;
+    }
+    while (g[2].size() &gt; 1u) {
+        pi x = g[2].back();
+        g[2].pop_back(); 
+        t[x.fi] = g[2].back().se;
+        g[2].back().se = x.se;
+    }
+    if (g[1].size() &amp;&amp; g[2].size()) {
+        pi x = g[1][0], y = g[2][0];
+        g[1].pop_back(), g[2].pop_back();
+        if (x.se &gt; y.se) {
+            g[0].pb(mp(x.fi, t[x.se]));
+            t[x.se] = y.se;
+            g[3].pb(mp(y.fi, x.se));
+        } else {
+            g[3].pb(mp(y.fi, t[y.se]));
+            t[y.se] = x.se;
+            g[0].pb(mp(x.fi, y.se));
+        }
+    }
+    if (g[0].size() &gt; g[3].size() || (g[0].size() == g[3].size() &amp;&amp; !g[2].size())) {
+        if (g[1].size()) ans.pb(g[1][0]);
+        for (ui i = 0; i &lt; g[3].size(); i++)
+            ans.pb(g[0][i]), ans.pb(g[3][i]);
+        if (g[0].size() &gt; g[3].size()) ans.pb(g[0].back());
+    } else {
+        if (g[2].size()) ans.pb(g[2][0]);
+        for (ui i = 0; i &lt; g[0].size(); i++)
+            ans.pb(g[3][i]), ans.pb(g[0][i]);
+        if (g[3].size() &gt; g[0].size()) ans.pb(g[3].back());
+    }
+    while (ans.size() &gt; 1u) {
+        pi x = ans.back();
+        ans.pop_back(); 
+        t[x.fi] = ans.back().se;
+        ans.back().se = x.se;
+    }
+    Ans.pb(ans.back().se);
+    while (t[Ans.back()]) Ans.pb(t[Ans.back()]);
+    while (Ans.size()) print(Ans.back(), " \n"[Ans.size()==1u]), Ans.pop_back();
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf578e-walking-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/445/"><span>较新一篇</span>CF585F Digits of Number Pi 题解</a><a class="rel-next" rel="next" href="/blog/posts/441/"><span>较早一篇</span>CF568C New Language 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

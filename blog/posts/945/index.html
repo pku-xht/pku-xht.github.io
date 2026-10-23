@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #647 (Div. 1) – Thanks, Algo Muse! 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #647 (Div. 1) – Thanks, Algo Muse!">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/945/">
+<meta property="og:title" content="Codeforces Round #647 (Div. 1) – Thanks, Algo Muse! 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #647 (Div. 1) – Thanks, Algo Muse!">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/945/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #647 (Div. 1) – Thanks, Algo Muse! 题解</h1><p class="post-meta"><time datetime="2020-06-05T01:39:10+08:00">2020 年 6 月 5 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 6 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Johnny and Contribution</a></li><li class="toc-level-2"><a href="#section-2">Johnny and Grandmaster</a></li><li class="toc-level-2"><a href="#section-3">Johnny and Megan’s Necklace</a></li><li class="toc-level-2"><a href="#section-4">Johnny and James</a></li><li class="toc-level-2"><a href="#section-5">James and the Chase</a></li><li class="toc-level-2"><a href="#section-6">Johnny and New Toy</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1361" target="_blank" rel="noopener noreferrer">Codeforces Round #647 (Div. 1) – Thanks, Algo Muse!</a>
+</p></blockquote>
+<h2 id="section-1"><a href="https://codeforces.com/contest/1361/problem/A" target="_blank" rel="noopener noreferrer">Johnny and Contribution</a></h2>
+<p>傻逼模拟题，用 <code>stable_sort</code> 排序一下，然后判一下无解。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7;
+int n, m, a[N], p[N], q[N];
+vi e[N];
+
+int main() {
+    rd(n, m);
+    for (int i = 1, x, y; i &lt;= m; i++)
+        rd(x, y), e[x].pb(y), e[y].pb(x);
+    rda(a, n);
+    for (int i = 1; i &lt;= n; i++) p[i] = i;
+    stable_sort(p + 1, p + n + 1, [&amp;](int i, int j) {
+        return a[i] &lt; a[j];
+    });
+    for (int i = 1; i &lt;= n; i++) q[p[i]] = i;
+    for (int x = 1; x &lt;= n; x++) {
+        map&lt;int, bool&gt; v;
+        for (int y : e[p[x]])
+            if (q[y] &lt; x) v[a[y]] = 1;
+        int t = 1;
+        while (v[t]) ++t;
+        if (t != a[p[x]]) return print(-1), 0;
+    }
+    printa(p, n);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2"><a href="https://codeforces.com/contest/1361/problem/B" target="_blank" rel="noopener noreferrer">Johnny and Grandmaster</a></h2>
+<p>从大到小贪心，每次往少的里面放。</p>
+<p>其实是好题，只不过细节很多。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, p, a[N];
+
+inline void solve() {
+    rd(n, p), rda(a, n);
+    if (p == 1) return print(n &amp; 1);
+    sort(a + 1, a + n + 1);
+    reverse(a + 1, a + n + 1);
+    modint ans = (modint)p ^ a[1];
+    ll c = 1;
+    int k = a[1], w = log(n) / log(p) + 1;
+    for (int i = 2; i &lt;= n; i++) {
+        if (k - a[i] &gt; w) {
+            if (c &gt; 0) c = n;
+            else if (c &lt; 0) c = -n;
+            k = a[i];
+        } else while (k &gt; a[i]) {
+            --k;
+            c *= p;
+            if (c &gt; n) {
+                c = n;
+                break;
+            }
+            if (c &lt; -n) {
+                c = -n;
+                break;
+            }
+        }
+        if (c &lt;= 0) {
+            ans += (modint)p ^ a[i];
+            ++c;
+        } else {
+            ans -= (modint)p ^ a[i];
+            --c;
+        }
+    }
+    print(ans);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3"><a href="https://codeforces.com/contest/1361/problem/C" target="_blank" rel="noopener noreferrer">Johnny and Megan’s Necklace</a></h2>
+<p>枚举所有答案，找到答案之后跑个欧拉回路即可。</p>
+<blockquote><p>
+  <strong>注意：欧拉回路的路径方案必须在 <code>dfs</code> 之后放入答案，否则是错的！！！！！！</strong>
+</p></blockquote>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e6 + 7;
+int n, a[N], b[N];
+
+int d[N];
+vi e[N];
+bool v[N];
+
+void dfs(int x) {
+    v[x] = 1;
+    for (int y : e[x])
+        if (!v[y]) dfs(y);
+}
+
+inline bool pd(int t) {
+    t = (1 &lt;&lt; t) - 1;
+    for (int i = 0; i &lt;= t; i++)
+        d[i] = 0, e[i].clear(), v[i] = 0;
+    for (int i = 1; i &lt;= n; i++)
+        e[a[i]&amp;t].pb(b[i] &amp; t), e[b[i]&amp;t].pb(a[i] &amp; t),
+        ++d[a[i]&amp;t], ++d[b[i]&amp;t];
+    for (int i = 0; i &lt;= t; i++)
+        if (d[i] &amp; 1) return 0;
+    dfs(a[1] &amp; t);
+    for (int i = 0; i &lt;= t; i++)
+        if (d[i] &amp;&amp; !v[i]) return 0;
+    return 1;
+}
+
+namespace Euler {
+    int h[N], e[N], t[N], tot = 1;
+    bool v[N];
+    vi ans;
+
+    inline void add(int x, int y, int o = 1) {
+        e[++tot] = y, t[tot] = h[x], h[x] = tot;
+        if (o) add(y, x, 0);
+    }
+
+    void dfs(int x) {
+        for (int &amp;i = h[x]; i; i = t[i]) {
+            if (v[i]) continue;
+            v[i] = v[i^1] = 1;
+            int y = e[i], j = i ^ 1;
+            dfs(y);
+            ans.pb(j);
+        }
+    }
+
+    inline void main(int t) {
+        t = (1 &lt;&lt; t) - 1;
+        for (int i = 1; i &lt;= n; i++)
+            add(a[i] &amp; t, b[i] &amp; t);
+        dfs(a[1] &amp; t);
+        for (int x : ans) print(x - 1, ' '), print((x ^ 1) - 1, ' ');
+    }
+}
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i], b[i]);
+    int t = 0;
+    while (t &lt; 20)
+        if (pd(t + 1)) ++t;
+        else break;
+    print(t);
+    Euler::main(t);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4"><a href="https://codeforces.com/contest/1361/problem/D" target="_blank" rel="noopener noreferrer">Johnny and James</a></h2>
+<p>咕</p>
+<h2 id="section-5"><a href="https://codeforces.com/contest/1361/problem/E" target="_blank" rel="noopener noreferrer">James and the Chase</a></h2>
+<p>咕</p>
+<h2 id="section-6"><a href="https://codeforces.com/contest/1361/problem/F" target="_blank" rel="noopener noreferrer">Johnny and New Toy</a></h2>
+<p>咕</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-647-div-1-thanks-algo-muse-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="16">构造</span>、<span data-source-tag="114">欧拉回路</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/965/"><span>较新一篇</span>k-D Tree 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/936/"><span>较早一篇</span>AtCoder Grand Contest 037 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

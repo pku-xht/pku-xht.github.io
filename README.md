@@ -57,16 +57,25 @@ The website uses no analytics, remote fonts or third-party runtime scripts. Blog
 
 The public-content inventory and batch status for the migration from `www.xht37.com` are maintained in [migration/README.md](migration/README.md). Non-public WordPress content remains on the old site and must stay outside this public repository.
 
-The owner selected **C · personal blog**: warm paper, serif headings, excerpt lists and single-column articles with collapsible contents. The first batch contains all 29 public notes. [design/README.md](design/README.md) retains the earlier alternatives as design history; they are not linked from the homepage.
+The owner selected **C · personal blog**: warm paper, serif headings, excerpt lists and single-column articles with collapsible contents. The first batch contained 29 public notes; the full local migration covers all 211 public posts and the old About page. Four original categories and original tags help readers find articles. [design/README.md](design/README.md) retains the earlier alternatives as design history; they are not linked from the homepage.
 
 ### Blog sources and generation
 
-- `migration/sources/notes-2026-10-23.json`: checked anonymous public source snapshot, with original HTML, dates and content hashes. It contains no authenticated exports.
-- `migration/sources/media.json`: original image URLs and hashes; files live in `blog/media/`.
+- `migration/sources/public-2026-10-23.json`: current checked anonymous public snapshot, including original HTML, dates, categories, tags and content hashes. The earlier `notes-2026-10-23.json` remains as the first-batch baseline. Neither contains authenticated exports.
+- `migration/sources/media.json`: original image and attachment URLs, hashes, sizes and referring documents; files live in `blog/media/`.
+- `migration/sources/legacy-anchors.json`: original-page evidence for legacy fragments that cannot be matched directly to a unique heading name.
 - `migration/sources/note-summaries.json`: explicit list-excerpt overrides; these do not modify article bodies.
-- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of `blog/index.html`, `blog/archive/index.html`, and `blog/posts/<WordPress-ID>/index.html`.
-- `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt search and code-copy enhancement. Articles and archive remain readable without JavaScript.
-- `migration/notes-batch1.json`: generated URL mapping and per-article counts; publication state is local-only until deployment is explicitly performed and checked.
+- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, `blog/posts/<WordPress-ID>/`, `blog/pages/<WordPress-ID>/`, and nonempty `blog/categories/<category-ID>/`.
+- `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.
+- `migration/public-batch.json`: current URL mapping and per-document counts; publication state is local-only until deployment is explicitly performed and checked. `migration/notes-batch1.json` records the earlier batch and is not regenerated.
+
+`tools/sync_public_blog.py` refreshes a public snapshot and its directly referenced images and old-site attachments. It uses anonymous requests without browser cookies, verifies `publish` and password-protection flags before saving, checks pagination totals and unique IDs, and downloads at most four assets at a time. It does not collect comments or sign in. Use it only for a confirmed migration scope; a normal rebuild is offline and does not need this network step:
+
+```sh
+python -S -u -X utf8 tools/sync_public_blog.py --checked-on 2026-10-23
+```
+
+If the source snapshot is already complete, add `--assets-only` to resume asset downloads. Existing hashed assets are reused; a partial unrecorded download is compared with a fresh download before reuse. The generator intentionally reads the approved snapshot named above; a later dated source needs an explicit scope update in the generator and independent checker.
 
 Regenerate from the approved snapshot using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
 
@@ -82,4 +91,4 @@ The generator preserves body text, code, images and original dates, removes the 
 
 Generated post HTML retains the original code's trailing spaces. Its scoped Git whitespace attribute permits those bytes; the independent code comparison still checks them exactly.
 
-The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. Old-site redirects, comments and private content are outside this batch.
+The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. The old About page is presented as a historical archive and does not replace current homepage facts. Comments remain on the old site by the owner's choice. Old-site redirects and private content are outside this migration.

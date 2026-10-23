@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF582E Boolean Function 题解 · 徐皓天</title><meta name="description" content="CF582E Boolean Function">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/451/">
+<meta property="og:title" content="CF582E Boolean Function 题解 · 徐皓天"><meta property="og:description" content="CF582E Boolean Function">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/451/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF582E Boolean Function 题解</h1><p class="post-meta"><time datetime="2019-12-03T20:20:41+08:00">2019 年 12 月 3 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 5 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/582/problem/E" target="_blank" rel="noopener noreferrer">CF582E Boolean Function</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li><code>A,B,C,D,a,b,c,d</code> 为八个布尔「变量」，其中小写字母的值等于对应大写字母的值取反。</li>
+<li><code>&amp;,|</code> 为两个布尔「操作符」。</li>
+<li>布尔「表达式」为一个「变量」，或通过「操作符」连接起来的两个「表达式」。</li>
+<li>布尔「函数」<code>f(A,B,C,D)</code> 为一个布尔「表达式」。</li>
+<li>给定一个可能缺少某些「变量」和「操作符」（用 <code>?</code> 代替）的「函数」<code>s</code>，并给出 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个<strong>函数在 <code>A,B,C,D</code> 确定时</strong>的值。</li>
+<li>求可能的「函数」个数。</li>
+<li><span class="math-inline" data-original-math="$|\texttt{s}|\le 500$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mtext mathvariant="monospace">s</mtext><mi mathvariant="normal">∣</mi><mo>≤</mo><mn>500</mn></mrow><annotation encoding="application/x-tex">|\texttt{s}|\le 500</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord text"><span class="mord texttt">s</span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">500</span></span></span></span></span>，<span class="math-inline" data-original-math="$n \le 16$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>16</mn></mrow><annotation encoding="application/x-tex">n \le 16</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">16</span></span></span></span></span>，答案对 <span class="math-inline" data-original-math="$10^9+7$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>9</mn></msup><mo>+</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">10^9+7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span></span> 取模。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>先建出表达式树，设 <span class="math-inline" data-original-math="$f[i][j]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">f[i][j]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mclose">]</span></span></span></span></span> 表示树中点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 处将 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个值压缩成 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 的方案数。</p>
+<p>对于一个非叶节点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 转移为<br>
+<span class="math-block" data-original-math="$$
+
+f[i][x] = \sum_{x = y \oplus z} f[j][y] \times f[k][z]
+
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>f</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>x</mi><mo stretchy="false">]</mo><mo>=</mo><munder><mo>∑</mo><mrow><mi>x</mi><mo>=</mo><mi>y</mi><mo>⊕</mo><mi>z</mi></mrow></munder><mi>f</mi><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>y</mi><mo stretchy="false">]</mo><mo>×</mo><mi>f</mi><mo stretchy="false">[</mo><mi>k</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>z</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">
+
+f[i][x] = \sum_{x = y \oplus z} f[j][y] \times f[k][z]
+
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4361em;vertical-align:-1.3861em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.9em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">=</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mbin mtight">⊕</span><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3861em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="mclose">]</span></span></span></span></span></span><br>
+因此可以 FWT 优化，总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(|\texttt{s}|n2^n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mtext mathvariant="monospace">s</mtext><mi mathvariant="normal">∣</mi><mi>n</mi><msup><mn>2</mn><mi>n</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(|\texttt{s}|n2^n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord text"><span class="mord texttt">s</span></span><span class="mord">∣</span><span class="mord mathnormal">n</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 507, M = 16;
+int k, n, m, fa[N], t = 1, p = 1;
+char s[N], c[N];
+int h[M|1][5];
+vi e[N];
+modint f[N][1&lt;&lt;M|1], a[1&lt;&lt;M|1], b[1&lt;&lt;M|1];
+
+inline void in(modint *A, modint *B) {
+    for (int i = 0; i &lt; n; i++) a[i] = A[i], b[i] = B[i];
+}
+
+inline void get() {
+    for (int i = 0; i &lt; n; i++) a[i] *= b[i];
+}
+
+inline void out(modint *f) {
+    for (int i = 0; i &lt; n; i++) f[i] += a[i];
+}
+
+inline void OR(modint *f, modint x = 1) {
+    for (int o = 2, k = 1; o &lt;= n; o &lt;&lt;= 1, k &lt;&lt;= 1)
+        for (int i = 0; i &lt; n; i += o)
+            for (int j = 0; j &lt; k; j++)
+                f[i+j+k] += f[i+j] * x;
+}
+
+inline void AND(modint *f, modint x = 1) {
+    for (int o = 2, k = 1; o &lt;= n; o &lt;&lt;= 1, k &lt;&lt;= 1)
+        for (int i = 0; i &lt; n; i += o)
+            for (int j = 0; j &lt; k; j++)
+                f[i+j] += f[i+j+k] * x;
+}
+
+void dfs(int x) {
+    if (!e[x].size()) {
+        if (c[x] == '?')
+            for (int i = 0; i &lt; 4; i++) {
+                int k = 0;
+                for (int j = 0; j &lt; m; j++) k |= h[j][i] &lt;&lt; j;
+                f[x][k] += 1, f[x][((1&lt;&lt;m)-1)^k] += 1;
+            }
+        else {
+            int i = c[x] - (c[x] &gt;= 'A' &amp;&amp; c[x] &lt;= 'D' ? 'A' : 'a'), k = 0;
+            for (int j = 0; j &lt; m; j++) k |= h[j][i] &lt;&lt; j;
+            f[x][c[x]&gt;='A'&amp;&amp;c[x]&lt;='D'?k:(((1&lt;&lt;m)-1)^k)] += 1;
+        }
+        return;
+    }
+    dfs(e[x][0]);
+    dfs(e[x][1]);
+    if (c[x] != '&amp;') in(f[e[x][0]], f[e[x][1]]), OR(a), OR(b), get(), OR(a, P - 1), out(f[x]);
+    if (c[x] != '|') in(f[e[x][0]], f[e[x][1]]), AND(a), AND(b), get(), AND(a, P - 1), out(f[x]);
+}
+
+int main() {
+    rds(s, k), rd(m), n = 1 &lt;&lt; m;
+    for (int i = 1; i &lt;= k; i++)
+        if (s[i] == '(') e[p].pb(++t), fa[t] = p, p = t;
+        else if (s[i] == ')') p = fa[p];
+        else c[p] = s[i];
+    for (int i = 0; i &lt; m; i++)
+        for (int j = 0; j &lt; 5; j++)
+            rd(h[i][j]);
+    dfs(1);
+    int o = 0;
+    for (int i = 0; i &lt; m; i++) o |= h[i][4] &lt;&lt; i;
+    print(f[1][o]);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf582e-boolean-function-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="111">FWT</span>、<span data-source-tag="24">树形 DP</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/458/"><span>较新一篇</span>CF516D Drazil and Morning Exercise 题解</a><a class="rel-next" rel="next" href="/blog/posts/449/"><span>较早一篇</span>CF611G New Year and Cake 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

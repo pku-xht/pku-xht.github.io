@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #641 (Div. 1) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #641 (Div. 1)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/908/">
+<meta property="og:title" content="Codeforces Round #641 (Div. 1) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #641 (Div. 1)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/908/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #641 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-05-13T00:22:50+08:00">2020 年 5 月 13 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 24 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Orac and LCM</a></li><li class="toc-level-2"><a href="#section-2">Orac and Medians</a></li><li class="toc-level-2"><a href="#section-3">Orac and Game of Life</a></li><li class="toc-level-2"><a href="#section-4">Slime and Biscuits</a></li><li class="toc-level-2"><a href="#section-5">Slime and Hats</a></li><li class="toc-level-2"><a href="#section-6">Slime and Sequences</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1349" target="_blank" rel="noopener noreferrer">Codeforces Round #641 (Div. 1)</a>
+</p></blockquote>
+<h2 id="section-1">Orac and LCM</h2>
+<p>每个质因子考虑一下即可。</p>
+<pre tabindex="0"><code class="language-cpp">namespace shai {
+    const int N = 1e6 + 7;
+    int p[N], v[N], phi[N], miu[N];
+
+    inline void init(int n) {
+        v[1] = phi[1] = miu[1] = 1;
+        for (int i = 2; i &lt;= n; i++) {
+            if (!v[i]) p[++p[0]] = v[i] = i, phi[i] = i - 1, miu[i] = -1;
+            for (int j = 1; j &lt;= p[0] &amp;&amp; i * p[j] &lt;= n &amp;&amp; p[j] &lt;= v[i]; j++)
+                v[i*p[j]] = p[j],
+                phi[i*p[j]] = phi[i] * (p[j] - 1 + (p[j] == v[i])),
+                miu[i*p[j]] = p[j] == v[i] ? 0 : -miu[i];
+        }
+    }
+}
+using shai::p;
+
+const int N = 1e5 + 7, M = 2e5 + 7;
+int n, a[N], c[M];
+pq&lt;int&gt; q[M];
+
+inline vector&lt;pair&lt;ll, int&gt;&gt; divide(ll n) {
+    vector&lt;pair&lt;ll, int&gt;&gt; p;
+    for (ll i = 2; i * i &lt;= n; i++)
+        if (!(n % i)) {
+            p.pb(mp(i, 0));
+            while (!(n % i)) ++p.back().se, n /= i;
+        }
+    if (n &gt; 1) p.pb(mp(n, 1));
+    return p;
+}
+
+int main() {
+    rd(n), rda(a, n);
+    shai::init(2e5);
+    for (int i = 1; i &lt;= n; i++) {
+        auto p = divide(a[i]);
+        for (auto o : p) {
+            q[o.fi].push(o.se);
+            if (q[o.fi].size() &gt; 2u) q[o.fi].pop();
+            ++c[o.fi];
+        }
+    }
+    ll ans = 1;
+    for (int i = 1; i &lt;= p[0]; i++) {
+        int x = p[i];
+        if (c[x] == n) {
+            int y = q[x].top();
+            while (y--) ans *= x;
+        }
+        if (c[x] == n - 1) {
+            if (q[x].size() &gt; 1u) q[x].pop();
+            int y = q[x].top();
+            while (y--) ans *= x;
+        }
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Orac and Medians</h2>
+<p>首先判一些特殊情况。</p>
+<p>一般情况就是判是否存在连续三个数中有两个 <span class="math-inline" data-original-math="$\ge k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">\ge k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, k, a[N];
+
+inline void solve() {
+    rd(n, k), rda(a, n);
+    vi p;
+    for (int i = 1; i &lt;= n; i++)
+        if (a[i] == k) p.pb(i);
+    if (!p.size()) return prints("no");
+    if (n == 1) return prints("yes");
+    if (n == 2) return prints(a[1] &gt;= k &amp;&amp; a[2] &gt;= k ? "yes" : "no");
+    for (int i = 1; i &lt;= n - 2; i++) {
+        int t = (a[i] &gt;= k) + (a[i+1] &gt;= k) + (a[i+2] &gt;= k);
+        if (t &gt;= 2) return prints("yes");
+    }
+    prints("no");
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Orac and Game of Life</h2>
+<p>随便 BFS 一下。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e3 + 7;
+ll inf = 1e18 + 1;
+const int dx[] = {0,0,1,-1};
+const int dy[] = {1,-1,0,0};
+int n, m, t;
+ll d[N][N];
+char s[N][N];
+
+int main() {
+    rd(n, m, t);
+    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            d[i][j] = inf;
+    queue&lt;pi&gt; q;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++) {
+            bool ok = 0;
+            for (int o = 0; o &lt; 4; o++) {
+                int x = i + dx[o], y = j + dy[o];
+                if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
+                if (s[x][y] == s[i][j]) ok = 1;
+            }
+            if (ok) d[i][j] = 0, q.push(mp(i, j));
+        }
+    while (q.size()) {
+        int i = q.front().fi, j = q.front().se;
+        q.pop();
+        for (int o = 0; o &lt; 4; o++) {
+            int x = i + dx[o], y = j + dy[o];
+            if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
+            if (d[x][y] &gt; d[i][j] + 1) d[x][y] = d[i][j] + 1, q.push(mp(x, y));
+        }
+    }
+    while (t--) {
+        int x, y;
+        ll z;
+        rd(x, y);
+        rd(z);
+        if (z &lt;= d[x][y]) print(s[x][y] - '0');
+        else {
+            int k = s[x][y] - '0';
+            z -= d[x][y];
+            k ^= z &amp; 1;
+            print(k);
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Slime and Biscuits</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-5">Slime and Hats</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-6">Slime and Sequences</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-641-div-1-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="71">数论</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/912/"><span>较新一篇</span>USACO 2019-2020 Platinum 题解</a><a class="rel-next" rel="next" href="/blog/posts/904/"><span>较早一篇</span>JOI Open 2019 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

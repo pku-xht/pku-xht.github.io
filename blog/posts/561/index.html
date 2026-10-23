@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF575I Robots protection 题解 · 徐皓天</title><meta name="description" content="CF575I Robots protection">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/561/">
+<meta property="og:title" content="CF575I Robots protection 题解 · 徐皓天"><meta property="og:description" content="CF575I Robots protection">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/561/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF575I Robots protection 题解</h1><p class="post-meta"><time datetime="2020-01-17T02:35:27+08:00">2020 年 1 月 17 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 15 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/575/problem/I" target="_blank" rel="noopener noreferrer">CF575I Robots protection</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>你需要在平面直角坐标系上进行 <span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span> 次操作。</li>
+<li>每次操作有两种，要么放置一个两条直角边平行于坐标轴的等腰直角三角形，要么查询某一个点被多少个三角形覆盖。</li>
+<li>每个等腰直角三角形可以用四个参数 <span class="math-inline" data-original-math="$dir,x,y,len$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>r</mi><mo separator="true">,</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>l</mi><mi>e</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">dir,x,y,len</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span></span></span></span></span> 确定，其中 <span class="math-inline" data-original-math="$dir \in [1,4]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>i</mi><mi>r</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mn>4</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">dir \in [1,4]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mclose">]</span></span></span></span></span> 表示三角形的方向，<span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span> 表示直角的顶点坐标，<span class="math-inline" data-original-math="$len$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>e</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">len</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">e</span><span class="mord mathnormal">n</span></span></span></span></span> 表示直角边的长度。</li>
+<li>保证所有点的坐标都是整数且 <span class="math-inline" data-original-math="$\in [1,n]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">\in [1,n]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span></span>。</li>
+<li><span class="math-inline" data-original-math="$n \le 5 \times 10^3$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>5</mn><mo>×</mo><msup><mn>10</mn><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">n \le 5 \times 10^3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="math-inline" data-original-math="$q \le 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>≤</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">q \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p><span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 很小，二维树状数组即可。</p>
+<p>注意到要分五类考虑，所以要在时间和空间卡一下常数。</p>
+<p><img src="/blog/media/1126418-20200108213332804-1585535723.png" alt="CF575I Robots protection 题解：原文插图" loading="lazy" decoding="async"></p>
+<p>（图来自兔）</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e4 + 7, M = 1e5 + 7;
+int n, m, op[M], dir[M], x[M], y[M], c[M], ans[M];
+int X, Y, bit[N][N], stx[M], sty[M], stz[M], top;
+
+inline void add(int x, int y, int z) {
+    stx[++top] = x, sty[top] = y, stz[top] = z;
+    for (int i = x; i &lt;= X; i += i &amp; -i)
+        for (int j = y; j &lt;= Y; j += j &amp; -j)
+            bit[i][j] += z;
+}
+
+inline int ask(int x, int y) {
+    int z = 0;
+    for (int i = x; i; i -= i &amp; -i)
+        for (int j = y; j; j -= j &amp; -j)
+            z += bit[i][j];
+    return z;
+}
+
+inline void clear() {
+    while (top) add(stx[top], sty[top], -stz[top]), top -= 2;
+}
+
+int main() {
+    rd(n), rd(m);
+    for (int i = 1; i &lt;= m; i++) {
+        rd(op[i]);
+        if (op[i] == 1) rd(dir[i]), rd(x[i]), rd(y[i]), rd(c[i]);
+        else rd(x[i]), rd(y[i]);
+    }
+
+    X = n, Y = n;
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 1) {
+            if (dir[i] == 1) add(x[i], y[i], 1);
+            if (dir[i] == 2) add(x[i], y[i] + 1, -1);
+            if (dir[i] == 3) add(x[i] + 1, y[i], -1);
+            if (dir[i] == 4) add(x[i] + 1, y[i] + 1, 1);
+        } else ans[i] += ask(x[i], y[i]);
+    clear();
+
+    X = n + n, Y = n;
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 1) {
+            if (dir[i] == 1)
+                add(x[i] + y[i] + c[i] + 1, y[i], -1);
+            if (dir[i] == 4)
+                add(x[i] + y[i] - c[i], y[i] + 1, -1);
+        } else ans[i] += ask(x[i] + y[i], y[i]);
+    clear();
+
+    X = n, Y = n + n;
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 1) {
+            if (dir[i] == 1)
+                add(n - x[i] + 2, x[i] + y[i] + c[i] + 1, 1);
+            if (dir[i] == 4)
+                add(n - x[i] + 1, x[i] + y[i] - c[i], 1);
+        } else ans[i] += ask(n - x[i] + 1, x[i] + y[i]);
+    clear();
+
+    X = n + n, Y = n;
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 1) {
+            if (dir[i] == 2)
+                add(n + x[i] - y[i] + c[i] + 2, y[i] + 1, 1);
+            if (dir[i] == 3)
+                add(n + x[i] - y[i] - c[i] + 1, y[i], 1);
+        } else ans[i] += ask(n + x[i] - y[i] + 1, y[i]);
+    clear();
+
+    X = n, Y = n + n;
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 1) {
+            if (dir[i] == 2)
+                add(x[i], n - x[i] + y[i] - c[i] + 1, 1);
+            if (dir[i] == 3)
+                add(x[i] + 1, n - x[i] + y[i] + c[i] + 2, 1);
+        } else ans[i] += ask(x[i], n - x[i] + y[i] + 1);
+    clear();
+
+    for (int i = 1; i &lt;= m; i++)
+        if (op[i] == 2) printf("%d\n", ans[i]);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf575i-robots-protection-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="34">树状数组</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/564/"><span>较新一篇</span>CF587D Duff in Mafia 题解</a><a class="rel-next" rel="next" href="/blog/posts/559/"><span>较早一篇</span>CF504E Misha and LCP on Tree 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

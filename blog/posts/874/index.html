@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>ARC097F Monochrome Cat 题解 · 徐皓天</title><meta name="description" content="ARC097F Monochrome Cat">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/874/">
+<meta property="og:title" content="ARC097F Monochrome Cat 题解 · 徐皓天"><meta property="og:description" content="ARC097F Monochrome Cat">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/874/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>ARC097F Monochrome Cat 题解</h1><p class="post-meta"><time datetime="2020-04-30T19:09:31+08:00">2020 年 4 月 30 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 18 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://atcoder.jp/contests/arc097/tasks/arc097_d" target="_blank" rel="noopener noreferrer">ARC097F Monochrome Cat</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一棵 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个点的树，每个点要么是白色要么是黑色。</li>
+<li>你可以从任何一个顶点出发，每秒执行下列操作中的一个：
+<ul>
+<li>走到一个相邻的节点，反转到达的节点颜色。</li>
+<li>反转所在的节点颜色。</li>
+</ul>
+</li>
+<li>问至少需要多少秒可以使所有节点变黑。</li>
+<li><span class="math-inline" data-original-math="$n \le 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>首先肯定先把纯黑的子树剪掉。</p>
+<p>假设我们要求必须回到起点，则我们一定会走一条欧拉回路。</p>
+<p><span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 为 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的度数，在只进行第一个操作的情况下，花费的时间为 <span class="math-inline" data-original-math="$2n – 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2n - 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 秒，同时点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的颜色会反转 <span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 次，因此总花费时间还要加上反转后颜色为白色的点数。</p>
+<p>考虑不要求回到起点有什么变化，此时实际去掉的路径就是从终点到起点的这一条链，除了终点都少被反转了一次。</p>
+<p>考虑只走一遍欧拉回路后两种颜色的点的贡献变化：</p>
+<ul>
+<li>对于黑色的点，如果少翻转一次，这个点即为白色，还是需要额外花费一次操作，因此操作数不变。</li>
+<li>对于白色的点，如果少翻转一次，这个点即为黑色，省掉了额外将其反转的操作，因此操作数减二。</li>
+</ul>
+<p>由于叶子节点一定是黑色的，问题可以简单的转化为求出一条包含白色点最多的路径，那么求个直径即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<p>要注意特判 <span class="math-inline" data-original-math="$n=1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的情况，此时叶子节点是白色的。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, ans, d[N];
+vi e[N];
+char s[N];
+bool a[N], c[N], b[N];
+
+void dfs1(int x, int fa) {
+    b[x] = c[x];
+    for (int y : e[x])
+        if (y != fa)
+            dfs1(y, x), b[x] |= b[y];
+    ans += b[x];
+    if (!b[x]) a[fa] ^= 1;
+}
+
+void dfs2(int x, int fa) {
+    d[x] = d[fa] + c[x];
+    for (int y : e[x])
+        if (b[y] &amp;&amp; y != fa)
+            dfs2(y, x);
+}
+
+int main() {
+    rd(n);
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x, y), e[x].pb(y), e[y].pb(x), a[x] ^= 1, a[y] ^= 1;
+    rds(s, n);
+    int rt = 0;
+    for (int i = 1; i &lt;= n; i++) {
+        c[i] = s[i] == 'W';
+        if (s[i] == 'W') rt = i;
+    }
+    if (!rt) return prints("0"), 0;
+    dfs1(rt, 0);
+    ans = ans * 2 - 2;
+    if (!ans) return prints("1"), 0;
+    for (int i = 1; i &lt;= n; i++)
+        if (b[i]) ans += c[i] ^= a[i];
+    dfs2(rt, 0);
+    for (int i = 1; i &lt;= n; i++)
+        if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
+    d[rt] = 0, dfs2(rt, 0);
+    for (int i = 1; i &lt;= n; i++)
+        if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
+    print(ans - d[rt] * 2);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/arc097f-monochrome-cat-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="114">欧拉回路</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/875/"><span>较新一篇</span>ARC098F Donation 题解</a><a class="rel-next" rel="next" href="/blog/posts/872/"><span>较早一篇</span>ARC096F Sweet Alchemy 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

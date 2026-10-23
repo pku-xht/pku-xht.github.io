@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>ARC089F ColoringBalls 题解 · 徐皓天</title><meta name="description" content="ARC089F ColoringBalls">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/863/">
+<meta property="og:title" content="ARC089F ColoringBalls 题解 · 徐皓天"><meta property="og:description" content="ARC089F ColoringBalls">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/863/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>ARC089F ColoringBalls 题解</h1><p class="post-meta"><time datetime="2020-04-27T19:35:21+08:00">2020 年 4 月 27 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 19 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://atcoder.jp/contests/arc089/tasks/arc089_d" target="_blank" rel="noopener noreferrer">ARC089F ColoringBalls</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>有 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个白色小球排成一排。</li>
+<li>给定一个长度为 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 的只包含红色和蓝色的染色操作序列。</li>
+<li>按照染色操作序列的顺序，每次选择一段区间（可以为空），将区间内的小球全部染成当前颜色。</li>
+<li>另外，要求整个过程中不存在把白色小球染成蓝色的情况，即当染成蓝色时，选择的区间内不能包含白色小球。</li>
+<li>求最终可以染出多少个不同的小球颜色序列。</li>
+<li><span class="math-inline" data-original-math="$n,k \le 70$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>k</mi><mo>≤</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">n,k \le 70</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">70</span></span></span></span></span>，答案对 <span class="math-inline" data-original-math="$10^9+7$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>9</mn></msup><mo>+</mo><mn>7</mn></mrow><annotation encoding="application/x-tex">10^9+7</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">7</span></span></span></span></span> 取模。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>考虑一个暴力做法：枚举最终的小球颜色序列，判断是否合法。</p>
+<p>考虑如何判断，以 <code>BRBRBWRRBRBBWWRRRRWRBBWWRRBBBR</code> 为例：</p>
+<ul>
+<li>首先显然可以先进行一次 <code>unique</code> 而不影响答案，即变成 <code>BRBRBWRBRBWRWRBWRBR</code>。</li>
+<li>以 <code>W</code> 分段：<code>BRBRB</code>，<code>RBRB</code>，<code>R</code>，<code>RB</code>，<code>RBR</code>。</li>
+<li>对每一段按照 <code>B</code> 的个数分组，设 <code>B</code> 的个数为 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>，将其分到第 <span class="math-inline" data-original-math="$x+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 组：
+<ol>
+<li><code>R</code>。</li>
+<li><code>(B)</code>，<code>(BR)</code>，<code>RB</code>，<code>RBR</code>（<code>()</code> 内的是不在这个例子中的情况）。</li>
+<li><code>(BRB)</code>，<code>(BRBR)</code>，<code>RBRB</code>，<code>(RBRBR)</code>。</li>
+<li><code>BRBRB</code>，<code>(BRBRBR)</code>，<code>(RBRBRB)</code>，<code>(RBRBRBR)</code>。</li>
+<li>…。</li>
+</ol>
+</li>
+<li>注意到每一组实际上是等价的。对于第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 组，只要染色操作序列存在对应的子序列，就可以得到这一组内所有的小球颜色序列：
+<ol>
+<li><code>r</code>。</li>
+<li><code>rb</code>。</li>
+<li><code>rb?</code>（<code>?</code> 是通配符）。</li>
+<li><code>rb??</code>。</li>
+<li>…</li>
+</ol>
+</li>
+<li>因此，如果染色操作序列存在互不相交的五个子序列 <code>rb??</code>，<code>rb?</code>，<code>r</code>，<code>rb</code>，<code>rb</code>，则意味着合法，否则不合法。</li>
+<li>按照要求的子序列长度从大到小贪心的匹配，先匹配 <code>r</code>，再匹配 <code>b</code>，再匹配 <code>?</code> 即可。</li>
+</ul>
+<p>可以发现我们枚举最终的小球颜色序列，会有非常多等价的情况。</p>
+<p>由于每一段是相互独立的，因此我们把一个小球颜色序列<strong>无序</strong>地写成一个序列，表示每一段所在组的编号（例子中的 <code>BRBRBWRRBRBBWWRRRRWRBBWWRRBBBR</code> 写成的序列为 <span class="math-inline" data-original-math="$1,2,2,3,4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1,2,2,3,4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span></span></span></span></span>），则写成的序列相同的是等价的。</p>
+<p>这个序列类似整数拆分，所以其实可能的序列很少，在 <span class="math-inline" data-original-math="$n = 70$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>70</mn></mrow><annotation encoding="application/x-tex">n = 70</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">70</span></span></span></span></span> 的时候也只有 <span class="math-inline" data-original-math="$418662$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>418662</mn></mrow><annotation encoding="application/x-tex">418662</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">418662</span></span></span></span></span> 种。</p>
+<p>最后的问题是，对于一个合法的序列，如何计算其对应了多少个最终的小球颜色序列呢？</p>
+<p>依然以 <span class="math-inline" data-original-math="$1,2,2,3,4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1,2,2,3,4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span></span></span></span></span> 为例，首先是一个多重组合数 <span class="math-inline" data-original-math="$\binom {5}{1,2,1,1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mn>5</mn><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn></mrow></mfrac><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\binom {5}{1,2,1,1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3762em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8951em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mtight">2</span><span class="mpunct mtight">,</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">5</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span>，然后乘上一个方案数。</p>
+<p><span class="math-inline" data-original-math="$1,2,2,3,4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">1,2,2,3,4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span></span></span></span></span> 这个序列对应的小球颜色序列一定包含子序列 <code>RWBWBWBRBWBRBRB</code>，长度为 <span class="math-inline" data-original-math="$15$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>15</mn></mrow><annotation encoding="application/x-tex">15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span></span>。而 <code>unique</code> 后一定是 <code>WRWRBRWRBRWRBRBRWRBRBRBRW</code> 的子序列，长度为 <span class="math-inline" data-original-math="$25$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>25</mn></mrow><annotation encoding="application/x-tex">25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">25</span></span></span></span></span>。即相当于把 <span class="math-inline" data-original-math="$n-15$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">n-15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span></span> 个字符分成 <span class="math-inline" data-original-math="$25$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>25</mn></mrow><annotation encoding="application/x-tex">25</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">25</span></span></span></span></span> 组，每组可以为空的方案数。考虑隔板法，答案为 <span class="math-inline" data-original-math="$\binom {n-15+25-1}{25-1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>n</mi><mo>−</mo><mn>15</mn><mo>+</mo><mn>25</mn><mo>−</mo><mn>1</mn></mrow><mrow><mn>25</mn><mo>−</mo><mn>1</mn></mrow></mfrac><mo fence="true">)</mo></mrow><annotation encoding="application/x-tex">\binom {n-15+25-1}{25-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2984em;vertical-align:-0.4033em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8951em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">25</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">15</span><span class="mbin mtight">+</span><span class="mord mtight">25</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4033em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span>。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(能过)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mtext>能过</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(能过)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord cjk_fallback">能过</span><span class="mclose">)</span></span></span></span></span>。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">int n, k;
+string s;
+modint ans;
+
+inline bool pd(vi p) {
+    vector&lt;bool&gt; v(k, 0);
+    vi t(p.size(), -1);
+    for (ui i = 0; i &lt; p.size(); i++) {
+        while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'b'));
+        if (t[i] == k) return 0;
+        v[t[i]] = 1;
+    }
+    while (p.size() &amp;&amp; p.back() == 1) p.pop_back();
+    for (ui i = 0; i &lt; p.size(); i++) {
+        while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'r'));
+        if (t[i] == k) return 0;
+        v[t[i]] = 1;
+    }
+    while (p.size() &amp;&amp; p.back() == 2) p.pop_back();
+    for (ui i = 0; i &lt; p.size(); i++)
+        for (int j = 2; j &lt; p[i]; j++) {
+            while (++t[i] &lt; k &amp;&amp; v[t[i]]);
+            if (t[i] == k) return 0;
+            v[t[i]] = 1;
+        }
+    return 1;
+}
+
+void dfs(int o, int l, int r, vi p) {
+    if (!o) {
+        if (!pd(p)) return;
+        modint now = binom(n - l + r - 1, r - 1);
+        while (p.size()) {
+            int t = 0, x = p.back();
+            while (p.size() &amp;&amp; p.back() == x) ++t, p.pop_back();
+            now *= binom(p.size() + t, t); 
+        }
+        return ans += now, void();
+    }
+    while (1) {
+        dfs(o - 1, l, r, p);
+        l += (o == 1 ? 1 : 2 * o - 3) + (l != 0);
+        if (l &gt; n) return;
+        r += 2 * o;
+        p.pb(o);
+    }
+}
+
+int main() {
+    rd(n, k), rds(s);
+    init(1e6);
+    vi p;
+    dfs((n + 3) &gt;&gt; 1, 0, 1, p);
+    print(ans);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/arc089f-coloringballs-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="55">组合计数</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/865/"><span>较新一篇</span>ARC099F Eating Symbols Hard 题解</a><a class="rel-next" rel="next" href="/blog/posts/862/"><span>较早一篇</span>ARC100F Colorful Sequences 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

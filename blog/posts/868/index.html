@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>JOI Final 2019 题解 · 徐皓天</title><meta name="description" content="JOI Final 2019">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/868/">
+<meta property="og:title" content="JOI Final 2019 题解 · 徐皓天"><meta property="og:description" content="JOI Final 2019">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/868/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>JOI Final 2019 题解</h1><p class="post-meta"><time datetime="2020-04-29T01:37:05+08:00">2020 年 4 月 29 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 15 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">勇者ビ太郎 (Bitaro the Brave)</a></li><li class="toc-level-2"><a href="#section-2">展覧会 (Exhibition)</a></li><li class="toc-level-2"><a href="#section-3">たのしいたのしいたのしい家庭菜園 (Growing Vegetables is Fun 3)</a></li><li class="toc-level-2"><a href="#section-4">コイン集め (Coin Collecting)</a></li><li class="toc-level-2"><a href="#section-5">珍しい都市 (Unique Cities)</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://contests.ioi-jp.org/joi-ho-2019/index-en.html" target="_blank" rel="noopener noreferrer">JOI Final 2019</a>
+</p></blockquote>
+<h2 id="section-1"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_a" target="_blank" rel="noopener noreferrer">勇者ビ太郎 (Bitaro the Brave)</a></h2>
+<p>前缀和计数一下，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(nm)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(nm)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">nm</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e3 + 7;
+int n, m, c[2][N][N];
+char s[N][N];
+ll ans;
+
+int main() {
+    rd(n, m);
+    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = m; j; j--)
+            c[0][i][j] = c[0][i][j+1] + (s[i][j] == 'O');
+    for (int j = 1; j &lt;= m; j++)
+        for (int i = n; i; i--)
+            c[1][i][j] = c[1][i+1][j] + (s[i][j] == 'I');
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            ans += (s[i][j] == 'J') * c[0][i][j] * c[1][i][j];
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_b" target="_blank" rel="noopener noreferrer">展覧会 (Exhibition)</a></h2>
+<p><code>sort</code> + 贪心，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, m, c[N], ans;
+pi a[N];
+
+int main() {
+    rd(n, m);
+    for (int i = 1; i &lt;= n; i++) rd(a[i].se, a[i].fi);
+    sort(a + 1, a + n + 1);
+    rda(c, m);
+    sort(c + 1, c + m + 1);
+    for (int i = m, j = n; i &amp;&amp; j; i--) {
+        while (j &amp;&amp; a[j].se &gt; c[i]) --j;
+        if (j) ++ans, --j;
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-3"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_c" target="_blank" rel="noopener noreferrer">たのしいたのしいたのしい家庭菜園 (Growing Vegetables is Fun 3)</a></h2>
+<p>考虑确定了最终的字符串后如何计算最少交换次数。</p>
+<p>首先同一个字符的相对顺序不变，于是可以一一对应起来。</p>
+<p>考虑计算逆序对的个数，由于每次交换可以使逆序对个数减 <span class="math-inline" data-original-math="$2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span>，因此答案就是逆序对个数除以 <span class="math-inline" data-original-math="$2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span>。</p>
+<p>把这个玩意儿套到一个 <span class="math-inline" data-original-math="$\mathcal O(n^3)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span> 的 DP 上去即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 407, inf = 1e9;
+int n, p[3][N], f[3][N][N][N], a[N], b[N], c[N];
+char s[N];
+
+inline void upd(int &amp;x, int y) {
+    x = min(x, y);
+}
+
+int main() {
+    rd(n), rds(s, n);
+    for (int i = 1; i &lt;= n; i++) {
+        for (int j = 0; j &lt; 3; j++) p[j][i] = p[j][i-1];
+        switch (s[i]) {
+            case 'R' : a[++a[0]] = i, ++p[0][i]; break;
+            case 'G' : b[++b[0]] = i, ++p[1][i]; break;
+            case 'Y' : c[++c[0]] = i, ++p[2][i]; break;
+        }
+    }
+    for (int i = 0; i &lt; 3; i++)
+        for (int x = 0; x &lt;= a[0]; x++)
+            for (int y = 0; y &lt;= b[0]; y++)
+                for (int z = 0; z &lt;= c[0]; z++)
+                    f[i][x][y][z] = inf;
+    if (a[0]) f[0][a[0]-1][b[0]][c[0]] = abs(n - a[a[0]]);
+    if (b[0]) f[1][a[0]][b[0]-1][c[0]] = abs(n - b[b[0]]);
+    if (c[0]) f[2][a[0]][b[0]][c[0]-1] = abs(n - c[c[0]]);
+    for (int i = n - 1; i; i--)
+        for (int x = 0; x &lt;= a[0] &amp;&amp; x &lt;= i; x++)
+            for (int y = 0; y &lt;= b[0] &amp;&amp; x + y &lt;= i; y++) {
+                int z = i - x - y;
+                if (z &gt; c[0]) continue;
+                if (x) upd(f[0][x-1][y][z], min(f[1][x][y][z], f[2][x][y][z]) + abs(p[1][a[x]] - y) + abs(p[2][a[x]] - z));
+                if (y) upd(f[1][x][y-1][z], min(f[0][x][y][z], f[2][x][y][z]) + abs(p[0][b[y]] - x) + abs(p[2][b[y]] - z));
+                if (z) upd(f[2][x][y][z-1], min(f[0][x][y][z], f[1][x][y][z]) + abs(p[0][c[z]] - x) + abs(p[1][c[z]] - y));
+            }
+    int ans = min(min(f[0][0][0][0], f[1][0][0][0]), f[2][0][0][0]);
+    print(ans == inf ? -1 : (ans &gt;&gt; 1));
+    return 0;
+}
+</code></pre>
+<h2 id="section-4"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_d" target="_blank" rel="noopener noreferrer">コイン集め (Coin Collecting)</a></h2>
+<p>依然是贪心，先把每个方块移到离它最近的范围内的位置，然后调整一下即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, c[N][3];
+ll ans;
+
+int main() {
+    rd(n);
+    for (int i = 1, x, y; i &lt;= (n &lt;&lt; 1); i++) {
+        rd(x, y);
+        if (x &lt; 1) ans += 1 - x, x = 1;
+        if (x &gt; n) ans += x - n, x = n;
+        if (y &lt; 1) ans += 1 - y, y = 1;
+        if (y &gt; 2) ans += y - 2, y = 2;
+        ++c[x][y];
+    }
+    for (int i = 1, c1 = 0, c2 = 0; i &lt;= n; i++) {
+        c1 += c[i][1] - 1, c2 += c[i][2] - 1;
+        while (c1 &lt; 0 &amp;&amp; c2 &gt; 0) ++c1, --c2, ++ans;
+        while (c1 &gt; 0 &amp;&amp; c2 &lt; 0) --c1, ++c2, ++ans;
+        if (i &lt; n) ans += abs(c1) + abs(c2);
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-5"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_e" target="_blank" rel="noopener noreferrer">珍しい都市 (Unique Cities)</a></h2>
+<p>关于 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 合法的城市一定在以 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 为根的最长链上，这条最长链的另一端一定是直径的某一端。</p>
+<p>因此我们对于直径的两端各算一次答案，取 <span class="math-inline" data-original-math="$\max$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\max</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mop">max</span></span></span></span></span> 即为最终的答案。</p>
+<p>考虑对于直径的一端如何计算答案，将这个点设为根，然后长链剖分。</p>
+<p>全局上用一个栈记录从根到每个点的路径上合法的点，用一个桶维护答案。</p>
+<p>处理到一个点时，优先递归重儿子，因此要先把栈中和他距离不大于深度最大的轻儿子的点退栈。接着再递归所有轻儿子，把栈中和他距离不大于重儿子的点退栈。</p>
+<p>这样可以保证每个点的贡献被删掉后不可能还需要加回来。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, m, a[N], ans[N];
+vi e[N];
+
+int rt, d[N];
+
+void dfs1(int x, int fa) {
+    d[x] = d[fa] + 1;
+    if (d[x] &gt; d[rt]) rt = x;
+    for (int y : e[x])
+        if (y != fa) dfs1(y, x);
+}
+
+int f[N], son[N][2];
+#define s0 son[x][0]
+#define s1 son[x][1]
+
+void dfs2(int x, int fa) {
+    d[x] = d[fa] + 1;
+    s0 = s1 = 0;
+    for (int y : e[x])
+        if (y != fa) {
+            dfs2(y, x);
+            if (f[y] &gt; f[s1]) s1 = y;
+            if (f[s1] &gt; f[s0]) swap(s0, s1);
+        }
+    f[x] = f[s0] + 1;
+}
+
+int st[N], tp;
+int c[N], cnt;
+
+inline void ins(int x) {
+    cnt += !c[x]++;
+}
+
+inline void del(int x) {
+    cnt -= !--c[x];
+}
+
+void dfs3(int x, int fa) {
+    if (fa) ins(a[fa]), st[++tp] = fa;
+    if (s0) {
+        while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s1]) del(a[st[tp--]]);
+        dfs3(s0, x);
+    }
+    while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s0]) del(a[st[tp--]]);
+    for (int y : e[x])
+        if (y != fa &amp;&amp; y != s0)
+            dfs3(y, x);
+    ans[x] = max(ans[x], cnt);
+    if (st[tp] == fa) del(a[st[tp--]]);
+}
+
+inline void work(int x) {
+    rt = x;
+    dfs1(x, 0);
+    dfs2(rt, 0);
+    for (int i = 1; i &lt;= m; i++) c[i] = 0;
+    cnt = tp = 0;
+    dfs3(rt, 0);
+}
+
+int main() {
+    rd(n, m);
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x, y), e[x].pb(y), e[y].pb(x);
+    rda(a, n);
+    work(1), work(rt);
+    for (int i = 1; i &lt;= n; i++) print(ans[i]);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/joi-final-2019-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span>、<span data-source-tag="125">长链剖分</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/870/"><span>较新一篇</span>JOI Final 2018 题解</a><a class="rel-next" rel="next" href="/blog/posts/865/"><span>较早一篇</span>ARC099F Eating Symbols Hard 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

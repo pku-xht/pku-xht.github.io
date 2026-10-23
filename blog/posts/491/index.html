@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #608 (Div. 2) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #608 (Div. 2)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/491/">
+<meta property="og:title" content="Codeforces Round #608 (Div. 2) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #608 (Div. 2)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/491/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #608 (Div. 2) 题解</h1><p class="post-meta"><time datetime="2019-12-15T19:58:54+08:00">2019 年 12 月 15 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2019 年 12 月 16 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Suits</a></li><li class="toc-level-2"><a href="#section-2">Blocks</a></li><li class="toc-level-2"><a href="#section-3">Shawarma Tent</a></li><li class="toc-level-2"><a href="#section-4">Portals</a></li><li class="toc-level-2"><a href="#section-5">Common Number</a></li><li class="toc-level-2"><a href="#section-6">Divide The Students</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1271" target="_blank" rel="noopener noreferrer">Codeforces Round #608 (Div. 2)</a>
+</p></blockquote>
+<h2 id="section-1">Suits</h2>
+<p>枚举。</p>
+<pre tabindex="0"><code class="language-cpp">int main() {
+    ll a, b, c, d, e, f, ans = 0;
+    cin &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d &gt;&gt; e &gt;&gt; f;
+    for (ll i = 0; i &lt;= d; i++) {
+        ans = max(ans, min(a, i) * e + min(min(b, c), d - i) * f);
+    }
+    cout &lt;&lt; ans &lt;&lt; endl;
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Blocks</h2>
+<p>贪心。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 207;
+int n;
+char s[N];
+
+int main() {
+    rd(n), rds(s, n);
+    vi p;
+    for (int i = 2; i &lt; n; i++)
+        if (s[i] != s[1]) p.pb(i), s[i] = s[i] == 'B' ? 'W' : 'B', s[i+1] = s[i+1] == 'B' ? 'W' : 'B';
+    if (s[1] != s[n]) {
+        if (n &amp; 1) {
+            for (int i = 1; i &lt; n; i += 2) p.pb(i);
+        } else return print(-1), 0;
+    }
+    print(p.size());
+    for (ui i = 0; i &lt; p.size(); i++)
+        print(p[i], ' ');
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Shawarma Tent</h2>
+<p>贪心。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, a, b, c[4];
+
+int main() {
+    rd(n), rd(a), rd(b);
+    for (int i = 1, x, y; i &lt;= n; i++) {
+        rd(x), rd(y);
+        if (x &lt; a) c[2]++;
+        if (x &gt; a) c[3]++;
+        if (y &lt; b) c[1]++;
+        if (y &gt; b) c[0]++; 
+    }
+    int o = 0;
+    for (int i = 1; i &lt;= 3; i++)
+        if (c[i] &gt; c[o]) o = i;
+    print(c[o]);
+    if (o == 0) print(a, ' '), print(b + 1);
+    if (o == 1) print(a, ' '), print(b - 1);
+    if (o == 2) print(a - 1, ' '), print(b);
+    if (o == 3) print(a + 1, ' '), print(b);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Portals</h2>
+<p>按贡献从大到小贪心，能选就选，用堆维护，判断是否能选时前缀和即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e3 + 7;
+int n, m, a[N], b[N], p[N], ans;
+pq&lt; pi &gt; q;
+
+int main() {
+    rd(n), rd(m), rd(b[0]);
+    for (int i = 1, x; i &lt;= n; i++)
+        rd(a[i-1]), rd(b[i]), b[i] += b[i-1], rd(x), q.push(mp(x, i)), p[i] = i;
+    for (int i = n - 1; ~i; i--) b[i] = min(b[i+1], b[i] - a[i]);
+    if (b[0] &lt; 0) return print(-1), 0;
+    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), p[y] = max(p[y], x);
+    while (q.size()) {
+        int x = p[q.top().se], o = q.top().fi;
+        q.pop();
+        if (b[x]) {
+            ans += o;
+            for (int i = x; i &lt;= n; i++) --b[i];
+            for (int i = x - 1; ~i; i--) b[i] = min(b[i], b[i+1]);
+        }
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">Common Number</h2>
+<p>把所有有可能的值都算一遍就好了，代码太丑了不贴了。</p>
+<h2 id="section-6">Divide The Students</h2>
+<p>题目太长了，不想读。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-608-div-2-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/498/"><span>较新一篇</span>CF582D Number of Binominal Coefficients 题解</a><a class="rel-next" rel="next" href="/blog/posts/490/"><span>较早一篇</span>Codeforces Round #607 (Div. 1) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

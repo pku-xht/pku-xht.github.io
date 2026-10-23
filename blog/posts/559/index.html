@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF504E Misha and LCP on Tree 题解 · 徐皓天</title><meta name="description" content="CF504E Misha and LCP on Tree">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/559/">
+<meta property="og:title" content="CF504E Misha and LCP on Tree 题解 · 徐皓天"><meta property="og:description" content="CF504E Misha and LCP on Tree">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/559/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF504E Misha and LCP on Tree 题解</h1><p class="post-meta"><time datetime="2020-01-16T18:26:51+08:00">2020 年 1 月 16 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 19 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/504/problem/E" target="_blank" rel="noopener noreferrer">CF504E Misha and LCP on Tree</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一棵 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个节点的树，每个节点有一个小写字母。</li>
+<li>有 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 组询问，每组询问为树上 <span class="math-inline" data-original-math="$a \to b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>→</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a \to b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 和 <span class="math-inline" data-original-math="$c \to d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>→</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">c \to d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span> 组成的字符串的最长公共前缀。</li>
+<li><span class="math-inline" data-original-math="$n \le 3 \times 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>3</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 3 \times 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="math-inline" data-original-math="$m \le 10^6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><msup><mn>10</mn><mn>6</mn></msup></mrow><annotation encoding="application/x-tex">m \le 10^6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">6</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>首先，根据 hash 值具有可减性，可以通过预处理每个点到根以及根到每个点的 hash 值，<span class="math-inline" data-original-math="$\mathcal O(1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 求出任意一条没有拐点的路径的 hash 值。</p>
+<p>考虑树剖，我们可以将 <span class="math-inline" data-original-math="$a \to b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>→</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a \to b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 和 <span class="math-inline" data-original-math="$c \to d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>→</mo><mi>d</mi></mrow><annotation encoding="application/x-tex">c \to d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span> 的路径分别拆成 <span class="math-inline" data-original-math="$\mathcal O(\log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 个区间，然后每次消掉一个区间。</p>
+<p>如果消不掉这个区间，则在这个区间上二分找到答案。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n + m \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mi>m</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n + m \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<p>另外，在 CF 上最好写双 hash，且不能采用自然溢出，否则大概率被卡。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">#define Hash pair &lt;modint, modint&gt;
+
+const int N = 3e5 + 7, mod = 1e9 + 7;
+const Hash B = mp((modint)131, (modint)13331);
+int n, m, d[N], f[N], s[N], son[N], dfn[N], rnk[N], top[N], num;
+Hash p[N], h1[N], h2[N];
+char c[N];
+vi e[N];
+
+inline Hash operator + (Hash a, Hash b) {
+    return mp(a.fi + b.fi, a.se + b.se);
+}
+
+inline Hash operator - (Hash a, Hash b) {
+    return mp(a.fi - b.fi, a.se - b.se);
+}
+
+inline Hash operator * (Hash a, Hash b) {
+    return mp(a.fi * b.fi, a.se * b.se);
+}
+
+inline Hash H(bool o, int x, int k) {
+    if (o) return h2[x-k+1] - h2[x+1] * p[k];
+    return h1[x+k-1] - h1[x-1] * p[k];
+}
+
+void dfs(int x) {
+    s[x] = 1;
+    for (auto y : e[x])
+        if (y != f[x]) {
+            f[y] = x, d[y] = d[x] + 1, dfs(y), s[x] += s[y];
+            if (s[y] &gt; s[son[x]]) son[x] = y;
+        }
+}
+
+void dfs(int x, int p) {
+    top[x] = p, dfn[x] = ++num, rnk[num] = x;
+    if (son[x]) dfs(son[x], p);
+    for (auto y : e[x]) if (y != f[x] &amp;&amp; y != son[x]) dfs(y, y);
+}
+
+inline int lca(int x, int y) {
+    while (top[x] != top[y]) {
+        if (d[top[x]] &gt; d[top[y]]) swap(x, y);
+        y = f[top[y]];
+    }
+    if (d[x] &gt; d[y]) swap(x, y);
+    return x;
+}
+
+inline vector &lt;pi&gt; get(int x, int y) {
+    int z = lca(x, y);
+    vector &lt;pi&gt; o, w;
+    while (d[top[x]] &gt; d[z]) o.pb(mp(x, top[x])), x = f[top[x]];
+    o.pb(mp(x, z));
+    while (d[top[y]] &gt; d[z]) w.pb(mp(top[y], y)), y = f[top[y]];
+    if (y != z) w.pb(mp(son[z], y));
+    while (w.size()) o.pb(w.back()), w.pop_back();
+    return o;
+}
+
+int main() {
+    rd(n), rds(c, n), p[0] = mp(1, 1), p[1] = B;
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x), rd(y), e[x].pb(y), e[y].pb(x), p[i+1] = p[i] * B;
+    d[1] = 1, dfs(1), dfs(1, 1);
+    for (int i = 1; i &lt;= n; i++)
+        h1[i] = h1[i-1] * B + mp(c[rnk[i]], c[rnk[i]]),
+        h2[n+1-i] = h2[n+2-i] * B + mp(c[rnk[n+1-i]], c[rnk[n+1-i]]);
+    rd(m);
+    while (m--) {
+        int a, b, c, d, ans = 0;
+        ui s = 0, t = 0;
+        rd(a), rd(b), rd(c), rd(d);
+        vector &lt;pi&gt; f = get(a, b), g = get(c, d);
+        while (s &lt; f.size() &amp;&amp; t &lt; g.size()) {
+            int df1 = dfn[f[s].fi], df2 = dfn[f[s].se];
+            int dg1 = dfn[g[t].fi], dg2 = dfn[g[t].se];
+            bool of = df1 &gt; df2, og = dg1 &gt; dg2;
+            int lf = (of ? df1 - df2 : df2 - df1) + 1;
+            int lg = (og ? dg1 - dg2 : dg2 - dg1) + 1;
+            int len = min(lf, lg);
+            Hash hf = H(of, df1, len);
+            Hash hg = H(og, dg1, len);
+            if (hf == hg) {
+                if (len == lf) ++s;
+                else f[s].fi = rnk[df1+(of?-1:1)*len];
+                if (len == lg) ++t;
+                else g[t].fi = rnk[dg1+(og?-1:1)*len];
+                ans += len;
+            } else {
+                int l = 1, r = len;
+                while (l &lt; r) {
+                    int mid = (l + r) &gt;&gt; 1;
+                    hf = H(of, df1, mid);
+                    hg = H(og, dg1, mid);
+                    if (hf == hg) l = mid + 1;
+                    else r = mid;
+                }
+                ans += l - 1; break;
+            }
+        }
+        print(ans);
+    }
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf504e-misha-and-lcp-on-tree-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="29">Hash</span>、<span data-source-tag="35">二分</span>、<span data-source-tag="103">树链剖分</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/561/"><span>较新一篇</span>CF575I Robots protection 题解</a><a class="rel-next" rel="next" href="/blog/posts/557/"><span>较早一篇</span>CF521D Shop 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

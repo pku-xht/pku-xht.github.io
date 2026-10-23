@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>JOI Open 2019 题解 · 徐皓天</title><meta name="description" content="JOI Open 2019">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/904/">
+<meta property="og:title" content="JOI Open 2019 题解 · 徐皓天"><meta property="og:description" content="JOI Open 2019">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/904/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>JOI Open 2019 题解</h1><p class="post-meta"><time datetime="2020-05-12T17:17:53+08:00">2020 年 5 月 12 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 5 月 15 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">三级跳</a></li><li class="toc-level-2"><a href="#section-2">汇款</a></li><li class="toc-level-2"><a href="#section-3">病毒实验</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://contests.ioi-jp.org/open-2019/index.html" target="_blank" rel="noopener noreferrer">JOI Open 2019</a>
+</p></blockquote>
+<h2 id="section-1"><a href="https://loj.ac/problem/3153" target="_blank" rel="noopener noreferrer">三级跳</a></h2>
+<p>考虑 <span class="math-inline" data-original-math="$a,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span>，注意到如果存在 <span class="math-inline" data-original-math="$a &lt; i &lt; b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&lt;</mo><mi>i</mi><mo>&lt;</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a &lt; i &lt; b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 且 <span class="math-inline" data-original-math="$A_i \ge A_a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mo>≥</mo><msub><mi>A</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">A_i \ge A_a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，<span class="math-inline" data-original-math="$A_i \ge A_b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub><mo>≥</mo><msub><mi>A</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">A_i \ge A_b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，则选择 <span class="math-inline" data-original-math="$a,i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">a,i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 或者 <span class="math-inline" data-original-math="$i,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">i,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 一定比 <span class="math-inline" data-original-math="$a,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 不劣。</p>
+<p>因此理论上可能成为答案的 <span class="math-inline" data-original-math="$a,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 只有 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 组，具体而言就是每个 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的左右第一个 <span class="math-inline" data-original-math="$\ge A_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><msub><mi>A</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\ge A_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 的位置，用单调栈就可以求出来。</p>
+<p>把询问离线下来按照 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 从大到小排序，用一个指针从右向左扫。</p>
+<p>当扫到 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 时，把所有 <span class="math-inline" data-original-math="$a = i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">a = i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的 <span class="math-inline" data-original-math="$A_a + A_b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>a</mi></msub><mo>+</mo><msub><mi>A</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">A_a + A_b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 加到 <span class="math-inline" data-original-math="$\ge 2b – a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mn>2</mn><mi>b</mi><mo>−</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">\ge 2b - a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 的位置，然后对于所有 <span class="math-inline" data-original-math="$l = i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>=</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">l = i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的询问，查询 <span class="math-inline" data-original-math="$[l,r]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">]</span></span></span></span></span> 的最大值。</p>
+<p>用线段树维护即可，对于一个区间要维护最大的 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 以及最大的加权。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7;
+int n, m;
+ui a[N], ans[N];
+vector&lt;pi&gt; q[N];
+
+struct SGT {
+    struct T {
+        int l, r;
+        ui x, y, z;
+    } t[N&lt;&lt;2|1];
+
+    inline void update(int p) {
+        t[p].z = max(t[ls].z, t[rs].z);
+    }
+
+    inline void work(int p, ui x) {
+        t[p].z = max(t[p].z, t[p].x + (t[p].y = max(t[p].y, x)));
+    }
+
+    inline void spread(int p) {
+        if (t[p].y) work(ls, t[p].y), work(rs, t[p].y), t[p].y = 0;
+    }
+
+    void build(int p, int l, int r) {
+        t[p].l = l, t[p].r = r;
+        if (l == r) return t[p].x = a[l], void();
+        build(ls, l, md), build(rs, md + 1, r);
+        t[p].x = max(t[ls].x, t[rs].x);
+    }
+
+    void add(int p, int l, int r, ui x) {
+        if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return work(p, x);
+        spread(p);
+        if (l &lt;= md) add(ls, l, r, x);
+        if (r &gt; md) add(rs, l, r, x);
+        update(p);
+    }
+
+    ui ask(int p, int l, int r) {
+        if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].z;
+        spread(p);
+        ui ret = 0;
+        if (l &lt;= md) ret = max(ret, ask(ls, l, r));
+        if (r &gt; md) ret = max(ret, ask(rs, l, r));
+        return ret;
+    }
+} sgt;
+
+int s[N], t;
+vi p[N];
+
+int main() {
+    rd(n), rda(a, n), sgt.build(1, 1, n), rd(m);
+    for (int i = 1; i &lt;= n; i++) {
+        while (t &amp;&amp; a[s[t]] &lt; a[i]) p[s[t--]].pb(i);
+        if (s[t]) p[s[t]].pb(i);
+        s[++t] = i;
+    }
+    for (int i = 1, l, r; i &lt;= m; i++)
+        rd(l, r), q[l].pb(mp(r, i));
+    for (int i = n; i; i--) {
+        for (int j : p[i])
+            if (2 * j - i &lt;= n)
+                sgt.add(1, 2 * j - i, n, a[i] + a[j]);
+        for (pi o : q[i])
+            ans[o.se] = sgt.ask(1, i, o.fi);
+    }
+    for (int i = 1; i &lt;= m; i++) print(ans[i]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2"><a href="https://loj.ac/problem/3154" target="_blank" rel="noopener noreferrer">汇款</a></h2>
+<p>暴力，不停地贪心地给钱。</p>
+<p>由于每轮能给的钱数都会折半，因此最多只有 <span class="math-inline" data-original-math="$\mathcal O(\log w)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>w</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mclose">)</span></span></span></span></span> 轮。</p>
+<p>最后判一下特殊情况即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, a[N], b[N]; 
+
+int main() {
+    rd(n);
+    for (int i = 0; i &lt; n; i++) rd(a[i], b[i]);
+    while (1) {
+        bool ok = 0;
+        for (int i = 0, j = 1; i &lt; n; i++, j = ++j == n ? 0 : j) {
+            int c = (a[i] - b[i]) &gt;&gt; 1;
+            if (a[i] - b[i] &gt; 1) a[j] += c, a[i] -= c &lt;&lt; 1, ok = 1; 
+        }
+        if (!ok) break;
+    }
+    bool ok1 = 1, ok2 = 1, ok3 = 0;
+    for (int i = 0; i &lt; n; i++) {
+        if (a[i] != b[i]) ok1 = 0;
+        if (a[i] != b[i] + 1) ok2 = 0;
+        if (a[i] &gt;= 2) ok3 = 1;
+    }
+    prints((ok1 || (ok2 &amp;&amp; ok3)) ? "Yes" : "No");
+    return 0;
+}
+</code></pre>
+<h2 id="section-3"><a href="https://loj.ac/problem/3155" target="_blank" rel="noopener noreferrer">病毒实验</a></h2>
+<p>先预处理 <span class="math-inline" data-original-math="$2^4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">2^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> 种状态在字符串环上的最长连续段。</p>
+<p>考虑一开始每个点都是一个集合，每个集合中有一个特殊点，表示在这个集合中的所有点都可以感染到这个特殊点。</p>
+<p>每次枚举一个集合 A，从 A 的特殊点开始 BFS，如果能 BFS 到 B 集合，则将 AB 集合合并，以 B 集合的特殊点作为合并后集合的特殊点。</p>
+<p>如果 A 不能走到其他集合，则用它更新答案，A 的特殊点能感染到的点数就是这个集合的最小答案，同时也是方案数。</p>
+<p>这么做时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O((nm)^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>n</mi><mi>m</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O((nm)^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">((</span><span class="mord mathnormal">nm</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>，考虑优化。</p>
+<p>有一个求 MST 的算法叫 Boruvka 算法：</p>
+<blockquote><p>
+  每次暴力地给每一个连通块找一条最小的出边，然后合并起来。<br>
+  直到最后只剩下一个连通块。<br>
+  每次连通块数都会减半，整个过程最多进行 <span class="math-inline" data-original-math="$\mathcal O(\log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 次。<br>
+  时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。
+</p></blockquote>
+<p>用在这道题上就可以了，注意在 A 合并到 B 上之后，不能再用 B 向外找出边，否则会重复访问 A。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(nm \log (nm))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>m</mi><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mi>m</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(nm \log (nm))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">nm</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">nm</span><span class="mclose">))</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int K = 2e5 + 7;
+char s[K];
+const char dc[] = {'N', 'S', 'W', 'E'};
+const int dx[] = {1, -1, 0, 0};
+const int dy[] = {0, 0, 1, -1};
+
+const int N = 807;
+int n, m, k, a[N][N], p[17], f[N*N], ans, cnt;
+bool v[N][N], w[N*N];
+
+int get(int x) {
+    return x == f[x] ? x : (f[x] = get(f[x]));
+}
+
+inline int F(int x, int y) {
+    return x * m + y;
+}
+
+inline void F(int z, int &amp;x, int &amp;y) {
+    x = z / m, y = z - x * m;
+}
+
+inline bool pd(int x, int y) {
+    if (!a[x][y]) return 0;
+    int t = 0;
+    for (int o = 0; o &lt; 4; o++) {
+        int X = x + dx[o], Y = y + dy[o];
+        if (X &lt; 0 || X &gt;= n || Y &lt; 0 || Y &gt;= m) continue;
+        if (v[X][Y]) t |= 1 &lt;&lt; (o ^ 1);
+    }
+    return p[t] == k || p[t] &gt;= a[x][y];
+}
+
+inline int work(int i) {
+    int sx, sy, t = -1;
+    F(i, sx, sy);
+    queue&lt;int&gt; qx, qy;
+    vi vx, vy;
+    qx.push(sx), qy.push(sy), vx.pb(sx), vy.pb(sy), v[sx][sy] = 1;
+    while (qx.size()) {
+        int x = qx.front(), y = qy.front();
+        qx.pop(), qy.pop();
+        for (int o = 0; o &lt; 4; o++) {
+            int X = x + dx[o], Y = y + dy[o];
+            if (X &lt; 0 || X &gt;= n || Y &lt; 0 || Y &gt;= m || v[X][Y]) continue;
+            if (pd(X, Y)) {
+                if (get(F(X, Y)) == i)
+                    qx.push(X), qy.push(Y), vx.pb(X), vy.pb(Y), v[X][Y] = 1;
+                else {
+                    t = get(F(X, Y));
+                    break;
+                }
+            }
+        }
+        if (~t) break;
+    }
+    for (ui i = 0; i &lt; vx.size(); i++) v[vx[i]][vy[i]] = 0;
+    if (~t) return f[i] = t, w[t] = 1, 0;
+    return vx.size();
+}
+
+int main() {
+    rd(k, n, m), rds(s, k);
+    for (int i = 1; i &lt;= k; i++) s[i+k] = s[i];
+    k &lt;&lt;= 1;
+    for (int s = 1; s &lt; 16; s++) {
+        map&lt;char, bool&gt; v;
+        for (int i = 0; i &lt; 4; i++)
+            v[dc[i]] = s &gt;&gt; i &amp; 1;
+        for (int i = 1, t = 0; i &lt;= k; i++)
+            if (v[::s[i]]) p[s] = max(p[s], ++t);
+            else t = 0;
+    }
+    for (int i = 0; i &lt; n; i++)
+        for (int j = 0; j &lt; m; j++)
+            rd(a[i][j]);
+    for (int i = 0; i &lt; n * m; i++) f[i] = i;
+    while (1) {
+        for (int i = 0; i &lt; n * m; i++) w[i] = 0;
+        for (int i = 0; i &lt; n; i++)
+            for (int j = 0; j &lt; m; j++)
+                if (!a[i][j]) w[F(i,j)] = 1;
+        ans = 0, cnt = 0;
+        bool ok = 0;
+        for (int i = 0; i &lt; n * m; i++)
+            if (!w[i] &amp;&amp; i == get(i)) {
+                int ret = work(i);
+                if (ret) {
+                    if (!ans || ret &lt; ans) ans = cnt = ret;
+                    else if (ans == ret) cnt += ret;
+                } else ok = 1;
+            }
+        if (!ok) break;
+    }
+    print(ans), print(cnt);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/joi-open-2019-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="58">单调栈</span>、<span data-source-tag="64">并查集</span>、<span data-source-tag="80">最小生成树</span>、<span data-source-tag="27">线段树</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/908/"><span>较新一篇</span>Codeforces Round #641 (Div. 1) 题解</a><a class="rel-next" rel="next" href="/blog/posts/900/"><span>较早一篇</span>AtCoder Grand Contest 039 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

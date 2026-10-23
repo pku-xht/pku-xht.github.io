@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #612 (Div. 1) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #612 (Div. 1)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/533/">
+<meta property="og:title" content="Codeforces Round #612 (Div. 1) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #612 (Div. 1)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/533/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #612 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-01-06T00:19:04+08:00">2020 年 1 月 6 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 1 月 10 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Garland</a></li><li class="toc-level-2"><a href="#section-2">Numbers on Tree</a></li><li class="toc-level-2"><a href="#section-3">Madhouse</a></li><li class="toc-level-2"><a href="#section-4">LCC</a></li><li class="toc-level-2"><a href="#section-5">Fedya the Potter Strikes Back</a></li><li class="toc-level-2"><a href="#section-6">Harry The Potter</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1286" target="_blank" rel="noopener noreferrer">Codeforces Round #612 (Div. 1)</a>
+</p></blockquote>
+<h2 id="section-1">Garland</h2>
+<p>DP 题做成贪心 WA 无数次，不愧是我。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 107;
+int n, a[N], f[N][N][N];
+
+inline void upd(int &amp;x, int y) {
+    x = min(x, y);
+}
+
+int main() {
+    rd(n);
+    if (n == 1) return print(0), 0;
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    memset(f, 0x3f, sizeof(f));
+    if (a[1]) {
+        if (a[1] &amp; 1) {
+            upd(f[1][0][a[1]], 0);
+        } else {
+            upd(f[1][1][a[1]], 0);
+        }
+    } else {
+        for (a[1] = 1; a[1] &lt;= n; a[1]++) {
+            if (a[1] &amp; 1) {
+                upd(f[1][0][a[1]], 0);
+            } else {
+                upd(f[1][1][a[1]], 0);
+            }
+        }
+    }
+    for (int i = 2; i &lt;= n; i++) {
+        for (int j = 0; j &lt;= min(i - 1, n &gt;&gt; 1); j++)
+            for (int k = 1; k &lt;= n; k++) {
+                if (a[i]) {
+                    if (a[i] &amp; 1) {
+                        if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
+                        upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+                    } else {
+                        if (j == (n &gt;&gt; 1)) continue;
+                        upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+                    }
+                } else {
+                    for (a[i] = 1; a[i] &lt;= n; a[i]++) {
+                        if (a[i] &amp; 1) {
+                            if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
+                            upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+                        } else {
+                            if (j == (n &gt;&gt; 1)) continue;
+                            upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+                        }
+                    }
+                    a[i] = 0;
+                }
+            }
+    }
+    int ans = 0x3f3f3f3f;
+    for (int i = 1; i &lt;= n; i++) ans = min(ans, f[n][n&gt;&gt;1][i]);
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Numbers on Tree</h2>
+<p>sb 构造题，不特判 WA 到死。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e3 + 7;
+int n, a[N], rt, ans[N];
+vi e[N], p[N];
+
+void dfs(int x) {
+    for (int y : e[x]) {
+        dfs(y);
+        for (auto z : p[y]) p[x].pb(z);
+    }
+    if (a[x] &gt; (int)p[x].size()) prints("NO"), exit(0);
+    vi o;
+    while ((int)p[x].size() &gt; a[x]) o.pb(p[x].back()), p[x].pop_back();
+    p[x].pb(x);
+    while (o.size()) p[x].pb(o.back()), o.pop_back();
+}
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) {
+        int f;
+        rd(f), rd(a[i]);
+        if (f) e[f].pb(i);
+        else rt = i;
+    }
+    dfs(rt);
+    for (int i = 1; i &lt;= n; i++) ans[p[rt][i-1]] = i;
+    prints("YES");
+    for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Madhouse</h2>
+<p>一道很屑的交互题。</p>
+<h2 id="section-4">LCC</h2>
+<p>线段树维护矩阵套路题。</p>
+<h2 id="section-5">Fedya the Potter Strikes Back</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-6">Harry The Potter</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-612-div-1-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="123">交互题</span>、<span data-source-tag="16">构造</span>、<span data-source-tag="27">线段树</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/537/"><span>较新一篇</span>长链剖分 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/530/"><span>较早一篇</span>Hello 2020 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>JOI Final 2018 题解 · 徐皓天</title><meta name="description" content="JOI Final 2018">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/870/">
+<meta property="og:title" content="JOI Final 2018 题解 · 徐皓天"><meta property="og:description" content="JOI Final 2018">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/870/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>JOI Final 2018 题解</h1><p class="post-meta"><time datetime="2020-04-30T01:56:48+08:00">2020 年 4 月 30 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 7 月 28 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">ストーブ (Stove)</a></li><li class="toc-level-2"><a href="#section-2">美術展 (Art Exhibition)</a></li><li class="toc-level-2"><a href="#section-3">団子職人 (Dango Maker)</a></li><li class="toc-level-2"><a href="#section-4">定期券 (Commuter Pass)</a></li><li class="toc-level-2"><a href="#section-5">毒蛇の脱走 (Snake Escaping)</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://contests.ioi-jp.org/joi-ho-2018/index-en.html" target="_blank" rel="noopener noreferrer">JOI Final 2018</a>
+</p></blockquote>
+<h2 id="section-1"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_a" target="_blank" rel="noopener noreferrer">ストーブ (Stove)</a></h2>
+<p>用个堆维护差分后的序列，每次取最小的。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, k, a[N], ans;
+
+int main() {
+    rd(n, k), rda(a, n), ans = n;
+    pq&lt;int&gt; q;
+    for (int i = 1; i &lt; n; i++)
+        q.push(-a[i+1] + a[i] + 1);
+    while (k++ &lt; n) ans -= q.top(), q.pop();
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_b" target="_blank" rel="noopener noreferrer">美術展 (Art Exhibition)</a></h2>
+<p>排序后前缀和统计。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7;
+const ll inf = 1e18;
+int n;
+pair&lt;ll, ll&gt; a[N];
+ll now = inf, ans;
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i].fi, a[i].se);
+    sort(a + 1, a + n + 1);
+    for (int i = 1; i &lt;= n; i++) {
+        a[i].se += a[i-1].se;
+        now = min(now, a[i-1].se - a[i].fi);
+        ans = max(ans, a[i].se - a[i].fi - now);
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-3"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_c" target="_blank" rel="noopener noreferrer">団子職人 (Dango Maker)</a></h2>
+<p>将每个 <code>G</code> 横纵方向的合法情况当成一个点，显然可以得到一个二分图匹配模型。</p>
+<p>然后会发现有连边的只可能是 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span> 与 <span class="math-inline" data-original-math="$(x+1,y-1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x+1,y-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 的两个不同方向。</p>
+<p>于是对于每一条斜线 DP 即可，总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(nm)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>m</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(nm)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">nm</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e3 + 7, inf = 1e9;
+int n, m, ans, f[2][N][N];
+char s[N][N];
+
+inline bool pd(int o, int i, int j) {
+    if (!o) return s[i][j-1] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i][j+1] == 'W';
+    return s[i-1][j] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i+1][j] == 'W';
+}
+
+int main() {
+    rd(n, m);
+    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+    for (int i = 0; i &lt;= n + 1; i++)
+        for (int j = 0; j &lt;= m + 1; j++)
+            f[0][i][j] = f[1][i][j] = -inf;
+    for (int i = 2; i &lt;= n + m; i++) {
+        int now = 0, X = 0, Y = 0;
+        for (int x = max(1, i - m); x &lt;= min(n, i - 1); x++) {
+            int y = i - x;
+            if (pd(0, x, y)) f[0][x][y] = max(f[0][x-1][y+1], now) + 1;
+            if (pd(1, x, y)) f[1][x][y] = max(f[1][x-1][y+1], now) + 1;
+            now = max(now, max(f[0][x-1][y+1], f[1][x-1][y+1]));
+            X = x, Y = y;
+        }
+        ans += max(now, max(f[0][X][Y], f[1][X][Y]));
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_d" target="_blank" rel="noopener noreferrer">定期券 (Commuter Pass)</a></h2>
+<p>首先跑 <span class="math-inline" data-original-math="$4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4</mn></mrow><annotation encoding="application/x-tex">4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span></span> 遍 Dijkstra 求出四个特殊点到每个点的最短路。</p>
+<p>把从 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 到 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 的所有可能是最短路的边找出来，发现这一定是个 DAG。</p>
+<p>没有代价的部分一定是 DAG 上的一条路径，于是 DAG 上 DP 一下即可，采用记忆化搜索会很方便。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(m \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(m \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+const ll inf = 1e18;
+int n, m, s, t, a, b;
+ll ds[N], dt[N], da[N], db[N], ans;
+vector&lt;pi&gt; e[N];
+
+bool v[N];
+pq&lt;pair&lt;ll, int&gt;&gt; q;
+
+inline void dij(int S, ll *d) {
+    for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
+    d[S] = 0, q.push(mp(0, S));
+    while (q.size()) {
+        int x = q.top().se;
+        q.pop();
+        if (v[x]) continue;
+        v[x] = 1;
+        for (pi o : e[x]) {
+            int y = o.fi, z = o.se;
+            if (d[y] &gt; d[x] + z)
+                d[y] = d[x] + z, q.push(mp(-d[y], y));
+        }
+    }
+}
+
+vi g[N];
+ll fa[N], fb[N];
+
+void dfs(int x) {
+    if (v[x]) return;
+    v[x] = 1;
+    fa[x] = da[x], fb[x] = db[x];
+    for (int y : g[x])
+        dfs(y), fa[x] = min(fa[x], fa[y]), fb[x] = min(fb[x], fb[y]);
+    ans = min(ans, min(fa[x] + db[x], fb[x] + da[x]));
+}
+
+int main() {
+    rd(n, m), rd(s, t), rd(a, b);
+    for (int i = 1, x, y, z; i &lt;= m; i++)
+        rd(x, y, z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+    dij(s, ds), dij(t, dt), dij(a, da), dij(b, db);
+    ans = da[b];
+    for (int x = 1; x &lt;= n; x++)
+        for (pi o : e[x]) {
+            int y = o.fi, z = o.se;
+            if (ds[x] + z + dt[y] == ds[t]) g[x].pb(y);
+        }
+    for (int i = 1; i &lt;= n; i++) v[i] = 0;
+    dfs(s);
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-5"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_e" target="_blank" rel="noopener noreferrer">毒蛇の脱走 (Snake Escaping)</a></h2>
+<p>毒瘤题。</p>
+<p>注意到对于每次询问 <span class="math-inline" data-original-math="$\max(c_?,c_0,c_1) \le 6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>c</mi><mo stretchy="false">?</mo></msub><mo separator="true">,</mo><msub><mi>c</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>c</mi><mn>1</mn></msub><mo stretchy="false">)</mo><mo>≤</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">\max(c_?,c_0,c_1) \le 6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mclose mtight">?</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">6</span></span></span></span></span>。</p>
+<p>对于 <span class="math-inline" data-original-math="$c_?$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mo stretchy="false">?</mo></msub></mrow><annotation encoding="application/x-tex">c_?</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mclose mtight">?</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 暴力枚举；对于 <span class="math-inline" data-original-math="$c_0,c_2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>c</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>c</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">c_0,c_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 容斥，需要 FWT 预处理。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(l2^l + 2^{\lfloor \frac l3 \rfloor}q)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>l</mi><msup><mn>2</mn><mi>l</mi></msup><mo>+</mo><msup><mn>2</mn><mrow><mo stretchy="false">⌊</mo><mfrac><mi>l</mi><mn>3</mn></mfrac><mo stretchy="false">⌋</mo></mrow></msup><mi>q</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(l2^l + 2^{\lfloor \frac l3 \rfloor}q)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0991em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.229em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.979em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">⌊</span><span class="mord mtight"><span class="mopen nulldelimiter katex-sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.88em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter katex-sizing reset-size3 size6"></span></span><span class="mclose mtight">⌋</span></span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mclose">)</span></span></span></span></span>。</p>
+<p>随手跑了个 LOJ 最优解是怎么回事。。。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 20;
+int l, n, q, a[1&lt;&lt;N|7], b[1&lt;&lt;N|7], c[1&lt;&lt;N|7];
+string s, t;
+int cx, c0, c1, kx, k0, k1, ans;
+
+int main() {
+    rd(l, q), n = 1 &lt;&lt; l, rds(s);
+    for (int i = 0; i &lt; n; i++) a[i] = b[i] = c[i] = s[i] &amp; 15;
+    for (int o = 2, k = 1; o &lt;= n; o &lt;&lt;= 1, k &lt;&lt;= 1)
+        for (int i = 0; i &lt; n; i += o)
+            for (int j = 0; j &lt; k; j++)
+                b[i+j+k] += b[i+j], c[i+j] += c[i+j+k];
+    while (q--) {
+        rds(t), cx = c0 = c1 = kx = k0 = k1 = ans = 0;
+        for (int i = 0; i &lt; l; i++)
+            switch (t[i]) {
+                case '?' : ++cx, kx |= 1 &lt;&lt; (l - 1 - i); break;
+                case '0' : ++c0, k0 |= 1 &lt;&lt; (l - 1 - i); break;
+                case '1' : ++c1, k1 |= 1 &lt;&lt; (l - 1 - i); break;
+            }
+        if (cx &lt;= c0 &amp;&amp; cx &lt;= c1) {
+            ans = a[k1];
+            for (int s = kx; s; s = (s - 1) &amp; kx) ans += a[s|k1];
+            print(ans);
+        } else if (c1 &lt;= c0) {
+            ans = (__builtin_popcount(k1) &amp; 1) ? -b[kx] : b[kx];
+            for (int s = k1; s; s = (s - 1) &amp; k1)
+                ans += (__builtin_popcount(s ^ k1) &amp; 1) ? -b[kx^s] : b[kx^s];
+            print(ans);
+        } else {
+            kx = (n - 1) ^ kx;
+            ans = (__builtin_popcount(k0) &amp; 1) ? -c[kx] : c[kx];
+            for (int s = k0; s; s = (s - 1) &amp; k0)
+                ans += (__builtin_popcount(s ^ k0) &amp; 1) ? -c[kx^s] : c[kx^s];
+            print(ans);
+        }
+    }
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/joi-final-2018-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="111">FWT</span>、<span data-source-tag="82">二分图</span>、<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="56">容斥</span>、<span data-source-tag="85">最短路</span>、<span data-source-tag="91">状压</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="67">记忆化搜索</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/872/"><span>较新一篇</span>ARC096F Sweet Alchemy 题解</a><a class="rel-next" rel="next" href="/blog/posts/868/"><span>较早一篇</span>JOI Final 2019 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

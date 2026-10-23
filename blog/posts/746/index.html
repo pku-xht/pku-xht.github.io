@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Global Round 7 题解 · 徐皓天</title><meta name="description" content="Codeforces Global Round 7">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/746/">
+<meta property="og:title" content="Codeforces Global Round 7 题解 · 徐皓天"><meta property="og:description" content="Codeforces Global Round 7">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/746/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Global Round 7 题解</h1><p class="post-meta"><time datetime="2020-03-22T03:40:26+08:00">2020 年 3 月 22 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（7 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Bad Ugly Numbers</a></li><li class="toc-level-2"><a href="#section-2">Maximums</a></li><li class="toc-level-2"><a href="#section-3">Permutation Partitions</a></li><li class="toc-level-2"><a href="#section-4">Prefix-Suffix Palindrome</a></li><li class="toc-level-2"><a href="#section-5">Bombs</a></li><li class="toc-level-2"><a href="#section-6">Wise Men</a></li><li class="toc-level-2"><a href="#section-7">Spiderweb Trees</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1326" target="_blank" rel="noopener noreferrer">Codeforces Global Round 7</a>
+</p></blockquote>
+<h2 id="section-1">Bad Ugly Numbers</h2>
+<p>特判掉 <span class="math-inline" data-original-math="$n=1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的情况，然后 <span class="math-inline" data-original-math="$8999\cdots 9$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8999</mn><mo>⋯</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">8999\cdots 9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">8999</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">9</span></span></span></span></span> 就符合要求。</p>
+<pre tabindex="0"><code class="language-cpp">inline void solve() {
+    int n;
+    rd(n);
+    if (n == 1) return puts("-1"), void();
+    putchar('8');
+    while (--n) putchar('9');
+    puts("");
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Maximums</h2>
+<p>依照题意，我们可以得到一个递推式 <span class="math-inline" data-original-math="$a_n = \max_{i=1}^{n-1} a_i + b_n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>n</mi></msub><mo>=</mo><msubsup><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><msub><mi>a</mi><mi>i</mi></msub><mo>+</mo><msub><mi>b</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">a_n = \max_{i=1}^{n-1} a_i + b_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.1311em;vertical-align:-0.2769em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8542em;"><span style="top:-2.4231em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.1031em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n;
+ll a[N], x;
+
+int main() {
+    rd(n), rda(a, n);
+    for (int i = 1; i &lt;= n; i++)
+        print(x + a[i], " \n"[i==n]), x = max(x, x + a[i]); 
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Permutation Partitions</h2>
+<p>最大值肯定可以选择 <span class="math-inline" data-original-math="$n,n-1,\cdots,n-k+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mo>⋯</mo><mtext> </mtext><mo separator="true">,</mo><mi>n</mi><mo>−</mo><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n,n-1,\cdots,n-k+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 这 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个数相加。</p>
+<p>求方案数时，相邻两个区间的间隔一定在两个选择的数中间，因此将位置之差相乘即可。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, k;
+ll a[N], ans;
+modint Ans = 1;
+
+int main() {
+    rd(n), rd(k), rda(a, n);
+    for (int i = 1; i &lt;= k; i++) ans += n + 1 - i;
+    print(ans, ' ');
+    vi p;
+    for (int i = 1; i &lt;= n; i++)
+        if (a[i] &gt; n - k) p.pb(i);
+    for (ui i = 1; i &lt; p.size(); i++)
+        Ans *= p[i] - p[i-1];
+    print(Ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Prefix-Suffix Palindrome</h2>
+<p>显然可以先贪心地取互为反串的最长前后缀。</p>
+<p>取完扔掉之后，相当于要在剩下的字符串的前缀或后缀找到一个最长的回文串。</p>
+<p>manacher 即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, m;
+char s[N], t[N];
+
+inline int work(char *s, int n) {
+    string ss = "$#";
+    vi p;
+    for (int i = 1; i &lt;= n; i++) ss += s[i], ss += "#";
+    p.pb(1);
+    int mx = 0, id = 0, ans = 1;
+    for (int i = 1; i &lt; (int)ss.length(); i++) {
+        p.pb(mx &gt; i ? min(p[2*id-i], mx - i) : 1);
+        while (i + p[i] &lt; (int)ss.length() &amp;&amp; ss[i+p[i]] == ss[i-p[i]]) ++p[i];
+        if (i == p[i]) ans = max(ans, p[i]);
+        if (i + p[i] &gt; mx) mx = i + p[i], id = i;
+    }
+    return ans - 1;
+}
+
+inline void solve() {
+    rds(s, n);
+    int p = 1;
+    while (p &lt;= n &amp;&amp; s[p] == s[n+1-p]) ++p;
+    if (p == n + 1) {
+        for (int i = 1; i &lt;= n; i++) putchar(s[i]);
+        return puts(""), void();
+    }
+    m = 0;
+    for (int i = p; i &lt;= n + 1 - p; i++) t[++m] = s[i];
+    int l = work(t, m);
+    reverse(t + 1, t + m + 1);
+    int r = work(t, m);
+    reverse(t + 1, t + m + 1);
+    if (l &lt; r) reverse(t + 1, t + m + 1), swap(l, r);
+    for (int i = 1; i &lt; p; i++) putchar(s[i]);
+    for (int i = 1; i &lt;= l; i++) putchar(t[i]);
+    for (int i = p - 1; i; i--) putchar(s[i]);
+    puts("");
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">Bombs</h2>
+<p>首先有答案是递减的。</p>
+<p>对于当前答案 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>，我们如何判断它时候能被保留下来呢？</p>
+<p>可以发现，<span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 能留下当且仅当存在一个位置满足它右边 <span class="math-inline" data-original-math="$\ge x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">\ge x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的数大于它右边的炸弹数。</p>
+<p>于是线段树维护全局 <span class="math-inline" data-original-math="$\max$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\max</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mop">max</span></span></span></span></span> 和区间修改即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7;
+int n, a[N], b[N], p[N], ans;
+struct T {
+    int l, r, x, z;
+} t[N&lt;&lt;2];
+
+void build(int p, int l, int r) {
+    t[p].l = l, t[p].r = r;
+    if (l == r) return;
+    build(ls, l, md), build(rs, md + 1, r);
+    t[p].x = max(t[ls].x, t[rs].x);
+}
+
+void spd(int p) {
+    if (t[p].z) {
+        t[ls].x += t[p].z;
+        t[ls].z += t[p].z;
+        t[rs].x += t[p].z;
+        t[rs].z += t[p].z;
+        t[p].z = 0;
+    }
+}
+
+void add(int p, int l, int r, int k) {
+    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
+    spd(p);
+    if (l &lt;= md) add(ls, l, r, k);
+    if (r &gt; md) add(rs, l, r, k);
+    t[p].x = max(t[ls].x, t[rs].x);
+}
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]), p[a[i]] = i; 
+    for (int i = 1; i &lt;= n; i++) rd(b[i]);
+    build(1, 1, n), ans = n, print(n, ' ');
+    add(1, 1, p[n], 1);
+    for (int i = 1; i &lt; n; i++) {
+        add(1, 1, b[i], -1);
+        while (t[1].x &lt;= 0) add(1, 1, p[--ans], 1);
+        print(ans, ' ');
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-6">Wise Men</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-7">Spiderweb Trees</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-global-round-7-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="42">Manacher</span>、<span data-source-tag="16">构造</span>、<span data-source-tag="27">线段树</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/767/"><span>较新一篇</span>JOISC 2020 题解</a><a class="rel-next" rel="next" href="/blog/posts/742/"><span>较早一篇</span>动态 DP 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

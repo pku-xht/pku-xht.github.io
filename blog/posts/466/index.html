@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF512D Fox And Travelling 题解 · 徐皓天</title><meta name="description" content="CF512D Fox And Travelling">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/466/">
+<meta property="og:title" content="CF512D Fox And Travelling 题解 · 徐皓天"><meta property="og:description" content="CF512D Fox And Travelling">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/466/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF512D Fox And Travelling 题解</h1><p class="post-meta"><time datetime="2019-12-05T18:09:35+08:00">2019 年 12 月 5 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 5 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/512/problem/D" target="_blank" rel="noopener noreferrer">CF512D Fox And Travelling</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>给定一张 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个点 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 条边的无向图。</li>
+<li>一个点只有当<strong>与它直接相连的点中最多只有一个点未被遍历过时</strong>才可被遍历。</li>
+<li>询问对于每个 <span class="math-inline" data-original-math="$k \in [0,n]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">k \in [0,n]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7335em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span></span>，遍历 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个点的方案数。</li>
+<li><span class="math-inline" data-original-math="$n \le 100$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n \le 100</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">100</span></span></span></span></span>，<span class="math-inline" data-original-math="$m \le \frac{n(n-1)}2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">m \le \frac{n(n-1)}2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>，答案对 <span class="math-inline" data-original-math="$10^9+9$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>10</mn><mn>9</mn></msup><mo>+</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">10^9+9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">9</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">9</span></span></span></span></span> 取模。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>首先，在环中的点一定不会被遍历。</p>
+<p>用类似拓扑排序的过程可以把环上的点全部扔掉，剩下的点会构成若干个有根树和无根树，其中有根树的根是树中<strong>唯一与环中的点相连</strong>的点。</p>
+<p>每棵树求出答案后，01 背包合并即可，中间只需要乘上一个组合数。</p>
+<p>对于有根树，设 <span class="math-inline" data-original-math="$f_{i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 为 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的子树中选 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 个的方案数，那么就是树上背包，同样需要乘上一个组合数。</p>
+<p>对于无根树，以树中每个点为根做一次有根树的树上背包，这样会发现每种选择 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个点的方案会被算 <span class="math-inline" data-original-math="$s – i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo>−</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">s - i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 次，其中 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 为这棵无根树的大小，那么除掉即可。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^3)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>，其中背包经过了上下界优化，原理简单来说就是「每对点只会在 LCA 处合并一次」。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 107;
+int n, m, d[N], w[N], b[N], s[N], S;
+vi e[N];
+modint p[N], v[N], vp[N], f[N][N], ans[N];
+
+inline modint C(int a, int b) {
+    return p[a] * vp[b] * vp[a-b];
+}
+
+void dfs(int x, int o, int &amp;s) {
+    b[x] = o, ++s;
+    for (ui i = 0; i &lt; e[x].size(); i++) {
+        int y = e[x][i];
+        if (!d[y] &amp;&amp; !b[y]) dfs(y, o, s);
+    }
+}
+
+void dp(int x, int fa) {
+    s[x] = 1, f[x][0] = 1;
+    for (ui i = 0; i &lt; e[x].size(); i++) {
+        int y = e[x][i];
+        if (b[x] != b[y] || y == fa) continue;
+        dp(y, x);
+        for (int j = 0; j &lt; s[y]; j++) f[x][s[x]+j] = 0;
+        for (int j = s[x] - 1; ~j; j--)
+            for (int k = 1; k &lt;= s[y]; k++)
+                f[x][j+k] += f[x][j] * f[y][k] * C(j + k, j);
+        s[x] += s[y];
+    }
+    f[x][s[x]] = f[x][s[x]-1];
+}
+
+void get(int x) {
+    dp(x, 0);
+    for (int i = 0; i &lt;= s[x]; i++) f[0][i] += f[x][i];
+}
+
+int main() {
+    rd(n), rd(m);
+    p[0] = v[0] = 1;
+    for (int i = 1; i &lt;= n; i++) p[i] = p[i-1] * i;
+    vp[n] = p[n] ^ -1;
+    for (int i = n; i; i--) v[i] = p[i-1] * vp[i], vp[i-1] = vp[i] * i;
+    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x), ++d[x], ++d[y];
+    queue&lt;int&gt; q;
+    for (int i = 1; i &lt;= n; i++) if (d[i] &lt;= 1) w[i] = 1, q.push(i);
+    while (q.size()) {
+        int x = q.front();
+        q.pop();
+        for (ui i = 0; i &lt; e[x].size(); i++) {
+            int y = e[x][i];
+            if (--d[y] &lt;= 1 &amp;&amp; !w[y]) w[y] = 1, q.push(y);
+        }
+    }
+    for (int i = 1; i &lt;= n; i++) if (d[i] == 1) dfs(i, i, s[i]);
+    for (int i = 1; i &lt;= n; i++) if (!d[i] &amp;&amp; !b[i]) dfs(i, i, s[i]);
+    ans[0] = 1;
+    for (int i = 1; i &lt;= n; i++)
+        if (i == b[i]) {
+            int o = s[i];
+            if (d[i] == 1) get(i);
+            else {
+                for (int j = 1; j &lt;= n; j++)
+                    if (b[j] == i) get(j);
+                for (int j = 0; j &lt;= o; j++) f[0][j] *= v[o-j];
+            }
+            for (int j = S; ~j; j--)
+                for (int k = 1; k &lt;= o; k++)
+                    ans[j+k] += ans[j] * f[0][k] * C(j + k, j);
+            for (int j = 0; j &lt;= o; j++) f[0][j] = 0;
+            S += o;
+        }
+    for (int i = 0; i &lt;= n; i++) print(ans[i]);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf512d-fox-and-travelling-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="24">树形 DP</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="84">背包</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/470/"><span>较新一篇</span>CF559E Gerald and Path 题解</a><a class="rel-next" rel="next" href="/blog/posts/462/"><span>较早一篇</span>CF576D Flights for Regular Customers 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

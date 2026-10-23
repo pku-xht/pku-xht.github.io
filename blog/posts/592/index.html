@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #616 (Div. 1) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #616 (Div. 1)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/592/">
+<meta property="og:title" content="Codeforces Round #616 (Div. 1) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #616 (Div. 1)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/592/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #616 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-02-04T18:51:47+08:00">2020 年 2 月 4 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Mind Control</a></li><li class="toc-level-2"><a href="#section-2">Irreducible Anagrams</a></li><li class="toc-level-2"><a href="#section-3">Prefix Enlightenment</a></li><li class="toc-level-2"><a href="#section-4">Coffee Varieties</a></li><li class="toc-level-2"><a href="#section-5">Cartesian Tree</a></li><li class="toc-level-2"><a href="#section-6">Making Shapes</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1290" target="_blank" rel="noopener noreferrer">Codeforces Round #616 (Div. 1)</a>
+</p></blockquote>
+<h2 id="section-1">Mind Control</h2>
+<p><span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span> 枚举。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3.5e3 + 7;
+int n, m, k, a[N];
+
+inline void solve() {
+    rd(n), rd(m), rd(k);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    if (k &gt;= m - 1) return print(max(*max_element(a + 1, a + m + 1), *max_element(a + n - m + 1, a + n + 1)));
+    int ans = 0;
+    for (int i = 0; i &lt;= k; i++) {
+        int p = i + 1, q = n - (k - i), now = 1e9;
+        for (int j = 0; j &lt;= m - 1 - k; j++)
+            now = min(now, max(a[p+j], a[q-(m-1-k-j)]));
+        ans = max(ans, now);
+    }
+    print(ans);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Irreducible Anagrams</h2>
+<p>垃圾结论题。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, m, a[N][26];
+char s[N];
+
+int main() {
+    rds(s, n), rd(m);
+    for (int i = 1; i &lt;= n; i++) {
+        for (int j = 0; j &lt; 26; j++) a[i][j] = a[i-1][j];
+        a[i][s[i]-'a']++;
+    }
+    for (int i = 1, l, r; i &lt;= m; i++) {
+        rd(l), rd(r);
+        if (l == r) prints("Yes");
+        else if (s[l] != s[r]) prints("Yes");
+        else {
+            int cnt = 0;
+            for (int j = 0; j &lt; 26; j++) cnt += a[r][j] &gt; a[l-1][j];
+            if (cnt &lt;= 2) prints("No");
+            else prints("Yes");
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Prefix Enlightenment</h2>
+<p>拆点带权并查集。</p>
+<p>每个集合有两种状态，选与不选，因此拆成两个点，选的点权为 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，不选的为 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>。</p>
+<p>依次考虑 <span class="math-inline" data-original-math="$i \in [1,n]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>∈</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">i \in [1,n]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6986em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span></span></span></span></span>，相当于每次新增了若干个条件，有以下几种情况：</p>
+<ol>
+<li><span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 没有在任何集合中出现：由于题目保证有解，因此可以直接不管。</li>
+<li><span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 在某一个集合中出现：这意味着这个集合要么选要么不选，有一个状态是无法达到的，对于这个状态，我们将它和 <span class="math-inline" data-original-math="$\infty$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord">∞</span></span></span></span></span> 相连即可。</li>
+<li><span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 在两个集合中出现：这意味着这两个集合的状态是相关联的，对应的边连上即可。</li>
+</ol>
+<p>由于 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 较大，对于每张图不能重新建重新算答案，因此我们需要动态维护答案。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O((n + k)\log k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mi>k</mi><mo stretchy="false">)</mo><mi>log</mi><mo>⁡</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O((n + k)\log k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">((</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7;
+int n, m, t, ans, f[N*2], a[N*2];
+vi e[N];
+char s[N];
+
+inline int get(int x) {
+    return x == f[x] ? x : (f[x] = get(f[x]));
+}
+
+inline void merge(int x, int y) {
+    x = get(x), y = get(y);
+    if (x == y) return;
+    f[x] = y, a[y] += a[x];
+}
+
+inline int ask(int x) {
+    return min(a[get(x)], a[get(x+m)]);
+}
+
+int main() {
+    rd(n), rd(m), rds(s, n), t = m &lt;&lt; 1 | 1, f[t] = t, a[t] = 1e9;
+    for (int i = 1, k; i &lt;= m; i++) {
+        rd(k), f[i] = i, f[i+m] = i + m, a[i] = 0, a[i+m] = 1;
+        for (int j = 1, x; j &lt;= k; j++) rd(x), e[x].pb(i);
+    }
+    for (int i = 1; i &lt;= n; i++) {
+        if (e[i].size() == 1u) {
+            int x = e[i][0], o = s[i] - '0';
+            ans -= ask(x), merge(x + o * m, t), ans += ask(x);
+        } else if (e[i].size() == 2u) {
+            int x = e[i][0], y = e[i][1], o = s[i] - '0';
+            if (get(x) != get(y + (!o) * m))
+                ans -= ask(x) + ask(y),
+                merge(x, y + (!o) * m),
+                merge(x + m, y + o * m),
+                ans += ask(x);
+        }
+        print(ans);
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Coffee Varieties</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-5">Cartesian Tree</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-6">Making Shapes</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-616-div-1-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="45">带权并查集</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/591/"><span>较新一篇</span>CF571D Campus 题解</a><a class="rel-next" rel="next" href="/blog/posts/594/"><span>较早一篇</span>EA 的练习赛 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

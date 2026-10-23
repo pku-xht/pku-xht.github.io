@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #618 (Div. 1) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #618 (Div. 1)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/613/">
+<meta property="og:title" content="Codeforces Round #618 (Div. 1) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #618 (Div. 1)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/613/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #618 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-02-10T00:32:05+08:00">2020 年 2 月 10 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Anu Has a Function</a></li><li class="toc-level-2"><a href="#section-2">Aerodynamic</a></li><li class="toc-level-2"><a href="#section-3">Water Balance</a></li><li class="toc-level-2"><a href="#section-4">Around the World</a></li><li class="toc-level-2"><a href="#section-5">So Mean</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1299" target="_blank" rel="noopener noreferrer">Codeforces Round #618 (Div. 1)</a>
+</p></blockquote>
+<h2 id="section-1">Anu Has a Function</h2>
+<p>从高到低位贪心。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, a[N];
+vi e[31];
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    for (int i = 30; ~i; i--)
+        for (int j = 1; j &lt;= n; j++)
+            if ((a[j] &gt;&gt; i) &amp; 1) e[i].pb(j);
+    for (int i = 30; ~i; i--)
+        if (e[i].size() == 1u) {
+            int x = e[i][0];
+            print(a[x], ' ');
+            for (int j = 1; j &lt;= n; j++)
+                if (j != x) print(a[j], ' ');
+            return 0;
+        }
+    for (int i = 1; i &lt;= n; i++) print(a[i], ' ');
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Aerodynamic</h2>
+<p>判断是否为中心对称图形即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, x[N], y[N];
+
+int main() {
+    rd(n);
+    if (n &amp; 1) return prints("NO"), 0;
+    for (int i = 1; i &lt;= n; i++) rd(x[i]), rd(y[i]);
+    int X = x[1] + x[n/2+1], Y = y[1] + y[n/2+1];
+    for (int i = 1; i &lt;= n / 2; i++) {
+        int j = i + n / 2;
+        if (x[i] + x[j] != X || y[i] + y[j] != Y) return prints("NO"), 0;
+    }
+    prints("YES");
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Water Balance</h2>
+<p>分成若干个极大的不升段，那么显然每一段内是肯定要合并的。</p>
+<p>从后往前贪心，若合并后更优则合并，否则不合并。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
+int n, a[N], v[N], r[N], l[N];
+ll s[N];
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]), v[i] = a[i] &gt; a[i-1];
+    a[n+1] = 1e9, v[n+1] = 1;
+    for (int i = n, j = n + 1; i; i--) r[i] = j, j = v[i] ? i : j;
+    l[n+1] = 1, s[n+1] = 1e9;
+    for (int i = n; i; i--)
+        if (v[i]) {
+            l[i] = r[i] - i;
+            for (int j = i; j &lt; r[i]; j++) s[i] += a[j];
+            while (s[i] * l[r[i]] &gt; s[r[i]] * l[i])
+                s[i] += s[r[i]], l[i] += l[r[i]], r[i] = r[r[i]];
+        }
+    for (int i = 1; i &lt;= n; i += l[i])
+        for (int j = 1; j &lt;= l[i]; j++)
+            printf("%.10Lf\n", 1.0L * s[i] / l[i]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Around the World</h2>
+<p>注意到大小为 <span class="math-inline" data-original-math="$5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>5</mn></mrow><annotation encoding="application/x-tex">5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">5</span></span></span></span></span> 的线性基只有 <span class="math-inline" data-original-math="$374$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>374</mn></mrow><annotation encoding="application/x-tex">374</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">374</span></span></span></span></span> 个就可以了。</p>
+<h2 id="section-5">So Mean</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-618-div-1-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="89">计算几何</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/611/"><span>较新一篇</span>CF626G Raffles 题解</a><a class="rel-next" rel="next" href="/blog/posts/609/"><span>较早一篇</span>CF536D Tavas in Kansas 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

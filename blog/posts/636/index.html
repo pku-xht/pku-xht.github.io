@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #621 (Div. 1 + Div. 2) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #621 (Div. 1 + Div. 2)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/636/">
+<meta property="og:title" content="Codeforces Round #621 (Div. 1 + Div. 2) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #621 (Div. 1 + Div. 2)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/636/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #621 (Div. 1 + Div. 2) 题解</h1><p class="post-meta"><time datetime="2020-02-20T03:50:55+08:00">2020 年 2 月 20 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（7 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Cow and Haybales</a></li><li class="toc-level-2"><a href="#section-2">Cow and Friend</a></li><li class="toc-level-2"><a href="#section-3">Cow and Message</a></li><li class="toc-level-2"><a href="#section-4">Cow and Fields</a></li><li class="toc-level-2"><a href="#section-5">Cow and Treats</a></li><li class="toc-level-2"><a href="#section-6">Cow and Vacation</a></li><li class="toc-level-2"><a href="#section-7">Cow and Exercise</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1307" target="_blank" rel="noopener noreferrer">Codeforces Round #621 (Div. 1 + Div. 2)</a>
+</p></blockquote>
+<h2 id="section-1">Cow and Haybales</h2>
+<p>贪心。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 107;
+int n, d, a[N];
+
+inline void solve() {
+    rd(n), rd(d);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    for (int i = 2; i &lt;= n; i++) {
+        int now = min(d, a[i] * (i - 1));
+        a[1] += now / (i - 1), d -= now;
+    }
+    print(a[1]);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Cow and Friend</h2>
+<p>贪心。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, d, a[N], x;
+
+inline void solve() {
+    rd(n), rd(d);
+    for (int i = 1; i &lt;= n; i++) rd(a[i]);
+    sort(a + 1, a + n + 1);
+    x = upper_bound(a + 1, a + n + 1, d) - a - 1;
+    if (!x) print(2);
+    else if (x == n) print((d - 1) / a[x] + 1);
+    else print(min(2, (d - 1) / a[x] + 1));
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Cow and Message</h2>
+<p>前缀和，组合计数。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, c[26];
+char s[N];
+ll ans, f[26][26];
+
+int main() {
+    rds(s, n);
+    for (int i = 1; i &lt;= n; i++) {
+        for (int j = 0; j &lt; 26; j++)
+            f[j][s[i]-'a'] += c[j];
+        ++c[s[i]-'a'];
+    }
+    ans = *max_element(c, c + 26);
+    for (int j = 0; j &lt; 26; j++)
+        for (int k = 0; k &lt; 26; k++)
+            ans = max(ans, f[j][k]);
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Cow and Fields</h2>
+<p>求出每个点与 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 到 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 的最短路，一条新的路只可能从离 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 更远的点连向离 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 更近的点，贪心即可。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7, inf = 1e9;
+int n, m, k, a[N], ds[N], dt[N], v[N], ans;
+vi e[N];
+
+inline void dij(int s, int *d) {
+    for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
+    pq&lt;pi&gt; q;
+    d[s] = 0, q.push(mp(0, s));
+    while (q.size()) {
+        int x = q.top().se;
+        q.pop();
+        if (v[x]) continue;
+        v[x] = 1;
+        for (int y : e[x])
+            if (d[y] &gt; d[x] + 1)
+                d[y] = d[x] + 1, q.push(mp(-d[y], y));
+    }
+}
+
+int main() {
+    rd(n), rd(m), rd(k);
+    for (int i = 1; i &lt;= k; i++) rd(a[i]);
+    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+    dij(1, ds), dij(n, dt);
+    sort(a + 1, a + k + 1, [&amp;](int i, int j) { return dt[i] &lt; dt[j]; });
+    for (int i = 1; i &lt; k; i++)
+        ans = max(ans, ds[a[i+1]] + 1 + dt[a[i]]);
+    print(min(ans, ds[n]));
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">Cow and Treats</h2>
+<p>垃圾题。</p>
+<h2 id="section-6">Cow and Vacation</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-7">Cow and Exercise</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-621-div-1-div-2-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="43">前缀和/差分</span>、<span data-source-tag="85">最短路</span>、<span data-source-tag="55">组合计数</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/645/"><span>较新一篇</span>CF607E Cross Sum 题解</a><a class="rel-next" rel="next" href="/blog/posts/638/"><span>较早一篇</span>CF506E Mr. Kitayuta’s Gift 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

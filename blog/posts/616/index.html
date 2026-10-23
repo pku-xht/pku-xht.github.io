@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF611H New Year and Forgotten Tree 题解 · 徐皓天</title><meta name="description" content="CF611H New Year and Forgotten Tree">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/616/">
+<meta property="og:title" content="CF611H New Year and Forgotten Tree 题解 · 徐皓天"><meta property="og:description" content="CF611H New Year and Forgotten Tree">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/616/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF611H New Year and Forgotten Tree 题解</h1><p class="post-meta"><time datetime="2020-02-12T02:58:45+08:00">2020 年 2 月 12 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 3 月 2 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/611/problem/H" target="_blank" rel="noopener noreferrer">CF611H New Year and Forgotten Tree</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>有一棵 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个节点的树，节点编号为 <span class="math-inline" data-original-math="$1 \sim n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>∼</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">1 \sim n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span>。</li>
+<li>记录这棵树的方式是记录下每条边连接的两点的编号。</li>
+<li>现在，你不知道这些编号具体是多少，你只知道它们在十进制下的位数。</li>
+<li>请你构造出一棵满足要求的树，或判断没有满足要求的树。</li>
+<li><span class="math-inline" data-original-math="$n \le 2 \times 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>2</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 2 \times 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>不妨把位数相同的点称为同种颜色，则显然有 <span class="math-inline" data-original-math="$m = \lfloor \log_{10} n \rfloor + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mo stretchy="false">⌊</mo><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>10</mn></msub><mi>n</mi><mo stretchy="false">⌋</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">m = \lfloor \log_{10} n \rfloor + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mop"><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.207em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2441em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">⌋</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 种颜色。</p>
+<p>对于每种颜色选择一个关键点，可以发现，如果存在合法的树，一定存在一种情况，使得关键点连成一个连通块，其他点连向某一个关键点。</p>
+<p>那么，我们可以 <span class="math-inline" data-original-math="$\mathcal O(m^{m-2})$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>m</mi><mrow><mi>m</mi><mo>−</mo><mn>2</mn></mrow></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(m^{m-2})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">m</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span> 枚举 Prufer 序列得到关键点的连通方式，对于剩下的颜色边 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span>，我们可以将 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 接到 <span class="math-inline" data-original-math="$y$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> 的关键点上，也可以将 <span class="math-inline" data-original-math="$y$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> 接到 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的关键点上。</p>
+<p>这相当于要做一个二分图多重匹配：</p>
+<ol>
+<li>二分图的左部点为每种类型的边，一共有 <span class="math-inline" data-original-math="$\frac{m(m+1)}2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>m</mi><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{m(m+1)}2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 个点，每个点的数量为原树对应的边的数量减去关键点之间对应的边的数量。</li>
+<li>二分图的右部点为每种颜色的点，一共有 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 个点，每个点的数量为原树对应的点的数量减去关键点中对应的点的数量。</li>
+<li>对于颜色边 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span>，将其对应的左部点分别与 <span class="math-inline" data-original-math="$x,y$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi></mrow><annotation encoding="application/x-tex">x,y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> 对应的右部点连边，数量为 <span class="math-inline" data-original-math="$+\infty$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">∞</span></span></span></span></span>。</li>
+</ol>
+<p>如果这个二分图存在多重完备匹配，则说明有解，否则无解。</p>
+<p>那么跑一遍网络流即可判断，如果有解则可以直接根据残量网络构造。</p>
+<p>由于 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 非常小，所以可以不用考虑时间复杂度，保证正确性即可。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">namespace Dinic {
+    const int N = 107, M = 1e3 + 7;
+    const ll inf = 1e18;
+    int n, m, S, T, h[N], hi[N], e[M], t[M], tot = 1, d[N];
+    ll mxf, f[M];
+    inline void add(int x, int y, ll z, int o = 1) {
+        e[++tot] = y, f[tot] = z, t[tot] = h[x], h[x] = tot;
+        if (o) add(y, x, 0, 0);
+    }
+    inline bool bfs() {
+        for (int i = 1; i &lt;= n; i++) d[i] = 0;
+        queue&lt;int&gt; q;
+        q.push(S), d[S] = 1;
+        while (q.size()) {
+            int x = q.front();
+            q.pop();
+            for (int i = h[x]; i; i = t[i]) {
+                int y = e[i];
+                ll z = f[i];
+                if (d[y] || !z) continue;
+                q.push(y), d[y] = d[x] + 1;
+                if (y == T) return 1;
+            }
+        }
+        return 0;
+    }
+    ll dinic(int x, ll nwf) {
+        if (x == T) return nwf;
+        ll rst = nwf;
+        for (int &amp;i = hi[x]; i; i = t[i]) {
+            int y = e[i];
+            ll z = f[i];
+            if (d[y] != d[x] + 1 || !z) continue;
+            ll k = dinic(y, min(z, rst));
+            if (!k) d[y] = 0;
+            else f[i] -= k, f[i^1] += k, rst -= k;
+            if (!rst) break;
+        }
+        return nwf - rst;
+    }
+    inline void main() {
+        while (bfs()) {
+            for (int i = 1; i &lt;= n; i++) hi[i] = h[i];
+            ll now;
+            while ((now = dinic(S, inf))) mxf += now; 
+        }
+    }
+}
+
+const int N = 2e5 + 7, M = 9;
+int n, p[M], q[M], m, a[M], b[M], d[M], g[M];
+char s[M];
+map&lt;pi, int&gt; c, f;
+
+inline void work() {
+    for (int i = 1; i &lt;= m; i++) d[i] = 0;
+    for (int i = 1; i &lt;= m - 2; i++) ++d[a[i]]; a[m-1] = m;
+    map&lt;pi, int&gt; c = ::c;
+    vector&lt;pi&gt; e;
+    for (int i = 1, j = 1; i &lt; m; i++, j++) {
+        while (d[j]) ++j; e.pb(mp(j, a[i]));
+        while (i &lt; m &amp;&amp; !--d[a[i]] &amp;&amp; a[i] &lt; j) e.pb(mp(a[i], a[i+1])), ++i;
+    }
+    for (pi o : e) {
+        if (o.fi &gt; o.se) swap(o.fi, o.se);
+        if (!c[o]--) return;
+    }
+    Dinic::n = 2 + m + m * (m + 1) / 2;
+    Dinic::S = Dinic::n - 1, Dinic::T = Dinic::n;
+    Dinic::tot = 1, Dinic::mxf = 0;
+    for (int i = 1; i &lt;= Dinic::n; i++) Dinic::h[i] = 0;
+    int k = m;
+    vector&lt;pi&gt; ff(Dinic::n);
+    for (int i = 1; i &lt;= m; i++) {
+        Dinic::add(i, Dinic::T, b[i]);
+        for (int j = i; j &lt;= m; j++) {
+            f[mp(i,j)] = ++k, ff[k] = mp(i, j);
+            Dinic::add(Dinic::S, k, c[mp(i,j)]);
+            Dinic::add(k, i, Dinic::inf);
+            Dinic::add(k, j, Dinic::inf);
+        }
+    }
+    Dinic::main();
+    if (Dinic::mxf != n - m) return;
+    for (pi o : e) print(p[o.fi], ' '), print(p[o.se]);
+    for (int x = 1; x &lt;= m; x++) {
+        q[x] = p[x];
+        for (int i = Dinic::h[x]; i; i = Dinic::t[i]) {
+            int y = Dinic::e[i];
+            if (y &lt;= m || y &gt;= Dinic::S) continue;
+            y = ff[y].fi == x ? ff[y].se : ff[y].fi;
+            while (Dinic::f[i]--) print(++q[x], ' '), print(p[y]);
+        }
+    }
+    exit(0);
+}
+
+void dfs(int o) {
+    if (o == m - 1) return work();
+    for (int i = 1; i &lt;= m; i++) a[o] = i, dfs(o + 1);
+}
+
+int main() {
+    rd(n);
+    for (int o = 1; o &lt;= n; o *= 10) p[++m] = o;
+    for (int i = 1; i &lt; m; i++) b[i] = p[i+1] - 1 - p[i];
+    b[m] = n - p[m];
+    for (int i = 1, x, y; i &lt; n; i++) {
+        rds(s, x), rds(s, y);
+        if (x &gt; y) swap(x, y);
+        ++c[mp(x,y)];
+    }
+    if (m == 1) {
+        if (c[mp(1,1)] != n - 1) return print(-1), 0;
+        for (int i = 1; i &lt; n; i++) print(i, ' '), print(i + 1);
+        return 0;
+    }
+    dfs(1), print(-1);
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf611h-new-year-and-forgotten-tree-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="146">Prufer 序列</span>、<span data-source-tag="82">二分图</span>、<span data-source-tag="16">构造</span>、<span data-source-tag="147">网络流</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/620/"><span>较新一篇</span>CF527E Data Center Drama 题解</a><a class="rel-next" rel="next" href="/blog/posts/618/"><span>较早一篇</span>Prufer 序列 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

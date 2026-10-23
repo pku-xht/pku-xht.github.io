@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>CF578F Mirror Box 题解 · 徐皓天</title><meta name="description" content="CF578F Mirror Box">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/488/">
+<meta property="og:title" content="CF578F Mirror Box 题解 · 徐皓天"><meta property="og:description" content="CF578F Mirror Box">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/488/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF578F Mirror Box 题解</h1><p class="post-meta"><time datetime="2019-12-14T16:57:34+08:00">2019 年 12 月 14 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 2 月 20 日</span></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/578/problem/F" target="_blank" rel="noopener noreferrer">CF578F Mirror Box</a>
+</p></blockquote>
+<h2 id="section-1">题意</h2>
+<ul>
+<li>在一个 <span class="math-inline" data-original-math="$n \times m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">n \times m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 的网格中，每个格子里都有一个呈 <code>\</code> 或 <code>/</code> 状的镜子。</li>
+<li>一个合法的网格需要满足<strong>从任意一个边界段垂直射进网格中，光线会从相邻的边界段射出</strong>，同时<strong>网格中的每一段都被至少一条光线穿透</strong>。</li>
+<li>现在网格中有 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个位置的镜子形状不确定，求有多少种合法的网格。</li>
+<li><span class="math-inline" data-original-math="$n,m \le 100$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo>≤</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">n,m \le 100</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">100</span></span></span></span></span>，<span class="math-inline" data-original-math="$k \le 200$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>≤</mo><mn>200</mn></mrow><annotation encoding="application/x-tex">k \le 200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">200</span></span></span></span></span>，答案对质数 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 取模。</li>
+</ul>
+<h2 id="section-2">题解</h2>
+<p>对 <span class="math-inline" data-original-math="$(n + 1)(m + 1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>m</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(n + 1)(m + 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 个顶点进行黑白相间染色。</p>
+<p>如果把一面镜子看成一条边的话，那么一面镜子连接了两个颜色相同的顶点。</p>
+<p>有结论：合法的网格的充要条件是<strong>某种颜色的点形成了一棵树</strong>。证明略。</p>
+<p>枚举黑/白点形成了树，把已知的边缩起来，对不确定的位置连两条边，然后直接使用<strong>矩阵树定理</strong>求解即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(k^3)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>k</mi><mn>3</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(k^3)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
+<h2 id="section-3">代码</h2>
+<pre tabindex="0"><code class="language-cpp">const int N = 107, K = 207;
+int n, m, f[N*N], fa[N*N], p[N*N], q[N*N];
+char s[N][N];
+bool ok[2] = {1, 1};
+modint a[K][K];
+
+inline int g(int x, int y) {
+    return x * (m + 1) + y;
+}
+
+inline void G(int &amp;x, int &amp;y, int z) {
+    x = z / (m + 1), y = z % (m + 1);
+}
+
+int get(int x) {
+    return x == f[x] ? x : (f[x] = get(f[x]));
+}
+
+inline void add(int x, int y) {
+    a[x][x] += 1, a[y][y] += 1, a[x][y] -= 1, a[y][x] -= 1;
+}
+
+inline modint calc(int o) {
+    if (!ok[o]) return 0;
+    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) fa[i] = f[i];
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            if (s[i][j] == '*') {
+                int a = i, b = j, c = i - 1, d = j - 1;
+                if (((i ^ j) &amp; 1) != o) swap(a, c);
+                int x = get(g(a, b)), y = get(g(c, d));
+                if (x != y) f[x] = y;
+            }
+    int rt = get(o);
+    for (int i = 0; i &lt;= n; i++)
+        for (int j = 0; j &lt;= m; j++)
+            if (((i ^ j) &amp; 1) == o &amp;&amp; get(g(i, j)) != rt) return 0;
+    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = fa[i];
+    int t = 0;
+    for (int i = 0; i &lt;= n; i++)
+        for (int j = 0; j &lt;= m; j++)
+            if (((i ^ j) &amp; 1) == o) {
+                int x = g(i, j);
+                if (x == get(x)) p[++t] = x, q[x] = t;
+            }
+    for (int i = 1; i &lt;= t; i++)
+        for (int j = 1; j &lt;= t; j++)
+            a[i][j] = 0;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            if (s[i][j] == '*') {
+                int a = i, b = j, c = i - 1, d = j - 1;
+                if (((i ^ j) &amp; 1) != o) swap(a, c);
+                int x = get(g(a, b)), y = get(g(c, d));
+                if (x != y) add(q[x], q[y]);
+            }
+    modint ans = 1;
+    for (int i = 1; i &lt; t; i++) {
+        for (int j = i + 1; j &lt; t; j++)
+            while (a[j][i] != 0) {
+                int d = a[i][i].x / a[j][i].x;
+                for (int k = i; k &lt; t; k++)
+                    a[i][k] -= d * a[j][k];
+                swap(a[i], a[j]), ans = -ans; 
+            }
+        ans *= a[i][i];
+    }
+    return ans;
+}
+
+int main() {
+    rd(n), rd(m), rd(P);
+    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = i;
+    for (int i = 1; i &lt;= n; i++) {
+        rds(s[i], m);
+        for (int j = 1; j &lt;= m; j++)
+            if (s[i][j] != '*') {
+                int a = i, b = j, c = i - 1, d = j - 1;
+                if (s[i][j] == '/') swap(a, c);
+                int x = get(g(a, b)), y = get(g(c, d));
+                if (x == y) ok[(a^b)&amp;1] = 0;
+                else f[x] = y;
+            }
+    }
+    print(calc(0) + calc(1));
+    return 0;
+}
+</code></pre>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/cf578f-mirror-box-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="119">矩阵树定理</span>、<span data-source-tag="120">高斯消元</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/489/"><span>较新一篇</span>Codeforces Round #606 (Div. 1, based on Technocup 2020 Elimination Round 4) 题解</a><a class="rel-next" rel="next" href="/blog/posts/486/"><span>较早一篇</span>矩阵树定理 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

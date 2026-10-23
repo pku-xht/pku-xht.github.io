@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>Codeforces Round #635 (Div. 1) 题解 · 徐皓天</title><meta name="description" content="Codeforces Round #635 (Div. 1)">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/827/">
+<meta property="og:title" content="Codeforces Round #635 (Div. 1) 题解 · 徐皓天"><meta property="og:description" content="Codeforces Round #635 (Div. 1)">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/827/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #635 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-04-16T01:29:41+08:00">2020 年 4 月 16 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Linova and Kingdom</a></li><li class="toc-level-2"><a href="#section-2">Xenia and Colorful Gems</a></li><li class="toc-level-2"><a href="#section-3">Kaavi and Magic Spell</a></li><li class="toc-level-2"><a href="#section-4">Yui and Mahjong Set</a></li><li class="toc-level-2"><a href="#section-5">Chiori and Doll Picking</a></li><li class="toc-level-2"><a href="#section-6">Journey</a></li></ol></details><div class="prose"><blockquote><p>
+  <a href="https://codeforces.com/contest/1336" target="_blank" rel="noopener noreferrer">Codeforces Round #635 (Div. 1)</a>
+</p></blockquote>
+<h2 id="section-1">Linova and Kingdom</h2>
+<p>设深度为 <span class="math-inline" data-original-math="$d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span>，子树大小为 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>，点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 对答案的贡献为 <span class="math-inline" data-original-math="$d_i – s_i + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">d_i - s_i + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从大到小贪心就好了。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, k, d[N], s[N];
+vi e[N];
+ll ans;
+pq&lt;pi&gt; q;
+
+void dfs(int x, int f) {
+    s[x] = 1;
+    for (int y : e[x])
+        if (y != f) {
+            d[y] = d[x] + 1;
+            dfs(y, x);
+            s[x] += s[y];
+            q.push(mp(d[y] - s[y] + 1, y));
+        }
+}
+
+int main() {
+    rd(n, k);
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x, y), e[x].pb(y), e[y].pb(x);
+    dfs(1, 0);
+    while (k--) {
+        ans += q.top().fi;
+        q.pop();
+    }
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-2">Xenia and Colorful Gems</h2>
+<p>乱搞，让三个数尽可能接近就行了。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int x, y, z;
+ll a[N], b[N], c[N], ans;
+
+inline void upd(ll x, ll y, ll z) {
+    ans = min(ans, (x - y) * (x - y) + (y - z) * (y - z) + (z - x) * (z - x));
+}
+
+inline void work(ll *a, int x, ll *b, int y, ll *c, int z) {
+    for (int i = 1, j, k; i &lt;= x; i++) {
+        j = lower_bound(b + 1, b + y + 1, a[i]) - b;
+        if (j &lt;= y) {
+            k = lower_bound(c + 1, c + z + 1, (a[i] + b[j]) &gt;&gt; 1) - c;
+            if (k &lt;= z) upd(a[i], b[j], c[k]);
+            if (k &gt; 1) upd(a[i], b[j], c[k-1]);
+        }
+        if (j &gt; 1) {
+            k = lower_bound(c + 1, c + z + 1, (a[i] + b[j-1]) &gt;&gt; 1) - c;
+            if (k &lt;= z) upd(a[i], b[j-1], c[k]);
+            if (k &gt; 1) upd(a[i], b[j-1], c[k-1]);
+        }
+    }
+}
+
+inline void solve() {
+    rd(x, y, z), rda(a, x), rda(b, y), rda(c, z);
+    sort(a + 1, a + x + 1);
+    sort(b + 1, b + y + 1);
+    sort(c + 1, c + z + 1);
+    ans = 4e18;
+    work(a, x, b, y, c, z);
+    work(b, y, c, z, a, x);
+    work(c, z, a, x, b, y);
+    print(ans);
+}
+
+int main() {
+    int T;
+    rd(T);
+    while (T--) solve();
+    return 0;
+}
+</code></pre>
+<h2 id="section-3">Kaavi and Magic Spell</h2>
+<p>正着比较难考虑，反着就容易了。</p>
+<p>设 <span class="math-inline" data-original-math="$f_{i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示考虑 <span class="math-inline" data-original-math="$s^r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>s</mi><mi>r</mi></msup></mrow><annotation encoding="application/x-tex">s^r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6644em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span></span></span></span></span></span></span></span></span></span></span></span> 的前 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个字符，覆盖了要求目标字符串的前 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 个字符和后 <span class="math-inline" data-original-math="$i-j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i-j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 个字符的方案数。</p>
+<p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 3e3 + 7;
+int n, m;
+char s[N], t[N];
+modint f[N][N], ans;
+
+int main() {
+    rds(s, n), rds(t, m);
+    reverse(s + 1, s + n + 1);
+    for (int i = 1; i &lt;= n; i++) {
+        if (n - i + 1 &gt;= m) f[i-1][0] += 1;
+        for (int j = 0; j &lt; i; j++) {
+            if (s[i] == t[j+1] || !t[j+1]) f[i][j+1] += f[i-1][j];
+            if (s[i] == t[n-i+1+j] || !t[n-i+1+j]) f[i][j] += f[i-1][j];
+        }
+    }
+    for (int j = 0; j &lt;= n; j++) ans += f[n][j];
+    print(ans);
+    return 0;
+}
+</code></pre>
+<h2 id="section-4">Yui and Mahjong Set</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-5">Chiori and Doll Picking</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+<h2 id="section-6">Journey</h2>
+<p>题目太神仙了，先咕咕咕着。</p>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/codeforces-round-635-div-1-%e9%a2%98%e8%a7%a3/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><p class="source-tags">原站标签：<span data-source-tag="40">DP</span>、<span data-source-tag="35">二分</span>、<span data-source-tag="32">贪心</span></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/755/"><span>较新一篇</span>AtCoder Grand Contest 043 题解</a><a class="rel-next" rel="next" href="/blog/posts/810/"><span>较早一篇</span>莫队 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>
