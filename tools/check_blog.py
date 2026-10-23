@@ -110,6 +110,16 @@ def main():
         assert len(prose) == 1
         prose = prose[0]
         assert canonical(original) == canonical(prose, True), (source["id"], "article text or TeX changed")
+        headings = [n for n in nodes(prose) if re.fullmatch(r"h[1-6]", n.tag)]
+        toc = [n for n in nodes(document) if has_class(n, "article-toc")]
+        assert len(toc) == bool(headings), (source["id"], "missing or duplicate contents")
+        items = [n for n in nodes(toc[0]) if n.tag == "li"] if toc else []
+        assert len(items) == len(headings), (source["id"], "contents count differs from headings")
+        for heading, item in zip(headings, items):
+            links = [n for n in nodes(item) if n.tag == "a"]
+            assert len(links) == 1, (source["id"], "contents item must have one local heading link")
+            assert links[0].attrs.get("href") == "#" + heading.attrs["id"], (source["id"], "contents points outside its heading")
+            assert canonical(item, True) == canonical(heading, True), (source["id"], "contents label differs from heading")
         for tag in ("code", "pre"):
             before = [content(n) for n in nodes(original) if n.tag == tag]
             after = [content(n) for n in nodes(prose) if n.tag == tag]
@@ -149,7 +159,7 @@ def main():
             assert (path.parent / url.strip('\"\'')).is_file(), url
     for metric in ("code_blocks", "formulas", "headings", "images"):
         assert totals[metric] == report["totals"][metric]
-    print("PASS: original text/TeX, code, images, tables, dates, local links and font assets")
+    print("PASS: original text/TeX, code, images, tables, dates, contents, local links and font assets")
     print(json.dumps(totals, ensure_ascii=False))
 
 

@@ -102,7 +102,7 @@ main.site-width { min-width: 0; min-height: 60vh; }
 .copy-code { position: absolute; z-index: 1; top: 5px; right: 7px; min-height: 30px; padding: 3px 9px; border: 1px solid #cbd1c8; border-radius: 3px; background: var(--paper); color: var(--muted); font: 12px/1.6 var(--sans); }
 .copy-code:hover { color: var(--ink); border-color: #9da998; }
 .copy-code:focus-visible { outline-offset: 2px; }
-.math-inline { display: inline-block; max-width: 100%; padding-block: 3px; overflow-x: auto; overflow-y: hidden; vertical-align: middle; line-height: normal; }
+.math-inline { display: inline-block; max-width: 100%; padding: 3px; overflow-x: auto; overflow-y: hidden; vertical-align: middle; line-height: normal; }
 .math-block { display: block; max-width: 100%; margin: 23px 0; padding: 8px 0 12px; overflow-x: auto; overflow-y: hidden; }
 .math-block > .katex-display { width: max-content; min-width: 100%; margin: 0; padding-inline: 2px; }
 .math-inline .katex { font-size: 1.06em; }

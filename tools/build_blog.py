@@ -173,16 +173,16 @@ def safe_url(value):
     return value
 
 
-def serialize(node, post, routes, media):
+def serialize(node, post, routes, media, in_toc=False):
     if isinstance(node, str):
         return html.escape(node, quote=False)
     if isinstance(node, Math):
         cls = "math-block" if node.display else "math-inline"
         return f'<span class="{cls}" data-original-math="{escape(node.original)}">{node.rendered}</span>'
     tag, attrs = node.tag, {}
-    if tag == "root":
-        return "".join(serialize(ch, post, routes, media) for ch in node.children)
-    if "id" in node.attrs:
+    if tag == "root" or (in_toc and tag == "a"):
+        return "".join(serialize(ch, post, routes, media, in_toc) for ch in node.children)
+    if "id" in node.attrs and not in_toc:
         attrs["id"] = node.attrs["id"]
     if tag == "a":
         url = safe_url(node.attrs.get("href", ""))
@@ -208,7 +208,7 @@ def serialize(node, post, routes, media):
     rendered_attrs = "".join(f' {key}="{escape(value)}"' for key, value in attrs.items())
     rendered = f"<{tag}{rendered_attrs}>"
     if tag not in VOID:
-        rendered += "".join(serialize(ch, post, routes, media) for ch in node.children) + f"</{tag}>"
+        rendered += "".join(serialize(ch, post, routes, media, in_toc) for ch in node.children) + f"</{tag}>"
     if tag == "table":
         rendered = '<div class="table-scroll" tabindex="0">' + rendered + "</div>"
     return rendered
@@ -311,7 +311,8 @@ def main():
         headings = post["headings"]
         toc = ""
         if headings:
-            toc_items = "".join(f'<li class="toc-level-{h.tag[1]}"><a href="#{h.attrs["id"]}">' + "".join(serialize(c, post, routes, media) for c in h.children) + '</a></li>' for h in headings)
+            # Heading text can contain source links; a contents entry has only its local anchor.
+            toc_items = "".join(f'<li class="toc-level-{h.tag[1]}"><a href="#{h.attrs["id"]}">' + "".join(serialize(c, post, routes, media, in_toc=True) for c in h.children) + '</a></li>' for h in headings)
             toc = f'<details class="article-toc"{" open" if len(headings) <= 10 else ""}><summary>本文目录（{len(headings)} 节）</summary><ol>{toc_items}</ol></details>'
         modified = "" if post["date"][:10] == post["modified"][:10] else f'<span>更新于 {display_date(post["modified"])}</span>'
         meta = f'<p class="post-meta"><time datetime="{post["date"]}+08:00">{display_date(post["date"])}</time><span>笔记</span>{modified}</p>'
