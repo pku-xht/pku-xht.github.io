@@ -52,3 +52,7 @@ The `.nojekyll` file tells GitHub to serve the static files directly.
 - `DESIGN.md`: implementation direction.
 
 The website uses no analytics, external font requests or third-party JavaScript.
+
+## Blog migration
+
+The public-content inventory and batch status for the migration from `www.xht37.com` are maintained in [migration/README.md](migration/README.md). Non-public WordPress content remains on the old site and must stay outside this public repository.
