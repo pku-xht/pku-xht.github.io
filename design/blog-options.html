@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>博客设计方案 · 徐皓天</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="blog-options.css">
+  <script defer src="blog-notes.js"></script>
+  <script defer src="blog-options.js"></script>
+</head>
+<body>
+  <header class="review-header">
+    <div class="review-title"><strong>博客设计方案</strong><span>布局预览 · 尚未选定或发布</span></div>
+    <div class="controls">
+      <div class="choices" aria-label="设计方案">
+        <button type="button" data-design="a" aria-pressed="true">A · 学术目录</button>
+        <button type="button" data-design="b" aria-pressed="false">B · 主题知识库</button>
+        <button type="button" data-design="c" aria-pressed="false">C · 个人博客</button>
+      </div>
+      <div class="choices" aria-label="页面类型">
+        <button type="button" data-view="list" aria-pressed="true">目录页</button>
+        <button type="button" data-view="article" aria-pressed="false">文章页样例</button>
+      </div>
+      <div class="choices" aria-label="预览宽度">
+        <button type="button" data-device="desktop" aria-pressed="true">桌面</button>
+        <button type="button" data-device="mobile" aria-pressed="false">手机宽度</button>
+      </div>
+    </div>
+    <p id="design-description" aria-live="polite"></p>
+  </header>
+
+  <div class="preview-surround">
+    <div id="preview" class="preview design-a" data-view="list">
+      <a class="skip" href="#preview-main">跳到正文</a>
+      <header class="site-header">
+        <a class="identity" href="../index.html"><img src="../assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a>
+        <nav aria-label="示例网站导航"><a href="../index.html">主页</a><button class="current" type="button" data-show-list>笔记</button><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav>
+      </header>
+      <div class="site-layout">
+        <aside class="library-nav" aria-label="笔记主题">
+          <p class="sidebar-label">学习笔记</p>
+          <div id="topic-nav"></div>
+          <p class="sidebar-note">按主题查阅<br>按原日期保留历史</p>
+        </aside>
+        <main id="preview-main" tabindex="-1">
+          <section id="list-view">
+            <div class="page-intro"><p class="eyebrow">BLOG / NOTES</p><h1 id="list-heading">笔记</h1><p id="list-subtitle">算法、数学与学习中的思考。</p></div>
+            <div class="list-tools"><span id="result-count" aria-live="polite"></span><label class="search-label">查找笔记<input id="search" type="search" placeholder="搜索标题" autocomplete="off"></label></div>
+            <div id="post-list"></div>
+            <p id="no-results" hidden>没有找到匹配的笔记。</p>
+          </section>
+          <section id="article-view" hidden>
+            <button type="button" class="back-link" data-show-list>← 全部笔记</button>
+            <header class="article-header"><p class="eyebrow">学习笔记</p><h1>树上背包时间复杂度证明</h1><p class="post-meta"><time datetime="2026-03-28">2026 年 3 月 28 日</time><span>徐皓天</span><a href="https://www.xht37.com/%E6%A0%91%E4%B8%8A%E8%83%8C%E5%8C%85%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E8%AF%81%E6%98%8E/" target="_blank" rel="noopener noreferrer">原文 ↗</a></p></header>
+            <div class="reading-layout">
+              <aside class="article-toc" aria-label="文章目录"><details open><summary>本文目录</summary><a href="#sample-transition">关注转移</a><a href="#sample-complexity">单次转移复杂度</a><a href="#sample-counting">计数的视角</a></details></aside>
+              <article class="prose">
+                <p class="sample-note">以下为原文节选，章节标题用于比较阅读布局；完整正文将在设计选定后迁入。</p>
+                <blockquote><a href="https://www.luogu.com.cn/problem/P2014" target="_blank" rel="noopener noreferrer">P2014 [CTSC1997] 选课</a></blockquote>
+                <p>本文证明树上背包的时间复杂度是 <math><mi mathvariant="script">O</mi><mo>(</mo><mi>n</mi><mi>m</mi><mo>)</mo></math> 的。换言之，上题可以加强至：<math><mi>n</mi><mo>≤</mo><mn>3</mn><mo>×</mo><msup><mn>10</mn><mn>5</mn></msup></math>，<math><mi>m</mi><mo>≤</mo><mn>300</mn></math>。</p>
+                <h2 id="sample-transition">关注转移</h2>
+                <p>让我们重点关注：</p>
+                <pre tabindex="0" aria-label="C++ 转移代码"><code>for (int i = min(sz[u], m); i &gt;= 1; i--) {
+    for (int j = min(sz[v], m - i); j &gt;= 1; j--) {
+        dp[u][i + j] = max(dp[u][i + j], dp[u][i] + dp[v][j]);
+    }
+}</code></pre>
+                <h2 id="sample-complexity">单次转移复杂度</h2>
+                <p>这也就是说，对于每条边 <math><mi>u</mi><mo>→</mo><mi>v</mi></math>，该部分转移的时间复杂度为</p>
+                <div class="formula"><math display="block"><mi mathvariant="script">O</mi><mo>(</mo><mi>min</mi><mo>(</mo><mi>m</mi><mo>,</mo><msub><mi>pre</mi><mi>v</mi></msub><mo>)</mo><mo>×</mo><mi>min</mi><mo>(</mo><mi>m</mi><mo>,</mo><msub><mi>siz</mi><mi>v</mi></msub><mo>)</mo><mo>)</mo></math></div>
+                <ul><li><math><msub><mi>pre</mi><mi>v</mi></msub></math> 表示 <math><mi>v</mi></math> 左边的子树大小之和，即 <math><mi>u</mi></math> 的子节点中在 <math><mi>v</mi></math> 之前被访问到的子节点的子树大小之和。</li><li><math><msub><mi>siz</mi><mi>v</mi></msub></math> 表示 <math><mi>v</mi></math> 的子树大小。</li></ul>
+                <h2 id="sample-counting">计数的视角</h2>
+                <p>注意到任意 <math><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></math> 仅会在它们的 lca 处被最多计数一次，且只有当 <math><msub><mi>dfn</mi><mi>y</mi></msub><mo>−</mo><msub><mi>dfn</mi><mi>x</mi></msub><mo>&lt;</mo><mn>2</mn><mi>m</mi></math> 才会被计数。这样的 <math><mo>(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>)</mo></math> 有 <math><mi mathvariant="script">O</mi><mo>(</mo><mi>n</mi><mi>m</mi><mo>)</mo></math> 对，因此总时间复杂度为 <math><mi mathvariant="script">O</mi><mo>(</mo><mi>n</mi><mi>m</mi><mo>)</mo></math>。</p>
+              </article>
+            </div>
+          </section>
+        </main>
+      </div>
+      <footer class="site-footer">徐皓天 · xht37</footer>
+    </div>
+  </div>
+  <footer class="review-footer">目录使用首批 29 篇公开笔记的真实标题与日期；点击标题会打开旧站原文。主题分组仅为 B 方案的设计示例。</footer>
+</body>
+</html>

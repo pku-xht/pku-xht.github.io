@@ -56,3 +56,5 @@ The website uses no analytics, external font requests or third-party JavaScript.
 ## Blog migration
 
 The public-content inventory and batch status for the migration from `www.xht37.com` are maintained in [migration/README.md](migration/README.md). Non-public WordPress content remains on the old site and must stay outside this public repository.
+
+Blog layout candidates are documented in [design/README.md](design/README.md). Open `design/blog-options.html` in the local preview to compare them; the candidates are not linked from the public homepage.
