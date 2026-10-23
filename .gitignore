@@ -1,6 +1,8 @@
 output/
 .playwright-cli/
 node_modules/
+__pycache__/
+*.py[cod]
 .DS_Store
 Thumbs.db
 .env

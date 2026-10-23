@@ -1,0 +1,37 @@
+[
+  {
+    "original_url": "https://oiwiki.org/geometry/images/convex-hull1.svg",
+    "download_url": "https://oiwiki.org/geometry/images/convex-hull1.svg",
+    "path": "/blog/media/convex-hull1.svg",
+    "sha256": "5bc424aa88647deedc83750a59025a61d29c2c7f082cbbe2b2d6fcf9a658ade9",
+    "bytes": 64979
+  },
+  {
+    "original_url": "https://oiwiki.org/geometry/images/convex-hull2.svg",
+    "download_url": "https://oiwiki.org/geometry/images/convex-hull2.svg",
+    "path": "/blog/media/convex-hull2.svg",
+    "sha256": "a2f65af6f858ccc4f9e4920242dbf16a7a1feaadb5a773fd9ed12d7d248b8e3f",
+    "bytes": 87046
+  },
+  {
+    "original_url": "https://oiwiki.org/geometry/images/convex-hull3.svg",
+    "download_url": "https://oiwiki.org/geometry/images/convex-hull3.svg",
+    "path": "/blog/media/convex-hull3.svg",
+    "sha256": "15a742efc32442ca2baec68a894a2f4f5223c1df55729e6da83f28c941600bd5",
+    "bytes": 89441
+  },
+  {
+    "original_url": "https://cdn.luogu.com.cn/upload/image_hosting/ns1f987h.png",
+    "download_url": "https://cdn.luogu.com.cn/upload/image_hosting/ns1f987h.png",
+    "path": "/blog/media/tree-knapsack.png",
+    "sha256": "6364e630248d9cba7d145471c7f3f74902882ed9c31a8cb6dd6337f3b99c6ca9",
+    "bytes": 160924
+  },
+  {
+    "original_url": "http://www.xht37.com/wp-content/uploads/2020/03/simulated-annealing.gif",
+    "download_url": "https://www.xht37.com/wp-content/uploads/2020/03/simulated-annealing.gif",
+    "path": "/blog/media/simulated-annealing.gif",
+    "sha256": "c89aba202997328f29cff4aa350165f15cdf87efbac31ecdd360e4df9142e54e",
+    "bytes": 1125635
+  }
+]

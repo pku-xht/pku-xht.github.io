@@ -1,0 +1,5 @@
+/blog/index.html linguist-generated=true
+/blog/archive/index.html linguist-generated=true
+/blog/posts/**/index.html linguist-generated=true whitespace=-blank-at-eol
+/assets/vendor/** linguist-vendored=true
+/tools/vendor/** linguist-vendored=true

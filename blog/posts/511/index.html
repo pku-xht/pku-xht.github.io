@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>笛卡尔树 学习笔记 · 徐皓天</title><meta name="description" content="碰到好多次了，系统的整理一下。">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/511/">
+<meta property="og:title" content="笛卡尔树 学习笔记 · 徐皓天"><meta property="og:description" content="碰到好多次了，系统的整理一下。">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/511/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>笛卡尔树 学习笔记</h1><p class="post-meta"><time datetime="2019-12-27T18:28:45+08:00">2019 年 12 月 27 日</time><span>笔记</span><span>更新于 2020 年 2 月 21 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">定义</a></li><li class="toc-level-2"><a href="#section-2">构建</a></li><li class="toc-level-4"><a href="#section-3">【模板】<a href="https://www.luogu.com.cn/problem/P5854" target="_blank" rel="noopener noreferrer">P5854 【模板】笛卡尔树</a></a></li><li class="toc-level-4"><a href="#section-4">【例题】<a href="https://www.luogu.com.cn/problem/P1377" target="_blank" rel="noopener noreferrer">P1377 [TJOI2011]树的序</a></a></li><li class="toc-level-2"><a href="#section-5">参考资料</a></li></ol></details><div class="prose"><blockquote><p>
+  碰到好多次了，系统的整理一下。
+</p></blockquote>
+<h2 id="section-1">定义</h2>
+<p>笛卡尔树跟 Treap 的定义是一样的：</p>
+<ul>
+<li>二叉树</li>
+<li>每个节点有一个键值 <span class="math-inline" data-original-math="$(k,w)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>k</mi><mo separator="true">,</mo><mi>w</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(k,w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mclose">)</span></span></span></span></span>。</li>
+<li><span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 满足二叉搜索树的性质。</li>
+<li><span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span> 满足二叉堆的性质。</li>
+</ul>
+<p>严格意义上讲，Treap 是 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span> 随机的笛卡尔树。</p>
+<p>通常我们可以对一个序列构建笛卡尔树：以下标为 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>，以元素为 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span>。</p>
+<p>这样构建的笛卡尔树的每一个子树都对应着序列的一个区间。</p>
+<h2 id="section-2">构建</h2>
+<p>由于对 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 排序后，每次一定是在笛卡尔树的右链上插入一个新的元素。</p>
+<p>因此我们可以利用单调栈维护右链。每当一个新节点找到一个位置插入后，把原来那个位置上的子树作为新节点的左儿子即可。</p>
+<p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
+<h4 id="section-3">【模板】<a href="https://www.luogu.com.cn/problem/P5854" target="_blank" rel="noopener noreferrer">P5854 【模板】笛卡尔树</a></h4>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e7 + 7;
+int n, a[N], s[N], t, l[N], r[N];
+ll L, R;
+
+int main() {
+    rd(n);
+    for (int i = 1; i &lt;= n; i++) {
+        rd(a[i]);
+        int k = t;
+        while (k &amp;&amp; a[s[k]] &gt; a[i]) --k;
+        if (k) r[s[k]] = i;
+        if (k &lt; t) l[i] = s[k+1];
+        s[++k] = i, t = k;
+    }
+    for (int i = 1; i &lt;= n; i++) L ^= 1ll * i * (l[i] + 1), R ^= 1ll * i * (r[i] + 1);
+    print(L, ' '), print(R);
+    return 0;
+}
+</code></pre>
+<h4 id="section-4">【例题】<a href="https://www.luogu.com.cn/problem/P1377" target="_blank" rel="noopener noreferrer">P1377 [TJOI2011]树的序</a></h4>
+<p>这题实际上是求以元素为 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span>、以下标为 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 的笛卡尔树的先序遍历。</p>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, a[N], s[N], t, l[N], r[N];
+ll L, R;
+
+void dfs(int x) {
+    if (x) print(x, ' '), dfs(l[x]), dfs(r[x]);
+}
+
+int main() {
+    rd(n);
+    for (int i = 1, x; i &lt;= n; i++) rd(x), a[x] = i;
+    for (int i = 1; i &lt;= n; i++) {
+        int k = t;
+        while (k &amp;&amp; a[s[k]] &gt; a[i]) --k;
+        if (k) r[s[k]] = i;
+        if (k &lt; t) l[i] = s[k+1];
+        s[++k] = i, t = k;
+    }
+    dfs(s[1]);
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">参考资料</h2>
+<ul>
+<li>OI Wiki <a href="https://oi-wiki.org/ds/cartesian-tree/" target="_blank" rel="noopener noreferrer">笛卡尔树</a></li>
+</ul>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/%e7%ac%9b%e5%8d%a1%e5%b0%94%e6%a0%91-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/513/"><span>较新一篇</span>树上启发式合并 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/486/"><span>较早一篇</span>矩阵树定理 学习笔记</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>

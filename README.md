@@ -1,16 +1,16 @@
 # 徐皓天 · Personal homepage
 
-Single-page, bilingual personal website for [pku-xht.github.io](https://pku-xht.github.io/).
+Bilingual personal homepage and Chinese blog for [pku-xht.github.io](https://pku-xht.github.io/).
 
 ## Local preview
 
 Run a static server from this directory, for example:
 
 ```sh
-python -m http.server 8789 --bind 127.0.0.1
+python -S -X utf8 -m http.server 8791 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8789/`. No package installation or build step is required.
+Open `http://127.0.0.1:8791/` or `/blog/`. The checked-in static pages need no package installation or build step to preview.
 
 ## Editing content
 
@@ -51,10 +51,35 @@ The `.nojekyll` file tells GitHub to serve the static files directly.
 - `assets/`: local site artwork and icons.
 - `DESIGN.md`: implementation direction.
 
-The website uses no analytics, external font requests or third-party JavaScript.
+The website uses no analytics, remote fonts or third-party runtime scripts. Blog formulas are rendered during generation with a vendored KaTeX build; its CSS and fonts are served locally.
 
 ## Blog migration
 
 The public-content inventory and batch status for the migration from `www.xht37.com` are maintained in [migration/README.md](migration/README.md). Non-public WordPress content remains on the old site and must stay outside this public repository.
 
-Blog layout candidates are documented in [design/README.md](design/README.md). Open `design/blog-options.html` in the local preview to compare them; the candidates are not linked from the public homepage.
+The owner selected **C · personal blog**: warm paper, serif headings, excerpt lists and single-column articles with collapsible contents. The first batch contains all 29 public notes. [design/README.md](design/README.md) retains the earlier alternatives as design history; they are not linked from the homepage.
+
+### Blog sources and generation
+
+- `migration/sources/notes-2026-10-23.json`: checked anonymous public source snapshot, with original HTML, dates and content hashes. It contains no authenticated exports.
+- `migration/sources/media.json`: original image URLs and hashes; files live in `blog/media/`.
+- `migration/sources/note-summaries.json`: explicit list-excerpt overrides; these do not modify article bodies.
+- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of `blog/index.html`, `blog/archive/index.html`, and `blog/posts/<WordPress-ID>/index.html`.
+- `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt search and code-copy enhancement. Articles and archive remain readable without JavaScript.
+- `migration/notes-batch1.json`: generated URL mapping and per-article counts; publication state is local-only until deployment is explicitly performed and checked.
+
+Regenerate from the approved snapshot using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
+
+```sh
+python -S -X utf8 tools/build_blog.py
+python -S -X utf8 tools/check_blog.py
+node --check blog/blog.js
+```
+
+No network or package installation is used by these commands. Edit the source snapshot or summary metadata, then regenerate; direct edits to generated article HTML will be overwritten. A new migration batch must first retain the source site's public/private boundary and the confirmed batch scope.
+
+The generator preserves body text, code, images and original dates, removes the injected old visit counter, normalizes heading levels, creates contents links, and redirects links between migrated articles to their new local pages. TeX rendering only adapts WordPress en dashes to minus signs and the old literal XOR caret spelling; the unmodified TeX remains in `data-original-math` for comparison. `check_blog.py` independently restores that TeX and compares all article text, code, tables, images, dates, local links and font paths with the snapshot.
+
+Generated post HTML retains the original code's trailing spaces. Its scoped Git whitespace attribute permits those bytes; the independent code comparison still checks them exactly.
+
+The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. Old-site redirects, comments and private content are outside this batch.

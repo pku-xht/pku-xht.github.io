@@ -16,13 +16,13 @@ Within ordinary records, keep the leading institution or course name at 15px / 6
 The first release uses personal information confirmed by the owner. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
 
 ## Interaction thesis
-- Six compact navigation anchors provide direct access to the page sections.
+- The compact header links to the six homepage sections and to Blog.
 - Gentle section reveals help the reader follow the page while scrolling.
 - Link underlines and the language selector respond clearly to focus and hover.
 - All animation respects reduced-motion preferences.
 
 ## Implementation
-- Dependency-free HTML, CSS, and JavaScript, published from the repository root with GitHub Pages.
+- Static HTML, CSS, and JavaScript, published from the repository root with GitHub Pages. The homepage is hand-maintained; blog generation is documented in `README.md`.
 - `content.js` contains bilingual personal content. Optional empty arrays remain hidden.
 - `site.js` renders content safely as text, handles navigation and language selection, and updates the document language and metadata.
 - On first visit, use the browser's preferred supported language; remember an explicit language choice. Support `?lang=zh` and `?lang=en` links.
@@ -48,3 +48,13 @@ The first release uses personal information confirmed by the owner. Optional sec
 - [Jon Barron](https://jonbarron.info/): compact publication entries and readable author/resource lines.
 
 The final layout uses its own HTML and CSS. The reference sites inform the hierarchy rather than supplying copied code or personal content. GitHub Pages serves this static site from the root of the `main` branch.
+
+## Blog: selected C direction
+
+The owner selected C · personal blog on 2026-10-23. The homepage retains the academic layout above. The blog has its own warm paper (`#fcfbf8`), dark gray-green text, the existing blue links, serif Chinese titles, a maximum 800px page width and 760px article width. Body text is 16px with 1.9 line height. Index and article headings are 34px and 32px; phone layouts reduce them while retaining readable body text.
+
+The index presents date-ordered article excerpts with original publication dates, category, and original modification date when its day differs. Search filters titles and excerpts. The archive groups all migrated articles by original year. This batch uses the original category “笔记”; the unselected B prototype's inferred topic groups are not used.
+
+Articles retain the complete Chinese body. A collapsible contents block uses the original heading hierarchy normalized to start at level two; it starts closed for more than ten headings. Formula HTML and MathML are rendered in advance, with local font files. Images, including the animated GIF, are local copies. Code blocks, long formulas and tables scroll within their own width. Copy buttons and search enhance the static HTML; basic reading needs no JavaScript.
+
+Each article links to its old source and its newer/older migrated neighbors. URLs use `/blog/posts/<original WordPress ID>/`. The homepage includes a bilingual `navBlog` label and a Chinese HTML fallback. This batch adds no theme sidebar, fabricated tags, comment service or visit counter.

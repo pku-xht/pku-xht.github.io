@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><meta name="theme-color" content="#fcfbf8">
+<title>虚树 学习笔记 · 徐皓天</title><meta name="description" content="又是以前学过的知识…… 对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。">
+<link rel="canonical" href="https://pku-xht.github.io/blog/posts/671/">
+<meta property="og:title" content="虚树 学习笔记 · 徐皓天"><meta property="og:description" content="又是以前学过的知识…… 对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。">
+<meta property="og:type" content="article"><meta property="og:url" content="https://pku-xht.github.io/blog/posts/671/">
+<link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+<link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
+</head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>虚树 学习笔记</h1><p class="post-meta"><time datetime="2020-02-26T22:02:06+08:00">2020 年 2 月 26 日</time><span>笔记</span><span>更新于 2020 年 4 月 3 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">概念</a></li><li class="toc-level-2"><a href="#section-2">构造</a></li><li class="toc-level-4"><a href="#section-3">【模板】</a></li><li class="toc-level-4"><a href="#section-4">【练习】<a href="https://www.luogu.com.cn/problem/P3320" target="_blank" rel="noopener noreferrer">P3320 [SDOI2015]寻宝游戏</a></a></li><li class="toc-level-2"><a href="#section-5">参考资料</a></li></ol></details><div class="prose"><blockquote><p>
+  又是以前学过的知识……<br>
+  对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。
+</p></blockquote>
+<h2 id="section-1">概念</h2>
+<p>有这样一类树上数据结构题，每组询问会涉及树中若干个<strong>关键点</strong>，但所有询问涉及的关键点总数并不多（通常需要输入这些关键点，所以也不可能太多，一般与树的大小同阶）。</p>
+<p>对于这样的问题，每次询问我们并不需要知道整棵树的结构信息，而只需要知道关键点之间的结构信息。那么，我们可以考虑建出一棵<strong>虚树</strong>，只保留关键点间的相对结构。</p>
+<p>为了保留相对结构，我们除了要将关键点保留，还需要将它们两两的 LCA 保留，同时虚树中一条边的边权为原树中对应路径的边权和。</p>
+<p>可以证明，树上 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个关键点两两的 LCA 个数不超过 <span class="math-inline" data-original-math="$k-1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，这意味着虚树的节点数是 <span class="math-inline" data-original-math="$\mathcal O(k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span> 的，非常优秀。</p>
+<h2 id="section-2">构造</h2>
+<p>与<a href="/blog/posts/511/">笛卡尔树</a>的构造类似，核心都是用栈维护右链。</p>
+<p>考虑按 dfs 序依次将关键点插入虚树，为了方便，我们新增一个超级根指向原来的树根。</p>
+<p>一开始栈中只有一个超级根，当要加入点 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 的时候，我们求出 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 与栈顶元素 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 的 LCA（由于超级根的存在，栈不会为空），记为点 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span>。</p>
+<p>若 <span class="math-inline" data-original-math="$p = v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">p = v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，说明 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 是 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 的祖先，因此直接将 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 加入栈，延长右链。</p>
+<p>否则说明 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 和 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 在 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 的不同子树中，因此我们要更新右链，注意此时 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 一定在右链中，但不一定在栈中。</p>
+<p>所以我们不断退栈并连边，直到栈顶的第二个元素的深度比 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 小，分类讨论一下栈顶和 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 是否为同一个点，然后退栈，加入 <span class="math-inline" data-original-math="$p,u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo separator="true">,</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">p,u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span></span></span></span></span>。</p>
+<p>最后将栈中的点连边即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n) – \mathcal O(k \log k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mi>log</mi><mo>⁡</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n) - \mathcal O(k \log k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span>。</p>
+<h4 id="section-3">【模板】</h4>
+<pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
+int n, m, q, dfn[N], tot, f[N][21], d[N], s[N], t;
+vi e[N], g[N];
+
+void dfs(int x) {
+    dfn[x] = ++tot;
+    for (int y : e[x])
+        if (y != f[x][0]) {
+            d[y] = d[x] + 1, f[y][0] = x;
+            for (int i = 1; f[y][i-1]; i++)
+                f[y][i] = f[f[y][i-1]][i-1];
+            dfs(y);
+        }
+}
+
+inline int lca(int x, int y) {
+    if (d[x] &gt; d[y]) swap(x, y);
+    for (int i = 20; ~i; i--)
+        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+    if (x == y) return x;
+    for (int i = 20; ~i; i--)
+        if (f[x][i] != f[y][i])
+            x = f[x][i], y = f[y][i];
+    return f[x][0];
+}
+
+inline void virtual_tree(vi &amp;p) {
+    sort(p.begin(), p.end(), [](int x, int y) { return dfn[x] &lt; dfn[y]; });
+    //p.erase(unique(p.begin(), p.end()), p.end());
+    vi q = p;
+    for (int x : p) {
+        int lca = ::lca(x, s[t]);
+        if (lca != s[t]) {
+            while (t &amp;&amp; d[s[t-1]] &gt;= d[lca])
+                g[s[t-1]].pb(s[t]), g[s[t]].pb(s[t-1]), --t;
+            if (lca != s[t])
+                g[lca].pb(s[t]), g[s[t]].pb(lca), s[t] = lca, q.pb(lca);
+        }
+        s[++t] = x;
+    }
+    if (t) while (--t) g[s[t]].pb(s[t+1]), g[s[t+1]].pb(s[t]);
+    p = q;
+}
+
+int main() {
+    rd(n), rd(q);
+    for (int i = 1, x, y; i &lt; n; i++)
+        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+    d[1] = 1, dfs(1);
+    while (q--) {
+        rd(m);
+        vi a, p;
+        for (int i = 1, x; i &lt;= m; i++)
+            rd(x), a.pb(x), p.pb(x);
+        virtual_tree(p);
+        /*
+        for (int x : p)
+            for (int y : g[x])
+                if (x &lt; y) debug("%d %d\n", x, y);
+        */
+        // to do
+        for (int x : p) g[x].clear();
+    }
+    return 0;
+}
+</code></pre>
+<h4 id="section-4">【练习】<a href="https://www.luogu.com.cn/problem/P3320" target="_blank" rel="noopener noreferrer">P3320 [SDOI2015]寻宝游戏</a></h4>
+<pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
+int n, m, dfn[N], rnk[N], num, d[N], f[N][21];
+bool v[N];
+vector&lt;pi&gt; e[N];
+ll s[N], ans;
+set&lt;int&gt; st;
+
+void dfs(int x, int fa) {
+    dfn[x] = ++num, rnk[num] = x, d[x] = d[f[x][0]=fa] + 1;
+    for (int j = 1; f[x][j-1]; j++) f[x][j] = f[f[x][j-1]][j-1];
+    for (pi o : e[x])
+        if (o.fi != fa) s[o.fi] = s[x] + o.se, dfs(o.fi, x);
+}
+
+inline int lca(int x, int y) {
+    if (d[x] &gt; d[y]) swap(x, y);
+    for (int i = 20; ~i; i--)
+        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+    if (x == y) return x;
+    for (int i = 20; ~i; i--)
+        if (f[x][i] != f[y][i])
+            x = f[x][i], y = f[y][i];
+    return f[x][0];
+}
+
+inline ll S(int x, int y) {
+    return s[x] + s[y] - 2 * s[lca(x,y)];
+}
+
+int main() {
+    rd(n), rd(m);
+    for (int i = 1, x, y, z; i &lt; n; i++)
+        rd(x), rd(y), rd(z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+    dfs(1, 0);
+    while (m--) {
+        int x;
+        rd(x), x = dfn[x];
+        if (!v[rnk[x]]) st.insert(x);
+        auto it = st.lower_bound(x);
+        int y = rnk[it==st.begin()?*--st.end():*--it];
+        it = st.upper_bound(x);
+        int z = rnk[it==st.end()?*st.begin():*it];
+        if (v[rnk[x]]) st.erase(x);
+        x = rnk[x];
+        ll d = S(x, y) + S(x, z) - S(y, z);
+        if (!v[x]) v[x] = 1, ans += d;
+        else v[x] = 0, ans -= d;
+        print(ans);
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="section-5">参考资料</h2>
+<ul>
+<li>Sengxian <a href="https://blog.sengxian.com/algorithms/virtual-tree" target="_blank" rel="noopener noreferrer">虚树学习笔记</a></li>
+</ul>
+</div><p class="source-note">本文迁自 <a href="https://www.xht37.com/%e8%99%9a%e6%a0%91-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。</p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/678/"><span>较新一篇</span>左偏树 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/656/"><span>较早一篇</span>Lyndon 分解 学习笔记</a></nav></article></main>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
+</body></html>
