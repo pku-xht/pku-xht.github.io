@@ -9,10 +9,10 @@
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="stylesheet" href="/blog/blog.css?v=1"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/blog/blog.js?v=1"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
-<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>虚树 学习笔记</h1><p class="post-meta"><time datetime="2020-02-26T22:02:06+08:00">2020 年 2 月 26 日</time><a href="/blog/categories/13/">笔记</a><span>更新于 2020 年 4 月 3 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">概念</a></li><li class="toc-level-2"><a href="#section-2">构造</a></li><li class="toc-level-4"><a href="#section-3">【模板】</a></li><li class="toc-level-4"><a href="#section-4">【练习】P3320 [SDOI2015]寻宝游戏</a></li><li class="toc-level-2"><a href="#section-5">参考资料</a></li></ol></details><div class="prose"><blockquote><p>
-  又是以前学过的知识……<br>
-  对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。
-</p></blockquote>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>虚树 学习笔记</h1><p class="post-meta"><time datetime="2020-02-26T22:02:06+08:00">2020 年 2 月 26 日</time><a href="/blog/categories/13/">笔记</a><span>更新于 2020 年 4 月 3 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">概念</a></li><li class="toc-level-2"><a href="#section-2">构造</a></li><li class="toc-level-4"><a href="#section-3">【模板】</a></li><li class="toc-level-4"><a href="#section-4">【练习】P3320 [SDOI2015]寻宝游戏</a></li><li class="toc-level-2"><a href="#section-5">参考资料</a></li></ol></details><div class="prose"><blockquote>
+<p>又是以前学过的知识……<br>
+对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。</p>
+</blockquote>
 <h2 id="section-1">概念</h2>
 <p>有这样一类树上数据结构题，每组询问会涉及树中若干个<strong>关键点</strong>，但所有询问涉及的关键点总数并不多（通常需要输入这些关键点，所以也不可能太多，一般与树的大小同阶）。</p>
 <p>对于这样的问题，每次询问我们并不需要知道整棵树的结构信息，而只需要知道关键点之间的结构信息。那么，我们可以考虑建出一棵<strong>虚树</strong>，只保留关键点间的相对结构。</p>

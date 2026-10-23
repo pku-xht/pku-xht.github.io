@@ -1,8 +1,11 @@
-"""Independently compare all generated public content with its checked snapshot.
+"""Check Markdown sources against generated pages and optionally their original archive.
 
 This checker deliberately does not import the generator: the source HTML, routes,
 indexes, media bytes and generated report are checked against one another here.
+The opt-in archive comparison reads immutable WordPress HTML independently of the
+Markdown renderer, so a shared rendering bug cannot establish migration fidelity.
 """
+import argparse
 import hashlib
 import html
 import json
@@ -213,13 +216,13 @@ def check_cards(document, sources, label, tags):
         destination = links[0].attrs.get("href")
         assert destination in expected, (label, destination, "unexpected card")
         source = expected[destination]
-        assert canonical(links[0]) == " ".join(html.unescape(source["title"]).split()), (label, source["id"], "card title changed")
+        assert canonical(links[0]) == " ".join(source["title"].split()), (label, source["id"], "card title changed")
         times = [n for n in nodes(card) if n.tag == "time"]
         assert len(times) == 1 and times[0].attrs.get("datetime") == source["date"] + "+08:00", (label, source["id"], "card date changed")
         assert canonical(times[0]) == visible_date(source["date"]), (label, source["id"], "visible card date changed")
         searchable = card.attrs.get("data-search", "")
         for tag_id in source.get("tags", []):
-            assert html.unescape(tags[tag_id]["name"]) in searchable, (label, source["id"], tag_id, "original tag absent from search index")
+            assert tags[tag_id]["name"] in searchable, (label, source["id"], tag_id, "original tag absent from search index")
         actual.append(destination)
     assert_routes(actual, list(expected), label)
     assert actual == [route(p) for p in sources], (label, "source chronological order changed")
@@ -248,7 +251,7 @@ def check_archive(document, sources):
             destination = links[0].attrs.get("href")
             assert destination in expected, (destination, "unexpected archive item")
             source = expected[destination]
-            assert canonical(links[0]) == " ".join(html.unescape(source["title"]).split()), (source["id"], "archive title changed")
+            assert canonical(links[0]) == " ".join(source["title"].split()), (source["id"], "archive title changed")
             times = [n for n in nodes(item) if n.tag == "time"]
             assert len(times) == 1 and times[0].attrs.get("datetime") == source["date"] + "+08:00", (source["id"], "archive date changed")
             assert canonical(times[0]) == source["date"][5:10] and year == source["date"][:4], (source["id"], "archive visible date changed")
@@ -258,10 +261,74 @@ def check_archive(document, sources):
     assert years == sorted({p["date"][:4] for p in sources}, reverse=True), "archive year missing, duplicate or reordered"
 
 
-def main():
-    batch = json.loads((ROOT / "migration/sources/public-2026-10-23.json").read_text(encoding="utf-8"))
+def assert_preserved_content(reference, current, media, paths=None, by_id=None):
+    """Compare original HTML with the Markdown render without using exporter code."""
+    before, after = source_document(reference), source_document(current)
+    identifier = current["id"]
+    assert canonical(before) == canonical(after), (identifier, "original snapshot: text changed during Markdown conversion")
+    assert structural_tags(before) == structural_tags(after), (identifier, "original snapshot: nested structure changed")
+    assert original_formulas(before) == original_formulas(after), (identifier, "original snapshot: TeX changed")
+    for tag in ("pre", "code"):
+        assert [content(n) for n in nodes(before) if n.tag == tag] == [content(n) for n in nodes(after) if n.tag == tag], (identifier, "original snapshot", tag, "code bytes changed")
+    before_headings = [n for n in nodes(before) if re.fullmatch(r"h[1-6]", n.tag)]
+    after_headings = [n for n in nodes(after) if re.fullmatch(r"h[1-6]", n.tag)]
+    assert [(n.tag, canonical(n)) for n in before_headings] == [(n.tag, canonical(n)) for n in after_headings], (identifier, "original snapshot: heading hierarchy or text changed")
+    for tag, attribute in (("img", "src"), ("a", "href")):
+        original_urls = [expected_link(n.attrs.get(attribute, ""), paths or {}, by_id or {}, media) for n in nodes(before) if n.tag == tag]
+        current_urls = [expected_link(n.attrs.get(attribute, ""), paths or {}, by_id or {}, media) for n in nodes(after) if n.tag == tag]
+        assert original_urls == current_urls, (identifier, "original snapshot", attribute, "media or links changed")
+
+
+def check_original_snapshot(batch, path, media):
+    archive = json.loads(path.read_text(encoding="utf-8"))
+    assert archive["visibility"] == "anonymous-public-only"
+    old_sources = archive["posts"] + archive.get("pages", [])
+    current_sources = batch["posts"] + batch.get("pages", [])
+    current_by_id = {p["id"]: p for p in current_sources}
+    assert {p["id"] for p in old_sources} == set(current_by_id), "original snapshot: document scope changed"
+    paths = {normalized_path(p["link"]): route(p) for p in current_sources}
+    by_id = {p["id"]: route(p) for p in current_sources}
+    old_taxonomy = {key: {item["id"]: html.unescape(item["name"]) for item in archive[key]} for key in ("categories", "tags")}
+    current_taxonomy = {key: {item["id"]: item["name"] for item in batch[key]} for key in ("categories", "tags")}
+    old_resources = json.loads((path.parent / "media.json").read_text(encoding="utf-8"))
+    current_resources = {item["original_url"]: item for item in batch["resources"]}
+    assert {item["original_url"] for item in old_resources} == set(current_resources), "original snapshot: resource scope changed"
+    for item in old_resources:
+        for key in ("path", "sha256", "bytes"):
+            assert item[key] == current_resources[item["original_url"]][key], (item["original_url"], "original snapshot: resource metadata changed", key)
+    old_anchors = json.loads((path.parent / "legacy-anchors.json").read_text(encoding="utf-8"))
+    assert old_anchors["visibility"] == "anonymous-public-only"
+    for anchor in old_anchors["anchors"]:
+        assert current_by_id[anchor["post_id"]].get("legacy_anchors", {}).get(anchor["fragment"]) == anchor["heading_text"], (anchor["post_id"], "original snapshot: verified anchor changed")
+    for reference in old_sources:
+        identifier = reference["id"]
+        current = current_by_id[identifier]
+        assert reference["status"] == "publish" and not reference["protected"]
+        assert hashlib.sha256(reference["content_html"].encode()).hexdigest() == reference["content_sha256"]
+        for key in ("type", "date", "date_gmt", "modified", "slug", "link"):
+            assert current[key] == reference[key], (identifier, "original snapshot", key, "metadata changed")
+        assert current["title"] == html.unescape(reference["title"]), (identifier, "original snapshot: title changed")
+        for key in ("categories", "tags"):
+            assert current[key] == reference[key], (identifier, "original snapshot", key, "assigned IDs changed")
+            for item in reference[key]:
+                assert current_taxonomy[key][item] == old_taxonomy[key][item], (identifier, "original snapshot", key, item, "name changed")
+        assert_preserved_content(reference, current, media, paths, by_id)
+    print(f"PASS: immutable original snapshot independently matches {len(old_sources)} Markdown documents")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--original-snapshot", nargs="?", type=Path,
+                        const=Path("migration/sources/public-2026-10-23.json"),
+                        help="also compare Markdown with the immutable migration snapshot (optional JSON path)")
+    args = parser.parse_args(argv)
+    from blog_sources import load_blog
+    batch = load_blog(ROOT / "content/blog", project_root=ROOT)
+    for group in ("posts", "pages"):
+        batch[group] = sorted(batch[group], key=lambda source: (source["date"], source["id"]), reverse=True)
+    TARGET_IDS.clear()
     report = json.loads((ROOT / "migration/public-batch.json").read_text(encoding="utf-8"))
-    assert batch["visibility"] == "anonymous-public-only"
+    assert report["source_format"] == "markdown-yaml", "build report is not based on formal Markdown sources"
     assert report["publication"] == "local-only" and report["design"] == "C"
     posts, historical_pages = batch["posts"], batch.get("pages", [])
     sources = posts + historical_pages
@@ -276,10 +343,8 @@ def main():
     assert len(category_by_id) == len(batch["categories"]), "duplicate category ID"
     tags = {t["id"]: t for t in batch["tags"]}
     assert len(tags) == len(batch["tags"]), "duplicate source tag ID"
-    aliases = json.loads((ROOT / "migration/sources/legacy-anchors.json").read_text(encoding="utf-8"))
-    assert aliases["visibility"] == "anonymous-public-only"
-    explicit_aliases = {(a["post_id"], a["fragment"]): a["heading_text"] for a in aliases["anchors"]}
-    media = json.loads((ROOT / "migration/sources/media.json").read_text(encoding="utf-8"))
+    explicit_aliases = {(p["id"], fragment): heading for p in sources for fragment, heading in p.get("legacy_anchors", {}).items()}
+    media = batch["resources"]
     media_map = {m["original_url"]: m["path"] for m in media}
     assert len(media_map) == len(media), "duplicate media original URL"
     media_by_key = {}
@@ -287,6 +352,7 @@ def main():
         key = media_key(item["original_url"])
         assert key not in media_by_key or media_by_key[key] == item["path"], (key, "ambiguous media aliases")
         media_by_key[key] = item["path"]
+        media_by_key[media_key(item["path"])] = item["path"]
     paths = {normalized_path(p["link"]): route(p) for p in sources}
     assert len(paths) == len(sources), "duplicate original permalink"
     by_id = {p["id"]: route(p) for p in sources}
@@ -312,14 +378,19 @@ def main():
         assert len(source["tags"]) == len(set(source["tags"])) and set(source["tags"]) <= set(tags)
         assert (source["type"] == "page") == (source in historical_pages)
         assert hashlib.sha256(source["content_html"].encode()).hexdigest() == source["content_sha256"]
+        expected_source = f'content/blog/{"pages" if source["type"] == "page" else "posts"}/{source["id"]}.md'
+        assert source["source_file"] == expected_source, (source["id"], "unexpected formal source path")
+        source_bytes = (ROOT / source["source_file"]).read_bytes()
+        assert hashlib.sha256(source_bytes).hexdigest() == source["source_sha256"], (source["id"], "formal source byte hash differs")
         assert (datetime.fromisoformat(source["date"]) - datetime.fromisoformat(source["date_gmt"])).total_seconds() == 28800
         original = source_document(source)
         path = ROOT / route(source).lstrip("/") / "index.html"
         document = read_document(path)
         row = report_by_id[source["id"]]
         assert row["path"] == route(source) and row["original_url"] == source["link"]
-        assert row["source_sha256"] == source["content_sha256"] and row["date"] == source["date"]
-        assert html.unescape(row["title"]) == html.unescape(source["title"])
+        assert row["source_file"] == source["source_file"] and row["source_sha256"] == source["source_sha256"]
+        assert row["content_sha256"] == source["content_sha256"] and row["date"] == source["date"]
+        assert row["title"] == source["title"]
         assert row["type"] == source["type"] and row["categories"] == source["categories"] and row["tags"] == source["tags"], (source["id"], "report metadata changed")
         prose = [n for n in nodes(document) if has_class(n, "prose")]
         assert len(prose) == 1, (source["id"], "missing or duplicate article body")
@@ -327,7 +398,7 @@ def main():
         assert canonical(original) == canonical(prose, True), (source["id"], "article text or TeX changed")
         assert structural_tags(original) == structural_tags(prose), (source["id"], "ordered HTML structure changed")
         article_title = [n for n in nodes(document) if n.tag == "h1"]
-        assert len(article_title) == 1 and canonical(article_title[0]) == " ".join(html.unescape(source["title"]).split()), (source["id"], "article title changed")
+        assert len(article_title) == 1 and canonical(article_title[0]) == " ".join(source["title"].split()), (source["id"], "article title changed")
         headings = [n for n in nodes(prose) if re.fullmatch(r"h[1-6]", n.tag)]
         source_headings = [n for n in nodes(original) if re.fullmatch(r"h[1-6]", n.tag)]
         if source_headings:
@@ -381,7 +452,7 @@ def main():
         tag_areas = [n for n in nodes(document) if has_class(n, "source-tags")]
         assert len(tag_areas) == bool(source["tags"]), (source["id"], "original tag metadata missing or duplicated")
         tag_nodes = [n for area in tag_areas for n in nodes(area) if "data-source-tag" in n.attrs]
-        assert [(n.attrs["data-source-tag"], canonical(n)) for n in tag_nodes] == [(str(i), " ".join(html.unescape(tags[i]["name"]).split())) for i in source["tags"]], (source["id"], "original tags changed")
+        assert [(n.attrs["data-source-tag"], canonical(n)) for n in tag_nodes] == [(str(i), " ".join(tags[i]["name"].split())) for i in source["tags"]], (source["id"], "original tags changed")
         for (post_id, fragment), heading_text in alias_targets.items():
             if post_id == source["id"]:
                 targets = [h for h in headings if any(n.attrs.get("id") == fragment for n in nodes(h))]
@@ -408,7 +479,7 @@ def main():
         category_id = category["id"]
         items = [p for p in posts if category_id in p["categories"]]
         assert len(items) == category["count"] == category_by_id[category_id]["count"], (category_id, "category count differs")
-        assert html.unescape(category["name"]) == html.unescape(category_by_id[category_id]["name"])
+        assert category["name"] == category_by_id[category_id]["name"]
         expected_route = f"/blog/categories/{category_id}/"
         assert category["path"] == expected_route
         category_path = ROOT / expected_route.lstrip("/") / "index.html"
@@ -441,8 +512,10 @@ def main():
             assert (path.parent / url.strip('\"\'')).is_file(), url
     for metric in ("code_blocks", "formulas", "headings", "images"):
         assert totals[metric] == report["totals"][metric]
-    print("PASS: all public text/TeX, code, ordered structure, dates, contents, complete indexes, migrated links, media hashes and font assets")
+    print("PASS: formal Markdown text/TeX, code, ordered structure, dates, contents, complete indexes, migrated links, media hashes and font assets")
     print(json.dumps({**totals, "categories": len(nonempty_categories), "media_files": len(media), "static_pages": len(pages)}, ensure_ascii=False))
+    if args.original_snapshot is not None:
+        check_original_snapshot(batch, (ROOT / args.original_snapshot).resolve(), media_by_key)
 
 
 if __name__ == "__main__":

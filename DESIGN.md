@@ -22,7 +22,7 @@ The first release uses personal information confirmed by the owner. Optional sec
 - All animation respects reduced-motion preferences.
 
 ## Implementation
-- Static HTML, CSS, and JavaScript, published from the repository root with GitHub Pages. The homepage is hand-maintained; blog generation is documented in `README.md`.
+- Static HTML, CSS, and JavaScript, published from the repository root with GitHub Pages. The homepage is hand-maintained; the blog builds from maintained Markdown/YAML as documented in `README.md`, retaining the existing C layout and ID-based URLs.
 - `content.js` contains bilingual personal content. Optional empty arrays remain hidden.
 - `site.js` renders content safely as text, handles navigation and language selection, and updates the document language and metadata.
 - On first visit, use the browser's preferred supported language; remember an explicit language choice. Support `?lang=zh` and `?lang=en` links.

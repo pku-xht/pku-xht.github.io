@@ -1,0 +1,29 @@
+[
+  {
+    "package": "markdown-it-py",
+    "version": "3.0.0",
+    "wheel": "markdown_it_py-3.0.0-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/42/d7/1ec15b46af6af88f19b8e5ffea08fa375d433c998b8a7639e76935c14f1f/markdown_it_py-3.0.0-py3-none-any.whl",
+    "sha256": "355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1",
+    "python_files": 66,
+    "scope": "pure Python sources only; optional compiled extensions omitted"
+  },
+  {
+    "package": "mdurl",
+    "version": "0.1.2",
+    "wheel": "mdurl-0.1.2-py3-none-any.whl",
+    "url": "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl",
+    "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8",
+    "python_files": 6,
+    "scope": "pure Python sources only; optional compiled extensions omitted"
+  },
+  {
+    "package": "PyYAML",
+    "version": "6.0.2",
+    "wheel": "PyYAML-6.0.2-cp39-cp39-win_amd64.whl",
+    "url": "https://files.pythonhosted.org/packages/19/87/5124b1c1f2412bb95c59ec481eaf936cd32f0fe2a7b16b97b81c4c017a6a/PyYAML-6.0.2-cp39-cp39-win_amd64.whl",
+    "sha256": "39693e1f8320ae4f43943590b49779ffb98acb81f788220ea932a6b6c51004d8",
+    "python_files": 17,
+    "scope": "pure Python sources only; optional compiled extensions omitted"
+  }
+]

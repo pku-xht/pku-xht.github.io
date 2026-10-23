@@ -1,5 +1,10 @@
 /blog/index.html linguist-generated=true
 /blog/archive/index.html linguist-generated=true
 /blog/posts/**/index.html linguist-generated=true whitespace=-blank-at-eol
+/blog/pages/**/index.html linguist-generated=true
+/blog/categories/**/index.html linguist-generated=true
+/content/blog/**/*.md whitespace=-blank-at-eol
 /assets/vendor/** linguist-vendored=true
 /tools/vendor/** linguist-vendored=true
+# Preserve upstream PyYAML source bytes, including its original whitespace.
+/tools/vendor/python/yaml/** whitespace=-blank-at-eol,-blank-at-eof

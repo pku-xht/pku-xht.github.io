@@ -24,7 +24,7 @@
 
 211 篇文章与 1 个历史页面共引用 40 张图片和 5 个旧站附件（4 个 PDF、1 个 ZIP），全部已保存原文件并核对大小与哈希。旧“关于我”作为独立历史页面保存，不覆盖现有个人主页。上述数字不包含登录后可见的内容，也不代表旧站后台的完整备份。
 
-完整文章清单见 [public-inventory.md](public-inventory.md)。全量匿名公开快照保存在 `sources/public-2026-10-23.json`，包含原始 HTML、日期、分类、标签和正文哈希；`output/` 中的最初原始响应仅是临时证据。
+完整文章清单见 [public-inventory.md](public-inventory.md)。全量匿名公开快照保存在 `sources/public-2026-10-23.json`，包含原始 HTML、日期、分类、标签和正文哈希；`output/` 中的最初原始响应仅是临时证据。快照仅用于校验，不是日常构建或修改文章的入口。
 
 接口入口使用 `https://www.xht37.com/index.php?rest_route=/wp/v2/posts&status=publish&context=view&per_page=100&page=1`，按响应分页读取。旧站的 `/wp-json/wp/v2/posts?page=…` 重写会吞掉首个查询参数，可能反复返回第一页；盘点必须同时核对总数与 ID 唯一性。
 
@@ -33,6 +33,8 @@
 首批 29 篇公开笔记完成后，用户确认将其余公开文章和历史页面全部迁入本地。当前包括 **211 篇公开文章、1 个历史页面、4 个非空分类页**，保留原文、原日期、分类和标签。隐藏内容与评论继续留在旧站。
 
 沿用用户选定的 [C · 个人博客](../DESIGN.md)：纸色背景、衬线标题、摘要列表、标题／摘要／分类／原标签搜索、按年份归档、完整正文和可折叠目录。主页保留原有布局，新增中英文博客入口；历史页面有独立提示。
+
+全部正文的正式维护源现为 `content/blog/posts/*.md` 与 `content/blog/pages/*.md`，每篇自带 YAML 元数据。`collection.yaml` 登记完整文件集合，`resources.yaml` 维护资源映射；普通构建不读取原快照。维护方法与唯一正式命令以根 `README.md` 为准，Markdown 转换验证见 [validation-markdown-2026-10-24.md](validation-markdown-2026-10-24.md)。
 
 | 本批核验项 | 已核对数量 |
 |---|---:|

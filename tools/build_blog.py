@@ -1,4 +1,4 @@
-"""Build the approved public blog batch from its checked, anonymous snapshot.
+"""Build the public blog from its registered Markdown + YAML source files.
 
 Python 3.9+ and Node.js; no network, cookies, package install or deployment.
 """
@@ -7,13 +7,16 @@ import html
 import json
 import re
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "migration/sources/public-2026-10-23.json"
+if str(Path(__file__).resolve().parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+from blog_sources import load_blog
 ALLOWED = set("p br strong em b i u s del h1 h2 h3 h4 h5 h6 ul ol li a code pre blockquote hr img table thead tbody tr th td sup sub span div".split())
 VOID = {"br", "hr", "img"}
 
@@ -134,7 +137,7 @@ def split_math(value, post_id):
 
 
 def prepare_math(node, post_id):
-    if not isinstance(node, Element) or node.tag in {"pre", "code"}:
+    if not isinstance(node, Element) or node.tag in {"pre", "code"} or node.attrs.get("data-blog-literal-dollar") == "1":
         return
     children, run = [], []
 
@@ -180,6 +183,11 @@ def local_target(value, routes, media):
     resource_url = value.split("#", 1)[0]
     if resource_url in media:
         return media[resource_url]["path"] + fragment
+    resource_key = (parts.hostname, unquote(parts.path), parts.query)
+    for original, item in media.items():
+        candidate = urlsplit(original)
+        if resource_key == (candidate.hostname, unquote(candidate.path), candidate.query):
+            return item["path"] + fragment
     # Old content mixes http/https for the same public upload.
     for alternate in ("https:" + resource_url[5:] if resource_url.startswith("http:") else "", "http:" + resource_url[6:] if resource_url.startswith("https:") else ""):
         if alternate in media:
@@ -198,9 +206,7 @@ def add_legacy_anchors(documents, routes, media):
     """Keep verified old heading fragments used by the migrated public corpus."""
     by_route = {post["route"]: post for post in documents}
     normalize = lambda value: re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
-    evidence = json.loads((ROOT / "migration/sources/legacy-anchors.json").read_text(encoding="utf-8"))
-    assert evidence["visibility"] == "anonymous-public-only"
-    verified = {(row["post_id"], row["fragment"]): row["heading_text"] for row in evidence["anchors"]}
+    verified = {(post["id"], fragment): heading for post in documents for fragment, heading in post.get("legacy_anchors", {}).items()}
     for post in documents:
         for node in walk(post["tree"]):
             if not isinstance(node, Element) or node.tag != "a":
@@ -317,18 +323,18 @@ def write(route, content):
 
 
 def main():
-    batch = json.loads(SOURCE.read_text(encoding="utf-8"))
-    assert batch["visibility"] == "anonymous-public-only"
+    source_dir = ROOT / "content/blog"
+    batch = load_blog(source_dir, project_root=ROOT)
+    assert batch["source_format"] == "markdown-yaml"
     posts = sorted(batch["posts"], key=lambda p: (p["date"], p["id"]), reverse=True)
     pages = sorted(batch.get("pages", []), key=lambda p: (p["date"], p["id"]), reverse=True)
     documents = posts + pages
     assert len(posts) == len({p["id"] for p in posts}) == batch["count"]
     assert len(pages) == len({p["id"] for p in pages})
     assert len({p["id"] for p in documents}) == len(documents)
-    categories = {c["id"]: {**c, "name": html.unescape(c["name"])} for c in batch["categories"]}
-    tags = {tag["id"]: {**tag, "name": html.unescape(tag["name"])} for tag in batch.get("tags", [])}
-    summaries = json.loads((ROOT / "migration/sources/note-summaries.json").read_text(encoding="utf-8"))
-    media_list = json.loads((ROOT / "migration/sources/media.json").read_text(encoding="utf-8"))
+    categories = {category["id"]: dict(category) for category in batch["categories"]}
+    tags = {tag["id"]: dict(tag) for tag in batch.get("tags", [])}
+    media_list = batch["resources"]
     media = {m["original_url"]: m for m in media_list}
     for item in media_list:
         assert hashlib.sha256((ROOT / item["path"].lstrip("/")).read_bytes()).hexdigest() == item["sha256"]
@@ -346,7 +352,6 @@ def main():
         assert all(category in categories for category in post["categories"])
         assert all(tag in tags for tag in post.get("tags", []))
         assert hashlib.sha256(post["content_html"].encode()).hexdigest() == post["content_sha256"]
-        post["title"] = html.unescape(post["title"])
         root = parse(post["content_html"])
         paragraphs = [text(n).strip() for n in walk(root) if isinstance(n, Element) and n.tag == "p" and text(n).strip()]
         excerpt = paragraphs[0] if paragraphs else post["title"]
@@ -355,7 +360,7 @@ def main():
         excerpt = re.sub(r"\\(?:mathcal|mathrm|operatorname|text)\s*", "", excerpt)
         symbols = {"le": "≤", "leq": "≤", "ge": "≥", "geq": "≥", "times": "×"}
         excerpt = re.sub(r"\\(leq|geq|le|ge|times)(?![A-Za-z])", lambda m: symbols[m.group(1)], excerpt)
-        post["excerpt"] = summaries.get(str(post["id"]), excerpt[:140] + ("…" if len(excerpt) > 140 else ""))
+        post["excerpt"] = post.get("summary", excerpt[:140] + ("…" if len(excerpt) > 140 else ""))
         prepare_math(root, post["id"])
         headings = [n for n in walk(root) if isinstance(n, Element) and re.fullmatch(r"h[1-6]", n.tag)]
         if headings:
@@ -379,7 +384,7 @@ def main():
             print(repr(key), error)
         raise ValueError(f"{len(errors)} unique TeX expressions failed")
     formulas = {key: row["html"] for key, row in zip(keys, rendered)}
-    report = {"batch": "public-2026-10-23", "source": str(SOURCE.relative_to(ROOT)).replace("\\", "/"), "design": "C", "publication": "local-only", "posts": [], "pages": [], "categories": []}
+    report = {"batch": "public-2026-10-23", "source_format": "markdown-yaml", "source": "content/blog", "design": "C", "publication": "local-only", "posts": [], "pages": [], "categories": []}
 
     def category_route(category_id):
         return f"/blog/categories/{category_id}/"
@@ -447,7 +452,7 @@ def main():
         body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}</header>{history_note}{toc}<div class="prose">{body_html}</div><p class="source-note">本文迁自 <a href="{escape(post["link"])}" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。{image_credit}</p>{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
         math_count = sum(isinstance(n, Math) for n in walk(root))
         write(post["route"], page(post["title"], post["excerpt"], post["route"], body, has_math=math_count > 0))
-        report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
+        report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_file": post["source_file"], "source_sha256": post["source_sha256"], "content_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
     body = '<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p></section>' + category_navigation() + historical_pages() + search_list(posts)
     write("/blog/", page("博客", "徐皓天的算法、数学、学习笔记与生活记录。", "/blog/", body))
     years = {}

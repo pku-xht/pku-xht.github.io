@@ -61,13 +61,26 @@ The owner selected **C · personal blog**: warm paper, serif headings, excerpt l
 
 ### Blog sources and generation
 
-- `migration/sources/public-2026-10-23.json`: current checked anonymous public snapshot, including original HTML, dates, categories, tags and content hashes. The earlier `notes-2026-10-23.json` remains as the first-batch baseline. Neither contains authenticated exports.
-- `migration/sources/media.json`: original image and attachment URLs, hashes, sizes and referring documents; files live in `blog/media/`.
-- `migration/sources/legacy-anchors.json`: original-page evidence for legacy fragments that cannot be matched directly to a unique heading name.
-- `migration/sources/note-summaries.json`: explicit list-excerpt overrides; these do not modify article bodies.
+- `content/blog/posts/<WordPress-ID>.md`: the 211 maintained article sources, each with YAML front matter.
+- `content/blog/pages/<WordPress-ID>.md`: maintained historical pages; currently `215.md`, the old About page.
+- `content/blog/collection.yaml`: the registered source-file set. Missing, duplicate or unregistered Markdown files fail the build.
+- `content/blog/resources.yaml`: the maintained image and attachment map, with original URLs, local paths, byte sizes and hashes. Files remain in `blog/media/`.
+- `tools/blog_sources.py`: safe YAML loading and CommonMark rendering with raw TeX and complex HTML preservation. Pure Python dependencies are pinned in `tools/vendor/python/`.
 - `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, `blog/posts/<WordPress-ID>/`, `blog/pages/<WordPress-ID>/`, and nonempty `blog/categories/<category-ID>/`.
 - `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.
-- `migration/public-batch.json`: current URL mapping and per-document counts; publication state is local-only until deployment is explicitly performed and checked. `migration/notes-batch1.json` records the earlier batch and is not regenerated.
+- `migration/public-batch.json`: generated URL mapping, counts, maintained source filenames and SHA-256 values; publication remains local-only until deployment is explicitly performed and checked.
+
+The original `migration/sources/public-2026-10-23.json` and its embedded original HTML, image map, legacy-anchor evidence, earlier notes snapshot and summary overrides remain unchanged as migration evidence. Normal builds do not read these snapshots or restore their content over maintained Markdown. `notes-batch1.json` records the earlier batch.
+
+### Editing an article
+
+Edit the existing Markdown source, for example [1154.md](content/blog/posts/1154.md). Its YAML front matter contains `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and an optional `summary`. Keep the original ID, type and URL stable to retain the current route. Dates include the original `+08:00` timezone; categories and tags are lists of `{id, name}` mappings. The summary controls the list excerpt, or may be omitted for automatic extraction.
+
+Use normal Markdown headings, paragraphs, links, lists, block quotes and fenced code. `$...$` and `$$...$$` preserve original TeX, including backslashes, underscores and multiline display formulas. Complex HTML blocks are supported where conversion would change structure or content. Preserve intentional Markdown hard breaks and original code trailing spaces.
+
+An optional `legacy_anchors` mapping records old fragments that cannot be inferred from unique heading names; `129.md` contains the verified `lwptoc45` target. Adding or deliberately removing an article or historical page requires updating both its Markdown file and `collection.yaml`; changing its anchors does not. Review the corresponding generated path when removing a document, since the checker rejects stale pages outside the collection. New images and attachments also need a `resources.yaml` entry. Do not hand-edit generated blog HTML.
+
+### Original-site import tools
 
 `tools/sync_public_blog.py` refreshes a public snapshot and its directly referenced images and old-site attachments. It uses anonymous requests without browser cookies, verifies `publish` and password-protection flags before saving, checks pagination totals and unique IDs, and downloads at most four assets at a time. It does not collect comments or sign in. Use it only for a confirmed migration scope; a normal rebuild is offline and does not need this network step:
 
@@ -75,9 +88,19 @@ The owner selected **C · personal blog**: warm paper, serif headings, excerpt l
 python -S -u -X utf8 tools/sync_public_blog.py --checked-on 2026-10-23
 ```
 
-If the source snapshot is already complete, add `--assets-only` to resume asset downloads. Existing hashed assets are reused; a partial unrecorded download is compared with a fresh download before reuse. The generator intentionally reads the approved snapshot named above; a later dated source needs an explicit scope update in the generator and independent checker.
+If the source snapshot is complete, add `--assets-only` to resume asset downloads. Existing hashed assets are reused; partial unrecorded downloads are compared with fresh downloads before reuse. This network tool does not update maintained Markdown.
 
-Regenerate from the approved snapshot using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
+`tools/import_blog_markdown.py` is the one-time snapshot-to-Markdown converter. It validates each block and whole document before writing, and refuses to overwrite existing Markdown, `collection.yaml` or `resources.yaml`:
+
+```sh
+python -S -X utf8 tools/import_blog_markdown.py
+```
+
+The current collection is already imported. For a later batch, use a separate `--output-root` for review and merge approved sources and manifests deliberately. Do not import over maintained files.
+
+### Build and check
+
+Regenerate from maintained Markdown/YAML using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
 
 ```sh
 python -S -X utf8 tools/build_blog.py
@@ -85,10 +108,17 @@ python -S -X utf8 tools/check_blog.py
 node --check blog/blog.js
 ```
 
-No network or package installation is used by these commands. Edit the source snapshot or summary metadata, then regenerate; direct edits to generated article HTML will be overwritten. A new migration batch must first retain the source site's public/private boundary and the confirmed batch scope.
+No network or package installation is used. The default checker compares maintained sources with generated pages, indexes and resources, allowing intentional future edits. To additionally check fidelity against the preserved original JSON/HTML, run:
 
-The generator preserves body text, code, images and original dates, removes the injected old visit counter, normalizes heading levels, creates contents links, and redirects links between migrated articles to their new local pages. Contents entries always link to local headings, including headings whose body text contains an external link. TeX rendering only adapts WordPress en dashes to minus signs and the old literal XOR caret spelling; the unmodified TeX remains in `data-original-math` for comparison. `check_blog.py` independently restores that TeX and compares all article text, code, tables, images, dates, local links and font paths with the snapshot, and checks every contents label and heading target.
+```sh
+python -S -X utf8 tools/check_blog.py --original-snapshot
+python -S -X utf8 tools/test_blog_sources.py
+```
 
-Generated post HTML retains the original code's trailing spaces. Its scoped Git whitespace attribute permits those bytes; the independent code comparison still checks them exactly.
+The original-snapshot mode checks complete text, original TeX, exact code bytes, metadata, ordered HTML structure, resource provenance and old anchor evidence. Intentional later edits may fail this archival comparison while passing the normal source check. Isolated tests use temporary files to verify that edits affect real builds, missing or corrupt sources fail, and builds work without original snapshots.
+
+The generator normalizes heading levels, creates contents links, and redirects links between migrated articles to local pages. Each contents entry links only to its local heading. TeX rendering adapts only old WordPress en dashes and the old literal XOR caret spelling; unmodified TeX remains in `data-original-math` for comparison.
+
+Markdown sources and generated post HTML retain intentional trailing spaces. Their scoped Git whitespace attributes permit those bytes; independent code comparison still checks them exactly.
 
 The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. The old About page is presented as a historical archive and does not replace current homepage facts. Comments remain on the old site by the owner's choice. Old-site redirects and private content are outside this migration.

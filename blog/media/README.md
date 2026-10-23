@@ -1,6 +1,6 @@
 # 旧文图片与附件来源
 
-全量迁移包含 40 张图片和 5 个附件，均由本轮已核实的公开文章或页面直接引用，按字节原样保存。原 URL、下载 URL、文件大小、SHA-256 和引用文章／页面的 ID 以根目录的 `migration/sources/media.json` 为准。
+全量迁移包含 40 张图片和 5 个附件，均由本轮已核实的公开文章或页面直接引用，按字节原样保存。当前正式映射位于根目录的 `content/blog/resources.yaml`，记录原 URL、下载 URL、文件大小、SHA-256 和引用文章／页面的 ID。原始 `migration/sources/media.json` 保留作校验，不作为构建输入。
 
 - `convex-hull1.svg`、`convex-hull2.svg`、`convex-hull3.svg`：OI Wiki 项目组，[凸包原页面](https://oi-wiki.org/geometry/convex-hull/)，用于《闵可夫斯基和 学习笔记》。按原站的 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 和 [SATA](https://github.com/zTrix/sata-license) 条款保留，未修改图片。许可出处见 [OI Wiki FAQ](https://oi-wiki.org/intro/faq/)。
 - `tree-knapsack.png`：旧站《树上背包时间复杂度证明》引用的洛谷图床原图。
