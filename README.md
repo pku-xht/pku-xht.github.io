@@ -68,7 +68,7 @@ The owner selected **C · personal blog**: warm paper, serif headings, excerpt l
 - `tools/blog_sources.py`: safe YAML loading and CommonMark rendering with raw TeX and complex HTML preservation. Pure Python dependencies are pinned in `tools/vendor/python/`.
 - `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, `blog/posts/<WordPress-ID>/`, `blog/pages/<WordPress-ID>/`, and nonempty `blog/categories/<category-ID>/`.
 - `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.
-- `migration/public-batch.json`: generated URL mapping, counts, maintained source filenames and SHA-256 values; publication remains local-only until deployment is explicitly performed and checked.
+- `migration/public-batch.json`: generated URL mapping, counts, maintained source filenames and SHA-256 values. Its legacy `publication: local-only` field identifies a locally generated build report; it does not track the live site. Deployment state and verification are recorded in [migration/deployment-2026-10-24.md](migration/deployment-2026-10-24.md).
 
 The original `migration/sources/public-2026-10-23.json` and its embedded original HTML, image map, legacy-anchor evidence, earlier notes snapshot and summary overrides remain unchanged as migration evidence. Normal builds do not read these snapshots or restore their content over maintained Markdown. `notes-batch1.json` records the earlier batch.
 
