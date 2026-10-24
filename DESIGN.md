@@ -16,7 +16,7 @@ Within ordinary records, keep the leading institution or course name at 15px / 6
 The first release uses personal information confirmed by the owner. Optional sections with no real content are omitted from the public page. Author-facing instructions and draft fields stay in the documentation.
 
 ## Interaction thesis
-- The compact header links to the six homepage sections and to Blog.
+- The compact header groups the six in-page section links. A separate Blog link with a ↗ icon sits at the far right, after the language selector; on narrow screens these actions stay in the top row while section links wrap below.
 - Gentle section reveals help the reader follow the page while scrolling.
 - Link underlines and the language selector respond clearly to focus and hover.
 - All animation respects reduced-motion preferences.

@@ -85,6 +85,22 @@ button, a { -webkit-tap-highlight-color: rgba(43, 95, 158, 0.12); }
   white-space: nowrap;
 }
 .main-nav a:hover { color: var(--blue); }
+.header-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 18px;
+}
+.blog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  color: var(--secondary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.blog-link:hover { color: var(--blue); }
 .language-switch {
   display: flex;
   flex: none;
