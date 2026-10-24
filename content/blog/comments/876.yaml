@@ -1,0 +1,29 @@
+version: 1
+post_id: 876
+comments:
+- id: 6870
+  post: 876
+  parent: 0
+  author_name: 2044_space_elevator
+  author_url: http://2044blog.skyman.cloud
+  date: '2023-08-16T10:48:05'
+  date_gmt: '2023-08-16T02:48:05'
+  content:
+    rendered: |
+      <p>问一下作者的这个目录使用的什么插件？</p>
+  link: https://www.xht37.com/atcoder-grand-contest-038-%e9%a2%98%e8%a7%a3/#comment-6870
+  status: approved
+  type: comment
+- id: 6937
+  post: 876
+  parent: 6870
+  author_name: xht37
+  author_url: http://xht37
+  date: '2023-10-11T00:12:23'
+  date_gmt: '2023-10-10T16:12:23'
+  content:
+    rendered: |
+      <p>都是四五年前弄的了，现在早忘了</p>
+  link: https://www.xht37.com/atcoder-grand-contest-038-%e9%a2%98%e8%a7%a3/#comment-6937
+  status: approved
+  type: comment

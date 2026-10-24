@@ -1,0 +1,55 @@
+version: 1
+post_id: 980
+comments:
+- id: 6383
+  post: 980
+  parent: 0
+  author_name: wjyyy
+  author_url: ''
+  date: '2020-07-13T18:04:01'
+  date_gmt: '2020-07-13T10:04:01'
+  content:
+    rendered: |
+      <p>orz HB A队大神</p>
+  link: https://www.xht37.com/hbsx2020-%e6%b8%b8%e8%ae%b0/#comment-6383
+  status: approved
+  type: comment
+- id: 6384
+  post: 980
+  parent: 6383
+  author_name: xht37
+  author_url: ''
+  date: '2020-07-13T19:36:17'
+  date_gmt: '2020-07-13T11:36:17'
+  content:
+    rendered: |
+      <p>wjyyy 哥哥！！！</p>
+  link: https://www.xht37.com/hbsx2020-%e6%b8%b8%e8%ae%b0/#comment-6384
+  status: approved
+  type: comment
+- id: 6391
+  post: 980
+  parent: 0
+  author_name: hfctf0210
+  author_url: ''
+  date: '2020-08-12T20:42:19'
+  date_gmt: '2020-08-12T12:42:19'
+  content:
+    rendered: |
+      <p>orz HB A队大神</p>
+  link: https://www.xht37.com/hbsx2020-%e6%b8%b8%e8%ae%b0/#comment-6391
+  status: approved
+  type: comment
+- id: 6392
+  post: 980
+  parent: 6391
+  author_name: xht37
+  author_url: ''
+  date: '2020-08-12T20:59:35'
+  date_gmt: '2020-08-12T12:59:35'
+  content:
+    rendered: |
+      <p>ctf 哥哥！！！！！！</p>
+  link: https://www.xht37.com/hbsx2020-%e6%b8%b8%e8%ae%b0/#comment-6392
+  status: approved
+  type: comment

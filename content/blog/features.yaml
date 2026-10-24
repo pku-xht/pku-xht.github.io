@@ -1,0 +1,8 @@
+version: 1
+comments:
+  enabled: false
+  api_base: ''
+  moderation: required
+visits:
+  enabled: false
+  api_base: ''

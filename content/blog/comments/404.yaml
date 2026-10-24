@@ -1,0 +1,55 @@
+version: 1
+post_id: 404
+comments:
+- id: 66
+  post: 404
+  parent: 0
+  author_name: 万弘
+  author_url: ''
+  date: '2019-11-17T21:05:15'
+  date_gmt: '2019-11-17T13:05:15'
+  content:
+    rendered: |
+      <p>D2T1一眼看去就嘴巴道&#8221;容斥&#8221;,然后得到了1h0分的好成绩.</p>
+  link: https://www.xht37.com/csp2019-%e6%b8%b8%e8%ae%b0/#comment-66
+  status: approved
+  type: comment
+- id: 67
+  post: 404
+  parent: 66
+  author_name: xht37
+  author_url: ''
+  date: '2019-11-17T21:08:17'
+  date_gmt: '2019-11-17T13:08:17'
+  content:
+    rendered: |
+      <p>Orz</p>
+  link: https://www.xht37.com/csp2019-%e6%b8%b8%e8%ae%b0/#comment-67
+  status: approved
+  type: comment
+- id: 71
+  post: 404
+  parent: 0
+  author_name: OrientalHorizon
+  author_url: https://www.luogu.com.cn/blog/OrientalHorizon/
+  date: '2019-11-25T21:02:01'
+  date_gmt: '2019-11-25T13:02:01'
+  content:
+    rendered: |
+      <p>请问<code>(unsigned long long)1</code>是<code>1ull</code>还是<code>1llu</code>呀，Dev 都会高亮，但是 LOJ 的编辑器上只会高亮<code>1ull</code>。</p>
+  link: https://www.xht37.com/csp2019-%e6%b8%b8%e8%ae%b0/#comment-71
+  status: approved
+  type: comment
+- id: 72
+  post: 404
+  parent: 71
+  author_name: xht37
+  author_url: ''
+  date: '2019-11-26T01:25:37'
+  date_gmt: '2019-11-25T17:25:37'
+  content:
+    rendered: |
+      <p>都可以</p>
+  link: https://www.xht37.com/csp2019-%e6%b8%b8%e8%ae%b0/#comment-72
+  status: approved
+  type: comment

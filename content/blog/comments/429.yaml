@@ -1,0 +1,29 @@
+version: 1
+post_id: 429
+comments:
+- id: 85
+  post: 429
+  parent: 0
+  author_name: hankeke
+  author_url: ''
+  date: '2019-12-17T14:44:38'
+  date_gmt: '2019-12-17T06:44:38'
+  content:
+    rendered: |
+      <p>我感觉您这个算法应该是 $O(w\log w)$ 的吧。您的 $i$ 从 $1$ 枚举到 $m$ 又枚举了 $i$ 的倍数，这是标准的调和级数吧。</p>
+  link: https://www.xht37.com/cf585e-present-for-vitalik-the-philatelist-%e9%a2%98%e8%a7%a3/#comment-85
+  status: approved
+  type: comment
+- id: 86
+  post: 429
+  parent: 85
+  author_name: xht37
+  author_url: ''
+  date: '2019-12-17T16:30:26'
+  date_gmt: '2019-12-17T08:30:26'
+  content:
+    rendered: |
+      <p>fixed &amp; thanks</p>
+  link: https://www.xht37.com/cf585e-present-for-vitalik-the-philatelist-%e9%a2%98%e8%a7%a3/#comment-86
+  status: approved
+  type: comment

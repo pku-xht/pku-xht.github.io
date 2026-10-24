@@ -1,0 +1,16 @@
+version: 1
+post_id: 1019
+comments:
+- id: 6947
+  post: 1019
+  parent: 0
+  author_name: RedHairSteve
+  author_url: ''
+  date: '2023-10-30T21:02:44'
+  date_gmt: '2023-10-30T13:02:44'
+  content:
+    rendered: |
+      <p>orz</p>
+  link: https://www.xht37.com/atcoder-grand-contest-022-%e9%a2%98%e8%a7%a3/#comment-6947
+  status: approved
+  type: comment

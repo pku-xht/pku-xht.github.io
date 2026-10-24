@@ -1,0 +1,16 @@
+version: 1
+post_id: 724
+comments:
+- id: 6345
+  post: 724
+  parent: 0
+  author_name: suiqingying
+  author_url: ''
+  date: '2020-03-26T10:40:29'
+  date_gmt: '2020-03-26T02:40:29'
+  content:
+    rendered: |
+      <p>很精致</p>
+  link: https://www.xht37.com/%e5%90%8e%e7%bc%80%e8%87%aa%e5%8a%a8%e6%9c%ba-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6345
+  status: approved
+  type: comment

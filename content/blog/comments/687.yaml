@@ -1,0 +1,29 @@
+version: 1
+post_id: 687
+comments:
+- id: 4396
+  post: 687
+  parent: 0
+  author_name: lob
+  author_url: http://dinnerhunt.cn
+  date: '2020-03-04T22:32:42'
+  date_gmt: '2020-03-04T14:32:42'
+  content:
+    rendered: |
+      <p>题解太棒了，简单易懂，谢谢博主分享</p>
+  link: https://www.xht37.com/ozon-tech-challenge-2020-div-1-div-2-rated-t-shirts-prizes-%e9%a2%98%e8%a7%a3/#comment-4396
+  status: approved
+  type: comment
+- id: 4400
+  post: 687
+  parent: 4396
+  author_name: xht37
+  author_url: ''
+  date: '2020-03-04T23:00:42'
+  date_gmt: '2020-03-04T15:00:42'
+  content:
+    rendered: |
+      <p>不谢</p>
+  link: https://www.xht37.com/ozon-tech-challenge-2020-div-1-div-2-rated-t-shirts-prizes-%e9%a2%98%e8%a7%a3/#comment-4400
+  status: approved
+  type: comment

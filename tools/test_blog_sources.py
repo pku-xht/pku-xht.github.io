@@ -58,6 +58,10 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.collection = self.content / "collection.yaml"
         self.collection.write_text(COLLECTION, encoding="utf-8")
         (self.content / "resources.yaml").write_text("version: 1\nresources: []\n", encoding="utf-8")
+        (self.content / "friends.yaml").write_text("version: 1\nlinks:\n- name: Example\n  url: https://example.com/\n", encoding="utf-8")
+        (self.content / "features.yaml").write_text("version: 1\ncomments:\n  enabled: false\n  api_base: ''\n  moderation: required\nvisits:\n  enabled: false\n  api_base: ''\n", encoding="utf-8")
+        (self.content / "comments").mkdir()
+        (self.content / "comments/index.yaml").write_text("version: 1\nfiles: []\ncount: 0\n", encoding="utf-8")
         self.write_source(FRONTMATTER + BODY)
 
     def write_source(self, value):
@@ -82,7 +86,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         katex_style.parent.mkdir(parents=True)
         katex_style.write_text("/* Style fixture; visual fonts are checked on the real site. */", encoding="utf-8")
         (self.project / "blog").mkdir()
-        for relative in ("blog/blog.css", "blog/blog.js"):
+        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js"):
             (self.project / relative).write_text("", encoding="utf-8")
         (self.project / "index.html").write_text('<main id="main">临时主页</main>', encoding="utf-8")
 
@@ -178,6 +182,10 @@ class MarkdownSourcesTests(unittest.TestCase):
         (snapshot.parent / "media.json").write_text("[]\n", encoding="utf-8")
         (snapshot.parent / "legacy-anchors.json").write_text(json.dumps({"visibility": "anonymous-public-only", "anchors": []}), encoding="utf-8")
         snapshot.write_text(json.dumps(archive, ensure_ascii=False), encoding="utf-8")
+        (snapshot.parent / "comments-public-2026-10-25.json").write_text(json.dumps({"visibility": "approved-public-comments-for-migrated-content", "scope_post_ids": [7], "count": 0, "comments": []}), encoding="utf-8")
+        friend_html = '<aside><h4 class="widget-title">友情链接</h4><ul class="widget-links"><li><a href="https://example.com/">Example</a></li></ul></aside>'
+        (snapshot.parent / "friends-public-2026-10-25.html").write_text(friend_html, encoding="utf-8")
+        (snapshot.parent / "friends-public-2026-10-25.json").write_text(json.dumps({"source": "https://www.xht37.com/", "visibility": "anonymous-public-only", "scope": "sidebar-friend-links-only", "count": 1, "html_file": "friends-public-2026-10-25.html", "html_sha256": hashlib.sha256(friend_html.encode("utf-8")).hexdigest(), "links": [{"name": "Example", "url": "https://example.com/"}]}), encoding="utf-8")
         self.check("--original-snapshot")
         self.write_source((FRONTMATTER + BODY).replace("源哨兵 alpha", "源哨兵 beta"))
         self.build()

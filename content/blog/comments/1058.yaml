@@ -1,0 +1,16 @@
+version: 1
+post_id: 1058
+comments:
+- id: 6654
+  post: 1058
+  parent: 0
+  author_name: acwing_gza
+  author_url: ''
+  date: '2023-04-29T16:46:34'
+  date_gmt: '2023-04-29T08:46:34'
+  content:
+    rendered: |
+      <p>您咕了</p>
+  link: https://www.xht37.com/atcoder-grand-contest-047-%e9%a2%98%e8%a7%a3/#comment-6654
+  status: approved
+  type: comment

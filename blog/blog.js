@@ -12,18 +12,49 @@
     const clearButton = document.getElementById("clear-search");
     const normalize = (text) => text.normalize("NFKC").toLocaleLowerCase("zh-CN");
     const searchable = cards.map((card) => normalize(card.dataset.search || ""));
+    const tagFilterEnabled = Boolean(document.querySelector('.post-list[data-tag-filter="all"]'));
+    const tagLinks = Array.from(document.querySelectorAll(".tag-cloud a[data-tag-id]"));
+    const tagNames = new Map(tagLinks.map((link) => [link.dataset.tagId, link.dataset.tagName || link.textContent.trim()]));
+    const cardTags = cards.map((card) => new Set((card.dataset.tags || "").trim().split(/\s+/u).filter(Boolean)));
+    const activeFilter = document.querySelector(".active-tag-filter");
+    const activeLabel = document.querySelector("[data-active-tag]");
+    const clearTagButtons = document.querySelectorAll("[data-clear-tag]");
+
+    function readTag() {
+      if (!tagFilterEnabled) return "";
+      const tag = new URL(window.location.href).searchParams.get("tag") || "";
+      return /^[1-9]\d*$/u.test(tag) ? tag : "";
+    }
+
+    let activeTag = readTag();
+
+    function updateTagAddress() {
+      const next = new URL(window.location.href);
+      if (activeTag) next.searchParams.set("tag", activeTag);
+      else next.searchParams.delete("tag");
+      if (next.href !== window.location.href) window.history.pushState(null, "", next);
+    }
 
     function filterPosts() {
       const terms = normalize(input.value).trim().split(/\s+/u).filter(Boolean);
       let visible = 0;
       cards.forEach((card, index) => {
-        const matches = terms.every((term) => searchable[index].includes(term));
+        const matches = (!activeTag || cardTags[index].has(activeTag)) && terms.every((term) => searchable[index].includes(term));
         card.hidden = !matches;
         if (matches) visible += 1;
       });
-      if (count) count.textContent = terms.length ? `找到 ${visible} 篇文章` : `共 ${cards.length} 篇文章`;
+      const tagName = tagNames.get(activeTag) || activeTag;
+      if (count) count.textContent = (activeTag ? `标签「${tagName}」：` : "") + (terms.length ? `找到 ${visible} 篇文章` : `共 ${visible} 篇文章`);
       if (noResults) noResults.hidden = visible !== 0;
       if (clearButton) clearButton.disabled = input.value.length === 0;
+      if (tagFilterEnabled) {
+        if (activeFilter) activeFilter.hidden = !activeTag;
+        if (activeLabel) activeLabel.textContent = activeTag ? `标签：${tagName}` : "";
+        tagLinks.forEach((link) => {
+          if (activeTag === link.dataset.tagId) link.setAttribute("aria-current", "true");
+          else link.removeAttribute("aria-current");
+        });
+      }
     }
 
     function clearSearch(event) {
@@ -42,6 +73,29 @@
     const clearButtons = new Set(document.querySelectorAll("[data-clear-search]"));
     if (clearButton) clearButtons.add(clearButton);
     clearButtons.forEach((button) => button.addEventListener("click", clearSearch));
+    if (tagFilterEnabled) {
+      tagLinks.forEach((link) => link.addEventListener("click", (event) => {
+        // Modified clicks retain the real static tag-page URL for a new tab.
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target === "_blank") return;
+        const tag = link.dataset.tagId || "";
+        if (!/^[1-9]\d*$/u.test(tag)) return;
+        event.preventDefault();
+        activeTag = tag;
+        updateTagAddress();
+        filterPosts();
+      }));
+      clearTagButtons.forEach((button) => button.addEventListener("click", (event) => {
+        event.preventDefault();
+        activeTag = "";
+        updateTagAddress();
+        filterPosts();
+        input.focus();
+      }));
+      window.addEventListener("popstate", () => {
+        activeTag = readTag();
+        filterPosts();
+      });
+    }
     form.hidden = false;
     filterPosts();
   }

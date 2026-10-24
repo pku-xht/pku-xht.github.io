@@ -1,0 +1,29 @@
+version: 1
+post_id: 478
+comments:
+- id: 6409
+  post: 478
+  parent: 0
+  author_name: Kylin
+  author_url: ''
+  date: '2020-10-12T11:13:52'
+  date_gmt: '2020-10-12T03:13:52'
+  content:
+    rendered: |
+      <p>请问可以在我的博客中引用吗？如果可以引用请您授权，谢谢！</p>
+  link: https://www.xht37.com/%e7%ba%bf%e6%ae%b5%e6%a0%91%e5%88%86%e6%b2%bb-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6409
+  status: approved
+  type: comment
+- id: 6410
+  post: 478
+  parent: 6409
+  author_name: xht37
+  author_url: http://xht37
+  date: '2020-10-16T00:17:04'
+  date_gmt: '2020-10-15T16:17:04'
+  content:
+    rendered: |
+      <p>可以</p>
+  link: https://www.xht37.com/%e7%ba%bf%e6%ae%b5%e6%a0%91%e5%88%86%e6%b2%bb-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6410
+  status: approved
+  type: comment

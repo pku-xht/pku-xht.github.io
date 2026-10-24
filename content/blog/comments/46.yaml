@@ -1,0 +1,644 @@
+version: 1
+post_id: 46
+comments:
+- id: 2
+  post: 46
+  parent: 0
+  author_name: Studying Father
+  author_url: https://studyingfather.com
+  date: '2019-07-23T20:09:59'
+  date_gmt: '2019-07-23T12:09:59'
+  content:
+    rendered: |
+      <p>xls 加油！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-2
+  status: approved
+  type: comment
+- id: 3
+  post: 46
+  parent: 2
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T20:12:05'
+  date_gmt: '2019-07-23T12:12:05'
+  content:
+    rendered: |
+      <p>Thanks♪(･ω･)ﾉ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-3
+  status: approved
+  type: comment
+- id: 4
+  post: 46
+  parent: 0
+  author_name: EternalAlexander
+  author_url: https://eternalalexander.github.io
+  date: '2019-07-23T20:20:05'
+  date_gmt: '2019-07-23T12:20:05'
+  content:
+    rendered: |
+      <p>前排orz xls!</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-4
+  status: approved
+  type: comment
+- id: 5
+  post: 46
+  parent: 0
+  author_name: Venn
+  author_url: https://www.syameimaru.com/
+  date: '2019-07-23T20:39:58'
+  date_gmt: '2019-07-23T12:39:58'
+  content:
+    rendered: |
+      <p>加油鸭 qwq</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-5
+  status: approved
+  type: comment
+- id: 6
+  post: 46
+  parent: 0
+  author_name: ustze
+  author_url: ''
+  date: '2019-07-23T20:52:33'
+  date_gmt: '2019-07-23T12:52:33'
+  content:
+    rendered: |
+      <p>您明年Au稳 /kel</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-6
+  status: approved
+  type: comment
+- id: 7
+  post: 46
+  parent: 0
+  author_name: lrz
+  author_url: ''
+  date: '2019-07-23T21:35:49'
+  date_gmt: '2019-07-23T13:35:49'
+  content:
+    rendered: |
+      <p>xls明年会更强！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-7
+  status: approved
+  type: comment
+- id: 8
+  post: 46
+  parent: 4
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:07:34'
+  date_gmt: '2019-07-23T14:07:34'
+  content:
+    rendered: |
+      <p>Orz EternalAlexander</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-8
+  status: approved
+  type: comment
+- id: 9
+  post: 46
+  parent: 5
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:07:54'
+  date_gmt: '2019-07-23T14:07:54'
+  content:
+    rendered: |
+      <p>蟹蟹 QwQ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-9
+  status: approved
+  type: comment
+- id: 10
+  post: 46
+  parent: 6
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:08:16'
+  date_gmt: '2019-07-23T14:08:16'
+  content:
+    rendered: |
+      <p>Orz 您国家队稳</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-10
+  status: approved
+  type: comment
+- id: 11
+  post: 46
+  parent: 7
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:08:27'
+  date_gmt: '2019-07-23T14:08:27'
+  content:
+    rendered: |
+      <p>您也加油啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-11
+  status: approved
+  type: comment
+- id: 12
+  post: 46
+  parent: 0
+  author_name: Owen_codeisking
+  author_url: ''
+  date: '2019-07-23T22:27:27'
+  date_gmt: '2019-07-23T14:27:27'
+  content:
+    rendered: |
+      <p>xls 加油啊！争取我明年去 NOI 的时候能看到您虐场啊 qwq</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-12
+  status: approved
+  type: comment
+- id: 13
+  post: 46
+  parent: 12
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:28:06'
+  date_gmt: '2019-07-23T14:28:06'
+  content:
+    rendered: |
+      <p>您也加油啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-13
+  status: approved
+  type: comment
+- id: 14
+  post: 46
+  parent: 0
+  author_name: _WA自动机
+  author_url: ''
+  date: '2019-07-23T22:52:06'
+  date_gmt: '2019-07-23T14:52:06'
+  content:
+    rendered: |
+      <p>qwq高二的xls要变得更强啊！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-14
+  status: approved
+  type: comment
+- id: 15
+  post: 46
+  parent: 14
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T22:56:46'
+  date_gmt: '2019-07-23T14:56:46'
+  content:
+    rendered: |
+      <p>好的 QwQ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-15
+  status: approved
+  type: comment
+- id: 16
+  post: 46
+  parent: 0
+  author_name: wjyyy
+  author_url: https://www.wjyyy.top/
+  date: '2019-07-23T23:15:57'
+  date_gmt: '2019-07-23T15:15:57'
+  content:
+    rendered: |
+      <p>退役选手在这给您加油</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-16
+  status: approved
+  type: comment
+- id: 17
+  post: 46
+  parent: 16
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-23T23:16:56'
+  date_gmt: '2019-07-23T15:16:56'
+  content:
+    rendered: |
+      <p>您也加油啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-17
+  status: approved
+  type: comment
+- id: 18
+  post: 46
+  parent: 0
+  author_name: yurzhang
+  author_url: ''
+  date: '2019-07-24T14:37:21'
+  date_gmt: '2019-07-24T06:37:21'
+  content:
+    rendered: |
+      <p>加油！我也要向您看齐！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-18
+  status: approved
+  type: comment
+- id: 19
+  post: 46
+  parent: 18
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-24T15:37:48'
+  date_gmt: '2019-07-24T07:37:48'
+  content:
+    rendered: |
+      <p>加油！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-19
+  status: approved
+  type: comment
+- id: 20
+  post: 46
+  parent: 0
+  author_name: wxwoo
+  author_url: https://wxwoo.top
+  date: '2019-07-24T18:50:05'
+  date_gmt: '2019-07-24T10:50:05'
+  content:
+    rendered: |
+      <p>加油！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-20
+  status: approved
+  type: comment
+- id: 21
+  post: 46
+  parent: 20
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-24T18:54:20'
+  date_gmt: '2019-07-24T10:54:20'
+  content:
+    rendered: |
+      <p>加油！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-21
+  status: approved
+  type: comment
+- id: 22
+  post: 46
+  parent: 0
+  author_name: PinkRabbit
+  author_url: http://xht37
+  date: '2019-07-25T00:33:33'
+  date_gmt: '2019-07-24T16:33:33'
+  content:
+    rendered: |
+      <p>今后一起加油吧！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-22
+  status: approved
+  type: comment
+- id: 23
+  post: 46
+  parent: 0
+  author_name: Gloria
+  author_url: ''
+  date: '2019-07-26T12:25:30'
+  date_gmt: '2019-07-26T04:25:30'
+  content:
+    rendered: |
+      <p>xht加油</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-23
+  status: approved
+  type: comment
+- id: 24
+  post: 46
+  parent: 23
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-26T12:54:59'
+  date_gmt: '2019-07-26T04:54:59'
+  content:
+    rendered: |
+      <p>嗯嗯，加油</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-24
+  status: approved
+  type: comment
+- id: 26
+  post: 46
+  parent: 22
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-27T17:37:15'
+  date_gmt: '2019-07-27T09:37:15'
+  content:
+    rendered: |
+      <p>对，一起加油</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-26
+  status: approved
+  type: comment
+- id: 29
+  post: 46
+  parent: 0
+  author_name: yyb
+  author_url: https://www.cnblogs.com/cjyyb/
+  date: '2019-07-30T08:52:58'
+  date_gmt: '2019-07-30T00:52:58'
+  content:
+    rendered: |
+      <p>加油QwQ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-29
+  status: approved
+  type: comment
+- id: 30
+  post: 46
+  parent: 29
+  author_name: xht37
+  author_url: ''
+  date: '2019-07-30T10:35:09'
+  date_gmt: '2019-07-30T02:35:09'
+  content:
+    rendered: |
+      <p>您也要加油鸭</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-30
+  status: approved
+  type: comment
+- id: 41
+  post: 46
+  parent: 0
+  author_name: Fburan
+  author_url: ''
+  date: '2019-08-22T20:35:34'
+  date_gmt: '2019-08-22T12:35:34'
+  content:
+    rendered: |
+      <p>您加油！！以后希望有机会noi面基QAQ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-41
+  status: approved
+  type: comment
+- id: 42
+  post: 46
+  parent: 41
+  author_name: xht37
+  author_url: ''
+  date: '2019-08-23T10:57:32'
+  date_gmt: '2019-08-23T02:57:32'
+  content:
+    rendered: |
+      <p>好啊好啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-42
+  status: approved
+  type: comment
+- id: 43
+  post: 46
+  parent: 0
+  author_name: Zhao001
+  author_url: https://2512821228.github.io/
+  date: '2019-09-17T21:43:25'
+  date_gmt: '2019-09-17T13:43:25'
+  content:
+    rendered: |
+      <p>原来您就是 算法竞赛进阶指南 的群主啊~~ %%%</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-43
+  status: approved
+  type: comment
+- id: 44
+  post: 46
+  parent: 43
+  author_name: xht37
+  author_url: ''
+  date: '2019-09-18T00:22:51'
+  date_gmt: '2019-09-17T16:22:51'
+  content:
+    rendered: |
+      <p>不是啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-44
+  status: approved
+  type: comment
+- id: 51
+  post: 46
+  parent: 0
+  author_name: yuntianming
+  author_url: https://luoguyuntianming.github.io/
+  date: '2019-10-05T19:19:38'
+  date_gmt: '2019-10-05T11:19:38'
+  content:
+    rendered: |
+      <p>加油加油！您最强了！明年进队也不迟！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-51
+  status: approved
+  type: comment
+- id: 52
+  post: 46
+  parent: 51
+  author_name: xht37
+  author_url: ''
+  date: '2019-10-05T21:51:23'
+  date_gmt: '2019-10-05T13:51:23'
+  content:
+    rendered: |
+      <p>谢谢 qwq</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-52
+  status: approved
+  type: comment
+- id: 53
+  post: 46
+  parent: 0
+  author_name: ar
+  author_url: ''
+  date: '2019-10-21T13:41:06'
+  date_gmt: '2019-10-21T05:41:06'
+  content:
+    rendered: |
+      <p>xht聚聚加油——</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-53
+  status: approved
+  type: comment
+- id: 54
+  post: 46
+  parent: 53
+  author_name: xht37
+  author_url: ''
+  date: '2019-10-21T14:40:21'
+  date_gmt: '2019-10-21T06:40:21'
+  content:
+    rendered: |
+      <p>谢谢 qwq</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-54
+  status: approved
+  type: comment
+- id: 57
+  post: 46
+  parent: 0
+  author_name: odf
+  author_url: ''
+  date: '2019-10-21T21:02:35'
+  date_gmt: '2019-10-21T13:02:35'
+  content:
+    rendered: |
+      <p>您tql。加油！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-57
+  status: approved
+  type: comment
+- id: 58
+  post: 46
+  parent: 57
+  author_name: xht37
+  author_url: ''
+  date: '2019-10-21T21:25:00'
+  date_gmt: '2019-10-21T13:25:00'
+  content:
+    rendered: |
+      <p>您也加油 qwq</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-58
+  status: approved
+  type: comment
+- id: 59
+  post: 46
+  parent: 0
+  author_name: Shu_Yu_Mo
+  author_url: https://shuyumo-1258548314.cos-website.ap-beijing.myqcloud.com
+  date: '2019-10-23T17:36:09'
+  date_gmt: '2019-10-23T09:36:09'
+  content:
+    rendered: |
+      <p>Hi~,我是Shu_Yu_Mo一个和你一样热爱OI的小孩，比你小一级，不管怎样，希望你坚持下去，用自己的内心驱散阴霾。加油哦</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-59
+  status: approved
+  type: comment
+- id: 60
+  post: 46
+  parent: 59
+  author_name: xht37
+  author_url: ''
+  date: '2019-10-23T20:13:49'
+  date_gmt: '2019-10-23T12:13:49'
+  content:
+    rendered: |
+      <p>awa 好的</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-60
+  status: approved
+  type: comment
+- id: 87
+  post: 46
+  parent: 0
+  author_name: Kylin_
+  author_url: ''
+  date: '2019-12-20T11:02:36'
+  date_gmt: '2019-12-20T03:02:36'
+  content:
+    rendered: |
+      <p>xht37加油吖！之前看过您的题解觉得学到了很多</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-87
+  status: approved
+  type: comment
+- id: 88
+  post: 46
+  parent: 87
+  author_name: xht37
+  author_url: ''
+  date: '2019-12-20T11:49:36'
+  date_gmt: '2019-12-20T03:49:36'
+  content:
+    rendered: |
+      <p>谢谢</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-88
+  status: approved
+  type: comment
+- id: 1957
+  post: 46
+  parent: 0
+  author_name: liziheng
+  author_url: http://www.liziheng.ac.cn
+  date: '2020-02-13T14:46:59'
+  date_gmt: '2020-02-13T06:46:59'
+  content:
+    rendered: |
+      <p>加油加油！！！！！！你是最棒的</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-1957
+  status: approved
+  type: comment
+- id: 1966
+  post: 46
+  parent: 1957
+  author_name: xht37
+  author_url: ''
+  date: '2020-02-13T16:08:00'
+  date_gmt: '2020-02-13T08:08:00'
+  content:
+    rendered: |
+      <p>awa 谢谢</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-1966
+  status: approved
+  type: comment
+- id: 4383
+  post: 46
+  parent: 0
+  author_name: 蒟蒻的名字
+  author_url: ''
+  date: '2020-03-04T20:30:50'
+  date_gmt: '2020-03-04T12:30:50'
+  content:
+    rendered: |
+      <p>GDGZ选手为您加油！不过二中我CSP初赛好像去过很多次诶QAQ</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-4383
+  status: approved
+  type: comment
+- id: 4391
+  post: 46
+  parent: 4383
+  author_name: xht37
+  author_url: ''
+  date: '2020-03-04T21:03:16'
+  date_gmt: '2020-03-04T13:03:16'
+  content:
+    rendered: |
+      <p>一起加油鸭</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-4391
+  status: approved
+  type: comment
+- id: 5218
+  post: 46
+  parent: 0
+  author_name: ShadderLeave
+  author_url: ''
+  date: '2020-03-12T06:46:35'
+  date_gmt: '2020-03-11T22:46:35'
+  content:
+    rendered: |
+      <p>没想到xhtdalao也是湖北的&#8230;.信心暴增（<br />
+      xht NB！</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-5218
+  status: approved
+  type: comment
+- id: 6352
+  post: 46
+  parent: 0
+  author_name: chenxia25
+  author_url: https://www.cnblogs.com/ycx-akioi
+  date: '2020-04-03T17:03:05'
+  date_gmt: '2020-04-03T09:03:05'
+  content:
+    rendered: |
+      <p>“T1 的数据水成屎了”<br />
+      xswl hahahah</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-6352
+  status: approved
+  type: comment
+- id: 6375
+  post: 46
+  parent: 0
+  author_name: RPgame
+  author_url: ''
+  date: '2020-06-03T17:10:57'
+  date_gmt: '2020-06-03T09:10:57'
+  content:
+    rendered: |
+      <p>慕名而来。<br />
+      话说我是第3800点击。</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-6375
+  status: approved
+  type: comment
+- id: 6980
+  post: 46
+  parent: 0
+  author_name: xsy2013
+  author_url: http://luogu.com.cn
+  date: '2024-04-19T18:37:49'
+  date_gmt: '2024-04-19T10:37:49'
+  content:
+    rendered: |
+      <p>可惜啊</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-6980
+  status: approved
+  type: comment
+- id: 7034
+  post: 46
+  parent: 0
+  author_name: da_ke
+  author_url: https://mahaoming2022.github.io
+  date: '2024-08-08T19:39:07'
+  date_gmt: '2024-08-08T11:39:07'
+  content:
+    rendered: |
+      <p>为什么 xht 的游记百看不厌呢？</p>
+      <p>我起码看过 3 回了。</p>
+  link: https://www.xht37.com/noi2019-%e6%b8%b8%e8%ae%b0/#comment-7034
+  status: approved
+  type: comment

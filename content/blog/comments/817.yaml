@@ -1,0 +1,55 @@
+version: 1
+post_id: 817
+comments:
+- id: 6365
+  post: 817
+  parent: 0
+  author_name: chenxia25
+  author_url: https://www.cnblogs.com/ycx-akioi
+  date: '2020-04-13T19:07:31'
+  date_gmt: '2020-04-13T11:07:31'
+  content:
+    rendered: |
+      <p>您不是退谷了么（</p>
+  link: https://www.xht37.com/%e3%80%90lgr-071%e3%80%91%e6%b4%9b%e8%b0%b7-4-%e6%9c%88%e6%9c%88%e8%b5%9b-mdoi-round-2-div-1-%e9%a2%98%e8%a7%a3/#comment-6365
+  status: approved
+  type: comment
+- id: 6366
+  post: 817
+  parent: 0
+  author_name: dsidsi
+  author_url: http://咕
+  date: '2020-04-16T21:54:48'
+  date_gmt: '2020-04-16T13:54:48'
+  content:
+    rendered: |
+      <p>终于找到B的题解了 /kel</p>
+  link: https://www.xht37.com/%e3%80%90lgr-071%e3%80%91%e6%b4%9b%e8%b0%b7-4-%e6%9c%88%e6%9c%88%e8%b5%9b-mdoi-round-2-div-1-%e9%a2%98%e8%a7%a3/#comment-6366
+  status: approved
+  type: comment
+- id: 6367
+  post: 817
+  parent: 6365
+  author_name: xht37
+  author_url: ''
+  date: '2020-04-16T23:04:24'
+  date_gmt: '2020-04-16T15:04:24'
+  content:
+    rendered: |
+      <p><code>xht37</code> 是退谷了啊</p>
+  link: https://www.xht37.com/%e3%80%90lgr-071%e3%80%91%e6%b4%9b%e8%b0%b7-4-%e6%9c%88%e6%9c%88%e8%b5%9b-mdoi-round-2-div-1-%e9%a2%98%e8%a7%a3/#comment-6367
+  status: approved
+  type: comment
+- id: 6368
+  post: 817
+  parent: 0
+  author_name: smy
+  author_url: https://www.cnblogs.com/smyjr
+  date: '2020-04-18T21:06:08'
+  date_gmt: '2020-04-18T13:06:08'
+  content:
+    rendered: |
+      <p>终于找到B的题解了 /kel</p>
+  link: https://www.xht37.com/%e3%80%90lgr-071%e3%80%91%e6%b4%9b%e8%b0%b7-4-%e6%9c%88%e6%9c%88%e8%b5%9b-mdoi-round-2-div-1-%e9%a2%98%e8%a7%a3/#comment-6368
+  status: approved
+  type: comment

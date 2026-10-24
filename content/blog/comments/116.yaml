@@ -1,0 +1,69 @@
+version: 1
+post_id: 116
+comments:
+- id: 4379
+  post: 116
+  parent: 0
+  author_name: chenxia25
+  author_url: ''
+  date: '2020-03-04T20:08:18'
+  date_gmt: '2020-03-04T12:08:18'
+  content:
+    rendered: |
+      <p>Geogebra<br />
+      https://www.geogebra.org/</p>
+  link: https://www.xht37.com/oi-websites/#comment-4379
+  status: approved
+  type: comment
+- id: 4389
+  post: 116
+  parent: 4379
+  author_name: xht37
+  author_url: ''
+  date: '2020-03-04T21:02:15'
+  date_gmt: '2020-03-04T13:02:15'
+  content:
+    rendered: |
+      <p>added &amp; thanks</p>
+  link: https://www.xht37.com/oi-websites/#comment-4389
+  status: approved
+  type: comment
+- id: 6370
+  post: 116
+  parent: 0
+  author_name: chenxia25
+  author_url: https://www.cnblogs.com/ycx-akioi/
+  date: '2020-05-02T19:10:57'
+  date_gmt: '2020-05-02T11:10:57'
+  content:
+    rendered: |
+      <p>BZOJ 题号查找器和cppreference的链接都炸了qwq</p>
+  link: https://www.xht37.com/oi-websites/#comment-6370
+  status: approved
+  type: comment
+- id: 6371
+  post: 116
+  parent: 6370
+  author_name: xht37
+  author_url: ''
+  date: '2020-05-04T20:30:12'
+  date_gmt: '2020-05-04T12:30:12'
+  content:
+    rendered: |
+      <p>BZOJ 题号查找器应该是原博客挂了，已删除；cppreference 的链接已修正；感谢指出。</p>
+  link: https://www.xht37.com/oi-websites/#comment-6371
+  status: approved
+  type: comment
+- id: 7081
+  post: 116
+  parent: 0
+  author_name: Gavin
+  author_url: https://gib716-blog.netlify.app/
+  date: '2024-10-20T21:48:27'
+  date_gmt: '2024-10-20T13:48:27'
+  content:
+    rendered: |
+      <p>新晋的图论编辑器：https://anacc22.github.io/another_graph_editor/</p>
+  link: https://www.xht37.com/oi-websites/#comment-7081
+  status: approved
+  type: comment

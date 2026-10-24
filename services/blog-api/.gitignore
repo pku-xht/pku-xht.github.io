@@ -1,0 +1,7 @@
+.wrangler/
+wrangler.local.toml
+.dev.vars
+*.sqlite
+*.sqlite-*
+*.log
+baseline-input.json

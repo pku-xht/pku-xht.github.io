@@ -65,10 +65,15 @@ The owner selected **C · personal blog**: warm paper, serif headings, excerpt l
 - `content/blog/pages/<WordPress-ID>.md`: maintained historical pages; currently `215.md`, the old About page.
 - `content/blog/collection.yaml`: the registered source-file set. Missing, duplicate or unregistered Markdown files fail the build.
 - `content/blog/resources.yaml`: the maintained image and attachment map, with original URLs, local paths, byte sizes and hashes. Files remain in `blog/media/`.
+- `content/blog/comments/index.yaml` and `<post-ID>.yaml`: the registered historical public-comment archives, preserving original HTML, names, full dates and reply IDs. They contain no private author metadata or new pending comments.
+- `content/blog/friends.yaml`: the maintained 25 original friend links, in their original order.
+- `content/blog/features.yaml`: explicit comment/Visits switches and public API URLs. Both are currently disabled pending backend setup; all new comments require moderation.
 - `tools/blog_sources.py`: safe YAML loading and CommonMark rendering with raw TeX and complex HTML preservation. Pure Python dependencies are pinned in `tools/vendor/python/`.
-- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, `blog/posts/<WordPress-ID>/`, `blog/pages/<WordPress-ID>/`, and nonempty `blog/categories/<category-ID>/`.
+- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, article/history routes, category lists, static tag pages and friend links, including archived discussions.
 - `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.
 - `migration/public-batch.json`: generated URL mapping, counts, maintained source filenames and SHA-256 values. Its legacy `publication: local-only` field identifies a locally generated build report; it does not track the live site. Deployment state and verification are recorded in [migration/deployment-2026-10-24.md](migration/deployment-2026-10-24.md).
+
+The next interaction batch is recorded in [migration/interactive-2026-10-25.md](migration/interactive-2026-10-25.md). It is a local implementation awaiting the owner's Cloudflare account setup, rather than a new production deployment.
 
 The original `migration/sources/public-2026-10-23.json` and its embedded original HTML, image map, legacy-anchor evidence, earlier notes snapshot and summary overrides remain unchanged as migration evidence. Normal builds do not read these snapshots or restore their content over maintained Markdown. `notes-batch1.json` records the earlier batch.
 
@@ -98,6 +103,15 @@ python -S -X utf8 tools/import_blog_markdown.py
 
 The current collection is already imported. For a later batch, use a separate `--output-root` for review and merge approved sources and manifests deliberately. Do not import over maintained files.
 
+The separately authorized public comments and sidebar friends use their own one-time importers:
+
+```sh
+python -S -X utf8 tools/sync_public_comments.py --checked-on 2026-10-25
+python -S -X utf8 tools/sync_blog_friends.py --checked-on 2026-10-25
+```
+
+These commands refuse to overwrite the existing maintained archives. The comment importer restricts requests to registered public document IDs and approved public comments, and never logs into WordPress. The preserved source and front-end audit cover 117 comments, including 43 replies, across the 212 registered documents; no additional visible comment IDs were found. Friend evidence contains only the public sidebar container, not a full-page or authenticated export.
+
 ### Build and check
 
 Regenerate from maintained Markdown/YAML using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
@@ -113,6 +127,8 @@ No network or package installation is used. The default checker compares maintai
 ```sh
 python -S -X utf8 tools/check_blog.py --original-snapshot
 python -S -X utf8 tools/test_blog_sources.py
+python -S -X utf8 tools/test_blog_comments.py
+node tools/test_blog_frontend.cjs
 ```
 
 The original-snapshot mode checks complete text, original TeX, exact code bytes, metadata, ordered HTML structure, resource provenance and old anchor evidence. Intentional later edits may fail this archival comparison while passing the normal source check. Isolated tests use temporary files to verify that edits affect real builds, missing or corrupt sources fail, and builds work without original snapshots.
@@ -121,4 +137,12 @@ The generator normalizes heading levels, creates contents links, and redirects l
 
 Markdown sources and generated post HTML retain intentional trailing spaces. Their scoped Git whitespace attributes permit those bytes; independent code comparison still checks them exactly.
 
-The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. The old About page is presented as a historical archive and does not replace current homepage facts. Comments remain on the old site by the owner's choice. Old-site redirects and private content are outside this migration.
+The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. The old About page is presented as a historical archive and does not replace current homepage facts. Historical public comments are maintained separately from article Markdown and included in the local interaction batch. Old-site redirects and private content are outside this migration.
+
+### Writable comments and future Visits
+
+The selected backend is Cloudflare Workers + D1, implemented in `services/blog-api/`. Readers do not need an account: they must enter a nickname and comment body, and every new submission waits for owner approval before becoming public. New comment bodies are plain text; the browser renders them without interpreting HTML. Historical comments already approved on the old site remain static, while only their public IDs/document assignments are registered as reply targets in the backend.
+
+Keep `features.yaml` comments disabled until the real service is configured and verified. Then set its public API URL and enable only comments before rebuilding. Pending comments, review tokens, real credentials and database exports belong in the backend or a separate private location, never in this public repository, including ignored directories. Backend setup, its local SQLite tests, moderation page and deployment commands have one maintained entry in [services/blog-api/README.md](services/blog-api/README.md).
+
+Visits stays disabled in both the static configuration and Worker environment. The default pages contain neither its counter UI nor its script, and make no Visits requests. At the later cutover, collect fresh per-document counts and the old site's independent total, review the cutover window, and import the complete baseline atomically before explicitly enabling counting. The old site's total must not be inferred by summing article counts, and the current archival snapshot must not be reused as a fresh cutover baseline.

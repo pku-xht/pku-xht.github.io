@@ -1,0 +1,16 @@
+version: 1
+post_id: 989
+comments:
+- id: 6869
+  post: 989
+  parent: 0
+  author_name: 2044_space_elevator
+  author_url: http://2044blog.skyman.cloud
+  date: '2023-08-16T10:44:26'
+  date_gmt: '2023-08-16T02:44:26'
+  content:
+    rendered: |
+      <p>问一下博主，请问您的这个用的是什么 Markdown 编辑器插件？我同样的主题+Markdown编辑器 Latex 动不动就挂（悲）。</p>
+  link: https://www.xht37.com/atcoder-grand-contest-041-%e9%a2%98%e8%a7%a3/#comment-6869
+  status: approved
+  type: comment

@@ -1,0 +1,55 @@
+version: 1
+post_id: 434
+comments:
+- id: 6347
+  post: 434
+  parent: 0
+  author_name: EncodeTalker
+  author_url: ''
+  date: '2020-03-30T21:50:41'
+  date_gmt: '2020-03-30T13:50:41'
+  content:
+    rendered: |
+      <p>您好！请问一下为什么$\frac{1}{(1-x)^2}=\sum_{n\geq 0}nx^n$呢？我推出来的是$\frac{1}{(1-x)^2}=\sum_{n\geq 0}(n+1)x^n$.</p>
+  link: https://www.xht37.com/%e7%94%9f%e6%88%90%e5%87%bd%e6%95%b0-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6347
+  status: approved
+  type: comment
+- id: 6348
+  post: 434
+  parent: 6347
+  author_name: xht37
+  author_url: ''
+  date: '2020-03-30T23:02:12'
+  date_gmt: '2020-03-30T15:02:12'
+  content:
+    rendered: |
+      <p>抱歉写错了，已更正，感谢指出。</p>
+  link: https://www.xht37.com/%e7%94%9f%e6%88%90%e5%87%bd%e6%95%b0-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6348
+  status: approved
+  type: comment
+- id: 6349
+  post: 434
+  parent: 6348
+  author_name: EncodeTalker
+  author_url: ''
+  date: '2020-03-30T23:40:49'
+  date_gmt: '2020-03-30T15:40:49'
+  content:
+    rendered: |
+      <p>以及在Fibonacci的生成函数的推导过程中貌似也有一些问题？$F(x)$前所乘的$x$的次数貌似不大对得上。</p>
+  link: https://www.xht37.com/%e7%94%9f%e6%88%90%e5%87%bd%e6%95%b0-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6349
+  status: approved
+  type: comment
+- id: 6350
+  post: 434
+  parent: 6349
+  author_name: xht37
+  author_url: ''
+  date: '2020-03-31T16:07:39'
+  date_gmt: '2020-03-31T08:07:39'
+  content:
+    rendered: |
+      <p>已更正，再次感谢。</p>
+  link: https://www.xht37.com/%e7%94%9f%e6%88%90%e5%87%bd%e6%95%b0-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6350
+  status: approved
+  type: comment

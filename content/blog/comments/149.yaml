@@ -1,0 +1,29 @@
+version: 1
+post_id: 149
+comments:
+- id: 6629
+  post: 149
+  parent: 0
+  author_name: Zhuyiming0325
+  author_url: https://www.luogu.com.cn
+  date: '2023-04-21T18:00:43'
+  date_gmt: '2023-04-21T10:00:43'
+  content:
+    rendered: |
+      <p>“厕所果然是一个充满灵感的地方”</p>
+  link: https://www.xht37.com/noip2018-%e6%b8%b8%e8%ae%b0/#comment-6629
+  status: approved
+  type: comment
+- id: 7033
+  post: 149
+  parent: 0
+  author_name: da_ke
+  author_url: https://mahaoming2022.github.io
+  date: '2024-08-08T19:26:33'
+  date_gmt: '2024-08-08T11:26:33'
+  content:
+    rendered: |
+      <p>“厕所果然是一个充满灵感的地方”</p>
+  link: https://www.xht37.com/noip2018-%e6%b8%b8%e8%ae%b0/#comment-7033
+  status: approved
+  type: comment

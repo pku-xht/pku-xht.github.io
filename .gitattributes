@@ -3,6 +3,8 @@
 /blog/posts/**/index.html linguist-generated=true whitespace=-blank-at-eol
 /blog/pages/**/index.html linguist-generated=true
 /blog/categories/**/index.html linguist-generated=true
+/blog/tags/**/index.html linguist-generated=true
+/blog/friends/index.html linguist-generated=true
 /content/blog/**/*.md whitespace=-blank-at-eol
 /assets/vendor/** linguist-vendored=true
 /tools/vendor/** linguist-vendored=true

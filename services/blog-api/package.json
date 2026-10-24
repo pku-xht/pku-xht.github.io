@@ -1,0 +1,10 @@
+{
+  "name": "xht37-blog-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "import:public": "node scripts/import-public.mjs"
+  },
+  "engines": { "node": ">=24" }
+}

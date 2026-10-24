@@ -1,0 +1,58 @@
+version: 1
+post_id: 504
+comments:
+- id: 93
+  post: 504
+  parent: 0
+  author_name: Studying Father
+  author_url: https://studyingfather.com
+  date: '2019-12-31T00:44:40'
+  date_gmt: '2019-12-30T16:44:40'
+  content:
+    rendered: |
+      <blockquote><p>
+        我再一无所有，也还有小粉兔呢（
+      </p></blockquote>
+      <p>这个理由可以（</p>
+  link: https://www.xht37.com/thuwc2020-%e6%b8%b8%e8%ae%b0/#comment-93
+  status: approved
+  type: comment
+- id: 95
+  post: 504
+  parent: 93
+  author_name: xht37
+  author_url: ''
+  date: '2020-01-06T23:36:11'
+  date_gmt: '2020-01-06T15:36:11'
+  content:
+    rendered: |
+      <p>嘻嘻</p>
+  link: https://www.xht37.com/thuwc2020-%e6%b8%b8%e8%ae%b0/#comment-95
+  status: approved
+  type: comment
+- id: 2943
+  post: 504
+  parent: 0
+  author_name: ezoixx130
+  author_url: ''
+  date: '2020-02-21T10:14:27'
+  date_gmt: '2020-02-21T02:14:27'
+  content:
+    rendered: |
+      <p>%xht37 顺便问下Day3的材料哪来的啊</p>
+  link: https://www.xht37.com/thuwc2020-%e6%b8%b8%e8%ae%b0/#comment-2943
+  status: approved
+  type: comment
+- id: 2965
+  post: 504
+  parent: 2943
+  author_name: xht37
+  author_url: ''
+  date: '2020-02-21T13:25:17'
+  date_gmt: '2020-02-21T05:25:17'
+  content:
+    rendered: |
+      <p>忘了&#8230;感觉好多地方都有</p>
+  link: https://www.xht37.com/thuwc2020-%e6%b8%b8%e8%ae%b0/#comment-2965
+  status: approved
+  type: comment

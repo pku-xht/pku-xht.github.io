@@ -1,0 +1,15 @@
+name = "xht37-blog-api"
+main = "src/worker.mjs"
+compatibility_date = "2026-10-25"
+
+[vars]
+ALLOWED_ORIGINS = "https://pku-xht.github.io"
+VISITS_ENABLED = "false"
+
+# Copy this file to an ignored local config and add your own D1 binding:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "your-blog-database"
+# database_id = "<set only in your local deployment config>"
+# migrations_dir = "migrations"
+# Required secrets: ADMIN_TOKEN and RATE_LIMIT_SALT (each at least 32 characters).

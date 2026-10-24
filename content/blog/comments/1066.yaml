@@ -1,0 +1,250 @@
+version: 1
+post_id: 1066
+comments:
+- id: 6396
+  post: 1066
+  parent: 0
+  author_name: JohnVictor
+  author_url: ''
+  date: '2020-08-23T19:19:42'
+  date_gmt: '2020-08-23T11:19:42'
+  content:
+    rendered: |
+      <p>xht加油呀</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6396
+  status: approved
+  type: comment
+- id: 6397
+  post: 1066
+  parent: 0
+  author_name: Studying Father
+  author_url: https://studyingfather.com
+  date: '2020-08-23T20:07:32'
+  date_gmt: '2020-08-23T12:07:32'
+  content:
+    rendered: |
+      <p>xls 文化课加油鸭！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6397
+  status: approved
+  type: comment
+- id: 6399
+  post: 1066
+  parent: 0
+  author_name: CYJian
+  author_url: ''
+  date: '2020-08-23T22:53:44'
+  date_gmt: '2020-08-23T14:53:44'
+  content:
+    rendered: |
+      <p>xls whk 加油啊，希望能北大见！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6399
+  status: approved
+  type: comment
+- id: 6403
+  post: 1066
+  parent: 0
+  author_name: Fuyuki
+  author_url: ''
+  date: '2020-08-24T09:43:33'
+  date_gmt: '2020-08-24T01:43:33'
+  content:
+    rendered: |
+      <p>xht 加油！北京再会！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6403
+  status: approved
+  type: comment
+- id: 6406
+  post: 1066
+  parent: 0
+  author_name: srf
+  author_url: https://www.cnblogs.com/s-r-f
+  date: '2020-09-24T18:57:54'
+  date_gmt: '2020-09-24T10:57:54'
+  content:
+    rendered: |
+      <p>xht 加油！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6406
+  status: approved
+  type: comment
+- id: 6407
+  post: 1066
+  parent: 0
+  author_name: UserUnknown
+  author_url: http://pathunknown.ml
+  date: '2020-09-27T21:04:22'
+  date_gmt: '2020-09-27T13:04:22'
+  content:
+    rendered: |
+      <p>“我要上热搜了”好评（</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6407
+  status: approved
+  type: comment
+- id: 6411
+  post: 1066
+  parent: 0
+  author_name: SGColin
+  author_url: http://blog.gyx.me
+  date: '2020-10-19T19:26:32'
+  date_gmt: '2020-10-19T11:26:32'
+  content:
+    rendered: |
+      <p>whk 加油啊！挺住！！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6411
+  status: approved
+  type: comment
+- id: 6429
+  post: 1066
+  parent: 0
+  author_name: George1123
+  author_url: https://www.cnblogs.com/George1123
+  date: '2021-01-31T11:25:36'
+  date_gmt: '2021-01-31T03:25:36'
+  content:
+    rendered: |
+      <p>加油。</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6429
+  status: approved
+  type: comment
+- id: 6440
+  post: 1066
+  parent: 0
+  author_name: 在同一时空相遇
+  author_url: http://blog.yuannancheng.com
+  date: '2021-05-24T23:55:31'
+  date_gmt: '2021-05-24T15:55:31'
+  content:
+    rendered: |
+      <p>加油</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6440
+  status: approved
+  type: comment
+- id: 6541
+  post: 1066
+  parent: 0
+  author_name: z
+  author_url: ''
+  date: '2022-12-04T14:57:37'
+  date_gmt: '2022-12-04T06:57:37'
+  content:
+    rendered: |
+      <p>像我这种蒟蒻连csp都没考过的走noi就别想了，好羡慕作者啊</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6541
+  status: approved
+  type: comment
+- id: 6543
+  post: 1066
+  parent: 0
+  author_name: 熙
+  author_url: ''
+  date: '2022-12-23T16:10:53'
+  date_gmt: '2022-12-23T08:10:53'
+  content:
+    rendered: |
+      <p>xht加油呀</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6543
+  status: approved
+  type: comment
+- id: 6806
+  post: 1066
+  parent: 0
+  author_name: 2044_space_elevator
+  author_url: ''
+  date: '2023-07-24T19:09:11'
+  date_gmt: '2023-07-24T11:09:11'
+  content:
+    rendered: |
+      <p>至少比我强 QwQ（刚刚还 WA 了一道 黄题）</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6806
+  status: approved
+  type: comment
+- id: 6917
+  post: 1066
+  parent: 0
+  author_name: RedHairSteve
+  author_url: ''
+  date: '2023-09-03T12:14:16'
+  date_gmt: '2023-09-03T04:14:16'
+  content:
+    rendered: |
+      <p>xht加油</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6917
+  status: approved
+  type: comment
+- id: 6938
+  post: 1066
+  parent: 0
+  author_name: gg
+  author_url: http://www.luogu.com.cn
+  date: '2023-10-14T10:53:33'
+  date_gmt: '2023-10-14T02:53:33'
+  content:
+    rendered: |
+      <p>加油啊！</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6938
+  status: approved
+  type: comment
+- id: 6962
+  post: 1066
+  parent: 0
+  author_name: very_easy
+  author_url: ''
+  date: '2024-01-22T10:00:32'
+  date_gmt: '2024-01-22T02:00:32'
+  content:
+    rendered: |
+      <p>xht爱打实况？</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6962
+  status: approved
+  type: comment
+- id: 6964
+  post: 1066
+  parent: 6962
+  author_name: xht37
+  author_url: http://xht37
+  date: '2024-02-05T21:23:06'
+  date_gmt: '2024-02-05T13:23:06'
+  content:
+    rendered: |
+      <p>1</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6964
+  status: approved
+  type: comment
+- id: 6966
+  post: 1066
+  parent: 0
+  author_name: chun_sun
+  author_url: ''
+  date: '2024-02-07T11:24:27'
+  date_gmt: '2024-02-07T03:24:27'
+  content:
+    rendered: |
+      <p>xht加油</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6966
+  status: approved
+  type: comment
+- id: 6967
+  post: 1066
+  parent: 0
+  author_name: xsy2013
+  author_url: http://luogu.com.cn
+  date: '2024-02-09T13:09:38'
+  date_gmt: '2024-02-09T05:09:38'
+  content:
+    rendered: |
+      <p>xht加油啊</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-6967
+  status: approved
+  type: comment
+- id: 7032
+  post: 1066
+  parent: 0
+  author_name: da_ke
+  author_url: https://mahaoming2022.github.io
+  date: '2024-08-08T19:24:18'
+  date_gmt: '2024-08-08T11:24:18'
+  content:
+    rendered: |
+      <p>%%% orz。</p>
+  link: https://www.xht37.com/noi2020-%e6%b8%b8%e8%ae%b0/#comment-7032
+  status: approved
+  type: comment

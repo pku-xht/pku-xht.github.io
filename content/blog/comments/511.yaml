@@ -1,0 +1,16 @@
+version: 1
+post_id: 511
+comments:
+- id: 6394
+  post: 511
+  parent: 0
+  author_name: ql12345
+  author_url: ''
+  date: '2020-08-20T07:53:08'
+  date_gmt: '2020-08-19T23:53:08'
+  content:
+    rendered: |
+      <p>“树的序”那道题应该是下标为w，元素为k吧</p>
+  link: https://www.xht37.com/%e7%ac%9b%e5%8d%a1%e5%b0%94%e6%a0%91-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/#comment-6394
+  status: approved
+  type: comment
