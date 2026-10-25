@@ -1,4 +1,5 @@
 import { ADMIN_SCRIPT } from './admin-client.mjs';
+import { adminLoginForm } from './admin-auth.mjs';
 
 const STYLE = `:root{color-scheme:light}*{box-sizing:border-box}body{max-width:800px;margin:32px auto;padding:0 20px;background:#fcfbf8;font:16px/1.7 system-ui;color:#202c38}a{color:#1f5d8d}h1{font-size:30px;line-height:1.3}h2{font-size:19px;overflow-wrap:anywhere}input,select,button{font:inherit;padding:8px;max-width:100%}input{width:min(100%,480px);display:block}label{display:block;margin:12px 0}article{border-top:1px solid #dde4eb;padding:18px 0}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}button{margin:0 8px 8px 0}small{color:#586574;overflow-wrap:anywhere}#message{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:480px){body{margin:24px auto;padding:0 18px}h1{font-size:26px}}\n`;
 const SCRIPT = ADMIN_SCRIPT;
@@ -11,12 +12,14 @@ function documentHTML({ apiBase, enabled, style, script, policy = '' }) {
 <title>博客评论审核 · 徐皓天</title>${style}${script}</head>
 <body data-admin-api="${escape(apiBase)}" data-admin-enabled="${enabled}">
 <p><a href="https://pku-xht.github.io/blog/">← 返回博客</a></p><h1>博客评论审核</h1>
-<p>输入管理员令牌（审核后台密码）后载入评论。密码只在当前页面内存中使用，离开或刷新后需重新输入。</p>
-<label>管理员令牌 <input id="token" type="password" autocomplete="off" spellcheck="false" disabled></label>
+<p>使用管理员密码登录。你可以让浏览器保存密码，下次自动填入。</p>
+${adminLoginForm()}
+<section id="management" hidden>
 <label>状态 <select id="status" disabled><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
-<button id="load" type="button" disabled>载入</button><button id="logout" type="button" disabled>清除令牌</button>
-<p id="message" role="status" aria-live="polite">${enabled ? '请输入管理员令牌后点击“载入”。' : '评论管理服务尚未配置。'}</p>
+<button id="refresh" type="button" disabled>刷新</button><button id="logout" type="button" disabled>退出登录</button>
 <main id="comments"></main><button id="more" type="button" hidden disabled>下一页</button>
+</section>
+<p id="message" role="status" aria-live="polite">${enabled ? '请输入管理员密码后登录。' : '评论管理服务尚未配置。'}</p>
 <noscript><p>评论管理需要启用 JavaScript。</p></noscript></body></html>\n`;
 }
 
@@ -35,8 +38,8 @@ export function staticAdminAssets(apiBase) {
     html: documentHTML({
       apiBase, enabled: Boolean(apiBase),
       policy: '<meta http-equiv="Content-Security-Policy" content="' + escape(policy) + '">',
-      style: '<link rel="stylesheet" href="/blog/comment/admin.css?v=1">',
-      script: '<script defer src="/blog/comment/admin.js?v=1"></script>',
+      style: '<link rel="stylesheet" href="/blog/comment/admin.css?v=2">',
+      script: '<script defer src="/blog/comment/admin.js?v=2"></script>',
     }),
     script: SCRIPT,
     style: STYLE,

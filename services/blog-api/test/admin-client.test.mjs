@@ -14,25 +14,33 @@ class Element {
   replaceChildren(...children) { for (const child of this.children) child.parent = null; this.children = []; this.append(...children); }
   remove() { if (this.parent) { this.parent.children = this.parent.children.filter(child => child !== this); this.parent = null; } }
   addEventListener(type, handler) { (this.listeners[type] ||= []).push(handler); }
-  async dispatch(type) { for (const handler of this.listeners[type] || []) await handler(); }
+  async dispatch(type) { for (const handler of this.listeners[type] || []) await handler({ preventDefault() {} }); }
   set innerHTML(_) { throw Error('HTML injection attempted'); }
 }
-function fixture({ base = api, enabled = true, foreignFrame = false, respond = () => ({ comments: [], next_cursor: null }), confirm = () => true, script = ADMIN_SCRIPT } = {}) {
-  const elements = Object.fromEntries(['token', 'status', 'load', 'logout', 'more', 'message', 'comments'].map(id => [id, new Element()]));
-  elements.status.value = 'pending'; elements.more.hidden = true;
+function fixture({ base = api, enabled = true, foreignFrame = false, respond = () => ({ comments: [], next_cursor: null }), confirm = () => true, script = ADMIN_SCRIPT, passwordManager = true, declinePassword = false } = {}) {
+  const elements = Object.fromEntries(['login-form', 'management', 'username', 'token', 'status', 'load', 'refresh', 'logout', 'more', 'message', 'comments'].map(id => [id, new Element()]));
+  elements.status.value = 'pending'; elements.more.hidden = true; elements.management.hidden = true;
+  elements.username.value = 'admin';
   const document = { body: { dataset: { adminApi: base, adminEnabled: String(enabled) } }, getElementById: id => elements[id], createElement: tag => new Element(tag) };
   Object.defineProperty(document, 'cookie', { get() { throw Error('Cookie access attempted'); }, set() { throw Error('Cookie write attempted'); } });
-  const events = {}, calls = [];
+  const events = {}, calls = [], savedPasswords = [];
   const window = { location: { origin: 'https://pku-xht.github.io', search: '?api=https://evil.example&token=not-accepted' }, addEventListener(type, handler) { events[type] = handler; } };
   window.top = foreignFrame ? { location: { origin: 'https://evil.example' } } : window;
   const context = { document, window, confirm, encodeURIComponent, fetch: async (url, options) => {
     calls.push({ url, options });
     const data = await respond(url, options);
-    return { ok: data.httpStatus ? data.httpStatus < 400 : true, json: async () => data };
+    return { ok: data.httpStatus ? data.httpStatus < 400 : true, status: data.httpStatus || 200, json: async () => data };
   } };
+  if (passwordManager) {
+    context.PasswordCredential = class { constructor(value) { Object.assign(this, value); } };
+    context.navigator = { credentials: { async store(value) {
+      savedPasswords.push(value);
+      if (declinePassword) throw Error('Browser declined saving');
+    } } };
+  }
   for (const key of ['localStorage', 'sessionStorage']) Object.defineProperty(context, key, { get() { throw Error('Persistent credential storage attempted'); } });
   vm.runInNewContext(script, context);
-  return { elements, calls, events, async login() { elements.token.value = '  ' + token + '  '; await elements.load.dispatch('click'); } };
+  return { elements, calls, events, savedPasswords, async login() { elements.token.value = '  ' + token + '  '; await elements['login-form'].dispatch('submit'); } };
 }
 const comment = (id = 'first') => ({ id, nickname: '<img src=x onerror=alert(1)>', document: '46', body: '<script>untrusted</script>', parent_id: null, created_at: '2026-10-25T00:00:00Z' });
 
@@ -41,6 +49,8 @@ test('static UI sends the token only as a header to its fixed API and renders co
   assert.equal(f.calls.length, 0);
   await f.login();
   assert.equal(f.elements.token.value, '');
+  assert.equal(f.elements['login-form'].hidden, true);
+  assert.equal(f.elements.management.hidden, false);
   assert.equal(f.calls[0].url, api + '/v1/admin/comments?status=pending');
   assert.equal(f.calls[0].options.headers.Authorization, 'Bearer ' + token);
   assert.equal(f.calls[0].options.credentials, 'omit');
@@ -75,9 +85,9 @@ test('shared UI applies approve and reject actions and preserves the destructive
   assert.equal(f.calls.at(-1).options.method, 'DELETE');
   assert.equal(three.parent, null);
   await f.elements.logout.dispatch('click');
-  await f.elements.load.dispatch('click');
+  await f.elements.refresh.dispatch('click');
   assert.equal(f.calls.length, before + 1);
-  assert.equal(f.elements.message.textContent, '请输入管理员令牌');
+  assert.equal(f.elements.message.textContent, '请先登录。');
 });
 
 test('clearing or leaving the page cannot be undone by an in-flight private response', async () => {
@@ -93,7 +103,8 @@ test('clearing or leaving the page cannot be undone by an in-flight private resp
     assert.equal(f.elements.comments.children.length, 0);
     assert.equal(f.elements.more.hidden, true);
     assert.equal(f.elements.token.value, '');
-    await f.elements.load.dispatch('click');
+    assert.equal(f.savedPasswords.length, 0);
+    await f.elements.refresh.dispatch('click');
     assert.equal(f.calls.length, 1);
   }
 });
@@ -116,7 +127,11 @@ test('Worker and static documents share one client while preserving their distin
   assert.match(assets.html, /connect-src https:\/\/comments\.example\.test/);
   assert.match(assets.html, /name="robots" content="noindex,nofollow"/);
   assert.match(assets.html, /name="referrer" content="no-referrer"/);
-  assert.match(assets.html, /<script defer src="\/blog\/comment\/admin\.js\?v=1"><\/script>/);
+  assert.match(assets.html, /<form id="login-form" method="post" autocomplete="on">/);
+  assert.match(assets.html, /name="username"[^>]+autocomplete="username"/);
+  assert.match(assets.html, /name="password" type="password" autocomplete="current-password"/);
+  assert.match(assets.html, /id="load" type="submit"/);
+  assert.match(assets.html, /<script defer src="\/blog\/comment\/admin\.js\?v=2"><\/script>/);
   assert.ok(!assets.html.includes('<iframe') && !assets.html.includes('http-equiv="refresh"'));
   const worker = adminPage(), html = await worker.text();
   assert.match(worker.headers.get('Content-Security-Policy'), /frame-ancestors 'none'/);
@@ -124,6 +139,42 @@ test('Worker and static documents share one client while preserving their distin
   assert.ok(html.includes(assets.script));
   assert.match(html, /data-admin-api="" data-admin-enabled="true"/);
   assert.match(staticAdminAssets('').html, /data-admin-enabled="false"/);
+});
+
+test('only successful authentication offers the fixed administrator password to the browser', async () => {
+  const success = fixture();
+  await success.login();
+  assert.equal(success.savedPasswords.length, 1);
+  assert.equal(success.savedPasswords[0].id, 'admin');
+  assert.equal(success.savedPasswords[0].password, token);
+  await success.elements.refresh.dispatch('click');
+  assert.equal(success.savedPasswords.length, 1, 'Refreshing comments must not repeatedly request password saving');
+
+  const failed = fixture({ respond: () => ({ httpStatus: 401, error: 'unauthorized' }) });
+  await failed.login();
+  assert.equal(failed.savedPasswords.length, 0);
+  assert.equal(failed.elements['login-form'].hidden, false);
+  assert.equal(failed.elements.management.hidden, true);
+  assert.equal(failed.elements.token.value, '');
+  assert.match(failed.elements.message.textContent, /密码不正确/);
+
+  for (const options of [{ passwordManager: false }, { declinePassword: true }]) {
+    const f = fixture(options);
+    await f.login();
+    assert.equal(f.elements.management.hidden, false, 'Password-manager support or consent is optional');
+  }
+});
+
+test('expired authentication clears private data and does not resave a password', async () => {
+  let expired = false;
+  const f = fixture({ respond: () => expired ? { httpStatus: 401 } : { comments: [comment()], next_cursor: null } });
+  await f.login();
+  expired = true;
+  await f.elements.refresh.dispatch('click');
+  assert.equal(f.elements.comments.children.length, 0);
+  assert.equal(f.elements.management.hidden, true);
+  assert.equal(f.elements['login-form'].hidden, false);
+  assert.equal(f.savedPasswords.length, 1);
 });
 
 test('renderer validates its fixed endpoint and accepts only the public configuration input', () => {

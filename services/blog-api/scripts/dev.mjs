@@ -17,6 +17,7 @@ const withinProject=relative(project,databasePath);
 if (!withinProject || (!withinProject.startsWith('..'+sep) && withinProject!=='..' && !isAbsolute(withinProject))) throw new Error('Keep the local database outside the public repository.');
 const DB=sqliteD1(databasePath);
 DB.sqlite.exec(readFileSync(new URL('../data/register-public.sql',import.meta.url),'utf8'));
+DB.sqlite.exec(readFileSync(new URL('../data/unified-comments.sql',import.meta.url),'utf8'));
 const env={DB,ADMIN_TOKEN:process.env.ADMIN_TOKEN,RATE_LIMIT_SALT:process.env.RATE_LIMIT_SALT,ALLOWED_ORIGINS:'https://pku-xht.github.io,http://127.0.0.1:8791,http://localhost:8791',VISITS_ENABLED:'false'};
 const server=createServer(async (incoming,outgoing)=>{
   try {

@@ -42,7 +42,7 @@ test('nickname must be manually supplied, trimmed, nonempty, <=40 and free of co
 test('body bounds, malformed fields, malicious moderation fields and unknown public documents fail',async context=>{
   const f=fixture(context);
   for (const body of ['', ' \n ', 'x'.repeat(10001), 'bad\u0001', [], null]) assert.equal((await f.post(f.comment({body}))).status,400);
-  for (const extra of [{status:'approved'},{ip:'192.0.2.1'},{admin:true},{nickname:['a']},{request_id:'short'},{website:{url:'bot'}}]) assert.equal((await f.post(f.comment(extra))).status,400);
+  for (const extra of [{status:'approved'},{ip:'192.0.2.1'},{admin:true},{body_html:'<b>forged</b>'},{author_url:'https://example.test/'},{nickname:['a']},{request_id:'short'},{website:{url:'bot'}}]) assert.equal((await f.post(f.comment(extra))).status,400);
   assert.equal((await f.post(f.comment({document:'999'}))).status,404);
   assert.equal((await f.post(f.comment({document:11}))).status,400);
   assert.equal((await f.post(f.comment({website:'https://spam.example'}))).status,202);
@@ -70,7 +70,8 @@ test('pending stays private, admin authorization gates moderation, approved XSS 
   const pending=await f.request('/v1/admin/comments',{admin:true,requestOrigin:null}); assert.equal(pending.data.comments.length,1);
   assert.equal((await f.approve(submitted.data.id)).status,200);
   const approved=(await f.request('/v1/comments?document=11')).data.comments[0]; assert.equal(approved.body,body);
-  assert.deepEqual(Object.keys(approved).sort(),['body','created_at','document','id','nickname','parent_id']);
+  assert.deepEqual(Object.keys(approved).sort(),['author_url','body','body_html','created_at','document','id','nickname','parent_id']);
+  assert.equal(approved.body_html,null); assert.equal(approved.author_url,'');
   assert.equal(approved.nickname,'读者'); assert.match(approved.id,/^[0-9a-f-]{36}$/);
 });
 
@@ -85,6 +86,9 @@ test('comment retries and racing duplicate requests are idempotent, conflicting 
 
 test('replies accept only an approved parent on the same registered document, including public legacy IDs',async context=>{
   const f=fixture(context);
+  // A registration-only projection is never sufficient after unified moderation.
+  assert.equal((await f.post(f.comment({parent_id:'wp-1'}))).status,409);
+  f.DB.sqlite.exec("INSERT INTO comments(id,document,nickname,body,status,request_id,request_hash,created_at) VALUES ('wp-1','11','原作者','正文','approved','import:wp-1','hash','2020-01-01T00:00:00.000Z'),('wp-2','12','另一作者','正文','approved','import:wp-2','hash','2020-01-01T00:00:00.000Z');");
   assert.equal((await f.post(f.comment({parent_id:'wp-1'}))).status,202);
   assert.equal((await f.post(f.comment({parent_id:'wp-2'}))).status,409);
   const parent=await f.post(f.comment());
@@ -287,6 +291,76 @@ test('offline public importer registers the real 212 documents and rejects priva
   mkdirSync(resolve(temporary,'posts')); writeFileSync(resolve(temporary,'posts/11.md'),'---\nid: 11\n---\npublic'); writeFileSync(resolve(temporary,'collection.yaml'),'version: 1\nposts:\n- posts/11.md\npages: []\n');
   writeFileSync(resolve(temporary,'legacy.json'),JSON.stringify({version:1,parents:[{id:'wp-1',document:'11',email:'private@example.test'}]}));
   const result=spawnSync(process.execPath,[new URL('../scripts/import-public.mjs',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1'),'--collection',resolve(temporary,'collection.yaml'),'--legacy',resolve(temporary,'legacy.json'),'--out',resolve(temporary,'out')],{encoding:'utf8'}); assert.notEqual(result.status,0);
+});
+
+test('all 117 public comments import atomically with original IDs, HTML, authors, UTC dates and reply links',async context=>{
+  const f=fixture(context);
+  f.DB.sqlite.exec(readFileSync(new URL('../data/register-public.sql',import.meta.url),'utf8'));
+  const manifest=JSON.parse(readFileSync(new URL('../data/unified-comments.json',import.meta.url),'utf8'));
+  const sql=readFileSync(new URL('../data/unified-comments.sql',import.meta.url),'utf8');
+  f.DB.sqlite.exec(sql);
+  assert.equal(manifest.comments.length,117);
+  assert.equal(manifest.comments.filter(row=>row.parent_id).length,43);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,117);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comment_import_ids').get().n,117);
+  assert.equal(f.DB.sqlite.prepare('SELECT payload FROM comment_import_batches').get().payload,null);
+  assert.deepEqual(f.DB.sqlite.prepare('PRAGMA foreign_key_check').all(),[]);
+  for (const expected of manifest.comments) {
+    const actual=f.DB.sqlite.prepare('SELECT id,document,nickname,author_url,body,body_html,parent_id,created_at FROM comments WHERE id=?').get(expected.id);
+    const {content_hash,...publicFields}=expected;
+    assert.deepEqual({...actual},publicFields);
+    assert.match(actual.created_at,/\.000Z$/);
+  }
+  const page=(await f.request('/v1/comments?document=116')).data;
+  assert.deepEqual(page.comments.map(row=>row.id),manifest.comments.filter(row=>row.document==='116').map(row=>row.id));
+  assert.ok(page.comments.every(row=>!('status' in row)&&!('request_hash' in row)&&!('content_hash' in row)));
+  const approved=(await f.request('/v1/admin/comments?status=approved',{admin:true,requestOrigin:null})).data;
+  assert.equal(approved.comments.length,100); assert.ok(approved.comments.every(row=>row.status==='approved'));
+  assert.equal((await f.request('/v1/admin/comments?status=approved&cursor='+approved.next_cursor,{admin:true,requestOrigin:null})).data.comments.length,17);
+});
+
+test('unified imported parents and mixed replies reject/delete together and repeated import never revives them',async context=>{
+  const f=fixture(context);
+  f.DB.sqlite.exec(readFileSync(new URL('../data/register-public.sql',import.meta.url),'utf8'));
+  const sql=readFileSync(new URL('../data/unified-comments.sql',import.meta.url),'utf8');
+  f.DB.sqlite.exec(sql);
+  const reply=(await f.post(f.comment({document:'116',parent_id:'wp-4389'}))).data.id;
+  await f.approve(reply);
+  const reject=await f.request('/v1/admin/comments/wp-4379/reject',{method:'POST',admin:true,requestOrigin:null});
+  assert.equal(reject.status,200); assert.equal(reject.data.affected,3);
+  f.DB.sqlite.exec(sql);
+  assert.equal(f.DB.sqlite.prepare("SELECT count(*) AS n FROM comments WHERE status='rejected'").get().n,3);
+  assert.equal((await f.post(f.comment({document:'116',parent_id:'wp-4379'}))).status,409);
+  assert.equal((await f.approve('wp-4389')).status,409);
+  const deleted=await f.request('/v1/admin/comments/wp-4379',{method:'DELETE',admin:true,requestOrigin:null});
+  assert.equal(deleted.status,200); assert.equal(deleted.data.deleted,3);
+  f.DB.sqlite.exec(sql);
+  assert.equal(f.DB.sqlite.prepare("SELECT count(*) AS n FROM comments WHERE id IN ('wp-4379','wp-4389',?)").get(reply).n,0);
+  assert.equal((await f.post(f.comment({document:'116',parent_id:'wp-4379'}))).status,409);
+  // Even a subsequent batch cannot reinsert a previously imported/deleted ID.
+  f.DB.sqlite.exec(sql.replaceAll('public-comments-2026-10-25','second-public-batch'));
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,115);
+  const batches=f.DB.sqlite.prepare('SELECT count(*) AS n FROM comment_import_batches').get().n;
+  assert.throws(()=>f.DB.sqlite.exec(sql.replace(/'([a-f0-9]{64})'/,"'"+'0'.repeat(64)+"'")),/NOT NULL/);
+  const manifest=JSON.parse(readFileSync(new URL('../data/unified-comments.json',import.meta.url),'utf8'));
+  const conflicting=sql.replaceAll('public-comments-2026-10-25','conflicting-content-batch').replace(manifest.comments[0].content_hash,'0'.repeat(64));
+  assert.throws(()=>f.DB.sqlite.exec(conflicting),/NOT NULL/);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comment_import_batches').get().n,batches);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,115);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM visit_baselines').get().n,0);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM visit_events').get().n,0);
+});
+
+test('chronological public pagination handles older imports inserted after newer comments',async context=>{
+  const f=fixture(context), insert=f.DB.sqlite.prepare("INSERT INTO comments(id,document,nickname,body,status,request_id,request_hash,created_at) VALUES (?,'11','reader','text','approved',?,'hash',?)");
+  const newer=randomUUID(); insert.run(newer,randomUUID(),'2026-10-25T00:00:00.000Z');
+  for (let index=0;index<101;index++) insert.run('wp-'+(index+10),'import:'+(index+10),'2020-01-01T00:00:00.000Z');
+  const first=(await f.request('/v1/comments?document=11')).data;
+  assert.equal(first.comments.length,100); assert.equal(first.comments[0].id,'wp-10'); assert.equal(first.next_cursor,101);
+  const last=(await f.request('/v1/comments?document=11&cursor='+first.next_cursor)).data;
+  assert.deepEqual(last.comments.map(row=>row.id),['wp-110',newer]); assert.equal(last.next_cursor,null);
+  assert.equal((await f.request('/v1/comments?document=12&cursor='+first.next_cursor)).status,400);
+  assert.equal((await f.request('/v1/comments?document=11&cursor=999999')).status,400);
 });
 
 test('baseline CLI defaults to an offline dry-run and --apply needs an explicit cutover flag',context=>{

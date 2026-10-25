@@ -1,162 +1,98 @@
-# 博客交互 API
+# 博客交互与文章编辑 API
 
-Cloudflare Worker + D1；运行时代码无 npm 依赖。这里只登记正式集合中的 211 篇公开文章与 1 个历史页面。新评论必须由读者自行填写昵称，提交后先进入待审核状态，管理员通过后才出现在公开接口。旧评论正文仍由静态归档提供，Worker 只保存可回复的旧评论 ID 与所属公开文档。
+Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collection.yaml` 中的 211 篇文章和 1 个页面。评论统一存储、读取和管理于 D1；文章仍以仓库内每篇 Markdown + YAML 为正式源。读者填写昵称和正文即可提交评论，所有新提交必须由站主审核后公开。
 
-`wrangler.toml` 中没有实际数据库 ID 或密钥，`VISITS_ENABLED` 明确为 `false`。真实后端已于 2026-10-25 部署并验证；静态页面的发布状态与实际核验见 [本批记录](../../migration/interactive-2026-10-25.md)。没有从旧快照提取或导入 Visits 正式基线。
+本轮统一评论、密码表单与在线文章编辑是**本地实现，尚未部署**。先前线上版本及部署证据保存在迁移记录中，不能用于证明本轮已上线。最新状态与验证见 [统一博客批次](../../migration/unified-blog-2026-10-25.md)。正式运行命令只维护在[根 README](../../README.md#build-and-check)，本文件说明接口与不变量。
 
 ## 接口
 
-所有请求／响应均为 UTF-8 JSON。公开 POST 必须带允许的 `Origin`，使用 `Content-Type: application/json`；不使用 Cookie 或浏览器登录。默认只允许 `https://pku-xht.github.io`，需要本地验收时明确加入 `http://127.0.0.1:8791` 和／或 `http://localhost:8791`，不会泛化允许任意 localhost 端口。
+公开 POST 要求允许的 `Origin` 和 `Content-Type: application/json`。默认允许正式站来源；本地验收只显式加入指定的 8791 来源，不允许任意 localhost 端口。管理接口统一要求 `Authorization: Bearer <ADMIN_TOKEN>`，不以昵称、GitHub 账号或前端开关代替管理权限。这里没有基于 Cookie 的站点登录。
 
 | 请求 | 行为 |
 |---|---|
-| `GET /v1/comments?document=1154&cursor=0` | 仅返回已审核的新评论，按创建次序每页最多 100 条 |
-| `POST /v1/comments` | 创建待审核评论；成功为 `202 {id, status:"pending"}` |
-| `GET /v1/admin/comments?status=pending&cursor=0` | 管理员查看 `pending`／`approved`／`rejected` 队列 |
-| `POST /v1/admin/comments/<UUID>/approve` | 公开新评论；其新父评论必须仍已公开 |
-| `POST /v1/admin/comments/<UUID>/reject` | 拒绝该新评论，并将它在同文中的新评论后代一并隐藏 |
-| `DELETE /v1/admin/comments/<UUID>` | 删除该新评论及同文新评论后代；不操作旧历史评论 |
-| `DELETE /v1/admin/comments/<UUID>?only_if_no_replies=true` | 原子删除单条无新回复的评论；已有回复时返回 `409 comment_has_replies`，不删除任何记录 |
-| `GET /v1/visits?document=1154` | 统计状态和基线加增量；未初始化时值为 `null` |
-| `POST /v1/visits` | 仅在明确启用并已导入基线时记录幂等访问事件 |
-| `POST /v1/admin/visits/baseline` | 未来切换时，显式确认并原子导入完整基线 |
-| `GET /admin` | Worker 上的备用审核入口，与站内 `/blog/comment/` 共享管理界面 |
+| `GET /v1/comments?document=1154&cursor=0` | 返回同文全部已公开评论，按创建时间及稳定序号分页，每页最多 100 条 |
+| `POST /v1/comments` | 创建待审核评论，成功为 `202 {id,status:"pending"}` |
+| `GET /v1/admin/comments?status=pending&cursor=0` | 同一管理队列查询 `pending`、`approved` 或 `rejected`，按稳定序号分页 |
+| `POST /v1/admin/comments/<ID>/approve` | 公开评论；其父评论须仍在同文且已公开 |
+| `POST /v1/admin/comments/<ID>/reject` | 拒绝该评论，连同文内全部回复后代一起隐藏 |
+| `DELETE /v1/admin/comments/<ID>` | 删除该评论及同文全部回复后代 |
+| `DELETE /v1/admin/comments/<ID>?only_if_no_replies=true` | 原子删除单条无回复评论，有回复时返回 `409 comment_has_replies` |
+| `GET /v1/admin/articles/<ID>` | 读取正式 `main` 同一修订下的完整 Markdown/YAML、blob SHA 和修订号 |
+| `POST /v1/admin/articles/<ID>` | 提交一个文档的候选修改，成功为 `202`，等待受信工作流发布 |
+| `GET /v1/admin/articles/<ID>/publication?revision=<SHA>` | 查询保存返回的候选修订，状态为 `pending`、`success` 或 `failure` |
+| `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；目前关闭，计数为 `null` |
+| `POST /v1/visits` | 仅明确启用且已有完整基线后计数，目前拒绝 |
+| `POST /v1/admin/visits/baseline` | 未来切换时显式确认并原子导入完整独立基线 |
+| `GET /admin` | 与 `/blog/comment/` 共享界面源码的备用评论管理入口 |
 
 公开评论形状：
 
 ```json
-{"comments":[{"id":"新评论 UUID","document":"1154","nickname":"读者自己填写","body":"纯文本正文","parent_id":null,"created_at":"ISO 时间"}],"next_cursor":null}
+{"comments":[{"id":"wp-4379","document":"116","nickname":"读者","body":"纯文本正文","body_html":"<p>安全化的既有正文</p>","author_url":"","parent_id":null,"created_at":"2020-03-04T12:08:18.000Z"}],"next_cursor":null}
 ```
 
-`next_cursor` 非空时继续带此整数请求下一页。`document` 为 WordPress ID **字符串**。`parent_id` 是已公开同文新评论的 UUID，或已导入同文旧公开评论的 `wp-<旧评论ID>`；不能回复待审、拒绝或其他文档的评论。
+`document` 为已注册文档 ID 字符串。评论 ID 可以是原有稳定的 `wp-N` 或 UUID；界面不显示来源分类。公开接口不返回状态、请求哈希、待审内容或私人元数据。`next_cursor` 非空时作为整数传入下一页。公开分页以游标对应的创建时间和序号作锚，因此晚导入的较早评论也不会因序号较大而遗漏。锚记录已删除或不属于该文档时返回 `invalid_cursor`，调用者需重新加载。
 
-评论提交字段仅允许：
+新评论仅接受：
 
 ```json
-{"document":"1154","nickname":"读者","body":"评论正文","parent_id":null,"request_id":"客户端生成并在重试时复用的 UUID","website":""}
+{"document":"1154","nickname":"读者","body":"评论正文","parent_id":null,"request_id":"本次提交与重试复用的 UUID","website":""}
 ```
 
-昵称 trim 后必填，最多 40 个 Unicode 字符；正文 trim 后必填，最多 10,000 个 Unicode 字符，保留纯文本换行。拒绝控制字符及额外的 `status`、`approved`、IP 等字段。HTML 标签按文字存储；公开站与管理页必须用 `textContent` 展示。`website` 为隐藏蜜罐，非空时接受表面请求但不入库。
+昵称 trim 后必填，最多 40 个 Unicode 字符；正文 trim 后必填，最多 10,000 字符，保留换行。拒绝控制字符和额外字段，包括 `status`、`body_html`、`author_url`、IP 等。新提交的 HTML 按文字展示；公开界面仅为离线安全化的既有 HTML 做白名单 DOM 重建。动态 TeX 使用本地 KaTeX，`trust:false`。管理列表以纯文本显示评论。
 
-重复 `request_id` 与相同内容返回原 ID；复用它提交不同内容返回 `409 request_conflict`。公开响应从不返回待审正文、IP、令牌或内部请求哈希。错误形状为 `{error:"稳定错误码",message:"说明"}`：无效内容 `400`，管理员未授权 `401`，来源不允许 `403`，未知公开文档 `404`，回复／幂等冲突 `409`，频控 `429`，配置缺失 `503`。
+`website` 是隐藏蜜罐，非空时返回表面接受但不入库。相同 `request_id` 与相同内容重试返回原 ID，不重复入库或计频控；内容不同时返回 `409 request_conflict`。回复父节点只能来自 `comments` 中同文已公开记录；最小 `legacy_parents` 投影不再授予回复权限，拒绝或删除过的父节点不能继续接收回复。
 
-## 管理与频控
+错误形状为 `{error:"稳定错误码",message:"说明"}`。常见状态：内容错误 `400`、未认证 `401`、来源不允许 `403`、未注册文档 `404`、版本/回复/幂等冲突 `409`、频控 `429`、配置缺失 `503`。响应均不缓存，真实凭据和上游错误正文不会返回客户端。
 
-管理接口统一要求 `Authorization: Bearer <ADMIN_TOKEN>`。`ADMIN_TOKEN` 与 `RATE_LIMIT_SALT` 均至少 32 个字符，放在 Worker secrets 或本机进程环境中，不能写入本公开仓库（包括忽略目录）。不要用 GitHub OAuth、昵称或前端开关冒充管理员权限。
+## 统一评论与公开校验材料
 
-管理页的令牌输入在载入后清空；令牌仅存在当前页面内存，刷新或离开即失效，不放 URL、Cookie、localStorage 或 sessionStorage。清除或离开后，正在返回的旧请求也不会重新把待审内容显示到页面。用户评论通过 DOM `textContent` 渲染，删除会明确提示同文新回复一并删除。
+`content/blog/comments/` 的 117 条已公开评论是原始校验材料，其中 43 条为回复。离线导入工具只从正式公开集合与这些白名单 YAML 读取数据，安全化正文、将已注册文内/资源链接映射到本地，并保留姓名、作者网址、完整时间和父子关系。不读取 WordPress 后台，不接受邮箱、IP、账户、用户代理或审核导出。
 
-站主选定的审核入口为 [站内评论管理页](https://pku-xht.github.io/blog/comment)。GitHub Pages 会为目录补上末尾 `/`，管理界面始终留在该地址；仍使用原管理员令牌。Worker 的 [原管理地址](https://xht37-blog-api.pku-xht-github-io.workers.dev/admin) 也可使用。本机管理员令牌的备份位于仓库外 `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`，由 Windows DPAPI 加密，只能在创建它的 Windows 用户下解密。在仓库根目录亲自执行以下命令，取出令牌后粘贴到管理页，点击“载入”；选择待审核评论后点击“公开”或“拒绝及隐藏回复”。不要把令牌发到聊天或写入本仓库：
+生成的 `data/unified-comments.json` 和 `.sql` 是公开导入资产，不是运行时评论源。`0002_unified_comments.sql` 为同一 `comments` 表增加 `body_html` 和 `author_url`，所有现有新评论仍保留。一次导入通过单条 SQL 及触发器事务完成；导入正文的临时 payload 随事务完成置空，仅保留批次/ID 哈希。
 
-```powershell
-pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
-```
+已导入记录不再被源快照覆盖。重复同批导入不改变审核、拒绝或删除结果；后续批次也不能重建已导入过的 ID。冲突哈希使整次操作失败回滚。删除评论后仍保留不可逆的最小导入标记以阻止复活，不保留第二份导入 payload。公开 YAML/JSON 保留原先已公开内容，仅供校验，不能回填新评论或未公开内容。
 
-不带 `-Reveal` 的脚本只显示取用说明，不显示令牌。`rate-limit-salt.dpapi` 同样保存在该私有目录中。Cloudflare 的真实 secrets 已通过 stdin 设置，公开源文件中不包含它们。
+静态页面不嵌入评论正文兜底，防止拒绝/删除后在离线、无脚本或 API 失败时仍显示原评论。所有评论由同一公开接口读取，并在同一个 `/blog/comment/` 界面管理。
 
-站内页由正式博客构建流程生成 `blog/comment/index.html`、`admin.js` 和 `admin.css`。唯一界面源为 `src/admin.mjs` 与 `src/admin-client.mjs`，`tools/render_comment_admin.mjs` 只接收公开的 `api_base` 配置；不接收凭据或评论。客户端作为原始脚本字符串共享，避免 Worker 打包器改写函数后再序列化而产生未定义辅助变量。
+## 管理密码与浏览器
 
-静态页通过 meta CSP 只加载本地脚本、样式，且只连接固定的 Worker origin；API 和密码不从 URL 参数读取。未配置 API 时控件禁用。页面声明 `noindex` 和 `no-referrer`；外站嵌入时禁止输入密码，同源窄屏检查仍可使用。Worker 入口继续使用 nonce CSP 和禁止嵌入的响应头。生成器记录共享源及产物哈希，校验器会拒绝陈旧或被手改的管理页；这些源与产物由 Git 属性和生成器统一使用 LF，避免 Windows 与 GitHub 检出后的哈希漂移。
+站内入口为 [评论管理](https://pku-xht.github.io/blog/comment)；GitHub Pages 会补末尾 `/`。固定账号为 `admin`，密码仍是原 `ADMIN_TOKEN`，本次不更换其值。编辑文章使用同一个密码。标准表单提供 `autocomplete="username"` 与 `autocomplete="current-password"`，成功认证后在支持的浏览器请求保存凭据。
 
-评论初始限制为每个地址 15 分钟最多 5 次新请求，Visits 为每分钟最多 120 次。新评论入库与占用频控额度在同一事务中完成，相同请求并发重试只占一次额度。数据库只在频控桶中保存带私密盐的地址 SHA-256，不保存或输出原 IP；在后续写请求中清理过期一天以上的桶，无后续请求时没有额外定时清理。Cloudflare 入口的 `CF-Connecting-IP` 作为地址来源；本地桥接强制使用本机连接地址，忽略调用者伪造的该头。所有 JSON 请求都以流式读取强制限制在 64KiB 内，不依赖客户端声明的 Content-Length。
+Chrome 可依其设置提示保存并在以后自动填入；不能保证每台机器或每次登录都出现提示。保存由浏览器密码管理器负责，站点不把凭据写入 URL、Cookie、localStorage 或 sessionStorage。页面只在当前内存保留密码，退出或离开即清除；已清除会话的迟到响应不能重新显示评论或源文本。
 
-这是一层基础频控和蜜罐，不能证明可抵御所有机器人或分布式滥用。所有新评论审核后公开，因而自动化提交也不会直接进入公开评论列表。自托管反向代理必须自行保证客户端地址头可信，不能直接把公开请求传来的地址头视作可信。
+本机 DPAPI 备份在仓库外 `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`，只可由创建它的 Windows 用户解密。取用命令见[密码说明](../../README.md#administrator-password)，不要把密码发到聊天或写入仓库。`RATE_LIMIT_SALT` 的加密备份也保存在该私有目录。
 
-## 本地验证与预览
+界面共享源码为 `src/admin.mjs`、`src/admin-client.mjs`、`src/admin-auth.mjs` 与 `src/article-editor.mjs`；生成页只含空界面、文档 ID 和固定 API，不包含实际密码、待审评论或文章草稿。脚本用原始字符串共享，避免 Wrangler 打包器注入辅助函数后再被序列化的问题。CSP 限定本地资源及固定 Worker，页面 `noindex`、无 referrer，外站 iframe 禁止输入密码。LF 和生成器哈希防止跨平台字节漂移。
 
-使用 Node 24.6+：
+## 在线文章编辑与发布
 
-```sh
-node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs
-```
-
-测试执行真实 SQLite 的外键、唯一约束、事务、JSON1 和访问计数触发器；`node:sqlite` 仅用于本地适配，Worker 运行时代码不依赖它。测试覆盖待审隔离、审核权限、同文父节点、子树处理、XSS 文字、CORS、频控、幂等及并发计数、基线防覆盖和默认关闭零写库。它不是线上 D1／Cloudflare 实际部署验收。
-
-管理客户端测试另覆盖固定跨源 API、Bearer header、纯文本渲染、审核操作、分页及清除／离开时的迟到响应。真实打包回归使用 esbuild 的 `keepNames:true` 打包实际 Worker，再在独立浏览器作用域执行 `/admin` 的内联脚本；可通过 `BLOG_ESBUILD_MODULE` 指定现有官方 Wrangler 工具链中的 `esbuild/lib/main.js`。依赖缺失时该项明确跳过，本轮发布验证已实际执行并通过，不能把跳过当成通过。
-
-无需 npm 的本地 API 桥接：先在启动进程的环境中设置仅供本地的 `ADMIN_TOKEN` 与 `RATE_LIMIT_SALT`，再运行：
-
-```sh
-node services/blog-api/scripts/dev.mjs --port 8787
-```
-
-它只监听 `127.0.0.1`，默认数据库在系统临时目录 `xht37-blog-api-local.sqlite`，也可用 `--database <仓库外路径>` 指定。凭据不写磁盘，Visits 强制关闭。首页静态服务继续使用 8791 端口，审核页为 `http://127.0.0.1:8787/admin`。此桥接仅供本地联调，不是生产服务器或完整 Cloudflare 模拟器。
-
-## 公开文档及旧父节点的离线导入
-
-生成注册数据：
-
-```sh
-node services/blog-api/scripts/import-public.mjs
-```
-
-工具读取正式 `content/blog/collection.yaml` 和已登记 Markdown 的 ID，输出 `data/public-documents.json`、最小 `data/legacy-parents.json` 与 `data/register-public.sql`。默认复用已登记的最小旧父节点清单，避免普通重建清空已有投影；更新历史评论范围时需显式传入新清单。不扫描 WordPress 后台，不提取 Visits，不导入正文、用户档案、凭据、邮箱或 IP。
-
-旧评论归档确定后，可另外提供最小公开父节点清单：
+每篇文章/页面后追加 `exit`，如 `/blog/posts/1154/exit/`、`/blog/pages/215/exit/`。当前 212 篇全部使用相同编辑流程，不分来源。GET 响应包含 `{document,path,revision,source,sha}`；POST 仅接受：
 
 ```json
-{"version":1,"parents":[{"id":"wp-123","document":"1154"}]}
+{"source":"完整 Markdown 与 YAML","sha":"载入时的40位blob SHA","request_id":"本次保存与重试复用的UUID"}
 ```
 
-```sh
-node services/blog-api/scripts/import-public.mjs --legacy <公开父节点清单.json>
-```
+后端固定目标仓库 `pku-xht/pku-xht.github.io`、基准分支 `main` 和注册文档路径；请求不能指定其他仓库、分支或文件。不得修改文档 `id`、`type`。提交最多 1MiB，源文件最多 950,000 字节。原 SHA 已变更时返回 `409 source_conflict`，保留本地编辑内容供比较；重复请求标识只能对应同一份修改。
 
-工具拒绝任何额外字段、重复 ID、未登记文档或非法父 ID。必须先由静态归档流程验证这些确为公开且已批准的历史评论，不能将后台导出交给此工具后再过滤。生成的 SQL 只添加注册成员，已有 ID 不重新归属；上线后移除文档／旧父节点需单独审查现有回复关系。
+保存先创建只包含该 Markdown 修改的 `codex/article-edit/<UUID>` 候选分支，返回 `202` 和候选修订号。受信工作流 `.github/workflows/publish-blog-edit.yml` 从 `main` 读取发布代码，不能执行候选分支提交的工作流或任意脚本。`tools/publish_blog_edit.py` 复核候选范围和基准版本，执行完整构建与校验，把源和生成页在一个提交内写入 `main`，随后显式触发并验证对应 Pages 构建。只有发布成功后才为候选修订的 `blog-publish` 状态报告成功。
 
-## Cloudflare 配置与部署入口
+不同保存请求进入串行队列，不能以“取消上次任务”丢弃文章修改。同文竞争修改须重新比较，不能自动覆盖。浏览器轮询 publication 接口显示提交、失败或已上线；候选分支创建、主干提交和实际上线是不同状态。`source_saved` 区分正文已保存但 Pages 失败与尚未写入正式源；前者需重新载入版本，并在 Actions 详情重新运行失败工作流。相同 `request_id` 重试只复用原候选，不会重新触发发布。`revision` 必须属于指定文章的保存记录。失败详情只给固定仓库的 Actions 链接，不向页面暴露 GitHub 凭据。
 
-本机已完成以下配置，绑定信息保存在忽略的 `wrangler.local.toml`；重建其他环境时，将 `wrangler.toml` 复制为本地配置，填入实际 D1 binding `DB`、数据库名与 ID，并保持 `VISITS_ENABLED = "false"`。不要向受版本管理的配置写入实际部署标识或 secret。`workers_dev` 开启，版本预览 URL 关闭；本次没有配置域名转移、旧站重定向或付费升级。
+编辑后端另需 Worker secret `GITHUB_EDIT_TOKEN`，只允许目标仓库的 Contents 读写、Commit statuses 只读和默认 Metadata 只读。管理员密码不具有 GitHub 写权限，也不充当此 secret。工作流自带令牌仅授予 contents/statuses/pages write。完整设置与部署顺序见[根 README](../../README.md#cloudflare-and-editor-configuration)。本轮尚未配置、部署或实际验收新的编辑授权。
 
-Wrangler 4.152.0 使用站主亲自批准的 OAuth 授权，范围为 `account:read`、`user:read`、`workers_scripts:write` 和 `d1:write`，以及自动附加的离线刷新权限。它可能提示缺少其他默认权限；当前部署与 D1 操作已验证无需额外扩权。Windows 上通过 `--use-keyring` 将登录凭据加密保存在仓库外，密钥存入 Windows Credential Manager。首次认证可执行：
+## 频控、本地验证与部署边界
 
-```sh
-wrangler login --device --use-keyring --scopes account:read user:read workers_scripts:write d1:write
-```
+评论每个地址 15 分钟最多 5 次新请求，Visits 预备限制每分钟 120 次。新评论与频控配额在同一事务中提交，并发重试只占一次。仅在短期桶中保存带私密盐的地址 SHA-256，不保存原 IP；后续写请求清理过期一天以上桶。Cloudflare 使用可信入口的 `CF-Connecting-IP`；本机桥接强制连接地址，忽略调用者伪造的头。JSON 流式限长，不能靠遗漏 Content-Length 绕过。
 
-设备码只有 5 分钟有效，站主必须在官方页面完成“允许”。本机曾出现令牌接口 `UND_ERR_CONNECT_TIMEOUT`：Windows 已设置的系统代理没有自动用于命令行。为 Wrangler 进程设置实际代理地址的 `HTTP_PROXY`／`HTTPS_PROXY`，并用 `NO_PROXY=localhost,127.0.0.1,::1` 排除本机后，登录和部署均正常。此项是连接配置问题，不能仅凭网页登录成功判断 CLI 已授权。
+这是基础频控与蜜罐，不表示能够抵御所有分布式自动化；所有新评论仍须审核。`ADMIN_TOKEN`、`RATE_LIMIT_SALT` 和 GitHub 编辑凭据只存 Worker secrets 或仓库外私有位置。待审内容、数据库导出和会话也不能进入仓库，包括忽略目录。
 
-使用官方 Wrangler CLI，按具体账户授权分别执行迁移、公开注册数据和 Worker 部署：
+本地测试运行真实 SQLite 外键、唯一约束、事务、JSON1 与触发器，另测管理/编辑客户端、固定接口、权限、幂等、重导防复活、混合回复删除和发布保护。实际运行命令与 esbuild 回归要求见[构建与校验](../../README.md#build-and-check)。本机桥接只监听 loopback，自动导入公开集合和统一评论，SQLite 强制位于仓库外；未配置编辑 secret 时明确不可用。
 
-```sh
-wrangler d1 migrations apply <数据库名> --remote --config services/blog-api/wrangler.local.toml
-wrangler d1 execute <数据库名> --remote --config services/blog-api/wrangler.local.toml --file services/blog-api/data/register-public.sql
-wrangler secret put ADMIN_TOKEN --config services/blog-api/wrangler.local.toml
-wrangler secret put RATE_LIMIT_SALT --config services/blog-api/wrangler.local.toml
-wrangler deploy --config services/blog-api/wrangler.local.toml
-```
+发布本轮前必须按[正式部署顺序](../../README.md#authorized-deployment-order)先应用新增 schema 和完整评论导入，再部署读取新字段的 Worker，然后在授权下推送静态页和受信工作流。读取现存待审数据不能保存到本仓库或作为公开测试证据。远程冒烟只可在授权窗口使用虚构留言和精确叶节点清理，命令见[远程检查](../../README.md#remote-smoke-check)。本地 SQLite 和浏览器结果不能替代 Cloudflare D1、GitHub 发布及 Pages 的实证。
 
-运行命令时由操作者交互输入 secret；不要把它放命令行参数或仓库内 `.dev.vars`。正式开通前仍需在实际 Worker 域名验证 CORS、待审流程、权限和 D1 行为，网站 API 地址由前端配置明确指定。启用评论与部署 Worker 均不自动授权开启 Visits。
+## Visits 仍然关闭
 
-### 实际服务冒烟检查
+前端与 Worker 开关均关闭，网页不显示计数、不发请求、后端不写访问事件，也没有导入基线。关闭 GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`；POST 返回 `404 visits_disabled`。即使将来启用，缺基线仍返回 `null` 并拒绝计数，不冒充 0。
 
-`scripts/smoke-remote.mjs` 需要 `BLOG_ADMIN_TOKEN` 环境变量及明确的 `--confirm-test-writes`；缺少开关时零网络请求退出。它会创建两条虚构留言，短暂公开其中一条以核验审核流程，并在 `finally` 中按本轮唯一正文、昵称、文档、父节点与 ID 精确清理。清理只使用服务端 `only_if_no_replies=true` 条件删除；无回复检查与单条删除在同一 SQL 内完成，避免真实回复在检查后插入而被连带删除。它不导出待审内容、不记录令牌；遇到回复时保留测试评论并报告 UUID。
-
-在获准的验收窗口运行，Windows 上可直接从加密备份载入进程环境：
-
-```powershell
-$env:BLOG_ADMIN_TOKEN = & services/blog-api/scripts/admin-token.ps1 -Reveal
-try {
-    node services/blog-api/scripts/smoke-remote.mjs --api https://xht37-blog-api.pku-xht-github-io.workers.dev --confirm-test-writes
-} finally {
-    Remove-Item Env:BLOG_ADMIN_TOKEN -ErrorAction SilentlyContinue
-}
-```
-
-检查覆盖精确 CORS、无令牌管理请求、管理页 CSP、昵称必填、待审不可见、审核后可见、旧 `wp-2` 回复和跨文回复拒绝、Visits 关闭及未初始化。终端只输出检查名、计数和必要的未清理测试 UUID。D1 文档登记数量、外键以及 Visits 各表为空仍需另作只读核对；一次通过不代表后续任意配置均已验收。
-
-## Visits：未来切换才初始化
-
-前端 Visits 开关关闭或 API 未配置时，不能发出任何 Visits 请求。Worker 默认关闭时，GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:请求ID或null}`，POST 返回 `404 visits_disabled`，数据库不写入。即使配置启用，未完成基线导入时 GET 仍为 `null`，POST 返回 `409 visits_not_seeded`，不能把未知旧数显示成 0。
-
-未来的切换基线必须同时包含：旧站**独立全站数** `site_base`、每个已登记公开文档的 `document_bases:[{document,base}]`、采集时间 `captured_at`。全站旧数不从各文档旧数求和。文档集合必须完整且精确，数值为核实的非负整数。数据来源、切换窗口与避免两边重复计数须在实际切换时重新确认，不能使用现有迁移快照中的旧 Visits 冒充届时基线。
-
-准备好仓库外的已核实 JSON 后，离线核对：
-
-```sh
-node services/blog-api/scripts/import-baseline.mjs --input <已核实基线.json> --batch <切换批次ID>
-```
-
-默认只 dry-run，网络请求为 0。未来获准切换后，操作者在进程环境设置 `BLOG_ADMIN_TOKEN`，再明确加上 `--apply --confirm-cutover --api <Worker origin>`。服务端也要求 `confirm_cutover:true` 和批次 ID；基线及全部文档基础数在同一 D1 batch 事务中导入。已有不同基线禁止覆盖，相同批次、相同内容重试无副作用；不能先开启计数，再补一个会抹掉增量的基线。
-
-基线导入后仍需另行明确将 Worker 与前端开关启用。访问事件 `{nonce,document?}` 由客户端为每次页面访问生成 nonce；文章传文档 ID，博客首页／归档等页面省略文档，仅全站加 1。SQLite 触发器确保事件与单文／全站增量原子提交；nonce 只计一次，不删除事件记录后重新计数。对外统计始终为独立旧基线加新增计数，单次响应的全站与单文数在一条 SQL 的同一快照中读取。
+未来基线必须包含旧站独立全站数、每个已注册公开文档的完整计数、采集时间和切换批次。全站数不能以逐文求和代替，也不能复用过时快照。完整基线单事务导入，同批同内容重试无副作用，不同基线禁止覆盖；单次访问 nonce、全站增量和单文增量保持原子性。采集、实际导入和开启两个开关仍需届时的明确授权；入口见[未来切换](../../README.md#future-visits-cutover)。隐藏内容继续留在旧站，本轮不登录后台。

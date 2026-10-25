@@ -51,99 +51,166 @@ The `.nojekyll` file tells GitHub to serve the static files directly.
 - `assets/`: local site artwork and icons.
 - `DESIGN.md`: implementation direction.
 
-The website uses no analytics, remote fonts or third-party runtime scripts. Blog formulas are rendered during generation with a vendored KaTeX build; its CSS and fonts are served locally.
+The website uses no analytics, remote fonts or remote third-party scripts. Article formulas are rendered during generation with vendored KaTeX; dynamic comment formulas use its local runtime. Its scripts, CSS and fonts are served locally.
 
-## Blog migration
+## Blog
 
-The public-content inventory and batch status for the migration from `www.xht37.com` are maintained in [migration/README.md](migration/README.md). Non-public WordPress content remains on the old site and must stay outside this public repository.
+The blog keeps the selected **C · personal blog** design, stable article URLs, four categories and 91 tag pages. Its 211 articles and page `215` form one public collection. Page `215` uses the same reading and editing interface as the articles; it does not replace the separately maintained homepage. Readers see one set of articles and comments. The navigation's single **旧站 ↗** link is the only source-site entrance; source notes, migration badges and separate historical sections are removed.
 
-The owner selected **C · personal blog**: warm paper, serif headings, excerpt lists and single-column articles with collapsible contents. The first batch contained 29 public notes; the full local migration covers all 211 public posts and the old About page. Four original categories and original tags help readers find articles. [design/README.md](design/README.md) retains the earlier alternatives as design history; they are not linked from the homepage.
+The unified interface, comment backend changes and online editor are currently a **local implementation, not a deployed release**. Earlier deployment evidence remains in [migration/README.md](migration/README.md); the current change and its verification state are recorded in [migration/unified-blog-2026-10-25.md](migration/unified-blog-2026-10-25.md). Hidden content remains outside this public repository and outside the current scope.
 
-### Blog sources and generation
+### Sources and generation
 
-- `content/blog/posts/<WordPress-ID>.md`: the 211 maintained article sources, each with YAML front matter.
-- `content/blog/pages/<WordPress-ID>.md`: maintained historical pages; currently `215.md`, the old About page.
-- `content/blog/collection.yaml`: the registered source-file set. Missing, duplicate or unregistered Markdown files fail the build.
-- `content/blog/resources.yaml`: the maintained image and attachment map, with original URLs, local paths, byte sizes and hashes. Files remain in `blog/media/`.
-- `content/blog/comments/index.yaml` and `<post-ID>.yaml`: the registered historical public-comment archives, preserving original HTML, names, full dates and reply IDs. They contain no private author metadata or new pending comments.
-- `content/blog/friends.yaml`: the maintained 25 original friend links, in their original order.
-- `content/blog/features.yaml`: explicit comment/Visits switches and public API URLs. Comments are enabled against the verified Cloudflare backend; Visits stays disabled. All new comments require moderation.
-- `/blog/comment/`: the owner's comment-management page, generated with its local JavaScript/CSS from the shared UI in `services/blog-api/src/admin*.mjs`. It uses the existing administrator password and is omitted from public navigation and search indexing.
-- `tools/blog_sources.py`: safe YAML loading and CommonMark rendering with raw TeX and complex HTML preservation. Pure Python dependencies are pinned in `tools/vendor/python/`.
-- `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, article/history routes, category lists, static tag pages and friend links, including archived discussions.
-- `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.
-- `migration/public-batch.json`: generated URL mapping, counts, maintained source filenames and SHA-256 values. Its legacy `publication: local-only` field identifies a locally generated build report; it does not track the live site. Current deployment state and verification are recorded in [migration/deployment-2026-10-25.md](migration/deployment-2026-10-25.md).
+- `content/blog/posts/<ID>.md` and `content/blog/pages/<ID>.md`: the sole maintained article/page sources, one Markdown file with YAML metadata per document.
+- `content/blog/collection.yaml`: the exact registered source set. Missing, duplicate or unregistered Markdown fails the build.
+- `content/blog/resources.yaml`: maintained resource paths, source URLs, sizes and hashes; files live in `blog/media/`.
+- `content/blog/comments/index.yaml` and `<ID>.yaml`: the preserved 117 previously public comments, including 43 replies. These are import and fidelity evidence, not a second runtime comment store. Do not overwrite them with moderated or new backend data.
+- `content/blog/friends.yaml`: the 25 maintained friend links, in their existing order.
+- `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch.
+- `tools/blog_sources.py`, `tools/build_blog.py`, `tools/render_math.cjs`: offline source loading, CommonMark/HTML/TeX preservation and static generation. Dependencies are vendored; ordinary builds need no network or installation.
+- `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
+- `services/blog-api/src/admin*.mjs` and `article-editor.mjs`: shared password login, comment management and editor assets. The builder generates `/blog/comment/`, shared `/blog/editor/` assets and an `exit/` page for every registered document.
+- `services/blog-api/data/unified-comments.json` and `.sql`: deterministic, public-only import assets. Their persistent batch and ID hashes prevent reruns from restoring a deleted comment or undoing moderation.
+- `migration/public-batch.json`: generated source hashes, URL mappings, counts and administrative-asset evidence. Its legacy `publication: local-only` describes a build report, not the live deployment state.
 
-The interaction batch is recorded in [migration/interactive-2026-10-25.md](migration/interactive-2026-10-25.md). Its Cloudflare backend and updated GitHub Pages site are deployed and verified; the publication includes archived comments, friend links, tag navigation and moderated new comments.
-
-The original `migration/sources/public-2026-10-23.json` and its embedded original HTML, image map, legacy-anchor evidence, earlier notes snapshot and summary overrides remain unchanged as migration evidence. Normal builds do not read these snapshots or restore their content over maintained Markdown. `notes-batch1.json` records the earlier batch.
+Original JSON/HTML snapshots in `migration/sources/`, earlier batch evidence and public comment YAML are preserved for independent comparison. Normal article builds do not read old snapshots or restore their text over maintained Markdown. [design/README.md](design/README.md) retains the unselected design alternatives without linking them from the public homepage.
 
 ### Editing an article
 
-Edit the existing Markdown source, for example [1154.md](content/blog/posts/1154.md). Its YAML front matter contains `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and an optional `summary`. Keep the original ID, type and URL stable to retain the current route. Dates include the original `+08:00` timezone; categories and tags are lists of `{id, name}` mappings. The summary controls the list excerpt, or may be omitted for automatic extraction.
+Edit the existing Markdown, for example [1154.md](content/blog/posts/1154.md). YAML includes `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and optional `summary`. Keep document identity and routes stable. Dates retain `+08:00`; categories/tags are `{id, name}` lists. A supplied summary controls the excerpt; otherwise the builder derives one.
 
-Use normal Markdown headings, paragraphs, links, lists, block quotes and fenced code. `$...$` and `$$...$$` preserve original TeX, including backslashes, underscores and multiline display formulas. Complex HTML blocks are supported where conversion would change structure or content. Preserve intentional Markdown hard breaks and original code trailing spaces.
+Use normal Markdown headings, paragraphs, lists, links, quotations and fenced code. `$...$` and `$$...$$` retain TeX backslashes, underscores and display formulas. Embed complex HTML when conversion would alter it. Preserve intentional Markdown hard breaks and code trailing spaces. `legacy_anchors` records verified compatibility fragments where unique heading names are insufficient. Intentional document additions/removals need both the source and `collection.yaml`; new resources also need `resources.yaml`. Do not hand-edit generated HTML.
 
-An optional `legacy_anchors` mapping records old fragments that cannot be inferred from unique heading names; `129.md` contains the verified `lwptoc45` target. Adding or deliberately removing an article or historical page requires updating both its Markdown file and `collection.yaml`; changing its anchors does not. Review the corresponding generated path when removing a document, since the checker rejects stale pages outside the collection. New images and attachments also need a `resources.yaml` entry. Do not hand-edit generated blog HTML.
+For online editing, append `exit` to an article URL: `/blog/posts/1154/exit/`, or `/blog/pages/215/exit/`. The editor loads that document's complete Markdown and YAML after administrator login. All 212 registered documents use this entry point; arbitrary repository paths and new documents are not accepted.
 
-### Original-site import tools
-
-`tools/sync_public_blog.py` refreshes a public snapshot and its directly referenced images and old-site attachments. It uses anonymous requests without browser cookies, verifies `publish` and password-protection flags before saving, checks pagination totals and unique IDs, and downloads at most four assets at a time. It does not collect comments or sign in. Use it only for a confirmed migration scope; a normal rebuild is offline and does not need this network step:
-
-```sh
-python -S -u -X utf8 tools/sync_public_blog.py --checked-on 2026-10-23
-```
-
-If the source snapshot is complete, add `--assets-only` to resume asset downloads. Existing hashed assets are reused; partial unrecorded downloads are compared with fresh downloads before reuse. This network tool does not update maintained Markdown.
-
-`tools/import_blog_markdown.py` is the one-time snapshot-to-Markdown converter. It validates each block and whole document before writing, and refuses to overwrite existing Markdown, `collection.yaml` or `resources.yaml`:
-
-```sh
-python -S -X utf8 tools/import_blog_markdown.py
-```
-
-The current collection is already imported. For a later batch, use a separate `--output-root` for review and merge approved sources and manifests deliberately. Do not import over maintained files.
-
-The separately authorized public comments and sidebar friends use their own one-time importers:
-
-```sh
-python -S -X utf8 tools/sync_public_comments.py --checked-on 2026-10-25
-python -S -X utf8 tools/sync_blog_friends.py --checked-on 2026-10-25
-```
-
-These commands refuse to overwrite the existing maintained archives. The comment importer restricts requests to registered public document IDs and approved public comments, and never logs into WordPress. The preserved source and front-end audit cover 117 comments, including 43 replies, across the 212 registered documents; no additional visible comment IDs were found. Friend evidence contains only the public sidebar container, not a full-page or authenticated export.
+**保存并更新网站** submits one candidate on `codex/article-edit/<UUID>`. The trusted workflow from `main` validates the edit, builds/checks the site and creates one main-branch commit containing the source and generated pages. It explicitly requests a Pages build and verifies that revision before reporting success. A pending submission is not publication; a failed build or a changed source version does not silently overwrite the published article. Reuse the save request ID on an uncertain retry. Public repository branches are public too, so the editor is only for material approved for public display.
 
 ### Build and check
 
-Regenerate from maintained Markdown/YAML using Python 3.9+ and Node.js (verified with Python 3.9.13 and Node 24.6.0):
+Run from the repository root with Python 3.9+ and Node 24.6+:
 
 ```sh
 python -S -X utf8 tools/build_blog.py
 python -S -X utf8 tools/check_blog.py
 node --check blog/blog.js
-```
-
-No network or package installation is used. The default checker compares maintained sources with generated pages, indexes and resources, allowing intentional future edits. To additionally check fidelity against the preserved original JSON/HTML, run:
-
-```sh
-python -S -X utf8 tools/check_blog.py --original-snapshot
+node --check blog/interactions.js
 python -S -X utf8 tools/test_blog_sources.py
 python -S -X utf8 tools/test_blog_comments.py
 node tools/test_blog_frontend.cjs
+node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs services/blog-api/test/articles.test.mjs services/blog-api/test/article-editor.test.mjs
+python -S -X utf8 tools/test_publish_blog_edit.py
 ```
 
-The original-snapshot mode checks complete text, original TeX, exact code bytes, metadata, ordered HTML structure, resource provenance and old anchor evidence. Intentional later edits may fail this archival comparison while passing the normal source check. Isolated tests use temporary files to verify that edits affect real builds, missing or corrupt sources fail, and builds work without original snapshots.
+The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`; an explicitly skipped bundling check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
 
-The generator normalizes heading levels, creates contents links, and redirects links between migrated articles to local pages. Each contents entry links only to its local heading. TeX rendering adapts only old WordPress en dashes and the old literal XOR caret spelling; unmodified TeX remains in `data-original-math` for comparison.
+An optional archival comparison checks original text, exact code bytes, TeX, metadata, structure, resources and anchors:
 
-Markdown sources and generated post HTML retain intentional trailing spaces. Their scoped Git whitespace attributes permit those bytes; independent code comparison still checks them exactly.
+```sh
+python -S -X utf8 tools/check_blog.py --original-snapshot
+```
 
-The homepage's Blog navigation label is bilingual; the migrated Chinese articles are not automatically translated. The old About page is presented as a historical archive and does not replace current homepage facts. Historical public comments are maintained separately from article Markdown and included in the published interaction batch. Old-site redirects and private content are outside this migration.
+Intentional subsequent edits can differ from the archive while passing the normal source check. The generator normalizes heading levels, keeps contents links local and maps registered article/media links to local routes. Formula rendering adapts known source compatibility spellings; original TeX remains available for comparison. Git attributes retain significant code/Markdown whitespace.
 
-### Writable comments and future Visits
+### Comment data and local API
 
-The selected backend is Cloudflare Workers + D1, implemented in `services/blog-api/`. Readers do not need an account: they must enter a nickname and comment body, and every new submission waits for owner approval before becoming public. New comment bodies are plain text; the browser renders them without interpreting HTML. Historical comments already approved on the old site remain static, while only their public IDs/document assignments are registered as reply targets in the backend.
+D1 is the only runtime store for **all** comments. The 117 imported public comments enter `approved`; later submissions enter `pending`. The same public API, moderation queues, reply tree, rejection and deletion apply to every comment. Import IDs `wp-N` and existing `#comment-N` anchors remain stable without reader-facing source labels. Preserved YAML/JSON only verifies the public import and never overwrites backend state.
 
-Only enable `features.yaml` comments after the real service is configured and verified; this has been completed for the current published build. Pending comments, review tokens, real credentials and database exports belong in the backend or a separate private location, never in this public repository, including ignored directories. Backend setup, encrypted administrator-token retrieval, the moderation page, local SQLite tests and remote smoke checks have one maintained entry in [services/blog-api/README.md](services/blog-api/README.md).
+Generate registered-document data and the deterministic public-comment import offline:
 
-Visits stays disabled in both the static configuration and Worker environment. The default pages contain neither its counter UI nor its script, and make no Visits requests. At the later cutover, collect fresh per-document counts and the old site's independent total, review the cutover window, and import the complete baseline atomically before explicitly enabling counting. The old site's total must not be inferred by summing article counts, and the current archival snapshot must not be reused as a fresh cutover baseline.
+```sh
+node services/blog-api/scripts/import-public.mjs
+python -S -X utf8 services/blog-api/scripts/import-public-comments.py
+python -S -X utf8 services/blog-api/scripts/import-public-comments.py --check
+```
+
+The comment import is one SQL statement and its trigger transaction. Batch/ID hashes persist after moderation/deletion; repeated batches skip those records, and conflicting hashes fail closed. The temporary import payload is cleared when the trigger completes. The older minimal `legacy-parents.json` remains compatibility evidence and grants no reply permission; a reply's parent must exist and be approved in `comments` on the same document.
+
+For a local API, supply fictional local `ADMIN_TOKEN` and `RATE_LIMIT_SALT` in the process environment, then run:
+
+```sh
+node services/blog-api/scripts/dev.mjs --port 8787
+```
+
+The bridge binds only `127.0.0.1`, applies schema/registered public comments and keeps SQLite outside this public repository, by default in the OS temporary directory. Use `--database <outside-repository-path>` to select another private location. Visits is forced off. Its administrator page is `http://127.0.0.1:8787/admin`; the static preview remains on port 8791. Without a configured GitHub editing secret the editor reports unavailable rather than pretending to save.
+
+### Administrator password
+
+Comment management stays at `/blog/comment/`; document editing uses its `exit/` address. Both use account `admin` and the **same existing password value** (`ADMIN_TOKEN`). Standard `username`/`current-password` form fields and a successful-login credential request let Chrome offer to save/autofill it. Browser settings and password-manager policy decide whether a prompt appears. The browser manages any saved credential; this site does not persist the password in cookies, localStorage, sessionStorage or URLs. Logout/page exit clears its in-memory password and late private responses cannot refill the page.
+
+The encrypted Windows backup is outside the repository at `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`. To reveal it privately in your own terminal:
+
+```powershell
+pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
+```
+
+The helper without `-Reveal` only explains retrieval. Do not copy a real password, pending comment, credential/session file or database export into this repository, including ignored directories. The shared admin/editor pages have fixed API configuration, restrictive CSP, no referrer, `noindex` and an external-frame login guard.
+
+### Cloudflare and editor configuration
+
+Service routes, validation, frequency limits and credential handling are described in [services/blog-api/README.md](services/blog-api/README.md). Runtime comments require Cloudflare Workers + D1 and the existing `ADMIN_TOKEN`/`RATE_LIMIT_SALT` secrets. `wrangler.local.toml` contains the local binding, while committed `wrangler.toml` has no real database ID or secret. Keep `VISITS_ENABLED = "false"`.
+
+The online editor additionally needs a fine-grained GitHub token, restricted to `pku-xht/pku-xht.github.io`: **Contents: read and write**, **Commit statuses: read**, plus GitHub's default **Metadata: read**. Store it as the Worker secret `GITHUB_EDIT_TOKEN`; it is never sent to the browser. This is separate from the administrator password. The trusted GitHub publication workflow's own token has only `contents: write`, `statuses: write` and `pages: write`. The workflow and publisher are `.github/workflows/publish-blog-edit.yml` and `tools/publish_blog_edit.py`; candidate branches cannot supply their workflow/code for privileged execution.
+
+Wrangler authentication uses the previously approved account/user read, Worker script write and D1 write scopes, plus offline refresh. Only when reconnecting is necessary:
+
+```sh
+wrangler login --device --use-keyring --scopes account:read user:read workers_scripts:write d1:write
+```
+
+Use the machine's actual HTTP/HTTPS proxy when its CLI cannot reach the OAuth endpoint; exclude localhost with `NO_PROXY`. A browser dashboard login alone does not establish CLI authorization. Keep encrypted CLI credentials outside this repository.
+
+### Authorized deployment order
+
+These commands are a deployment procedure, not evidence that this local change is deployed. Run only with authorization covering the release. Apply additive schema and the complete public import before deploying code that reads the new columns:
+
+```sh
+wrangler d1 migrations apply <database-name> --remote --config services/blog-api/wrangler.local.toml
+wrangler d1 execute <database-name> --remote --config services/blog-api/wrangler.local.toml --file services/blog-api/data/register-public.sql
+wrangler d1 execute <database-name> --remote --config services/blog-api/wrangler.local.toml --file services/blog-api/data/unified-comments.sql
+wrangler secret put GITHUB_EDIT_TOKEN --config services/blog-api/wrangler.local.toml
+wrangler deploy --config services/blog-api/wrangler.local.toml
+```
+
+Enter the GitHub secret interactively or through a private stdin pipe; never put its value in command arguments or repository files. Preserve the existing `ADMIN_TOKEN` and `RATE_LIMIT_SALT`. If setting up a new service, create those two Worker secrets separately through the same secret input mechanism.
+
+Read back public-import counts, hashes and foreign-key checks without exporting pending data; verify the actual Worker, CORS and unified public/admin behavior. Then push the checked static site and trusted workflow to `main` under the same release authorization, verify the matching Pages revision and assets, and finally test the authorized online-save flow. Do not report local tests, a candidate commit, or a main commit as a successful Pages publication.
+
+### Remote smoke check
+
+Only in an authorized test-write window, the remote smoke script can create fictional comments, temporarily approve one and clean up its own exact records. It requires both an environment password and the explicit write flag:
+
+```powershell
+$env:BLOG_ADMIN_TOKEN = & services/blog-api/scripts/admin-token.ps1 -Reveal
+try {
+    node services/blog-api/scripts/smoke-remote.mjs --api https://xht37-blog-api.pku-xht-github-io.workers.dev --confirm-test-writes
+} finally {
+    Remove-Item Env:BLOG_ADMIN_TOKEN -ErrorAction SilentlyContinue
+}
+```
+
+Cleanup deletes only a leaf through the server's atomic `only_if_no_replies=true` condition; a real reply blocks removal and the script reports its UUID. It does not export pending content or print the password. Exact CORS, approval isolation, same-document replies and disabled Visits need actual service verification, separate from SQLite tests.
+
+### Future Visits cutover
+
+Visits remains disabled in both frontend and Worker: no UI, requests, baseline import or counting is enabled by this work. At the later authorized cutover, collect fresh per-document counts and the old site's **independent total**, record the capture window and import an exact complete baseline. Never infer the total by adding article counts or reuse an old archive as the fresh baseline.
+
+Validate a privately stored baseline offline first:
+
+```sh
+node services/blog-api/scripts/import-baseline.mjs --input <verified-private-baseline.json> --batch <cutover-batch>
+```
+
+The default is a zero-network dry run. Actual application additionally requires process `BLOG_ADMIN_TOKEN`, `--apply --confirm-cutover --api <Worker-origin>`, and a separately authorized enablement of both switches. The backend imports the independent site and complete document bases atomically, refuses a differing overwrite and counts each event nonce once.
+
+### Original-site import tools
+
+The initial, authorized imports are already complete. They are not daily build commands and must not overwrite maintained files:
+
+```sh
+python -S -u -X utf8 tools/sync_public_blog.py --checked-on 2026-10-23
+python -S -X utf8 tools/import_blog_markdown.py
+python -S -X utf8 tools/sync_public_comments.py --checked-on 2026-10-25
+python -S -X utf8 tools/sync_blog_friends.py --checked-on 2026-10-25
+```
+
+The public source sync uses anonymous requests, registered document IDs and explicit public visibility checks. It does not log into WordPress. The Markdown importer refuses existing sources; use a separate output root to review any separately authorized future batch. Public comment importers accept only approved display fields, never backend exports or private author data. The 212-document audit found exactly the 117 preserved public comment IDs. Hidden content, old-site redirects and old-site shutdown remain outside this work.

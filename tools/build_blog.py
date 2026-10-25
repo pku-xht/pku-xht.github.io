@@ -300,7 +300,9 @@ def header(active="博客"):
 
 
 def page(title, description, route, body, active="博客", has_math=False, features=None, document_id=None):
-    math_css = '<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">' if has_math else ""
+    comment_math = bool(document_id and features and features["comments"]["enabled"])
+    math_css = '<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">' if has_math or comment_math else ""
+    math_script = '<script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script>' if comment_math else ""
     visits = features and features["visits"]["enabled"]
     visits_script = '<script defer src="/blog/visits.js?v=1"></script>' if visits else ""
     visits_attrs = f' data-blog-visits data-visits-enabled="true" data-blog-api="{escape(features["visits"]["api_base"])}" data-document-id="{document_id or ""}"' if visits else ""
@@ -314,7 +316,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
 <meta property="og:title" content="{escape(title)} · 徐皓天"><meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="{'article' if has_math or route.startswith('/blog/posts/') else 'website'}"><meta property="og:url" content="https://pku-xht.github.io{route}">
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
-<link rel="stylesheet" href="/blog/blog.css?v=2">{math_css}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=1"></script>{visits_script}
+<link rel="stylesheet" href="/blog/blog.css?v=3">{math_css}{math_script}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}
 </head><body class="blog-page">{header(active)}
 <main class="site-width" id="main">{body}</main>
 <footer class="site-footer"><div class="site-width">徐皓天 · xht37{counts}</div></footer>
@@ -419,8 +421,6 @@ def main():
     def metadata(post):
         modified = "" if post["date"][:10] == post["modified"][:10] else f'<span>更新于 {display_date(post["modified"])}</span>'
         labels = "".join(f'<a href="{category_route(cid)}">{escape(categories[cid]["name"])}</a>' for cid in post["categories"])
-        if post["type"] == "page":
-            labels = '<span>旧站历史页</span>'
         return f'<p class="post-meta"><time datetime="{post["date"]}+08:00">{display_date(post["date"])}</time>{labels}{modified}</p>'
 
     def card(post):
@@ -443,7 +443,7 @@ def main():
         if not pages:
             return ""
         links = "".join(f'<li><a href="{p["route"]}">{escape(p["title"])}</a></li>' for p in pages)
-        return '<nav class="historical-pages" aria-label="旧站历史页面"><span>旧站历史页</span><ul class="historical-pages-list">' + links + '</ul></nav>'
+        return '<nav class="blog-pages" aria-label="页面"><ul class="blog-pages-list">' + links + '</ul></nav>'
 
     def search_list(items, all_tags=False):
         count = len(items)
@@ -477,17 +477,10 @@ def main():
         image_credit = ''
         if any(isinstance(n, Element) and n.tag == 'img' and n.attrs['src'].startswith('https://oiwiki.org/') for n in walk(root)):
             image_credit = '<span class="image-credit">插图：<a href="https://oi-wiki.org/geometry/convex-hull/" target="_blank" rel="noopener noreferrer">OI Wiki 项目组</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> / <a href="https://github.com/zTrix/sata-license">SATA</a>），原图未修改。</span>'
-        history_note = '<aside class="historical-note">这是旧站的历史页面，内容保留原站历次更新。当前个人信息请以<a href="/">主页</a>为准。</aside>' if post["type"] == "page" else ""
-        source_tags = '<p class="source-tags">原站标签：' + "、".join(f'<a data-source-tag="{tid}" href="/blog/tags/{tid}/">{escape(tags[tid]["name"])}</a>' for tid in post.get("tags", [])) + '</p>' if post.get("tags") else ""
-        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}</header>{history_note}{toc}<div class="prose">{body_html}</div><p class="source-note">本文迁自 <a href="{escape(post["link"])}" target="_blank" rel="noopener noreferrer">xht37 的旧博客原文</a>，保留原始内容与发布日期。{image_credit}</p>{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
-        rendered_comments = {}
-        for comment in comments["by_post"][post["id"]]:
-            comment_root = comment_trees[comment["id"]]
-            for node in walk(comment_root):
-                if isinstance(node, Math):
-                    node.rendered = formulas[(node.tex, node.display)]
-            rendered_comments[comment["id"]] = serialize(comment_root, post, routes, media)
-        body += comments_section(post["id"], comments["by_post"][post["id"]], rendered_comments, features["comments"])
+        source_tags = '<p class="source-tags">标签：' + "、".join(f'<a data-source-tag="{tid}" href="/blog/tags/{tid}/">{escape(tags[tid]["name"])}</a>' for tid in post.get("tags", [])) + '</p>' if post.get("tags") else ""
+        credit = f'<p class="image-credit-note">{image_credit}</p>' if image_credit else ""
+        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}</header>{toc}<div class="prose">{body_html}</div>{credit}{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
+        body += comments_section(post["id"], features["comments"])
         math_count = sum(isinstance(n, Math) for n in walk(root))
         has_comment_math = any(isinstance(node, Math) for comment in comments["by_post"][post["id"]] for node in walk(comment_trees[comment["id"]]))
         write(post["route"], page(post["title"], post["excerpt"], post["route"], body, has_math=math_count > 0 or has_comment_math, features=features, document_id=post["id"]))
@@ -497,26 +490,26 @@ def main():
     years = {}
     for post in posts:
         years.setdefault(post["date"][:4], []).append(post)
-    archive = f'<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>{len(posts)} 篇文章，按原始发布日期排列。</p></section>' + category_navigation() + historical_pages()
+    archive = f'<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>{len(posts)} 篇文章，按发布日期排列。</p></section>' + category_navigation() + historical_pages()
     for year, items in years.items():
         archive += f'<section class="archive-year"><h2>{year}</h2><ul class="archive-list">' + "".join(f'<li><time datetime="{p["date"]}+08:00">{p["date"][5:10]}</time><a href="{p["route"]}">{escape(p["title"])}</a></li>' for p in items) + '</ul></section>'
-    write("/blog/archive/", page("文章归档", "按原始发布日期排列的公开文章。", "/blog/archive/", archive, active="归档", features=features))
+    write("/blog/archive/", page("文章归档", "按发布日期排列的文章。", "/blog/archive/", archive, active="归档", features=features))
     for cid, category in categories.items():
         items = [post for post in posts if cid in post["categories"]]
         if not items:
             continue
         route = category_route(cid)
-        body = f'<section class="page-intro"><p class="eyebrow">CATEGORY</p><h1>{escape(category["name"])}</h1><p>{len(items)} 篇文章，按原始发布日期排列。</p></section>' + category_navigation(cid) + search_list(items)
+        body = f'<section class="page-intro"><p class="eyebrow">CATEGORY</p><h1>{escape(category["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p></section>' + category_navigation(cid) + search_list(items)
         write(route, page(category["name"], f'{category["name"]}分类的全部公开文章。', route, body, features=features))
         report["categories"].append({"id": cid, "name": category["name"], "path": route, "count": len(items)})
-    body = f'<section class="page-intro"><p class="eyebrow">TAGS</p><h1>标签</h1><p>{len(used_tags)} 个原站标签，按文章数显示。</p></section>' + tag_cloud(used_tags)
-    write("/blog/tags/", page("标签", "按原站标签浏览全部公开文章。", "/blog/tags/", body, active="标签", features=features))
+    body = f'<section class="page-intro"><p class="eyebrow">TAGS</p><h1>标签</h1><p>{len(used_tags)} 个标签，按文章数显示。</p></section>' + tag_cloud(used_tags)
+    write("/blog/tags/", page("标签", "按标签浏览全部文章。", "/blog/tags/", body, active="标签", features=features))
     for tag in used_tags:
         items = [post for post in posts if tag["id"] in post.get("tags", [])]
-        body = f'<section class="page-intro"><p class="eyebrow">TAG</p><h1>{escape(tag["name"])}</h1><p>{len(items)} 篇文章，按原始发布日期排列。</p><p><a href="/blog/tags/">全部标签</a></p></section>' + search_list(items)
+        body = f'<section class="page-intro"><p class="eyebrow">TAG</p><h1>{escape(tag["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p><p><a href="/blog/tags/">全部标签</a></p></section>' + search_list(items)
         write(tag["path"], page(tag["name"], f'{tag["name"]}标签的全部公开文章。', tag["path"], body, active="标签", features=features))
-    body = '<section class="page-intro"><p class="eyebrow">FRIENDS</p><h1>友情链接</h1><p>保留旧站友链名单及原有顺序。</p></section>' + friend_list(friends)
-    write("/blog/friends/", page("友情链接", "旧博客的友情链接。", "/blog/friends/", body, active="友链", features=features))
+    body = '<section class="page-intro"><p class="eyebrow">FRIENDS</p><h1>友情链接</h1></section>' + friend_list(friends)
+    write("/blog/friends/", page("友情链接", "朋友们的博客。", "/blog/friends/", body, active="友链", features=features))
     admin_result = subprocess.run(
         ["node", str(ROOT / "tools/render_comment_admin.mjs")],
         input=json.dumps({"api_base": features["comments"]["api_base"]}),
@@ -541,6 +534,39 @@ def main():
             path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(admin_directory.iterdir()) if path.is_file()
         },
+    }
+    editor_result = subprocess.run(
+        ["node", str(ROOT / "tools/render_article_editor.mjs")],
+        input=json.dumps({"api_base": features["comments"]["api_base"], "documents": [{"id": post["id"], "path": post["route"], "title": post["title"]} for post in documents]}),
+        text=True, encoding="utf-8", capture_output=True, check=True,
+    )
+    editor_assets = json.loads(editor_result.stdout)
+    if set(editor_assets) != {"pages", "script", "style"} or not all(isinstance(editor_assets[key], str) and editor_assets[key] for key in ("script", "style")):
+        raise ValueError("Article editor renderer returned invalid assets")
+    expected_editor_routes = {str(post["id"]): post["route"] + "exit/" for post in documents}
+    if {row["document"]: row["path"] for row in editor_assets["pages"]} != expected_editor_routes or len(editor_assets["pages"]) != len(documents):
+        raise ValueError("Article editor routes differ from registered documents")
+    editor_paths = []
+    for row in editor_assets["pages"]:
+        if set(row) != {"document", "path", "html"} or not isinstance(row["html"], str):
+            raise ValueError("Article editor page is invalid")
+        write(row["path"], row["html"])
+        editor_paths.append(ROOT / row["path"].lstrip("/") / "index.html")
+    editor_directory = ROOT / "blog/editor"
+    editor_directory.mkdir(parents=True, exist_ok=True)
+    for filename, key in (("editor.js", "script"), ("editor.css", "style")):
+        path = editor_directory / filename
+        with path.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(editor_assets[key])
+        editor_paths.append(path)
+    report["article_editor"] = {
+        "api_base": features["comments"]["api_base"], "script": "/blog/editor/editor.js", "style": "/blog/editor/editor.css",
+        "routes": [{"document": str(post["id"]), "path": expected_editor_routes[str(post["id"])]} for post in documents],
+        "source_sha256": {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in [ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs"]
+        },
+        "asset_sha256": {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in editor_paths},
     }
     report["totals"] = {key: sum(p[key] for p in report["posts"] + report["pages"]) for key in ["formulas", "code_blocks", "headings", "images"]}
     (ROOT / "migration/public-batch.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

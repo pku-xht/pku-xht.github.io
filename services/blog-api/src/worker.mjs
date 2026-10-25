@@ -1,4 +1,5 @@
 import { adminPage } from './admin.mjs';
+import { articleRequest } from './articles.mjs';
 
 const PUBLIC_ORIGIN = 'https://pku-xht.github.io';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -6,7 +7,7 @@ const REQUEST_ID = /^[A-Za-z0-9_-]{16,128}$/;
 const PARENT_ID = /^(?:wp-[1-9][0-9]*|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 const CONTROL = /[\u0000-\u001f\u007f-\u009f]/;
 const BODY_CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/;
-const PUBLIC_FIELDS = 'id, document, nickname, body, parent_id, created_at';
+const PUBLIC_FIELDS = 'id, document, nickname, body, body_html, author_url, parent_id, created_at';
 
 class APIError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
@@ -109,15 +110,14 @@ async function rateLimit(request, env, scope, limit, seconds) {
   if (!results[1].results.length) fail(429, 'rate_limited', 'Too many requests. Please try later.');
 }
 function validParentSQL() {
-  return `( ? IS NULL OR EXISTS (SELECT 1 FROM comments p WHERE p.id = ? AND p.document = ? AND p.status = 'approved')
-    OR EXISTS (SELECT 1 FROM legacy_parents p WHERE p.id = ? AND p.document = ?) )`;
+  return `( ? IS NULL OR EXISTS (SELECT 1 FROM comments p WHERE p.id = ? AND p.document = ? AND p.status = 'approved') )`;
 }
 async function parentExists(database, parent, document) {
   if (parent === null) return true;
-  return Boolean(await database.prepare(`SELECT 1 AS found WHERE ${validParentSQL()}`).bind(parent, parent, document, parent, document).first());
+  return Boolean(await database.prepare(`SELECT 1 AS found WHERE ${validParentSQL()}`).bind(parent, parent, document).first());
 }
 function publicComment(row) {
-  return { id: row.id, document: row.document, nickname: row.nickname, body: row.body, parent_id: row.parent_id, created_at: row.created_at };
+  return { id: row.id, document: row.document, nickname: row.nickname, body: row.body, body_html: row.body_html ?? null, author_url: row.author_url || '', parent_id: row.parent_id, created_at: row.created_at };
 }
 async function listComments(url, env, admin = false) {
   const database = db(env), cursor = cursorValue(url);
@@ -129,7 +129,14 @@ async function listComments(url, env, admin = false) {
   } else {
     const document = docID(url.searchParams.get('document'));
     await registered(database, document);
-    rows = (await database.prepare(`SELECT seq, ${PUBLIC_FIELDS} FROM comments WHERE document = ? AND status = 'approved' AND seq > ? ORDER BY seq LIMIT 101`).bind(document, cursor).all()).results;
+    let anchor = null;
+    if (cursor) {
+      anchor = await database.prepare('SELECT created_at FROM comments WHERE seq = ? AND document = ?').bind(cursor, document).first();
+      if (!anchor) fail(400, 'invalid_cursor', 'The comment cursor is no longer available; reload the comments.');
+    }
+    rows = (await database.prepare(`SELECT seq, ${PUBLIC_FIELDS} FROM comments WHERE document = ? AND status = 'approved'
+      AND (? = 0 OR created_at > ? OR (created_at = ? AND seq > ?))
+      ORDER BY created_at, seq LIMIT 101`).bind(document, cursor, anchor?.created_at || '', anchor?.created_at || '', cursor).all()).results;
   }
   const hasMore = rows.length > 100;
   rows = rows.slice(0, 100);
@@ -170,7 +177,7 @@ async function submitComment(request, env) {
       .bind(key, now + 900, value.request_id, value.request_id),
     database.prepare(`INSERT INTO comments(id, document, nickname, body, parent_id, request_id, request_hash, created_at)
       SELECT ?, ?, ?, ?, ?, ?, ?, ? WHERE changes() > 0 AND EXISTS (SELECT 1 FROM public_documents WHERE id = ?) AND ${validParentSQL()}
-      ON CONFLICT(request_id) DO NOTHING`).bind(identifier, document, nickname, body, parent, value.request_id, fingerprint, new Date().toISOString(), document, parent, parent, document, parent, document),
+      ON CONFLICT(request_id) DO NOTHING`).bind(identifier, document, nickname, body, parent, value.request_id, fingerprint, new Date().toISOString(), document, parent, parent, document),
     database.prepare('SELECT id, request_hash FROM comments WHERE request_id = ?').bind(value.request_id),
   ]);
   const inserted = results[3].results[0];
@@ -180,7 +187,7 @@ async function submitComment(request, env) {
   return json({ id: inserted.id, status: 'pending' }, 202);
 }
 async function moderate(request, env, id, action) {
-  if (!UUID.test(id)) fail(404, 'not_found', 'Comment not found.');
+  if (!PARENT_ID.test(id)) fail(404, 'not_found', 'Comment not found.');
   const database = db(env);
   if (action === 'delete_leaf') {
     // Check for replies and delete this one row in the same SQLite statement.
@@ -199,7 +206,7 @@ async function moderate(request, env, id, action) {
   const now = new Date().toISOString();
   if (action === 'approve') {
     const result = await database.prepare(`UPDATE comments SET status = 'approved', moderated_at = ? WHERE id = ? AND ${validParentSQL()} RETURNING id`)
-      .bind(now, id, comment.parent_id, comment.parent_id, comment.document, comment.parent_id, comment.document).all();
+      .bind(now, id, comment.parent_id, comment.parent_id, comment.document).all();
     if (!result.results.length) fail(409, 'invalid_parent', 'Approve the parent before approving this reply.');
     return json({ id, status: 'approved' });
   }
@@ -296,6 +303,8 @@ async function route(request, env, url) {
   }
   if (url.pathname.startsWith('/v1/admin/')) {
     await authorized(request, env);
+    if (url.pathname === '/v1/admin/session' && request.method === 'GET') return json({ authenticated: true, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32 });
+    if (url.pathname.startsWith('/v1/admin/articles/')) return articleRequest(request, env, url);
     if (url.pathname === '/v1/admin/comments' && request.method === 'GET') return listComments(url, env, true);
     const moderation = /^\/v1\/admin\/comments\/([^/]+)(?:\/(approve|reject))?$/.exec(url.pathname);
     if (moderation && request.method === 'POST' && moderation[2]) return moderate(request, env, moderation[1], moderation[2]);

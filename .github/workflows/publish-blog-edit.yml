@@ -1,0 +1,58 @@
+name: Publish blog edits
+
+# The REST Git-reference API emits `create` for a new proposal branch. `push`
+# also covers subsequent updates; duplicate events are safe and idempotent.
+on:
+  create:
+  push:
+    branches:
+      - 'codex/article-edit/**'
+    paths:
+      - 'content/blog/posts/*.md'
+      - 'content/blog/pages/*.md'
+
+permissions: {}
+
+jobs:
+  publish:
+    if: >-
+      github.repository == 'pku-xht/pku-xht.github.io' &&
+      ((github.event_name == 'create' && github.event.ref_type == 'branch' && startsWith(github.event.ref, 'codex/article-edit/')) ||
+       (github.event_name == 'push' && !github.event.deleted && startsWith(github.ref, 'refs/heads/codex/article-edit/')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      statuses: write
+      pages: write
+    # Unlike the default single pending slot, queue:max retains distinct edits.
+    # Recheck each source SHA against the newest main after its turn arrives.
+    concurrency:
+      group: blog-editor-publish
+      queue: max
+      cancel-in-progress: false
+    env:
+      CANDIDATE_SHA: ${{ github.sha }}
+      CANDIDATE_REF: ${{ github.event_name == 'create' && format('refs/heads/{0}', github.event.ref) || github.ref }}
+    steps:
+      - name: Check out the trusted publisher from main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate, build, commit and publish the proposed article
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python -S -X utf8 tools/publish_blog_edit.py publish
+          --candidate-sha "$CANDIDATE_SHA"
+          --candidate-ref "$CANDIDATE_REF"
+          --state-file "$RUNNER_TEMP/blog-edit-publication.json"

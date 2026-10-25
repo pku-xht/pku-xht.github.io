@@ -1,13 +1,19 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://xht37-blog-api.pku-xht-github-io.workers.dev; base-uri 'none'; form-action 'none'">
-<title>博客评论审核 · 徐皓天</title><link rel="stylesheet" href="/blog/comment/admin.css?v=1"><script defer src="/blog/comment/admin.js?v=1"></script></head>
+<title>博客评论审核 · 徐皓天</title><link rel="stylesheet" href="/blog/comment/admin.css?v=2"><script defer src="/blog/comment/admin.js?v=2"></script></head>
 <body data-admin-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-admin-enabled="true">
 <p><a href="https://pku-xht.github.io/blog/">← 返回博客</a></p><h1>博客评论审核</h1>
-<p>输入管理员令牌（审核后台密码）后载入评论。密码只在当前页面内存中使用，离开或刷新后需重新输入。</p>
-<label>管理员令牌 <input id="token" type="password" autocomplete="off" spellcheck="false" disabled></label>
+<p>使用管理员密码登录。你可以让浏览器保存密码，下次自动填入。</p>
+<form id="login-form" method="post" autocomplete="on">
+<label for="username">账号 <input id="username" name="username" type="text" value="admin" autocomplete="username" readonly disabled></label>
+<label for="token">管理员密码 <input id="token" name="password" type="password" autocomplete="current-password" required spellcheck="false" disabled></label>
+<button id="load" type="submit" disabled>登录</button>
+</form>
+<section id="management" hidden>
 <label>状态 <select id="status" disabled><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
-<button id="load" type="button" disabled>载入</button><button id="logout" type="button" disabled>清除令牌</button>
-<p id="message" role="status" aria-live="polite">请输入管理员令牌后点击“载入”。</p>
+<button id="refresh" type="button" disabled>刷新</button><button id="logout" type="button" disabled>退出登录</button>
 <main id="comments"></main><button id="more" type="button" hidden disabled>下一页</button>
+</section>
+<p id="message" role="status" aria-live="polite">请输入管理员密码后登录。</p>
 <noscript><p>评论管理需要启用 JavaScript。</p></noscript></body></html>

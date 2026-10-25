@@ -35,6 +35,95 @@
     }
   }
 
+  function commentURL(value, allowLocal = false) {
+    if (typeof value !== "string" || !value || /[\s\u0000-\u001f\\]/u.test(value)) return null;
+    try {
+      const url = new URL(value, window.location.href);
+      if (url.username || url.password || !["http:", "https:"].includes(url.protocol)) return null;
+      if (/^https?:\/\//iu.test(value)) return value;
+      return allowLocal && /^(?:\/(?!\/)|#)/u.test(value) ? value : null;
+    } catch { return null; }
+  }
+
+  function appendCommentHTML(container, value) {
+    const allowed = new Set("p br strong em b i u s del code pre blockquote ul ol li dl dt dd a sup sub span div abbr acronym q cite hr h1 h2 h3 h4 h5 h6 table thead tbody tr th td".split(" "));
+    const blocked = new Set("script style iframe object embed form input button select option textarea svg math link meta base video audio source canvas noscript img".split(" "));
+    const parsed = new DOMParser().parseFromString(value, "text/html");
+    function copy(source, target) {
+      if (source.nodeType === 3) { target.appendChild(document.createTextNode(source.nodeValue)); return; }
+      if (source.nodeType !== 1) return;
+      const tag = source.tagName.toLowerCase();
+      if (blocked.has(tag)) return;
+      const node = allowed.has(tag) ? document.createElement(tag) : target;
+      if (node !== target) {
+        if (tag === "a") {
+          const href = commentURL(source.getAttribute("href"), true);
+          if (href) {
+            node.setAttribute("href", href);
+            node.setAttribute("rel", "ugc nofollow noopener noreferrer");
+            if (/^https?:/iu.test(href)) node.setAttribute("target", "_blank");
+          }
+        }
+        if (["abbr", "acronym", "q", "blockquote"].includes(tag) && source.hasAttribute("title")) node.setAttribute("title", source.getAttribute("title"));
+        const codeClass = source.getAttribute("class") || "";
+        if (tag === "code" && /^language-[A-Za-z0-9_+-]+$/u.test(codeClass)) node.className = codeClass;
+        if (tag === "ol" && /^-?\d+$/u.test(source.getAttribute("start") || "")) node.setAttribute("start", source.getAttribute("start"));
+        if (["th", "td"].includes(tag)) for (const key of ["rowspan", "colspan"]) {
+          if (/^[1-9]\d{0,3}$/u.test(source.getAttribute(key) || "")) node.setAttribute(key, source.getAttribute(key));
+        }
+        target.appendChild(node);
+      }
+      Array.from(source.childNodes).forEach((child) => copy(child, node));
+    }
+    Array.from(parsed.body.childNodes).forEach((child) => copy(child, container));
+    renderCommentMath(container);
+  }
+
+  function renderCommentMath(container) {
+    if (!window.katex || typeof window.katex.render !== "function") return;
+    function appendRun(target, value) {
+      let start = 0, index = 0;
+      while (index < value.length) {
+        if (value[index] !== "$" || (index && value[index - 1] === "\\")) { index++; continue; }
+        const delimiter = value.slice(index, index + 2) === "$$" ? "$$" : "$";
+        let end = index + delimiter.length;
+        while ((end = value.indexOf(delimiter, end)) !== -1 && value[end - 1] === "\\") end += delimiter.length;
+        if (end === -1) break;
+        if (index > start) appendText(target, value.slice(start, index));
+        const original = value.slice(index, end + delimiter.length).replaceAll("\ue000", "\n");
+        const tex = value.slice(index + delimiter.length, end).replaceAll("\ue000", "\n").replaceAll("–", "-").replaceAll("\\text{^}", "\\text{\\textasciicircum}");
+        const math = document.createElement("span");
+        math.className = delimiter === "$$" ? "math-block" : "math-inline";
+        math.setAttribute("data-original-math", original);
+        try { window.katex.render(tex, math, { displayMode: delimiter === "$$", throwOnError: true, trust: false, strict: "ignore", maxExpand: 1000, maxSize: 30 }); }
+        catch { math.textContent = original; }
+        target.appendChild(math);
+        index = end + delimiter.length; start = index;
+      }
+      if (start < value.length) appendText(target, value.slice(start));
+    }
+    function appendText(target, value) {
+      value.split("\ue000").forEach((part, index) => {
+        if (index) target.appendChild(document.createElement("br"));
+        if (part) target.appendChild(document.createTextNode(part));
+      });
+    }
+    function visit(node) {
+      if (["PRE", "CODE"].includes(node.tagName)) return;
+      const children = Array.from(node.childNodes);
+      let run = "";
+      node.replaceChildren();
+      const flush = () => { if (run) { appendRun(node, run); run = ""; } };
+      children.forEach((child) => {
+        if (child.nodeType === 3) run += child.nodeValue;
+        else if (child.nodeType === 1 && child.tagName === "BR") run += "\ue000";
+        else { flush(); if (child.nodeType === 1) visit(child); node.appendChild(child); }
+      });
+      flush();
+    }
+    visit(container);
+  }
+
   function initializeComments(section) {
     if (section.dataset.commentsInitialized === "true") return;
     section.dataset.commentsInitialized = "true";
@@ -52,7 +141,7 @@
       status.setAttribute("role", "status");
       form.appendChild(status);
     }
-    const disabledMessage = "新评论暂未开放，历史评论可正常阅读。";
+    const disabledMessage = "评论暂未开放。";
     const documentId = section.dataset.documentId || "";
     let api;
     try { api = endpoint(section.dataset.blogApi || "", "v1/comments"); } catch { api = null; }
@@ -86,16 +175,14 @@
     status.textContent = "";
     const submitLabel = submit.textContent;
     const known = new Map();
-    section.querySelectorAll("[data-comment-id]").forEach((node) => {
-      if (!node.id) node.id = "comment-" + node.dataset.commentId;
-      known.set(node.dataset.commentId, node);
-    });
     let list = section.querySelector(".comment-list");
     if (!list) {
       list = document.createElement("ol");
       list.className = "comment-list";
       form.parentNode.insertBefore(list, form);
     }
+    // Never retain a static copy: rejected or deleted comments must stay hidden.
+    list.replaceChildren();
     let loadStatus = section.querySelector(".comments-load-status");
     if (!loadStatus) {
       loadStatus = document.createElement("p");
@@ -233,33 +320,30 @@
     function parentHref(id) {
       const parent = known.get(id);
       if (parent) return "#" + encodeURIComponent(parent.id);
-      const source = document.querySelector(".source-note a");
-      if (/^wp-\d+$/u.test(id) && source) {
-        const original = new URL(source.href, window.location.href);
-        original.hash = "comment-" + id.slice(3);
-        return original.href;
-      }
-      return "#" + encodeURIComponent("comment-" + id);
+      return "#" + encodeURIComponent("comment-" + (/^wp-\d+$/u.test(id) ? id.slice(3) : id));
     }
 
     function makeComment(item) {
       const node = document.createElement("li");
       node.className = "comment-item";
       node.dataset.commentId = item.id;
-      node.id = "comment-" + item.id;
+      node.id = "comment-" + (/^wp-\d+$/u.test(item.id) ? item.id.slice(3) : item.id);
+      node.dataset.parentId = item.parent_id || "";
       const article = document.createElement("article");
       article.className = "comment";
       const meta = document.createElement("header");
       meta.className = "comment-meta";
-      const author = document.createElement("span");
+      const authorURL = commentURL(item.author_url);
+      const author = document.createElement(authorURL ? "a" : "span");
       author.className = "comment-author";
       author.textContent = item.nickname;
+      if (authorURL) { author.href = authorURL; author.target = "_blank"; author.setAttribute("rel", "ugc nofollow noopener noreferrer"); }
       meta.appendChild(author);
       const date = new Date(item.created_at);
       if (!Number.isNaN(date.getTime())) {
         const time = document.createElement("time");
         time.dateTime = item.created_at;
-        time.textContent = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Shanghai" }).format(date);
+        time.textContent = new Intl.DateTimeFormat("zh-CN", { year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Shanghai" }).format(date);
         meta.appendChild(time);
       }
       const permalink = document.createElement("a");
@@ -270,10 +354,11 @@
       article.appendChild(meta);
       const content = document.createElement("div");
       content.className = "comment-body";
-      const paragraph = document.createElement("p");
-      paragraph.className = "comment-text";
-      paragraph.textContent = item.body;
-      content.appendChild(paragraph);
+      const text = document.createElement("div");
+      text.className = "comment-text";
+      if (typeof item.body_html === "string" && item.body_html) { text.className = "comment-html"; appendCommentHTML(text, item.body_html); }
+      else { const paragraph = document.createElement("p"); paragraph.textContent = item.body; text.appendChild(paragraph); }
+      content.appendChild(text);
       article.appendChild(content);
       const reply = document.createElement("button");
       reply.type = "button";
@@ -317,9 +402,9 @@
           note.className = "comment-reply-context comment-missing-parent";
           const link = document.createElement("a");
           link.href = parentHref(item.parent_id);
-          link.textContent = "回复原评论";
+          link.textContent = "查看被回复的评论";
           note.appendChild(link);
-          node.querySelector(".comment-body").insertBefore(note, node.querySelector(".comment-text"));
+          node.querySelector(".comment-body").insertBefore(note, node.querySelector(".comment-body").firstChild);
           waitingForParent.set(node, item.parent_id);
         }
         list.appendChild(node);
@@ -340,7 +425,7 @@
       loading = true;
       retryCursor = cursor;
       more.disabled = true;
-      loadStatus.textContent = "正在加载新评论…";
+      loadStatus.textContent = "正在加载评论…";
       try {
         const url = new URL(api);
         url.searchParams.set("document", documentId);
@@ -354,7 +439,7 @@
         more.textContent = "加载更多评论";
         loadStatus.textContent = "";
       } catch {
-        loadStatus.textContent = "新评论暂时无法加载，已迁入的历史评论仍可阅读。";
+        loadStatus.textContent = "评论暂时无法加载，请重试。";
         more.hidden = false;
         more.textContent = "重试加载";
       } finally {

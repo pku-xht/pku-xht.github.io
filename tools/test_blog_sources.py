@@ -77,10 +77,12 @@ class MarkdownSourcesTests(unittest.TestCase):
         shutil.copyfile(PROJECT / "tools/render_math.cjs", tools / "render_math.cjs")
         shutil.copyfile(PROJECT / "tools/vendor/katex/katex.cjs", tools / "vendor/katex/katex.cjs")
         shutil.copyfile(PROJECT / "tools/render_comment_admin.mjs", tools / "render_comment_admin.mjs")
+        shutil.copyfile(PROJECT / "tools/render_article_editor.mjs", tools / "render_article_editor.mjs")
         admin_sources = self.project / "services/blog-api/src"
         admin_sources.mkdir(parents=True)
         for source in (PROJECT / "services/blog-api/src").glob("admin*.mjs"):
             shutil.copyfile(source, admin_sources / source.name)
+        shutil.copyfile(PROJECT / "services/blog-api/src/article-editor.mjs", admin_sources / "article-editor.mjs")
         # No migration/sources directory exists: none of the original JSON can be a build input.
         (self.project / "migration").mkdir()
         for relative in ("assets/favicon.svg", "assets/x-script-icon.svg"):
@@ -90,6 +92,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         katex_style = self.project / "assets/vendor/katex/katex.min.css"
         katex_style.parent.mkdir(parents=True)
         katex_style.write_text("/* Style fixture; visual fonts are checked on the real site. */", encoding="utf-8")
+        shutil.copyfile(PROJECT / "assets/vendor/katex/katex.min.js", katex_style.with_name("katex.min.js"))
         (self.project / "blog").mkdir()
         for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js"):
             (self.project / relative).write_text("", encoding="utf-8")
@@ -144,6 +147,71 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.build()
         self.check()
         self.assertIn(marker, (self.project / "blog/comment/admin.js").read_text(encoding="utf-8"))
+
+    def test_comments_are_loaded_from_one_service_without_static_reviving_records(self):
+        self.prepare_build()
+        features = self.content / "features.yaml"
+        features.write_text("version: 1\ncomments:\n  enabled: true\n  api_base: https://comments.example.test\n  moderation: required\nvisits:\n  enabled: false\n  api_base: ''\n", encoding="utf-8")
+        comment = {"id": 17, "post": 7, "parent": 0, "author_name": "Public author sentinel", "author_url": "", "date": "2020-01-02T08:00:00", "date_gmt": "2020-01-02T00:00:00", "content": {"rendered": "<p>Public comment sentinel $x_i$</p>"}, "link": "https://www.xht37.com/temporary/#comment-17", "type": "comment", "status": "approved"}
+        (self.content / "comments/index.yaml").write_text("version: 1\nfiles: [7.yaml]\ncount: 1\n", encoding="utf-8")
+        (self.content / "comments/7.yaml").write_text(json.dumps({"version": 1, "post_id": 7, "comments": [comment]}), encoding="utf-8")
+        self.build()
+        self.check()
+        article = self.project / "blog/posts/7/index.html"
+        value = article.read_text(encoding="utf-8")
+        self.assertNotIn("Public comment sentinel", value)
+        self.assertNotIn("Public author sentinel", value)
+        self.assertNotIn("历史评论", value)
+        self.assertNotIn("本文迁自", value)
+        self.assertIn('<ol class="comment-list" data-comment-list></ol>', value)
+        self.assertIn('/assets/vendor/katex/katex.min.js?v=0.19.0', value)
+        article.write_text(value.replace('<ol class="comment-list" data-comment-list></ol>', '<ol class="comment-list" data-comment-list><li data-comment-id="wp-17">stale</li></ol>'), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+
+    def test_each_document_editor_uses_fixed_api_and_has_no_embedded_source(self):
+        self.prepare_build()
+        self.build()
+        self.check()
+        editor = self.project / "blog/posts/7/exit/index.html"
+        document = editor.read_text(encoding="utf-8")
+        self.assertIn('data-document-id="7"', document)
+        self.assertIn('autocomplete="current-password"', document)
+        self.assertIn('name="username"', document)
+        self.assertNotIn("源哨兵 alpha", document)
+        self.assertIn('<textarea id="source"', document)
+        editor.write_text(document.replace('</textarea>', 'tampered draft</textarea>'), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+        self.build()
+        editor.unlink()
+        with self.assertRaises((AssertionError, FileNotFoundError)):
+            self.check()
+
+    def test_independent_page_has_the_same_editor_and_no_origin_badge(self):
+        page = self.content / "pages/8.md"
+        metadata = FRONTMATTER.replace("id: 7", "id: 8", 1).replace("type: post", "type: page").replace('title: "临时校验"', 'title: "临时页面"').replace("slug: temporary", "slug: temporary-page").replace('https://www.xht37.com/temporary/', 'https://www.xht37.com/temporary-page/')
+        metadata = metadata[:metadata.index("categories:")] + "categories: []\ntags: []\n---\n\n"
+        page.write_text(metadata + "这是一篇独立页面。\n", encoding="utf-8")
+        self.collection.write_text(COLLECTION.replace("pages: []", "pages:\n  - pages/8.md"), encoding="utf-8")
+        self.prepare_build()
+        self.build()
+        self.check()
+        document = (self.project / "blog/pages/8/index.html").read_text(encoding="utf-8")
+        self.assertNotIn("历史", document)
+        self.assertNotIn("本文迁自", document)
+        self.assertIn("这是一篇独立页面。", document)
+        self.assertTrue((self.project / "blog/pages/8/exit/index.html").is_file())
+
+    def test_only_the_authorized_orphan_link_removal_passes_original_comparison(self):
+        removed_url = "https://www.xht37.com/zroi-19-csp-s-模拟赛十联测-day1-题解/#lwptoc2"
+        reference = {"id": 925, "content_html": '<p>基本上就是 <a href="' + removed_url + '">这题</a>。</p><p><a href="https://example.test/">another</a></p>'}
+        current = {"id": 925, "content_html": '<p>基本上就是 这题。</p><p><a href="https://example.test/">another</a></p>'}
+        check_blog.assert_preserved_content(reference, current, {})
+        with self.assertRaises(AssertionError):
+            check_blog.assert_preserved_content(reference, {**current, "content_html": current["content_html"].replace("https://example.test/", "https://other.example.test/")}, {})
+        with self.assertRaises(AssertionError):
+            check_blog.assert_preserved_content(reference, {**current, "content_html": current["content_html"].replace("这题", "另一题")}, {})
 
     def test_markdown_preserves_literal_escapes_tex_and_exact_code(self):
         current = {"id": 7, "content_html": render_markdown(BODY)}

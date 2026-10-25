@@ -240,12 +240,16 @@ def check_comment_admin(report, feature):
     scripts = [node for node in elements if node.tag == "script"]
     styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
     assert len(scripts) == len(styles) == 1
-    assert scripts[0].attrs.get("src") == "/blog/comment/admin.js?v=1" and not content(scripts[0]).strip()
-    assert styles[0].attrs.get("href") == "/blog/comment/admin.css?v=1"
+    assert scripts[0].attrs.get("src") == "/blog/comment/admin.js?v=2" and not content(scripts[0]).strip()
+    assert styles[0].attrs.get("href") == "/blog/comment/admin.css?v=2"
     assert not any(key.lower().startswith("on") for node in elements for key in node.attrs), "inline event handlers on management page"
     by_id = {node.attrs["id"]: node for node in elements if "id" in node.attrs}
-    assert {"token", "load", "logout", "status", "message", "comments", "more"} <= set(by_id)
-    assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "off"
+    assert {"login-form", "username", "token", "load", "logout", "status", "message", "comments", "more", "management", "refresh"} <= set(by_id)
+    assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "current-password"
+    assert by_id["token"].attrs.get("name") == "password" and "required" in by_id["token"].attrs
+    assert by_id["username"].attrs.get("autocomplete") == "username" and by_id["username"].attrs.get("value") == "admin"
+    assert by_id["login-form"].tag == "form" and by_id["load"].attrs.get("type") == "submit"
+    assert "hidden" in by_id["management"].attrs
     assert not by_id["token"].attrs.get("value") and not content(by_id["comments"]).strip(), "private admin data must not be serialized"
     assert "disabled" in by_id["token"].attrs and "disabled" in by_id["load"].attrs
     client = (directory / "admin.js").read_text(encoding="utf-8")
@@ -255,6 +259,52 @@ def check_comment_admin(report, feature):
 def assert_routes(actual, expected, label):
     assert Counter(actual) == Counter(expected), (label, "missing, duplicate or unexpected entries", Counter(expected) - Counter(actual), Counter(actual) - Counter(expected))
     assert len(actual) == len(set(actual)), (label, "duplicate entries")
+
+
+def check_article_editors(report, sources, feature):
+    metadata = report["article_editor"]
+    assert metadata["api_base"] == feature["api_base"]
+    assert metadata["script"] == "/blog/editor/editor.js" and metadata["style"] == "/blog/editor/editor.css"
+    expected_routes = [{"document": str(source["id"]), "path": route(source) + "exit/"} for source in sources]
+    assert metadata["routes"] == expected_routes, "editor routes must cover every registered article and page"
+    directory = ROOT / "blog/editor"
+    shared = {directory / "editor.js", directory / "editor.css"}
+    assert set(directory.iterdir()) == shared, "missing or stale editor assets"
+    page_files = {ROOT / row["path"].lstrip("/") / "index.html" for row in expected_routes}
+    source_files = {ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs"}
+    for key, files in (("source_sha256", source_files), ("asset_sha256", shared | page_files)):
+        expected = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
+        assert metadata[key] == expected, (key, "article editors need rebuilding from shared sources")
+    endpoint = urlsplit(feature["api_base"])
+    origin = f"{endpoint.scheme}://{endpoint.netloc}" if endpoint.netloc else "'none'"
+    for source in sources:
+        path = ROOT / route(source).lstrip("/") / "exit/index.html"
+        document = read_document(path)
+        elements = list(nodes(document))
+        body = [node for node in elements if node.tag == "body"]
+        assert len(body) == 1 and body[0].attrs.get("data-editor-api") == feature["api_base"] and body[0].attrs.get("data-document-id") == str(source["id"]), (source["id"], "editor endpoint or document changed")
+        metas = {node.attrs.get("name"): node.attrs.get("content", "") for node in elements if node.tag == "meta"}
+        assert "noindex" in metas.get("robots", "").split(",") and metas.get("referrer") == "no-referrer"
+        policies = [node.attrs.get("content", "") for node in elements if node.tag == "meta" and node.attrs.get("http-equiv", "").lower() == "content-security-policy"]
+        assert len(policies) == 1
+        policy = {parts[0]: parts[1:] for value in policies[0].split(";") if (parts := value.split())}
+        assert policy == {"default-src": ["'none'"], "script-src": ["'self'"], "style-src": ["'self'"], "connect-src": [origin], "base-uri": ["'none'"], "form-action": ["'none'"]}, (source["id"], "editor CSP must be local and fixed")
+        by_id = {node.attrs["id"]: node for node in elements if "id" in node.attrs}
+        assert {"login-form", "username", "token", "load", "editor", "source", "save", "reload", "logout", "revision", "details", "message"} <= set(by_id)
+        assert by_id["login-form"].tag == "form" and by_id["load"].attrs.get("type") == "submit"
+        assert by_id["username"].attrs.get("autocomplete") == "username" and by_id["username"].attrs.get("value") == "admin"
+        assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "current-password" and not by_id["token"].attrs.get("value")
+        assert by_id["source"].tag == "textarea" and not content(by_id["source"]).strip() and "hidden" in by_id["editor"].attrs, (source["id"], "editor must not serialize saved source or private drafts")
+        assert "disabled" in by_id["token"].attrs and "disabled" in by_id["load"].attrs
+        assert any(node.tag == "a" and node.attrs.get("href") == route(source) for node in elements), "editor needs a return link"
+        scripts = [node for node in elements if node.tag == "script"]
+        styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
+        assert len(scripts) == len(styles) == 1 and scripts[0].attrs.get("src") == "/blog/editor/editor.js?v=1" and not content(scripts[0]).strip()
+        assert styles[0].attrs.get("href") == "/blog/editor/editor.css?v=1"
+        assert not any(node.tag == "iframe" or any(key.lower().startswith("on") for key in node.attrs) for node in elements), "editor must use its local script, without frames or inline handlers"
+    client = (directory / "editor.js").read_text(encoding="utf-8")
+    assert not re.search(r"\b(?:localStorage|sessionStorage|URLSearchParams)\b|document\.cookie|location\.(?:search|hash)", client), "editor credentials and drafts must not use browser storage or URLs"
+    return page_files
 
 
 def check_cards(document, sources, label, tags):
@@ -389,77 +439,40 @@ def check_comment_records(comments, post_id):
 
 
 def check_article_comments(document, source, comments, features, paths, by_id, media):
-    sections = [node for node in nodes(document) if has_class(node, "historical-comments")]
-    assert len(sections) == 1, (source["id"], "missing or duplicate historical comment section")
+    sections = [node for node in nodes(document) if has_class(node, "comments-section")]
+    assert len(sections) == 1, (source["id"], "missing or duplicate comment section")
     section = sections[0]
-    assert section.attrs.get("data-document-id") == str(source["id"]), (source["id"], "comment section document ID changed")
-    assert section.attrs.get("data-comments-enabled") == str(features["comments"]["enabled"]).lower() and section.attrs.get("data-blog-api") == features["comments"]["api_base"], (source["id"], "rendered new-comment availability differs from formal configuration")
+    assert section.attrs.get("data-document-id") == str(source["id"]), (source["id"], "comment document ID changed")
+    assert section.attrs.get("data-comments-enabled") == str(features["comments"]["enabled"]).lower() and section.attrs.get("data-blog-api") == features["comments"]["api_base"], (source["id"], "comment availability differs from configuration")
     prose = next(node for node in nodes(document) if has_class(node, "prose"))
-    assert not any(node is section for node in nodes(prose)), (source["id"], "comments must stay outside article prose")
-    rows = [node for node in nodes(section) if node.tag == "li" and "data-comment-id" in node.attrs]
-    expected = comment_preorder(comments)
-    assert [node.attrs.get("data-comment-id") for node in rows] == [f'wp-{comment["id"]}' for comment in expected], (source["id"], "historical comment count or thread order changed")
-    parents = {}
-
-    def collect(node, parent=""):
-        if not isinstance(node, Node):
-            return
-        if "data-comment-id" in node.attrs:
-            parents[node.attrs["data-comment-id"]] = parent
-            parent = node.attrs["data-comment-id"]
-        for child in node.children:
-            collect(child, parent)
-
-    collect(section)
-    formulas = 0
-    for row, comment in zip(rows, expected):
-        identifier = comment["id"]
-        parent = f'wp-{comment["parent"]}' if comment["parent"] else ""
-        assert row.attrs.get("id") == f"comment-{identifier}" and row.attrs.get("data-parent-id") == parent and parents[f"wp-{identifier}"] == parent, (identifier, "comment parent relation or anchor changed")
-        articles = [child for child in row.children if isinstance(child, Node) and has_class(child, "comment")]
-        assert len(articles) == 1, (identifier, "comment row needs one article")
-        article = articles[0]
-        authors = [node for node in nodes(article) if has_class(node, "comment-author")]
-        assert len(authors) == 1 and content(authors[0]) == comment["author_name"], (identifier, "comment author changed")
-        assert authors[0].tag == ("a" if comment["author_url"] else "span"), (identifier, "comment author URL markup changed")
-        if comment["author_url"]:
-            assert authors[0].attrs.get("href") == comment["author_url"], (identifier, "comment author URL changed")
-            assert {"noopener", "noreferrer"} <= set(authors[0].attrs.get("rel", "").split()), (identifier, "unsafe author link attributes")
-        times = [node for node in nodes(article) if node.tag == "time"]
-        assert len(times) == 1 and times[0].attrs.get("datetime") == comment["date"] + "+08:00", (identifier, "comment date changed")
-        date = datetime.fromisoformat(comment["date"])
-        assert date.strftime("%H:%M:%S") in content(times[0]) and visible_date(comment["date"]) in content(times[0]), (identifier, "full visible comment date changed")
-        permalinks = [node for node in nodes(article) if has_class(node, "comment-permalink")]
-        assert len(permalinks) == 1 and permalinks[0].attrs.get("href") == f"#comment-{identifier}", (identifier, "comment permalink changed")
-        bodies = [node for node in nodes(article) if has_class(node, "comment-body")]
-        assert len(bodies) == 1, (identifier, "missing or duplicate comment body")
-        original, body = Document(comment["content"]["rendered"]).root, bodies[0]
-        check_comment_html(body, identifier, rendered=True)
-        assert canonical(original) == canonical(body, True), (identifier, "historical comment text or TeX changed")
-        assert structural_tags(original) == structural_tags(body), (identifier, "historical comment structure changed")
-        rendered_formulas = [node.attrs["data-original-math"] for node in nodes(body) if "data-original-math" in node.attrs]
-        assert rendered_formulas == original_formulas(original), (identifier, "historical comment formula changed")
-        assert not any(has_class(node, "katex-error") for node in nodes(body)), (identifier, "historical comment math failed")
-        formulas += len(rendered_formulas)
-        for tag in ("pre", "code"):
-            assert [content(node) for node in nodes(original) if node.tag == tag] == [content(node) for node in nodes(body) if node.tag == tag], (identifier, "historical comment code bytes changed")
-        before = [expected_link(node.attrs.get("href", ""), paths, by_id, media) for node in nodes(original) if node.tag == "a"]
-        after = [node.attrs.get("href", "") for node in semantic_nodes(body) if node.tag == "a"]
-        assert before == after, (identifier, "historical comment links changed")
+    assert not any(node is section for node in nodes(prose)), (source["id"], "comments must stay outside prose")
+    assert not any("data-comment-id" in node.attrs for node in nodes(section)), (source["id"], "static comments could revive backend moderation decisions")
+    lists = [node for node in nodes(section) if "data-comment-list" in node.attrs]
+    assert len(lists) == 1 and not content(lists[0]).strip() and not lists[0].children, (source["id"], "comments must load solely from the service")
+    counts = [node for node in nodes(section) if "data-comment-count" in node.attrs]
+    assert len(counts) == 1 and not content(counts[0]), (source["id"], "static comment counts can become stale")
+    assert not any(has_class(node, "historical-comments") or "data-new-comments" in node.attrs for node in nodes(section)), "comments must not be split by origin"
     forms = [node for node in nodes(section) if node.tag == "form"]
-    for form in forms:
-        fields = [node for node in nodes(form) if node.tag in {"input", "textarea"}]
-        assert all(node.attrs.get("name") in {"nickname", "body", "website"} and node.attrs.get("type") != "email" for node in fields), (source["id"], "new-comment form unexpectedly collects private fields")
+    assert len(forms) == 1, (source["id"], "one comment form is required")
+    fields = [node for node in nodes(forms[0]) if node.tag in {"input", "textarea"}]
+    assert {node.attrs.get("name") for node in fields} == {"nickname", "body", "website"}, (source["id"], "comment form fields changed")
+    assert all(node.attrs.get("type") != "email" for node in fields), "private comment fields must not be collected"
+    for name in ("nickname", "body"):
+        field = next(node for node in fields if node.attrs.get("name") == name)
+        assert "required" in field.attrs, (source["id"], name, "required comment field missing")
     if not features["comments"]["enabled"]:
-        for form in forms:
-            submit = [node for node in nodes(form) if node.tag in {"button", "input"} and node.attrs.get("type", "submit" if node.tag == "button" else "text") == "submit"]
-            assert submit and all("disabled" in node.attrs for node in submit), (source["id"], "unconfigured new comments must not accept submission")
-        assert "未开放" in content(section) or "未启用" in content(section), (source["id"], "disabled new-comment state is not explained")
-    return formulas
-
+        submit = [node for node in nodes(forms[0]) if node.tag == "button" and node.attrs.get("type") == "submit"]
+        assert submit and all("disabled" in node.attrs for node in submit), "unconfigured comments must not accept submission"
+        assert "未开放" in content(section), "disabled comment state is not explained"
+    else:
+        scripts = [node.attrs.get("src", "") for node in nodes(document) if node.tag == "script"]
+        assert any(urlsplit(value).path == "/assets/vendor/katex/katex.min.js" for value in scripts), "dynamic comments need the local math runtime"
+    # The retained source archive is still checked, but is never a display fallback.
+    comment_preorder(comments)
+    return sum(len(original_formulas(Document(comment["content"]["rendered"]).root)) for comment in comments)
 
 def check_history_links(document, sources, label):
-    areas = [n for n in nodes(document) if has_class(n, "historical-pages-list")]
+    areas = [n for n in nodes(document) if has_class(n, "blog-pages-list")]
     links = [n.attrs.get("href") for area in areas for n in nodes(area) if n.tag == "a"]
     assert_routes(links, [route(p) for p in sources], label)
 
@@ -495,6 +508,21 @@ def assert_preserved_content(reference, current, media, paths=None, by_id=None):
     """Compare original HTML with the Markdown render without using exporter code."""
     before, after = source_document(reference), source_document(current)
     identifier = current["id"]
+    if identifier == 925:
+        removed_url = "https://www.xht37.com/zroi-19-csp-s-模拟赛十联测-day1-题解/#lwptoc2"
+        def remove_orphan(node):
+            if not isinstance(node, Node):
+                return
+            children = []
+            for child in node.children:
+                if isinstance(child, Node) and child.tag == "a" and child.attrs.get("href") == removed_url:
+                    assert content(child) == "这题", "authorized orphan link text changed"
+                    children.extend(child.children)
+                else:
+                    remove_orphan(child)
+                    children.append(child)
+            node.children = children
+        remove_orphan(before)
     assert canonical(before) == canonical(after), (identifier, "original snapshot: text changed during Markdown conversion")
     assert structural_tags(before) == structural_tags(after), (identifier, "original snapshot: nested structure changed")
     assert original_formulas(before) == original_formulas(after), (identifier, "original snapshot: TeX changed")
@@ -543,7 +571,8 @@ def check_original_snapshot(batch, path, media):
             for item in reference[key]:
                 assert current_taxonomy[key][item] == old_taxonomy[key][item], (identifier, "original snapshot", key, item, "name changed")
         assert_preserved_content(reference, current, media, paths, by_id)
-    print(f"PASS: immutable original snapshot independently matches {len(old_sources)} Markdown documents")
+    exception = " (document 925 retains the authorized orphan-link removal)" if 925 in current_by_id else ""
+    print(f"PASS: immutable original snapshot independently matches {len(old_sources)} Markdown documents{exception}")
 
 
 def check_comment_source_files(batch, content_root, post_ids):
@@ -790,7 +819,7 @@ def main(argv=None):
         if items:
             assert any(n.tag == "a" and n.attrs.get("href") == expected_route for n in nodes(home)), (category_id, "nonempty category missing from blog index")
     for directory, values in (("posts", posts), ("pages", historical_pages)):
-        expected_files = {ROOT / route(p).lstrip("/") / "index.html" for p in values}
+        expected_files = {ROOT / route(p).lstrip("/") / filename for p in values for filename in ("index.html", "exit/index.html")}
         assert set((ROOT / "blog" / directory).rglob("*.html")) == expected_files, (directory, "missing or stale content pages")
     assert set((ROOT / "blog/categories").rglob("*.html")) == expected_category_files, "missing or stale category pages"
     used_tags = {identifier for source in posts for identifier in source["tags"]}
@@ -812,14 +841,19 @@ def main(argv=None):
     check_friends_page(read_document(friends_path), friends)
     assert report["friends"] == {"path": "/blog/friends/", "count": len(friends), "source_file": "content/blog/friends.yaml"}, "friend-link report differs"
     check_comment_admin(report, features["comments"])
+    editor_pages = check_article_editors(report, sources, features["comments"])
     comment_admin_path = ROOT / "blog/comment/index.html"
     pages = list((ROOT / "blog").rglob("*.html"))
-    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
+    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | editor_pages | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
     assert set(pages) == expected_pages, "missing or stale generated blog HTML"
     for path in pages:
         document = Document(path.read_text(encoding="utf-8")).root
         ids = [n.attrs["id"] for n in nodes(document) if "id" in n.attrs]
         assert len(ids) == len(set(ids)), (path, "duplicate page ID")
+        old_links = [node for node in nodes(document) if node.tag == "a" and urlsplit(node.attrs.get("href", "")).hostname in OLD_HOSTS]
+        assert len(old_links) <= 1 and all(content(node) == "旧站 ↗" and node.attrs.get("href") == "https://www.xht37.com/" for node in old_links), (path, "only the shared old-site navigation may point to the old domain")
+        assert not any(has_class(node, name) for node in nodes(document) for name in ("source-note", "historical-note", "historical-pages", "historical-comments")), (path, "reader UI still separates imported content")
+        assert not re.search(r"旧站历史|历史评论|原站标签|本文迁自|保留旧站|旧博客的友情链接", content(document)), (path, "migration labels remain visible")
         for node in nodes(document):
             for key in ("href", "src"):
                 if key in node.attrs:
@@ -835,6 +869,7 @@ def main(argv=None):
     for path in (ROOT / "assets/vendor/katex").glob("*.css"):
         for url in re.findall(r"url\(([^)]+)\)", path.read_text(encoding="utf-8")):
             assert (path.parent / url.strip('\"\'')).is_file(), url
+    assert (ROOT / "assets/vendor/katex/katex.min.js").read_bytes() == (ROOT / "tools/vendor/katex/katex.cjs").read_bytes(), "comment math runtime differs from the reviewed build-time KaTeX version"
     for metric in ("code_blocks", "formulas", "headings", "images"):
         assert totals[metric] == report["totals"][metric]
     assert totals["comment_formulas"] == report["comments"]["formulas"], "historical comment formula report differs"
