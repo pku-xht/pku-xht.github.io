@@ -5908,11 +5908,11 @@
     "source_sha256": {
       "tools/render_comment_admin.mjs": "a8c6245795a034c98822cb81acb8ffa8d3804cf9def2fbf19d486e24892c045c",
       "services/blog-api/src/admin-client.mjs": "82514382bd699b9bded5801a112472c2d751fc8f62bb93006f5282d98035fabe",
-      "services/blog-api/src/admin.mjs": "37b5d3e7620023bb5730e3dae395e2bb9a2991a1879583e10325b675555a9d5a"
+      "services/blog-api/src/admin.mjs": "44e2d23e59951f1bb823faf1b5934c2c09086901aa6b0c65c5ce89643334fa65"
     },
     "asset_sha256": {
-      "blog/comment/admin.css": "a016649c2718f66b5609379d68d39e7cc6fe45445b46a828ec3c94241ddf19ea",
-      "blog/comment/admin.js": "b502eca2df0d56c96e60eeb8c4f816b55665c436d0a27b4a63c60911d7aa9fe0",
+      "blog/comment/admin.css": "2a07301bd93a49b74b93387328f2300b0541b3ee2507dcf6b59d469322efb909",
+      "blog/comment/admin.js": "2bbd18dd43b35c6a7948f9150da1a9b5f52187919698af2ccd2dd2a0ba78a2ab",
       "blog/comment/index.html": "de1648e4abee62cfe4f41e2363d2b284164fd4b26287b4a958646e1b48869842"
     }
   },

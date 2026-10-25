@@ -527,8 +527,9 @@ def main():
         raise ValueError("Comment admin renderer returned invalid assets")
     write("/blog/comment/", admin_assets["html"])
     admin_directory = ROOT / "blog/comment"
-    (admin_directory / "admin.js").write_text(admin_assets["script"], encoding="utf-8")
-    (admin_directory / "admin.css").write_text(admin_assets["style"], encoding="utf-8")
+    for filename, key in (("admin.js", "script"), ("admin.css", "style")):
+        with (admin_directory / filename).open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(admin_assets[key])
     report["comment_admin"] = {
         "path": "/blog/comment/", "api_base": features["comments"]["api_base"],
         "script": "/blog/comment/admin.js", "style": "/blog/comment/admin.css",

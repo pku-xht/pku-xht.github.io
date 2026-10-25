@@ -56,7 +56,7 @@ pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
 
 站内页由正式博客构建流程生成 `blog/comment/index.html`、`admin.js` 和 `admin.css`。唯一界面源为 `src/admin.mjs` 与 `src/admin-client.mjs`，`tools/render_comment_admin.mjs` 只接收公开的 `api_base` 配置；不接收凭据或评论。客户端作为原始脚本字符串共享，避免 Worker 打包器改写函数后再序列化而产生未定义辅助变量。
 
-静态页通过 meta CSP 只加载本地脚本、样式，且只连接固定的 Worker origin；API 和密码不从 URL 参数读取。未配置 API 时控件禁用。页面声明 `noindex` 和 `no-referrer`；外站嵌入时禁止输入密码，同源窄屏检查仍可使用。Worker 入口继续使用 nonce CSP 和禁止嵌入的响应头。生成器记录共享源及产物哈希，校验器会拒绝陈旧或被手改的管理页。
+静态页通过 meta CSP 只加载本地脚本、样式，且只连接固定的 Worker origin；API 和密码不从 URL 参数读取。未配置 API 时控件禁用。页面声明 `noindex` 和 `no-referrer`；外站嵌入时禁止输入密码，同源窄屏检查仍可使用。Worker 入口继续使用 nonce CSP 和禁止嵌入的响应头。生成器记录共享源及产物哈希，校验器会拒绝陈旧或被手改的管理页；这些源与产物由 Git 属性和生成器统一使用 LF，避免 Windows 与 GitHub 检出后的哈希漂移。
 
 评论初始限制为每个地址 15 分钟最多 5 次新请求，Visits 为每分钟最多 120 次。新评论入库与占用频控额度在同一事务中完成，相同请求并发重试只占一次额度。数据库只在频控桶中保存带私密盐的地址 SHA-256，不保存或输出原 IP；在后续写请求中清理过期一天以上的桶，无后续请求时没有额外定时清理。Cloudflare 入口的 `CF-Connecting-IP` 作为地址来源；本地桥接强制使用本机连接地址，忽略调用者伪造的该头。所有 JSON 请求都以流式读取强制限制在 64KiB 内，不依赖客户端声明的 Content-Length。
 

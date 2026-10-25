@@ -38,7 +38,7 @@
 
 ## Cloudflare 部署与联调
 
-2026-10-25，站主完成 Cloudflare 官方 OAuth 设备授权，随后创建 APAC D1 `xht37-blog-comments`，执行 `0001_initial.sql` 与公开登记 SQL，部署 `xht37-blog-api`。实际接口为 `https://xht37-blog-api.pku-xht-github-io.workers.dev`，当前部署版本为 `b081f789-3c80-4981-b959-d78730744afe`。该部署没有付费升级、旧站重定向或停用。
+2026-10-25，站主完成 Cloudflare 官方 OAuth 设备授权，随后创建 APAC D1 `xht37-blog-comments`，执行 `0001_initial.sql` 与公开登记 SQL，部署 `xht37-blog-api`。实际接口为 `https://xht37-blog-api.pku-xht-github-io.workers.dev`；新增站内管理入口后的当前 Worker 版本为 `5cee45c0-4ee2-4db1-9e4e-d6e9fb0364a0`。该部署没有付费升级、旧站重定向或停用。
 
 真实绑定文件仅保存在被忽略的 `services/blog-api/wrangler.local.toml`，其中没有密钥。新生成的管理员令牌和限流盐通过 stdin 交给 Worker secrets，Windows DPAPI 加密备份保存在仓库外的用户私有配置目录。Wrangler 登录凭据也加密保存在仓库外，密钥位于 Windows Credential Manager；没有将凭据、Cookie、真实待审内容或数据库导出写入本仓库。
 
@@ -57,6 +57,8 @@
 ## 当前交付状态
 
 站主另选定 `/blog/comment` 作为评论管理入口，新增的 `/blog/comment/` 页面与 Worker 入口共享同一界面和原管理密码，不在公开导航中列出。生成与校验已登记管理页及资产，重建不会丢失；13 项源隔离测试和 28 项后端／管理客户端测试（含实际打包回归）通过。本地桌面与实际 390px iframe 验证控件可用、无横向溢出；错误密码被真实后端拒绝，清除后需重新输入。此次验证不读取真实待审内容，不修改管理员密码。
+
+该入口已随内容提交 `61419ce` 发布，Pages 构建成功。指定的无尾斜杠 URL 正常跳转至同目录，管理页与两项本地资产均为 HTTP 200 且字节哈希一致；实际 Worker 脚本与共享客户端一致，并能在独立浏览器作用域运行。原管理密码和正式站 CORS 验证通过，只检查认证状态，没有读取或保存待审正文。详情见[上线记录](deployment-2026-10-25.md)。
 
 **Cloudflare 评论后端和本批 GitHub Pages 静态页面均已部署并通过相应验证。** 用户明确授权“推送上线吧”后，内容提交 `7154771` 已推送到 `origin/main`，Pages API 确认该提交构建成功，20 个线上关键页面和资源的字节哈希与本地一致。`features.yaml` 已开启 comments 并指向真实 API，公开页面包含历史评论、友链、标签导航和审核制新评论入口。完整范围与浏览器读回限制见 [2026-10-25 上线记录](deployment-2026-10-25.md)。
 

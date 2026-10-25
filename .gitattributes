@@ -5,6 +5,9 @@
 /blog/categories/**/index.html linguist-generated=true
 /blog/tags/**/index.html linguist-generated=true
 /blog/friends/index.html linguist-generated=true
+/blog/comment/** linguist-generated=true text eol=lf
+/services/blog-api/src/admin*.mjs text eol=lf
+/tools/render_comment_admin.mjs text eol=lf
 /content/blog/**/*.md whitespace=-blank-at-eol
 /assets/vendor/** linguist-vendored=true
 /tools/vendor/** linguist-vendored=true
