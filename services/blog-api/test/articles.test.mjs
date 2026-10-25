@@ -26,7 +26,7 @@ function fixture() {
     if (state.responseStatus) return response({ message: 'upstream must not be relayed ' + TOKEN }, state.responseStatus);
     assert.equal(parsed.origin, 'https://api.github.com');
     assert.equal(options.headers.Authorization, 'Bearer ' + TOKEN);
-    assert.equal(options.redirect, 'error'); assert.equal(options.credentials, 'omit');
+    assert.equal(options.redirect, 'manual'); assert.equal(options.credentials, 'omit');
     if (options.method === 'GET' && path.startsWith('/git/ref/')) {
       const revision = refs.get(path.slice('/git/ref/'.length));
       return revision ? response({ object: { type: 'commit', sha: revision } }) : response({ message: 'not found' }, 404);
@@ -158,6 +158,24 @@ test('GitHub authorization/network errors do not relay upstream bodies or creden
   const request = new Request('https://api.example.test/v1/admin/articles/46');
   const failed = await articleRequest(request, { GITHUB_EDIT_TOKEN: TOKEN }, new URL(request.url), { transport: async () => { throw new Error(TOKEN); } });
   assert.equal(failed.status, 502); assert.ok(!(await failed.text()).includes(TOKEN));
+});
+
+test('GitHub redirects fail closed without following or forwarding the credential', async () => {
+  for (const status of [301, 302, 303, 307, 308]) {
+    const calls = [];
+    const request = new Request('https://api.example.test/v1/admin/articles/46');
+    const result = await articleRequest(request, { GITHUB_EDIT_TOKEN: TOKEN }, new URL(request.url), {
+      transport: async (url, options) => {
+        calls.push({ url, options });
+        return new Response('untrusted upstream body ' + TOKEN, { status, headers: { Location: 'https://untrusted.example/credential-target' } });
+      },
+    });
+    assert.equal(result.status, 502);
+    assert.equal(calls.length, 1);
+    assert.ok(calls[0].url.startsWith('https://api.github.com/repos/pku-xht/pku-xht.github.io/'));
+    assert.equal(calls[0].options.redirect, 'manual');
+    assert.ok(!(await result.text()).includes(TOKEN));
+  }
 });
 
 test('worker authenticates every edit route before accessing GitHub and distinguishes password from edit setup', async () => {

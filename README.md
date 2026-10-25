@@ -97,11 +97,11 @@ node --check blog/interactions.js
 python -S -X utf8 tools/test_blog_sources.py
 python -S -X utf8 tools/test_blog_comments.py
 node tools/test_blog_frontend.cjs
-node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs services/blog-api/test/articles.test.mjs services/blog-api/test/article-editor.test.mjs
+node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs services/blog-api/test/articles.test.mjs services/blog-api/test/article-editor.test.mjs services/blog-api/test/worker-runtime.test.mjs
 python -S -X utf8 tools/test_publish_blog_edit.py
 ```
 
-The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`; an explicitly skipped bundling check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
+The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker-runtime regression additionally requires Miniflare/workerd, located through `BLOG_MINIFLARE_MODULE` (the installed Wrangler dependency's `miniflare/dist/src/index.js`). It runs the real bundled Worker against a local fictional GitHub service, covering runtime-specific fetch options and redirect credential isolation. An explicitly skipped bundling or runtime check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
 
 An optional archival comparison checks original text, exact code bytes, TeX, metadata, structure, resources and anchors:
 

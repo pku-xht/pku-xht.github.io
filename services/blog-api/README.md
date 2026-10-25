@@ -81,6 +81,8 @@ Chrome 可依其设置提示保存并在以后自动填入；不能保证每台�
 
 编辑后端另需 Worker secret `GITHUB_EDIT_TOKEN`，只允许目标仓库的 Contents 读写、Commit statuses 只读和默认 Metadata 只读。管理员密码不具有 GitHub 写权限，也不充当此 secret。工作流自带令牌仅授予 contents/statuses/pages write。完整设置与部署顺序见[根 README](../../README.md#cloudflare-and-editor-configuration)。本轮尚未配置、部署或实际验收新的编辑授权。
 
+GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响应都停止处理，不跟随重定向或转发凭据。浏览器支持的 `redirect: error` 在 Workers 中会在请求发出前抛出异常；部署前须执行真实 workerd 回归，不能仅用 Node 模拟 fetch 代替运行时兼容性验证。
+
 ## 频控、本地验证与部署边界
 
 评论每个地址 15 分钟最多 5 次新请求，Visits 预备限制每分钟 120 次。新评论与频控配额在同一事务中提交，并发重试只占一次。仅在短期桶中保存带私密盐的地址 SHA-256，不保存原 IP；后续写请求清理过期一天以上桶。Cloudflare 使用可信入口的 `CF-Connecting-IP`；本机桥接强制连接地址，忽略调用者伪造的头。JSON 流式限长，不能靠遗漏 Content-Length 绕过。

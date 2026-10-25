@@ -98,7 +98,9 @@ export async function articleRequest(request, env, url = new URL(request.url), {
       try {
         response = await transport(API + suffix, {
           method, headers: { Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'xht37-blog-editor', ...(value === undefined ? {} : { 'Content-Type': 'application/json' }) },
-          credentials: 'omit', redirect: 'error', cache: 'no-store', signal: controller.signal,
+          // Workers rejects redirect:"error" before sending the request.
+          // Manual mode plus the non-2xx check below never forwards the token.
+          credentials: 'omit', redirect: 'manual', cache: 'no-store', signal: controller.signal,
           ...(value === undefined ? {} : { body: JSON.stringify(value) }),
         });
       } catch { fail(502, 'github_unavailable', 'GitHub 暂时无法连接，修改尚未提交，请保留编辑内容后重试。'); }
