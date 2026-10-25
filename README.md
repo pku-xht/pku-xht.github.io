@@ -59,6 +59,8 @@ The blog keeps the selected **C · personal blog** design, stable article URLs, 
 
 The unified interface, comment backend and online editor were **deployed on 2026-10-26**. A real save, automatic build/Pages publication, stale-version rejection and exact source restoration have been verified. Chrome now loads the live comments and Worker API after a local Windows proxy repair; actual administrator login and browser password saving remain separate checks. Current evidence is recorded in [migration/unified-blog-2026-10-25.md](migration/unified-blog-2026-10-25.md); earlier releases remain in [migration/README.md](migration/README.md). Hidden content remains outside this public repository and outside the current scope.
 
+The follow-up comment workspace, shared blog styling and 30-day administrator sessions are **local changes awaiting a separately authorized release**. Their implementation and verification are recorded in [migration/admin-workspace-2026-10-26.md](migration/admin-workspace-2026-10-26.md); these local results do not change the preceding production-release evidence.
+
 ### Sources and generation
 
 - `content/blog/posts/<ID>.md` and `content/blog/pages/<ID>.md`: the sole maintained article/page sources, one Markdown file with YAML metadata per document.
@@ -69,7 +71,7 @@ The unified interface, comment backend and online editor were **deployed on 2026
 - `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch.
 - `tools/blog_sources.py`, `tools/build_blog.py`, `tools/render_math.cjs`: offline source loading, CommonMark/HTML/TeX preservation and static generation. Dependencies are vendored; ordinary builds need no network or installation.
 - `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
-- `services/blog-api/src/admin*.mjs` and `article-editor.mjs`: shared password login, comment management and editor assets. The builder generates `/blog/comment/`, shared `/blog/editor/` assets and an `exit/` page for every registered document.
+- `services/blog-api/src/admin*.mjs` and `article-editor.mjs`: shared session login, comment management, visual styles and editor assets. The builder generates `/blog/comment/`, shared `/blog/editor/` assets and an `exit/` page for every registered document.
 - `services/blog-api/data/unified-comments.json` and `.sql`: deterministic, public-only import assets. Their persistent batch and ID hashes prevent reruns from restoring a deleted comment or undoing moderation.
 - `migration/public-batch.json`: generated source hashes, URL mappings, counts and administrative-asset evidence. Its legacy `publication: local-only` describes a build report, not the live deployment state.
 
@@ -97,11 +99,11 @@ node --check blog/interactions.js
 python -S -X utf8 tools/test_blog_sources.py
 python -S -X utf8 tools/test_blog_comments.py
 node tools/test_blog_frontend.cjs
-node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs services/blog-api/test/articles.test.mjs services/blog-api/test/article-editor.test.mjs services/blog-api/test/worker-runtime.test.mjs
+node --test services/blog-api/test/*.test.mjs
 python -S -X utf8 tools/test_publish_blog_edit.py
 ```
 
-The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker-runtime regression additionally requires Miniflare/workerd, located through `BLOG_MINIFLARE_MODULE` (the installed Wrangler dependency's `miniflare/dist/src/index.js`). It runs the real bundled Worker against a local fictional GitHub service, covering runtime-specific fetch options and redirect credential isolation. An explicitly skipped bundling or runtime check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
+The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker-runtime regression additionally requires Miniflare/workerd, located through `BLOG_MINIFLARE_MODULE` (the installed Wrangler dependency's `miniflare/dist/src/index.js`). It runs the real bundled Worker against a local fictional GitHub service and temporary D1, covering runtime-specific fetch options, redirect credential isolation and session creation/restoration/revocation. An explicitly skipped bundling or runtime check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
 
 An optional archival comparison checks original text, exact code bytes, TeX, metadata, structure, resources and anchors:
 
@@ -115,6 +117,8 @@ Intentional subsequent edits can differ from the archive while passing the norma
 
 D1 is the only runtime store for **all** comments. The 117 imported public comments enter `approved`; later submissions enter `pending`. The same public API, moderation queues, reply tree, rejection and deletion apply to every comment. Import IDs `wp-N` and existing `#comment-N` anchors remain stable without reader-facing source labels. Preserved YAML/JSON only verifies the public import and never overwrites backend state.
 
+The management workspace defaults to **all comments**, newest first, with status counts, article-title links, per-article filtering and a nickname/body search across the full database. It loads up to 100 rows per page. Counts follow the selected article and search, while the status selector chooses which rows to show. Moderation reloads the current view so status changes and affected reply descendants do not leave stale rows.
+
 Generate registered-document data and the deterministic public-comment import offline:
 
 ```sh
@@ -123,7 +127,7 @@ python -S -X utf8 services/blog-api/scripts/import-public-comments.py
 python -S -X utf8 services/blog-api/scripts/import-public-comments.py --check
 ```
 
-The comment import is one SQL statement and its trigger transaction. Batch/ID hashes persist after moderation/deletion; repeated batches skip those records, and conflicting hashes fail closed. The temporary import payload is cleared when the trigger completes. The older minimal `legacy-parents.json` remains compatibility evidence and grants no reply permission; a reply's parent must exist and be approved in `comments` on the same document.
+The document registry includes titles read with the canonical YAML loader, so comment management uses the maintained article names. The comment import is one SQL statement and its trigger transaction. Batch/ID hashes persist after moderation/deletion; repeated batches skip those records, and conflicting hashes fail closed. The temporary import payload is cleared when the trigger completes. The older minimal `legacy-parents.json` remains compatibility evidence and grants no reply permission; a reply's parent must exist and be approved in `comments` on the same document.
 
 For a local API, supply fictional local `ADMIN_TOKEN` and `RATE_LIMIT_SALT` in the process environment, then run:
 
@@ -135,7 +139,11 @@ The bridge binds only `127.0.0.1`, applies schema/registered public comments and
 
 ### Administrator password
 
-Comment management stays at `/blog/comment/`; document editing uses its `exit/` address. Both use account `admin` and the **same existing password value** (`ADMIN_TOKEN`). Standard `username`/`current-password` form fields and a successful-login credential request let Chrome offer to save/autofill it. Browser settings and password-manager policy decide whether a prompt appears. The browser manages any saved credential; this site does not persist the password in cookies, localStorage, sessionStorage or URLs. Logout/page exit clears its in-memory password and late private responses cannot refill the page.
+Comment management stays at `/blog/comment/`; document editing uses its `exit/` address. Both use account `admin` and the **same existing password value** (`ADMIN_TOKEN`). Standard `username`/`current-password` form fields and a successful-login credential request let Chrome offer to save/autofill it. Browser settings and password-manager policy decide whether a prompt appears. The browser manages any saved password; this site never writes the password into cookies, localStorage, sessionStorage or URLs.
+
+A successful password login exchanges it for a random, revocable session with a **30-day absolute expiry**. The same-origin comment and editor pages share only this session token and expiry in localStorage; reopening or refreshing a page validates the session before loading administrative data. The expiry does not slide on use. D1 stores only a token HMAC keyed by the current `ADMIN_TOKEN`, plus creation/expiry times. The raw password and raw session token do not enter D1.
+
+Leaving a page clears its in-memory state while retaining the saved session. Explicit logout clears local access and requests server revocation, with other open pages responding to the storage change. A network failure is reported as a local logout with remote revocation unconfirmed. Expiry or a logout in another tab clears comment data but preserves an editor's unsaved text in memory; signing in again retains that draft and its original base SHA for conflict checking. Drafts are never persisted in browser storage. A browser that denies localStorage can still use the current page, but cannot keep the session across visits.
 
 The encrypted Windows backup is outside the repository at `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`. To reveal it privately in your own terminal:
 
@@ -161,7 +169,7 @@ Use the machine's actual HTTP/HTTPS proxy when its CLI cannot reach the OAuth en
 
 ### Authorized deployment order
 
-These commands are a deployment procedure, not evidence that this local change is deployed. Run only with authorization covering the release. Apply additive schema and the complete public import before deploying code that reads the new columns:
+These commands are a deployment procedure, not evidence that this local change is deployed. Run only with authorization covering the release. Apply additive schema before deploying code that reads it. The 30-day-session upgrade requires `0003_admin_sessions.sql` before the new Worker, followed by the generated pages. Existing deployments retain their secrets and imported comments; they do not need a new GitHub secret or another import solely for this upgrade. The complete setup procedure is:
 
 ```sh
 wrangler d1 migrations apply <database-name> --remote --config services/blog-api/wrangler.local.toml

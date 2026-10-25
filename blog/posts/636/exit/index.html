@@ -2,20 +2,27 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://xht37-blog-api.pku-xht-github-io.workers.dev; base-uri 'none'; form-action 'none'"><title>编辑 · Codeforces Round #621 (Div. 1 + Div. 2) 题解</title>
-<link rel="stylesheet" href="/blog/editor/editor.css?v=1"><script defer src="/blog/editor/editor.js?v=1"></script></head>
-<body data-editor-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-document-id="636"><main>
-<header><a href="/blog/posts/636/">← 返回文章</a><a href="/blog/comment/">评论管理</a></header>
-<h1>编辑 · Codeforces Round #621 (Div. 1 + Div. 2) 题解</h1>
-<form id="login-form" method="post" autocomplete="on">
+<link rel="stylesheet" href="/blog/editor/editor.css?v=2"><script defer src="/blog/editor/editor.js?v=2"></script></head>
+<body class="editor-page" data-editor-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-document-id="636">
+<header class="admin-header"><div class="admin-width">
+<a class="identity" href="/blog/">徐皓天 <span class="identity-note">/ 博客</span></a>
+<nav class="admin-nav" aria-label="后台导航"><a href="/blog/comment/">评论管理</a><a href="/blog/posts/636/">返回文章 ↗</a></nav>
+</div></header>
+<main class="admin-width">
+<section class="page-intro"><p class="eyebrow">EDIT ARTICLE</p><h1>Codeforces Round #621 (Div. 1 + Div. 2) 题解</h1></section>
+<form id="login-form" class="login-panel" method="post" autocomplete="on">
+<h2 class="login-heading">管理员登录</h2>
 <label for="username">账号 <input id="username" name="username" type="text" value="admin" autocomplete="username" readonly disabled></label>
 <label for="token">管理员密码 <input id="token" name="password" type="password" autocomplete="current-password" required spellcheck="false" disabled></label>
-<button id="load" type="submit" disabled>登录</button>
+<button id="load" class="primary" type="submit" disabled>登录</button>
+<p class="form-note">在此浏览器保持登录 30 天，评论管理与文章编辑通用。你也可以随时退出登录。</p>
 </form>
 <p id="message" role="status" aria-live="polite">请输入管理员密码后登录。</p>
 <section id="editor" hidden>
-<div class="actions"><button id="save" class="primary" type="button" disabled>保存并更新网站</button><button id="reload" type="button" disabled>重新载入</button><button id="logout" type="button">退出登录</button></div>
-<p class="muted"><span id="revision"></span> <a id="details" target="_blank" rel="noopener noreferrer" hidden>更新详情 ↗</a></p>
-<label id="source-label" for="source">Markdown 正文与 YAML 元数据</label>
-<p class="muted">保留文件开头的文章编号与链接信息。公式、代码和 HTML 均可直接编辑。</p>
+<div class="editor-toolbar"><div class="actions"><button id="save" class="primary" type="button" disabled>保存并更新网站</button><button id="reload" type="button" disabled>重新载入</button></div><button id="logout" class="quiet" type="button">退出登录</button></div>
+<p class="editor-status"><span id="revision"></span> <a id="details" target="_blank" rel="noopener noreferrer" hidden>查看更新进度 ↗</a></p>
+<div class="editor-label"><label id="source-label" for="source">文章源文件</label><span>Markdown + YAML · Ctrl / ⌘ + S 保存</span></div>
+<p class="editor-hint">正文、公式、代码和 HTML 均可编辑；请保留开头的文章编号与链接信息。</p>
 <textarea id="source" spellcheck="false" aria-describedby="source-label"></textarea>
-</section><noscript><p>文章编辑需要启用 JavaScript。</p></noscript></main></body></html>
+</section><noscript><p>文章编辑需要启用 JavaScript。</p></noscript></main>
+<footer class="admin-footer"><div class="admin-width">徐皓天 · xht37</div></footer></body></html>

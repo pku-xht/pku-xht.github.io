@@ -240,11 +240,12 @@ def check_comment_admin(report, feature):
     scripts = [node for node in elements if node.tag == "script"]
     styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
     assert len(scripts) == len(styles) == 1
-    assert scripts[0].attrs.get("src") == "/blog/comment/admin.js?v=2" and not content(scripts[0]).strip()
-    assert styles[0].attrs.get("href") == "/blog/comment/admin.css?v=2"
+    assert scripts[0].attrs.get("src") == "/blog/comment/admin.js?v=3" and not content(scripts[0]).strip()
+    assert styles[0].attrs.get("href") == "/blog/comment/admin.css?v=3"
     assert not any(key.lower().startswith("on") for node in elements for key in node.attrs), "inline event handlers on management page"
     by_id = {node.attrs["id"]: node for node in elements if "id" in node.attrs}
-    assert {"login-form", "username", "token", "load", "logout", "status", "message", "comments", "more", "management", "refresh"} <= set(by_id)
+    assert {"login-form", "username", "token", "load", "logout", "status", "message", "comments", "more", "management", "refresh", "document-filter", "search", "summary", "loaded-count", "empty-state"} <= set(by_id)
+    assert [node.attrs.get("value") for node in nodes(by_id["status"]) if node.tag == "option"] == ["all", "pending", "approved", "rejected"]
     assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "current-password"
     assert by_id["token"].attrs.get("name") == "password" and "required" in by_id["token"].attrs
     assert by_id["username"].attrs.get("autocomplete") == "username" and by_id["username"].attrs.get("value") == "admin"
@@ -253,7 +254,7 @@ def check_comment_admin(report, feature):
     assert not by_id["token"].attrs.get("value") and not content(by_id["comments"]).strip(), "private admin data must not be serialized"
     assert "disabled" in by_id["token"].attrs and "disabled" in by_id["load"].attrs
     client = (directory / "admin.js").read_text(encoding="utf-8")
-    assert not re.search(r"\b(?:localStorage|sessionStorage|URLSearchParams)\b|document\.cookie|location\.(?:search|hash)", client), "management credential or API must not use storage or URL parameters"
+    check_admin_session_client(client)
 
 
 def assert_routes(actual, expected, label):
@@ -271,7 +272,7 @@ def check_article_editors(report, sources, feature):
     shared = {directory / "editor.js", directory / "editor.css"}
     assert set(directory.iterdir()) == shared, "missing or stale editor assets"
     page_files = {ROOT / row["path"].lstrip("/") / "index.html" for row in expected_routes}
-    source_files = {ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs"}
+    source_files = {ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs", ROOT / "services/blog-api/src/admin-session-client.mjs", ROOT / "services/blog-api/src/admin-style.mjs"}
     for key, files in (("source_sha256", source_files), ("asset_sha256", shared | page_files)):
         expected = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
         assert metadata[key] == expected, (key, "article editors need rebuilding from shared sources")
@@ -299,12 +300,23 @@ def check_article_editors(report, sources, feature):
         assert any(node.tag == "a" and node.attrs.get("href") == route(source) for node in elements), "editor needs a return link"
         scripts = [node for node in elements if node.tag == "script"]
         styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
-        assert len(scripts) == len(styles) == 1 and scripts[0].attrs.get("src") == "/blog/editor/editor.js?v=1" and not content(scripts[0]).strip()
-        assert styles[0].attrs.get("href") == "/blog/editor/editor.css?v=1"
+        assert len(scripts) == len(styles) == 1 and scripts[0].attrs.get("src") == "/blog/editor/editor.js?v=2" and not content(scripts[0]).strip()
+        assert styles[0].attrs.get("href") == "/blog/editor/editor.css?v=2"
         assert not any(node.tag == "iframe" or any(key.lower().startswith("on") for key in node.attrs) for node in elements), "editor must use its local script, without frames or inline handlers"
     client = (directory / "editor.js").read_text(encoding="utf-8")
-    assert not re.search(r"\b(?:localStorage|sessionStorage|URLSearchParams)\b|document\.cookie|location\.(?:search|hash)", client), "editor credentials and drafts must not use browser storage or URLs"
+    check_admin_session_client(client)
     return page_files
+
+
+def check_admin_session_client(client):
+    """Keep both generated clients on the one reviewed session transport."""
+    helper_file = ROOT / "services/blog-api/src/admin-session-client.mjs"
+    helper_source = helper_file.read_text(encoding="utf-8")
+    helper = helper_source.split("export const ADMIN_SESSION_HELPERS = String.raw`", 1)[1].rsplit("`;", 1)[0]
+    assert helper in client, "management must use the shared revocable-session transport"
+    assert not re.search(r"\b(?:sessionStorage|URLSearchParams)\b|document\.cookie|location\.(?:search|hash)", client), "password, source and fixed API must not use URLs or cookies"
+    assert client.count("localStorage.setItem(") == 1 and client.count("localStorage.getItem(") == 1, "only the shared session helper may persist data"
+    assert "JSON.stringify({ token, expires_at: data.expires_at })" in helper
 
 
 def check_cards(document, sources, label, tags):

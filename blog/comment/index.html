@@ -1,19 +1,33 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://xht37-blog-api.pku-xht-github-io.workers.dev; base-uri 'none'; form-action 'none'">
-<title>博客评论审核 · 徐皓天</title><link rel="stylesheet" href="/blog/comment/admin.css?v=2"><script defer src="/blog/comment/admin.js?v=2"></script></head>
+<title>评论管理 · 徐皓天</title><link rel="stylesheet" href="/blog/comment/admin.css?v=3"><script defer src="/blog/comment/admin.js?v=3"></script></head>
 <body data-admin-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-admin-enabled="true">
-<p><a href="https://pku-xht.github.io/blog/">← 返回博客</a></p><h1>博客评论审核</h1>
-<p>使用管理员密码登录。你可以让浏览器保存密码，下次自动填入。</p>
-<form id="login-form" method="post" autocomplete="on">
+<header class="admin-header"><div class="admin-width">
+<a class="identity" href="https://pku-xht.github.io/blog/">徐皓天 <span class="identity-note">/ 博客</span></a>
+<nav class="admin-nav" aria-label="后台导航"><a href="https://pku-xht.github.io/blog/comment/" aria-current="page">评论管理</a><a href="https://pku-xht.github.io/blog/">返回博客 ↗</a></nav>
+</div></header>
+<main class="admin-width">
+<section class="page-intro"><p class="eyebrow">COMMENTS</p><h1>评论管理</h1><p>在这里查看和管理所有文章的留言与回复。</p></section>
+<form id="login-form" class="login-panel" method="post" autocomplete="on">
+<h2 class="login-heading">管理员登录</h2>
 <label for="username">账号 <input id="username" name="username" type="text" value="admin" autocomplete="username" readonly disabled></label>
 <label for="token">管理员密码 <input id="token" name="password" type="password" autocomplete="current-password" required spellcheck="false" disabled></label>
-<button id="load" type="submit" disabled>登录</button>
+<button id="load" class="primary" type="submit" disabled>登录</button>
+<p class="form-note">在此浏览器保持登录 30 天，评论管理与文章编辑通用。你也可以随时退出登录。</p>
 </form>
-<section id="management" hidden>
-<label>状态 <select id="status" disabled><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
-<button id="refresh" type="button" disabled>刷新</button><button id="logout" type="button" disabled>退出登录</button>
-<main id="comments"></main><button id="more" type="button" hidden disabled>下一页</button>
-</section>
 <p id="message" role="status" aria-live="polite">请输入管理员密码后登录。</p>
-<noscript><p>评论管理需要启用 JavaScript。</p></noscript></body></html>
+<section id="management" hidden>
+<div class="management-heading"><p id="summary">正在读取评论概况…</p><div class="management-actions"><button id="refresh" type="button" disabled>刷新评论</button><button id="logout" class="quiet" type="button" disabled>退出登录</button></div></div>
+<div class="comment-filters">
+<label for="status">评论状态<select id="status" disabled><option value="all">全部评论</option><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
+<label for="document-filter">所属文章<select id="document-filter" disabled><option value="">全部文章</option></select></label>
+<label class="filter-search" for="search">搜索评论<input id="search" type="search" maxlength="200" placeholder="搜索昵称或评论内容" autocomplete="off" disabled></label>
+</div>
+<p id="loaded-count" aria-live="polite"></p>
+<div id="comments"></div>
+<p id="empty-state" hidden>没有符合条件的评论。</p>
+<div class="pagination"><button id="more" type="button" hidden disabled>加载更多评论</button></div>
+</section>
+<noscript><p>评论管理需要启用 JavaScript。</p></noscript></main>
+<footer class="admin-footer"><div class="admin-width">徐皓天 · xht37</div></footer></body></html>

@@ -564,7 +564,7 @@ def main():
         "routes": [{"document": str(post["id"]), "path": expected_editor_routes[str(post["id"])]} for post in documents],
         "source_sha256": {
             path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in [ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs"]
+            for path in [ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs", ROOT / "services/blog-api/src/admin-session-client.mjs", ROOT / "services/blog-api/src/admin-style.mjs"]
         },
         "asset_sha256": {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in editor_paths},
     }

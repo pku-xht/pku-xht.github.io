@@ -1,5 +1,7 @@
 import { adminPage } from './admin.mjs';
 import { articleRequest } from './articles.mjs';
+import registry from '../data/public-documents.json' with { type: 'json' };
+import { AdminSessionError, passwordMatches, createAdminSession, administratorAuthorization, revokeAdminSession } from './admin-sessions.mjs';
 
 const PUBLIC_ORIGIN = 'https://pku-xht.github.io';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -8,6 +10,7 @@ const PARENT_ID = /^(?:wp-[1-9][0-9]*|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-
 const CONTROL = /[\u0000-\u001f\u007f-\u009f]/;
 const BODY_CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/;
 const PUBLIC_FIELDS = 'id, document, nickname, body, body_html, author_url, parent_id, created_at';
+const DOCUMENTS = new Map(registry.documents.map(row => [row.id, row]));
 
 class APIError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
@@ -20,9 +23,9 @@ function strictObject(value, allowed) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) fail(400, 'invalid_body', 'Expected a JSON object.');
   if (Object.keys(value).some(key => !allowed.includes(key))) fail(400, 'unknown_field', 'Unexpected request field.');
 }
-async function bodyJSON(request, allowed) {
+async function bodyJSON(request, allowed, limit = 65536) {
   if (!/^application\/json(?:;|$)/i.test(request.headers.get('Content-Type') || '')) fail(415, 'json_required', 'Use application/json.');
-  if (Number(request.headers.get('Content-Length')) > 65536) fail(413, 'body_too_large', 'Request is too large.');
+  if (Number(request.headers.get('Content-Length')) > limit) fail(413, 'body_too_large', 'Request is too large.');
   const reader = request.body?.getReader();
   const decoder = new TextDecoder();
   const chunks = [];
@@ -32,7 +35,7 @@ async function bodyJSON(request, allowed) {
       const { done, value } = await reader.read();
       if (done) break;
       length += value.byteLength;
-      if (length > 65536) { await reader.cancel(); fail(413, 'body_too_large', 'Request is too large.'); }
+      if (length > limit) { await reader.cancel(); fail(413, 'body_too_large', 'Request is too large.'); }
       chunks.push(decoder.decode(value, { stream: true }));
     }
   }
@@ -68,10 +71,7 @@ async function authorized(request, env) {
   const expected = secret(env, 'ADMIN_TOKEN');
   const match = /^Bearer ([^\s]+)$/.exec(request.headers.get('Authorization') || '');
   if (!match) fail(401, 'unauthorized', 'Administrator authorization is required.');
-  const left = await sha256(match[1]), right = await sha256(expected);
-  let different = 0;
-  for (let index = 0; index < left.length; index++) different |= left.charCodeAt(index) ^ right.charCodeAt(index);
-  if (different) fail(401, 'unauthorized', 'Administrator authorization is required.');
+  return administratorAuthorization(match[1], expected, env.DB);
 }
 function origins(env) {
   const result = new Set([PUBLIC_ORIGIN]);
@@ -121,11 +121,33 @@ function publicComment(row) {
 }
 async function listComments(url, env, admin = false) {
   const database = db(env), cursor = cursorValue(url);
-  let rows;
+  let rows, counts, documents;
   if (admin) {
-    const status = url.searchParams.get('status') || 'pending';
-    if (!['pending', 'approved', 'rejected'].includes(status)) fail(400, 'invalid_status', 'Invalid moderation status.');
-    rows = (await database.prepare(`SELECT seq, ${PUBLIC_FIELDS}, status, moderated_at FROM comments WHERE status = ? AND seq > ? ORDER BY seq LIMIT 101`).bind(status, cursor).all()).results;
+    if (['status', 'document', 'q'].some(key => url.searchParams.getAll(key).length > 1)) fail(400, 'invalid_filter', 'Supply each filter only once.');
+    const status = url.searchParams.get('status') ?? 'all';
+    if (!['all', 'pending', 'approved', 'rejected'].includes(status)) fail(400, 'invalid_status', 'Invalid moderation status.');
+    const document = docID(url.searchParams.get('document'), true);
+    if (document !== null) await registered(database, document);
+    const query = (url.searchParams.get('q') || '').trim();
+    if ([...query].length > 200 || CONTROL.test(query)) fail(400, 'invalid_search', 'Search must contain at most 200 characters without control characters.');
+    const result = await database.batch([
+      database.prepare(`SELECT seq, ${PUBLIC_FIELDS}, status, moderated_at FROM comments
+        WHERE (? = 'all' OR status = ?) AND (? IS NULL OR document = ?)
+        AND (? = '' OR instr(lower(nickname), lower(?)) > 0 OR instr(lower(body), lower(?)) > 0)
+        AND (? = 0 OR seq < ?) ORDER BY seq DESC LIMIT 101`).bind(status, status, document, document, query, query, query, cursor, cursor),
+      database.prepare(`SELECT status, COUNT(*) AS count FROM comments WHERE (? IS NULL OR document = ?)
+        AND (? = '' OR instr(lower(nickname), lower(?)) > 0 OR instr(lower(body), lower(?)) > 0)
+        GROUP BY status`).bind(document, document, query, query, query),
+      database.prepare('SELECT id, kind FROM public_documents ORDER BY CAST(id AS INTEGER)'),
+    ]);
+    rows = result[0].results;
+    counts = { all: 0, pending: 0, approved: 0, rejected: 0 };
+    for (const row of result[1].results) { counts[row.status] = row.count; counts.all += row.count; }
+    documents = result[2].results.map(row => ({
+      id: row.id,
+      title: DOCUMENTS.get(row.id)?.title || (row.kind === 'page' ? '页面 ' : '文章 ') + row.id,
+      url: '/blog/' + (row.kind === 'page' ? 'pages/' : 'posts/') + row.id + '/',
+    }));
   } else {
     const document = docID(url.searchParams.get('document'));
     await registered(database, document);
@@ -140,7 +162,22 @@ async function listComments(url, env, admin = false) {
   }
   const hasMore = rows.length > 100;
   rows = rows.slice(0, 100);
-  return json({ comments: rows.map(row => admin ? { ...publicComment(row), status: row.status, moderated_at: row.moderated_at } : publicComment(row)), next_cursor: hasMore ? rows.at(-1).seq : null });
+  return json({ comments: rows.map(row => admin ? { ...publicComment(row), status: row.status, moderated_at: row.moderated_at } : publicComment(row)), next_cursor: hasMore ? rows.at(-1).seq : null, ...(admin ? { counts, documents } : {}) });
+}
+
+async function login(request, env) {
+  const target = new URL(request.url);
+  if (target.protocol !== 'https:' && !(target.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(target.hostname))) fail(400, 'https_required', 'Administrator login requires HTTPS.');
+  const password = secret(env, 'ADMIN_TOKEN');
+  const value = await bodyJSON(request, ['username', 'password'], 2048);
+  if (typeof value.username !== 'string' || typeof value.password !== 'string' || value.password.length > 1024) fail(400, 'invalid_login', 'Enter the administrator account and password.');
+  // Apply the same salted-address rate bucket to accepted and rejected logins.
+  // No account name, password, session token or raw address enters the bucket.
+  await rateLimit(request, env, 'admin-login', 10, 900);
+  const matches = await passwordMatches(value.password, password);
+  if (value.username !== 'admin' || !matches) fail(401, 'unauthorized', 'Administrator authorization is required.');
+  const session = await createAdminSession(db(env), password);
+  return json({ authenticated: true, ...session, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32 });
 }
 async function submitComment(request, env) {
   const value = await bodyJSON(request, ['document', 'nickname', 'body', 'parent_id', 'request_id', 'website']);
@@ -302,8 +339,13 @@ async function route(request, env, url) {
     if (request.method === 'POST') return submitVisit(request, env);
   }
   if (url.pathname.startsWith('/v1/admin/')) {
-    await authorized(request, env);
-    if (url.pathname === '/v1/admin/session' && request.method === 'GET') return json({ authenticated: true, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32 });
+    if (url.pathname === '/v1/admin/login' && request.method === 'POST') return login(request, env);
+    const authorization = await authorized(request, env);
+    if (url.pathname === '/v1/admin/session' && request.method === 'GET') return json({ authenticated: true, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32, ...(authorization.kind === 'session' ? { expires_at: authorization.expires_at } : {}) });
+    if (url.pathname === '/v1/admin/session' && request.method === 'DELETE') {
+      await revokeAdminSession(authorization, env.DB);
+      return json({ logged_out: true });
+    }
     if (url.pathname.startsWith('/v1/admin/articles/')) return articleRequest(request, env, url);
     if (url.pathname === '/v1/admin/comments' && request.method === 'GET') return listComments(url, env, true);
     const moderation = /^\/v1\/admin\/comments\/([^/]+)(?:\/(approve|reject))?$/.exec(url.pathname);
@@ -326,7 +368,7 @@ export default {
       origin = corsOrigin(request, env, url);
       response = request.method === 'OPTIONS' ? new Response(null, { status: 204 }) : await route(request, env, url);
     } catch (error) {
-      response = error instanceof APIError ? json({ error: error.code, message: error.message }, error.status) : json({ error: 'internal_error', message: 'The request could not be completed.' }, 500);
+      response = error instanceof APIError || error instanceof AdminSessionError ? json({ error: error.code, message: error.message }, error.status) : json({ error: 'internal_error', message: 'The request could not be completed.' }, 500);
     }
     const headers = new Headers(response.headers);
     headers.set('Cache-Control', 'no-store');

@@ -75,6 +75,116 @@ test('pending stays private, admin authorization gates moderation, approved XSS 
   assert.equal(approved.nickname,'读者'); assert.match(approved.id,/^[0-9a-f-]{36}$/);
 });
 
+test('administrator login creates an opaque 30-day session and D1 stores only its keyed hash',async context=>{
+  const f=fixture(context,{GITHUB_EDIT_TOKEN:'fictional-edit-token-12345678901234567890'});
+  const now=Date.parse('2026-10-26T12:00:00.000Z'); context.mock.method(Date,'now',()=>now);
+  const login=await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
+  assert.equal(login.status,200); assert.equal(login.data.authenticated,true); assert.equal(login.data.article_editing,true);
+  assert.match(login.data.token,/^bs_[a-f0-9]{64}$/);
+  assert.equal(login.data.expires_at,'2026-11-25T12:00:00.000Z');
+  assert.equal(login.headers.get('Cache-Control'),'no-store'); assert.equal(login.headers.get('Set-Cookie'),null);
+  const row=f.DB.sqlite.prepare('SELECT * FROM admin_sessions').get();
+  assert.deepEqual(Object.keys(row).sort(),['created_at','expires_at','token_hash']);
+  assert.match(row.token_hash,/^[a-f0-9]{64}$/); assert.equal(row.created_at,now); assert.equal(row.expires_at,now+30*86400000);
+  assert.ok(!JSON.stringify(row).includes(login.data.token)); assert.ok(!JSON.stringify(row).includes(token));
+  const Authorization='Bearer '+login.data.token;
+  const restored=await f.request('/v1/admin/session',{Authorization});
+  assert.deepEqual(restored.data,{authenticated:true,article_editing:true,expires_at:login.data.expires_at});
+  assert.equal((await f.request('/v1/admin/comments',{Authorization})).status,200);
+  const otherFixture=fixture(context); const otherLogin=await otherFixture.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
+  assert.notEqual(otherLogin.data.token,login.data.token);
+  assert.equal((await otherFixture.request('/v1/admin/comments',{Authorization})).status,401);
+});
+
+test('session expiry is absolute at 30 days, restores do not extend it and password changes invalidate it',async context=>{
+  const f=fixture(context); let now=Date.parse('2026-10-26T12:00:00.000Z'); context.mock.method(Date,'now',()=>now);
+  const login=await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
+  const Authorization='Bearer '+login.data.token, expiry=Date.parse(login.data.expires_at);
+  now=expiry-1;
+  assert.equal((await f.request('/v1/admin/session',{Authorization})).status,200);
+  assert.equal(f.DB.sqlite.prepare('SELECT expires_at FROM admin_sessions').get().expires_at,expiry);
+  f.env.ADMIN_TOKEN='rotated-fictional-admin-token-12345678901234567890';
+  assert.equal((await f.request('/v1/admin/comments',{Authorization})).status,401);
+  assert.equal((await f.request('/v1/admin/session',{admin:true})).status,401);
+  f.env.ADMIN_TOKEN=token; now=expiry;
+  assert.equal((await f.request('/v1/admin/session',{Authorization})).status,401);
+  assert.equal((await f.request('/v1/admin/comments',{Authorization})).status,401);
+  const fresh=await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
+  assert.equal(fresh.status,200); assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,1);
+});
+
+test('logout revokes the current shared session, does not revoke another device and gates every edit/moderation route',async context=>{
+  const f=fixture(context);
+  const login=async()=>f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
+  const first=(await login()).data, second=(await login()).data;
+  const Authorization='Bearer '+first.token;
+  assert.equal((await f.request('/v1/admin/articles/46',{Authorization})).status,503,'valid sessions reach the separately unconfigured editor');
+  const logout=await f.request('/v1/admin/session',{method:'DELETE',Authorization});
+  assert.equal(logout.status,200); assert.deepEqual(logout.data,{logged_out:true});
+  for(const [path,method] of [['/v1/admin/comments','GET'],['/v1/admin/session','GET'],['/v1/admin/articles/46','GET'],['/v1/admin/articles/46','POST'],['/v1/admin/comments/wp-1/approve','POST'],['/v1/admin/comments/wp-1','DELETE'],['/v1/admin/visits/baseline','POST']]) {
+    assert.equal((await f.request(path,{method,Authorization})).status,401,path);
+  }
+  assert.equal((await f.request('/v1/admin/session',{Authorization:'Bearer '+second.token})).status,200);
+  assert.equal((await f.request('/v1/admin/session',{admin:true})).status,200,'existing CLI password bearer stays supported');
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,1);
+});
+
+test('login validates its bounded body and origin, never creates a session for wrong credentials',async context=>{
+  const f=fixture(context);
+  for(const value of [{username:'admin',password:'wrong'},{username:'reader',password:token}]) {
+    const result=await f.request('/v1/admin/login',{method:'POST',value}); assert.equal(result.status,401); assert.ok(!JSON.stringify(result.data).includes(token));
+  }
+  for(const value of [{username:'admin'},{username:[],password:token},{username:'admin',password:[]},{username:'admin',password:token,expires_at:'2099-01-01'},[],null]) {
+    assert.equal((await f.request('/v1/admin/login',{method:'POST',value})).status,400);
+  }
+  assert.equal((await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:'x'.repeat(3000)}})).status,413);
+  assert.equal((await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token},'Content-Type':'text/plain'})).status,415);
+  assert.equal((await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token},requestOrigin:'https://evil.example'})).status,403);
+  const insecure=await worker.fetch(new Request('http://api.example.test/v1/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'admin',password:token})}),f.env);
+  assert.equal(insecure.status,400); assert.equal((await insecure.json()).error,'https_required');
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,0);
+});
+
+test('login attempts are rate limited using salted address buckets without passwords or raw addresses',async context=>{
+  const f=fixture(context), ip='198.51.100.74';
+  for(let index=0;index<10;index++) assert.equal((await f.request('/v1/admin/login',{method:'POST',ip,value:{username:'admin',password:'wrong'}})).status,401);
+  assert.equal((await f.request('/v1/admin/login',{method:'POST',ip,value:{username:'admin',password:token}})).status,429);
+  const stored=JSON.stringify(f.DB.sqlite.prepare('SELECT * FROM rate_buckets').all());
+  assert.ok(!stored.includes(ip)); assert.ok(!stored.includes(token)); assert.ok(!stored.includes('wrong'));
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,0);
+  assert.equal((await f.request('/v1/admin/login',{method:'POST',ip:'198.51.100.75',value:{username:'admin',password:token}})).status,200);
+});
+
+test('all-comment management returns newest first across statuses, paginates and keeps public readers isolated',async context=>{
+  const f=fixture(context), insert=f.DB.sqlite.prepare("INSERT INTO comments(id,document,nickname,body,status,request_id,request_hash,created_at) VALUES (?,'11',?,?,?,?,'hash','2026-10-25T00:00:00.000Z')");
+  const ids=[];
+  for(let index=0;index<102;index++) {const id=randomUUID(); ids.push(id); insert.run(id,'reader '+index,'text',index%3===0?'pending':index%3===1?'approved':'rejected',randomUUID());}
+  const page=await f.request('/v1/admin/comments',{admin:true});
+  assert.equal(page.status,200); assert.deepEqual(page.data.counts,{all:102,pending:34,approved:34,rejected:34});
+  assert.equal(page.data.comments.length,100); assert.equal(page.data.comments[0].id,ids[101]); assert.equal(page.data.next_cursor,3);
+  const final=await f.request('/v1/admin/comments?status=all&cursor='+page.data.next_cursor,{admin:true});
+  assert.deepEqual(final.data.comments.map(row=>row.id),[ids[1],ids[0]]); assert.equal(final.data.next_cursor,null);
+  const approved=await f.request('/v1/admin/comments?status=approved',{admin:true});
+  assert.equal(approved.data.comments.length,34); assert.ok(approved.data.comments.every(row=>row.status==='approved')); assert.deepEqual(approved.data.counts,page.data.counts);
+  const publicData=(await f.request('/v1/comments?document=11')).data;
+  assert.equal(publicData.comments.length,34); assert.ok(!('counts' in publicData)); assert.ok(!('documents' in publicData));
+  assert.ok(publicData.comments.every(row=>!('status' in row)));
+  const pageTitle=JSON.parse(readFileSync(new URL('../data/public-documents.json',import.meta.url),'utf8')).documents.find(row=>row.id==='215')?.title || '页面 215';
+  assert.deepEqual(page.data.documents,[{id:'11',title:'文章 11',url:'/blog/posts/11/'},{id:'12',title:'文章 12',url:'/blog/posts/12/'},{id:'215',title:pageTitle,url:'/blog/pages/215/'}]);
+});
+
+test('admin document and literal nickname/body search filters cover all rows and counts, reject malformed filters',async context=>{
+  const f=fixture(context), insert=f.DB.sqlite.prepare("INSERT INTO comments(id,document,nickname,body,status,request_id,request_hash,created_at) VALUES (?,?,?,?,?,?,'hash','2026-10-25T00:00:00.000Z')");
+  for(const [document,nickname,body,status] of [['11','Alice','含有 literal%_\\ 文本','pending'],['11','Bob','ALICE replied','approved'],['12','Alice','other doc','rejected'],['215','页面读者','无匹配','approved']]) insert.run(randomUUID(),document,nickname,body,status,randomUUID());
+  const a=(await f.request('/v1/admin/comments?q=alice',{admin:true})).data; assert.equal(a.comments.length,3); assert.deepEqual(a.counts,{all:3,pending:1,approved:1,rejected:1});
+  const b=(await f.request('/v1/admin/comments?document=11&q=alice&status=pending',{admin:true})).data;
+  assert.equal(b.comments.length,1); assert.equal(b.comments[0].nickname,'Alice'); assert.deepEqual(b.counts,{all:2,pending:1,approved:1,rejected:0});
+  const literal=(await f.request('/v1/admin/comments?q='+encodeURIComponent('%_\\'),{admin:true})).data; assert.equal(literal.comments.length,1);
+  const empty=(await f.request('/v1/admin/comments?document=12&q=not-found',{admin:true})).data; assert.equal(empty.comments.length,0); assert.deepEqual(empty.counts,{all:0,pending:0,approved:0,rejected:0});
+  assert.equal((await f.request('/v1/admin/comments?document=999',{admin:true})).status,404);
+  for(const filter of ['status=bad','status=','document=','document=11&document=12','status=all&status=pending','q=a&q=b','q='+encodeURIComponent('x'.repeat(201)),'q='+encodeURIComponent('x\u0000')]) assert.equal((await f.request('/v1/admin/comments?'+filter,{admin:true})).status,400,filter);
+});
+
 test('comment retries and racing duplicate requests are idempotent, conflicting payloads reject',async context=>{
   const f=fixture(context), payload=f.comment();
   const results=await Promise.all(Array.from({length:20},()=>f.post(payload)));
@@ -272,10 +382,10 @@ test('index visits increment site alone and unknown documents cannot enter the c
   assert.equal((await f.request('/v1/visits?document=999')).status,404);
 });
 
-test('Worker admin page keeps tokens in memory and renders user content via textContent',async context=>{
+test('Worker admin page embeds no real credentials and renders user content via textContent',async context=>{
   const f=fixture(context), response=await f.request('/admin',{requestOrigin:null});
   assert.equal(response.status,200); assert.match(response.headers.get('Content-Security-Policy'),/frame-ancestors 'none'/);
-  assert.ok(response.data.includes('body.textContent = comment.body')); assert.ok(!response.data.includes('localStorage')); assert.ok(!response.data.includes('innerHTML'));
+  assert.ok(response.data.includes('body.textContent = comment.body')); assert.ok(!response.data.includes('innerHTML'));
   assert.ok(!response.data.includes(token));
 });
 
@@ -288,7 +398,7 @@ test('offline public importer registers the real 212 documents and rejects priva
   assert.equal(actual.sqlite.prepare('SELECT count(*) AS n FROM legacy_parents').get().n,117);
   assert.deepEqual(actual.sqlite.prepare('PRAGMA foreign_key_check').all(),[]);
   const temporary=mkdtempSync(resolve(tmpdir(),'blog-api-import-')); context.after(()=>rmSync(temporary,{recursive:true,force:true}));
-  mkdirSync(resolve(temporary,'posts')); writeFileSync(resolve(temporary,'posts/11.md'),'---\nid: 11\n---\npublic'); writeFileSync(resolve(temporary,'collection.yaml'),'version: 1\nposts:\n- posts/11.md\npages: []\n');
+  mkdirSync(resolve(temporary,'posts')); writeFileSync(resolve(temporary,'posts/11.md'),'---\nid: 11\ntitle: Public fixture\n---\npublic'); writeFileSync(resolve(temporary,'collection.yaml'),'version: 1\nposts:\n- posts/11.md\npages: []\n');
   writeFileSync(resolve(temporary,'legacy.json'),JSON.stringify({version:1,parents:[{id:'wp-1',document:'11',email:'private@example.test'}]}));
   const result=spawnSync(process.execPath,[new URL('../scripts/import-public.mjs',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1'),'--collection',resolve(temporary,'collection.yaml'),'--legacy',resolve(temporary,'legacy.json'),'--out',resolve(temporary,'out')],{encoding:'utf8'}); assert.notEqual(result.status,0);
 });

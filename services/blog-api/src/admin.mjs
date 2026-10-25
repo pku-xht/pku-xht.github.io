@@ -1,7 +1,8 @@
 import { ADMIN_SCRIPT } from './admin-client.mjs';
 import { adminLoginForm } from './admin-auth.mjs';
+import { ADMIN_STYLE } from './admin-style.mjs';
 
-const STYLE = `:root{color-scheme:light}*{box-sizing:border-box}body{max-width:800px;margin:32px auto;padding:0 20px;background:#fcfbf8;font:16px/1.7 system-ui;color:#202c38}a{color:#1f5d8d}h1{font-size:30px;line-height:1.3}h2{font-size:19px;overflow-wrap:anywhere}input,select,button{font:inherit;padding:8px;max-width:100%}input{width:min(100%,480px);display:block}label{display:block;margin:12px 0}article{border-top:1px solid #dde4eb;padding:18px 0}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}button{margin:0 8px 8px 0}small{color:#586574;overflow-wrap:anywhere}#message{white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:480px){body{margin:24px auto;padding:0 18px}h1{font-size:26px}}\n`;
+const STYLE = ADMIN_STYLE;
 const SCRIPT = ADMIN_SCRIPT;
 const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
@@ -9,18 +10,30 @@ function documentHTML({ apiBase, enabled, style, script, policy = '' }) {
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">${policy}
-<title>博客评论审核 · 徐皓天</title>${style}${script}</head>
+<title>评论管理 · 徐皓天</title>${style}${script}</head>
 <body data-admin-api="${escape(apiBase)}" data-admin-enabled="${enabled}">
-<p><a href="https://pku-xht.github.io/blog/">← 返回博客</a></p><h1>博客评论审核</h1>
-<p>使用管理员密码登录。你可以让浏览器保存密码，下次自动填入。</p>
+<header class="admin-header"><div class="admin-width">
+<a class="identity" href="https://pku-xht.github.io/blog/">徐皓天 <span class="identity-note">/ 博客</span></a>
+<nav class="admin-nav" aria-label="后台导航"><a href="https://pku-xht.github.io/blog/comment/" aria-current="page">评论管理</a><a href="https://pku-xht.github.io/blog/">返回博客 ↗</a></nav>
+</div></header>
+<main class="admin-width">
+<section class="page-intro"><p class="eyebrow">COMMENTS</p><h1>评论管理</h1><p>在这里查看和管理所有文章的留言与回复。</p></section>
 ${adminLoginForm()}
-<section id="management" hidden>
-<label>状态 <select id="status" disabled><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
-<button id="refresh" type="button" disabled>刷新</button><button id="logout" type="button" disabled>退出登录</button>
-<main id="comments"></main><button id="more" type="button" hidden disabled>下一页</button>
-</section>
 <p id="message" role="status" aria-live="polite">${enabled ? '请输入管理员密码后登录。' : '评论管理服务尚未配置。'}</p>
-<noscript><p>评论管理需要启用 JavaScript。</p></noscript></body></html>\n`;
+<section id="management" hidden>
+<div class="management-heading"><p id="summary">正在读取评论概况…</p><div class="management-actions"><button id="refresh" type="button" disabled>刷新评论</button><button id="logout" class="quiet" type="button" disabled>退出登录</button></div></div>
+<div class="comment-filters">
+<label for="status">评论状态<select id="status" disabled><option value="all">全部评论</option><option value="pending">待审核</option><option value="approved">已公开</option><option value="rejected">已拒绝</option></select></label>
+<label for="document-filter">所属文章<select id="document-filter" disabled><option value="">全部文章</option></select></label>
+<label class="filter-search" for="search">搜索评论<input id="search" type="search" maxlength="200" placeholder="搜索昵称或评论内容" autocomplete="off" disabled></label>
+</div>
+<p id="loaded-count" aria-live="polite"></p>
+<div id="comments"></div>
+<p id="empty-state" hidden>没有符合条件的评论。</p>
+<div class="pagination"><button id="more" type="button" hidden disabled>加载更多评论</button></div>
+</section>
+<noscript><p>评论管理需要启用 JavaScript。</p></noscript></main>
+<footer class="admin-footer"><div class="admin-width">徐皓天 · xht37</div></footer></body></html>\n`;
 }
 
 export function staticAdminAssets(apiBase) {
@@ -38,8 +51,8 @@ export function staticAdminAssets(apiBase) {
     html: documentHTML({
       apiBase, enabled: Boolean(apiBase),
       policy: '<meta http-equiv="Content-Security-Policy" content="' + escape(policy) + '">',
-      style: '<link rel="stylesheet" href="/blog/comment/admin.css?v=2">',
-      script: '<script defer src="/blog/comment/admin.js?v=2"></script>',
+      style: '<link rel="stylesheet" href="/blog/comment/admin.css?v=3">',
+      script: '<script defer src="/blog/comment/admin.js?v=3"></script>',
     }),
     script: SCRIPT,
     style: STYLE,
@@ -49,7 +62,7 @@ export function staticAdminAssets(apiBase) {
 export function adminPage() {
   const nonce = crypto.randomUUID().replaceAll('-', '');
   const html = documentHTML({ apiBase: '', enabled: true, style: `<style nonce="${nonce}">${STYLE}</style>`, script: '' });
-  return new Response(html.replace('</body>', `<script nonce="${nonce}">${SCRIPT}</script></body>`), { headers: {
+  return new Response(html.replace('</body>', () => `<script nonce="${nonce}">${SCRIPT}</script></body>`), { headers: {
     'Content-Type': 'text/html; charset=utf-8',
     'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${nonce}'; style-src 'nonce-${nonce}'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'`,
   } });

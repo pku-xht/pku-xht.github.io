@@ -8,6 +8,7 @@ export function sqliteD1(path = ':memory:') {
   sqlite.exec('PRAGMA foreign_keys = ON;');
   if (!sqlite.prepare("SELECT name FROM sqlite_master WHERE name = 'public_documents'").get()) sqlite.exec(readFileSync(new URL('../migrations/0001_initial.sql', import.meta.url), 'utf8'));
   if (!sqlite.prepare('PRAGMA table_info(comments)').all().some(row => row.name === 'body_html')) sqlite.exec(readFileSync(new URL('../migrations/0002_unified_comments.sql', import.meta.url), 'utf8'));
+  if (!sqlite.prepare("SELECT name FROM sqlite_master WHERE name = 'admin_sessions'").get()) sqlite.exec(readFileSync(new URL('../migrations/0003_admin_sessions.sql', import.meta.url), 'utf8'));
   const database = {
     sqlite, writes: 0, lastError: null,
     prepare(sql) {

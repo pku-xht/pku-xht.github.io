@@ -1,5 +1,6 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 const args = process.argv.slice(2);
 function option(name, fallback) { const at = args.indexOf(name); return at < 0 ? fallback : args[at + 1]; }
@@ -10,6 +11,7 @@ const explicitLegacyFile = option('--legacy');
 const legacyFile = explicitLegacyFile || resolve(output, 'legacy-parents.json');
 const content = await readFile(collection, 'utf8');
 const documents = [];
+const headers = [];
 const ids = new Set();
 for (const line of content.split(/\r?\n/)) {
   const match = /^\s*-\s*(posts|pages)\/([1-9][0-9]*)\.md\s*$/.exec(line);
@@ -20,9 +22,25 @@ for (const line of content.split(/\r?\n/)) {
   if (ids.has(match[2])) throw new Error('Duplicate document ID: '+match[2]);
   const source = await readFile(resolve(dirname(collection), `${match[1]}/${match[2]}.md`), 'utf8');
   if (!new RegExp(`^id: ${match[2]}$`, 'm').test(source)) throw new Error('Source ID does not match collection: '+match[2]);
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(source);
+  if (!frontmatter) throw new Error('Missing source metadata: '+match[2]);
+  headers.push(frontmatter[1]);
   ids.add(match[2]); documents.push({ id: match[2], kind: match[1] === 'posts' ? 'post' : 'page' });
 }
 if (!documents.length) throw new Error('No public documents in collection.');
+// Reuse the canonical YAML loader, including quoted and multiline titles.
+const titleScript = `import json, sys
+sys.path.insert(0, sys.argv[1])
+from blog_sources import _yaml
+titles = [_yaml(text, "public document metadata").get("title") for text in json.load(sys.stdin)]
+if any(not isinstance(title, str) or not title.strip() for title in titles):
+    raise ValueError("Every registered document needs a title")
+print(json.dumps(titles, ensure_ascii=False))
+`;
+const titleResult = spawnSync(process.env.BLOG_PYTHON || 'python', ['-S', '-X', 'utf8', '-c', titleScript, resolve(project, 'tools')], { input: JSON.stringify(headers), encoding: 'utf8' });
+if (titleResult.status !== 0) throw new Error('Could not read public source titles with the canonical YAML loader.');
+const titles = JSON.parse(titleResult.stdout);
+documents.forEach((row, index) => { row.title = titles[index]; });
 const parents = [];
 let legacyText = null;
 try { legacyText = await readFile(resolve(legacyFile), 'utf8'); }
