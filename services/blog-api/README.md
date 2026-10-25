@@ -2,7 +2,7 @@
 
 Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collection.yaml` 中的 211 篇文章和 1 个页面。评论统一存储、读取和管理于 D1；文章仍以仓库内每篇 Markdown + YAML 为正式源。读者填写昵称和正文即可提交评论，所有新提交必须由站主审核后公开。
 
-本轮统一评论、密码表单与在线文章编辑是**本地实现，尚未部署**。先前线上版本及部署证据保存在迁移记录中，不能用于证明本轮已上线。最新状态与验证见 [统一博客批次](../../migration/unified-blog-2026-10-25.md)。正式运行命令只维护在[根 README](../../README.md#build-and-check)，本文件说明接口与不变量。
+统一评论、密码表单与在线文章编辑已于 **2026-10-26 部署**。真实编辑接口已完成保存、自动构建与 Pages 发布、版本冲突拒绝和原文恢复验证；Chrome 到 Worker 域名的连接仍在由用户排查。最新证据与验收边界见 [统一博客批次](../../migration/unified-blog-2026-10-25.md)。正式运行命令只维护在[根 README](../../README.md#build-and-check)，本文件说明接口与不变量。
 
 ## 接口
 
@@ -79,7 +79,7 @@ Chrome 可依其设置提示保存并在以后自动填入；不能保证每台�
 
 不同保存请求进入串行队列，不能以“取消上次任务”丢弃文章修改。同文竞争修改须重新比较，不能自动覆盖。浏览器轮询 publication 接口显示提交、失败或已上线；候选分支创建、主干提交和实际上线是不同状态。`source_saved` 区分正文已保存但 Pages 失败与尚未写入正式源；前者需重新载入版本，并在 Actions 详情重新运行失败工作流。相同 `request_id` 重试只复用原候选，不会重新触发发布。`revision` 必须属于指定文章的保存记录。失败详情只给固定仓库的 Actions 链接，不向页面暴露 GitHub 凭据。
 
-编辑后端另需 Worker secret `GITHUB_EDIT_TOKEN`，只允许目标仓库的 Contents 读写、Commit statuses 只读和默认 Metadata 只读。管理员密码不具有 GitHub 写权限，也不充当此 secret。工作流自带令牌仅授予 contents/statuses/pages write。完整设置与部署顺序见[根 README](../../README.md#cloudflare-and-editor-configuration)。本轮尚未配置、部署或实际验收新的编辑授权。
+编辑后端使用 Worker secret `GITHUB_EDIT_TOKEN`，只允许目标仓库的 Contents 读写、Commit statuses 只读和默认 Metadata 只读，已由站主在 Cloudflare 中加密保存。管理员密码不具有 GitHub 写权限，也不充当此 secret。工作流自带令牌仅授予 contents/statuses/pages write。完整设置与部署顺序见[根 README](../../README.md#cloudflare-and-editor-configuration)；真实授权已通过文章读取和两次候选发布验证。
 
 GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响应都停止处理，不跟随重定向或转发凭据。浏览器支持的 `redirect: error` 在 Workers 中会在请求发出前抛出异常；部署前须执行真实 workerd 回归，不能仅用 Node 模拟 fetch 代替运行时兼容性验证。
 
