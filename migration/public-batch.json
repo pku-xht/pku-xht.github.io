@@ -5782,7 +5782,7 @@
   ],
   "friends": {
     "path": "/blog/friends/",
-    "count": 25,
+    "count": 20,
     "source_file": "content/blog/friends.yaml"
   },
   "comments": {

@@ -67,7 +67,7 @@ The follow-up comment workspace, shared blog styling and 30-day administrator se
 - `content/blog/collection.yaml`: the exact registered source set. Missing, duplicate or unregistered Markdown fails the build.
 - `content/blog/resources.yaml`: maintained resource paths, source URLs, sizes and hashes; files live in `blog/media/`.
 - `content/blog/comments/index.yaml` and `<ID>.yaml`: the preserved 117 previously public comments, including 43 replies. These are import and fidelity evidence, not a second runtime comment store. Do not overwrite them with moderated or new backend data.
-- `content/blog/friends.yaml`: the 25 maintained friend links, in their existing order.
+- `content/blog/friends.yaml`: the 20 maintained friend links, preserving the remaining entries' relative order. Current updates and removals are recorded in [migration/friends-2026-10-26.md](migration/friends-2026-10-26.md).
 - `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch.
 - `tools/blog_sources.py`, `tools/build_blog.py`, `tools/render_math.cjs`: offline source loading, CommonMark/HTML/TeX preservation and static generation. Dependencies are vendored; ordinary builds need no network or installation.
 - `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
