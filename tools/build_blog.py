@@ -517,6 +517,30 @@ def main():
         write(tag["path"], page(tag["name"], f'{tag["name"]}标签的全部公开文章。', tag["path"], body, active="标签", features=features))
     body = '<section class="page-intro"><p class="eyebrow">FRIENDS</p><h1>友情链接</h1><p>保留旧站友链名单及原有顺序。</p></section>' + friend_list(friends)
     write("/blog/friends/", page("友情链接", "旧博客的友情链接。", "/blog/friends/", body, active="友链", features=features))
+    admin_result = subprocess.run(
+        ["node", str(ROOT / "tools/render_comment_admin.mjs")],
+        input=json.dumps({"api_base": features["comments"]["api_base"]}),
+        text=True, encoding="utf-8", capture_output=True, check=True,
+    )
+    admin_assets = json.loads(admin_result.stdout)
+    if set(admin_assets) != {"html", "script", "style"} or not all(isinstance(value, str) and value for value in admin_assets.values()):
+        raise ValueError("Comment admin renderer returned invalid assets")
+    write("/blog/comment/", admin_assets["html"])
+    admin_directory = ROOT / "blog/comment"
+    (admin_directory / "admin.js").write_text(admin_assets["script"], encoding="utf-8")
+    (admin_directory / "admin.css").write_text(admin_assets["style"], encoding="utf-8")
+    report["comment_admin"] = {
+        "path": "/blog/comment/", "api_base": features["comments"]["api_base"],
+        "script": "/blog/comment/admin.js", "style": "/blog/comment/admin.css",
+        "source_sha256": {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in [ROOT / "tools/render_comment_admin.mjs", *sorted((ROOT / "services/blog-api/src").glob("admin*.mjs"))]
+        },
+        "asset_sha256": {
+            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in sorted(admin_directory.iterdir()) if path.is_file()
+        },
+    }
     report["totals"] = {key: sum(p[key] for p in report["posts"] + report["pages"]) for key in ["formulas", "code_blocks", "headings", "images"]}
     (ROOT / "migration/public-batch.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"posts": len(posts), "pages": len(pages), "categories": len(report["categories"]), "unique_formulas": len(formulas), **report["totals"]}, ensure_ascii=False))

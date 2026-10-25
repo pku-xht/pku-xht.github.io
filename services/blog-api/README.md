@@ -20,7 +20,7 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。这里只登记正式�
 | `GET /v1/visits?document=1154` | 统计状态和基线加增量；未初始化时值为 `null` |
 | `POST /v1/visits` | 仅在明确启用并已导入基线时记录幂等访问事件 |
 | `POST /v1/admin/visits/baseline` | 未来切换时，显式确认并原子导入完整基线 |
-| `GET /admin` | Worker 自带的轻量评论审核页 |
+| `GET /admin` | Worker 上的备用审核入口，与站内 `/blog/comment/` 共享管理界面 |
 
 公开评论形状：
 
@@ -44,15 +44,19 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。这里只登记正式�
 
 管理接口统一要求 `Authorization: Bearer <ADMIN_TOKEN>`。`ADMIN_TOKEN` 与 `RATE_LIMIT_SALT` 均至少 32 个字符，放在 Worker secrets 或本机进程环境中，不能写入本公开仓库（包括忽略目录）。不要用 GitHub OAuth、昵称或前端开关冒充管理员权限。
 
-`/admin` 的令牌输入在载入后清空；令牌仅存在当前页面内存，刷新或离开即失效，不放 URL、Cookie、localStorage 或 sessionStorage。用户评论通过 DOM `textContent` 渲染；页面有 nonce CSP，禁止外部脚本、嵌入与表单提交。删除会明确提示同文新回复一并删除。
+管理页的令牌输入在载入后清空；令牌仅存在当前页面内存，刷新或离开即失效，不放 URL、Cookie、localStorage 或 sessionStorage。清除或离开后，正在返回的旧请求也不会重新把待审内容显示到页面。用户评论通过 DOM `textContent` 渲染，删除会明确提示同文新回复一并删除。
 
-当前审核入口为 [评论管理页](https://xht37-blog-api.pku-xht-github-io.workers.dev/admin)。本机管理员令牌的备份位于仓库外 `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`，由 Windows DPAPI 加密，只能在创建它的 Windows 用户下解密。在仓库根目录亲自执行以下命令，取出令牌后粘贴到管理页，点击“载入”；选择待审核评论后点击“公开”或“拒绝及隐藏回复”。不要把令牌发到聊天或写入本仓库：
+站主选定的审核入口为 [站内评论管理页](https://pku-xht.github.io/blog/comment)。GitHub Pages 会为目录补上末尾 `/`，管理界面始终留在该地址；仍使用原管理员令牌。Worker 的 [原管理地址](https://xht37-blog-api.pku-xht-github-io.workers.dev/admin) 也可使用。本机管理员令牌的备份位于仓库外 `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`，由 Windows DPAPI 加密，只能在创建它的 Windows 用户下解密。在仓库根目录亲自执行以下命令，取出令牌后粘贴到管理页，点击“载入”；选择待审核评论后点击“公开”或“拒绝及隐藏回复”。不要把令牌发到聊天或写入本仓库：
 
 ```powershell
 pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
 ```
 
 不带 `-Reveal` 的脚本只显示取用说明，不显示令牌。`rate-limit-salt.dpapi` 同样保存在该私有目录中。Cloudflare 的真实 secrets 已通过 stdin 设置，公开源文件中不包含它们。
+
+站内页由正式博客构建流程生成 `blog/comment/index.html`、`admin.js` 和 `admin.css`。唯一界面源为 `src/admin.mjs` 与 `src/admin-client.mjs`，`tools/render_comment_admin.mjs` 只接收公开的 `api_base` 配置；不接收凭据或评论。客户端作为原始脚本字符串共享，避免 Worker 打包器改写函数后再序列化而产生未定义辅助变量。
+
+静态页通过 meta CSP 只加载本地脚本、样式，且只连接固定的 Worker origin；API 和密码不从 URL 参数读取。未配置 API 时控件禁用。页面声明 `noindex` 和 `no-referrer`；外站嵌入时禁止输入密码，同源窄屏检查仍可使用。Worker 入口继续使用 nonce CSP 和禁止嵌入的响应头。生成器记录共享源及产物哈希，校验器会拒绝陈旧或被手改的管理页。
 
 评论初始限制为每个地址 15 分钟最多 5 次新请求，Visits 为每分钟最多 120 次。新评论入库与占用频控额度在同一事务中完成，相同请求并发重试只占一次额度。数据库只在频控桶中保存带私密盐的地址 SHA-256，不保存或输出原 IP；在后续写请求中清理过期一天以上的桶，无后续请求时没有额外定时清理。Cloudflare 入口的 `CF-Connecting-IP` 作为地址来源；本地桥接强制使用本机连接地址，忽略调用者伪造的该头。所有 JSON 请求都以流式读取强制限制在 64KiB 内，不依赖客户端声明的 Content-Length。
 
@@ -63,10 +67,12 @@ pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
 使用 Node 24.6+：
 
 ```sh
-node --test services/blog-api/test/worker.test.mjs
+node --test services/blog-api/test/worker.test.mjs services/blog-api/test/admin-client.test.mjs
 ```
 
 测试执行真实 SQLite 的外键、唯一约束、事务、JSON1 和访问计数触发器；`node:sqlite` 仅用于本地适配，Worker 运行时代码不依赖它。测试覆盖待审隔离、审核权限、同文父节点、子树处理、XSS 文字、CORS、频控、幂等及并发计数、基线防覆盖和默认关闭零写库。它不是线上 D1／Cloudflare 实际部署验收。
+
+管理客户端测试另覆盖固定跨源 API、Bearer header、纯文本渲染、审核操作、分页及清除／离开时的迟到响应。真实打包回归使用 esbuild 的 `keepNames:true` 打包实际 Worker，再在独立浏览器作用域执行 `/admin` 的内联脚本；可通过 `BLOG_ESBUILD_MODULE` 指定现有官方 Wrangler 工具链中的 `esbuild/lib/main.js`。依赖缺失时该项明确跳过，本轮发布验证已实际执行并通过，不能把跳过当成通过。
 
 无需 npm 的本地 API 桥接：先在启动进程的环境中设置仅供本地的 `ADMIN_TOKEN` 与 `RATE_LIMIT_SALT`，再运行：
 

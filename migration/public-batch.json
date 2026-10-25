@@ -5900,6 +5900,22 @@
     "comments_enabled": true,
     "visits_enabled": false
   },
+  "comment_admin": {
+    "path": "/blog/comment/",
+    "api_base": "https://xht37-blog-api.pku-xht-github-io.workers.dev",
+    "script": "/blog/comment/admin.js",
+    "style": "/blog/comment/admin.css",
+    "source_sha256": {
+      "tools/render_comment_admin.mjs": "a8c6245795a034c98822cb81acb8ffa8d3804cf9def2fbf19d486e24892c045c",
+      "services/blog-api/src/admin-client.mjs": "82514382bd699b9bded5801a112472c2d751fc8f62bb93006f5282d98035fabe",
+      "services/blog-api/src/admin.mjs": "37b5d3e7620023bb5730e3dae395e2bb9a2991a1879583e10325b675555a9d5a"
+    },
+    "asset_sha256": {
+      "blog/comment/admin.css": "a016649c2718f66b5609379d68d39e7cc6fe45445b46a828ec3c94241ddf19ea",
+      "blog/comment/admin.js": "b502eca2df0d56c96e60eeb8c4f816b55665c436d0a27b4a63c60911d7aa9fe0",
+      "blog/comment/index.html": "de1648e4abee62cfe4f41e2363d2b284164fd4b26287b4a958646e1b48869842"
+    }
+  },
   "totals": {
     "formulas": 8961,
     "code_blocks": 609,

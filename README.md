@@ -68,6 +68,7 @@ The owner selected **C · personal blog**: warm paper, serif headings, excerpt l
 - `content/blog/comments/index.yaml` and `<post-ID>.yaml`: the registered historical public-comment archives, preserving original HTML, names, full dates and reply IDs. They contain no private author metadata or new pending comments.
 - `content/blog/friends.yaml`: the maintained 25 original friend links, in their original order.
 - `content/blog/features.yaml`: explicit comment/Visits switches and public API URLs. Comments are enabled against the verified Cloudflare backend; Visits stays disabled. All new comments require moderation.
+- `/blog/comment/`: the owner's comment-management page, generated with its local JavaScript/CSS from the shared UI in `services/blog-api/src/admin*.mjs`. It uses the existing administrator password and is omitted from public navigation and search indexing.
 - `tools/blog_sources.py`: safe YAML loading and CommonMark rendering with raw TeX and complex HTML preservation. Pure Python dependencies are pinned in `tools/vendor/python/`.
 - `tools/build_blog.py` and `tools/render_math.cjs`: offline generation of the blog, archive, article/history routes, category lists, static tag pages and friend links, including archived discussions.
 - `blog/blog.css` and `blog/blog.js`: the selected layout, title/excerpt/category/tag search and code-copy enhancement. Articles, category lists and archive remain readable without JavaScript.

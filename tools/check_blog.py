@@ -201,6 +201,57 @@ def read_document(path):
     return Document(path.read_text(encoding="utf-8")).root
 
 
+def check_comment_admin(report, feature):
+    directory = ROOT / "blog/comment"
+    expected_files = {directory / name for name in ("index.html", "admin.js", "admin.css")}
+    assert set(directory.iterdir()) == expected_files, "missing or stale comment-management assets"
+    metadata = report["comment_admin"]
+    assert metadata["path"] == "/blog/comment/" and metadata["api_base"] == feature["api_base"]
+    assert metadata["script"] == "/blog/comment/admin.js" and metadata["style"] == "/blog/comment/admin.css"
+    sources = {ROOT / "tools/render_comment_admin.mjs", *list((ROOT / "services/blog-api/src").glob("admin*.mjs"))}
+    for key, files in (("source_sha256", sources), ("asset_sha256", expected_files)):
+        expected = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
+        assert metadata[key] == expected, (key, "comment management needs rebuilding from shared sources")
+    document = read_document(directory / "index.html")
+    elements = list(nodes(document))
+    bodies = [node for node in elements if node.tag == "body"]
+    assert len(bodies) == 1 and bodies[0].attrs.get("data-admin-api") == feature["api_base"], "management API differs from fixed configuration"
+    assert bodies[0].attrs.get("data-admin-enabled") == str(bool(feature["api_base"])).lower()
+    metas = {node.attrs.get("name"): node.attrs.get("content", "") for node in elements if node.tag == "meta"}
+    assert "noindex" in metas.get("robots", "").split(",") and metas.get("referrer") == "no-referrer"
+    policies = [node.attrs.get("content", "") for node in elements if node.tag == "meta" and node.attrs.get("http-equiv", "").lower() == "content-security-policy"]
+    assert len(policies) == 1, "management page needs its static CSP"
+    policy = {parts[0]: parts[1:] for value in policies[0].split(";") if (parts := value.split())}
+    for directive in ("default-src", "base-uri", "form-action"):
+        assert policy.get(directive) == ["'none'"], (directive, "unsafe management policy")
+    for directive in ("script-src", "style-src"):
+        assert policy.get(directive) == ["'self'"], (directive, "management must use local assets")
+    endpoint = urlsplit(feature["api_base"])
+    if endpoint.netloc:
+        hostname = endpoint.hostname.lower()
+        authority = f"[{hostname}]" if ":" in hostname else hostname
+        if endpoint.port and endpoint.port != {"https": 443, "http": 80}[endpoint.scheme]:
+            authority += f":{endpoint.port}"
+        connect = f"{endpoint.scheme}://{authority}"
+    else:
+        connect = "'none'"
+    assert policy.get("connect-src") == [connect], "management may only connect to its fixed backend"
+    assert not any(node.tag == "iframe" or node.attrs.get("http-equiv", "").lower() == "refresh" for node in elements), "management must stay at its own route"
+    scripts = [node for node in elements if node.tag == "script"]
+    styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
+    assert len(scripts) == len(styles) == 1
+    assert scripts[0].attrs.get("src") == "/blog/comment/admin.js?v=1" and not content(scripts[0]).strip()
+    assert styles[0].attrs.get("href") == "/blog/comment/admin.css?v=1"
+    assert not any(key.lower().startswith("on") for node in elements for key in node.attrs), "inline event handlers on management page"
+    by_id = {node.attrs["id"]: node for node in elements if "id" in node.attrs}
+    assert {"token", "load", "logout", "status", "message", "comments", "more"} <= set(by_id)
+    assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "off"
+    assert not by_id["token"].attrs.get("value") and not content(by_id["comments"]).strip(), "private admin data must not be serialized"
+    assert "disabled" in by_id["token"].attrs and "disabled" in by_id["load"].attrs
+    client = (directory / "admin.js").read_text(encoding="utf-8")
+    assert not re.search(r"\b(?:localStorage|sessionStorage|URLSearchParams)\b|document\.cookie|location\.(?:search|hash)", client), "management credential or API must not use storage or URL parameters"
+
+
 def assert_routes(actual, expected, label):
     assert Counter(actual) == Counter(expected), (label, "missing, duplicate or unexpected entries", Counter(expected) - Counter(actual), Counter(actual) - Counter(expected))
     assert len(actual) == len(set(actual)), (label, "duplicate entries")
@@ -760,8 +811,10 @@ def main(argv=None):
     friends_path = ROOT / "blog/friends/index.html"
     check_friends_page(read_document(friends_path), friends)
     assert report["friends"] == {"path": "/blog/friends/", "count": len(friends), "source_file": "content/blog/friends.yaml"}, "friend-link report differs"
+    check_comment_admin(report, features["comments"])
+    comment_admin_path = ROOT / "blog/comment/index.html"
     pages = list((ROOT / "blog").rglob("*.html"))
-    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path} | expected_category_files | expected_tag_files | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
+    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
     assert set(pages) == expected_pages, "missing or stale generated blog HTML"
     for path in pages:
         document = Document(path.read_text(encoding="utf-8")).root

@@ -76,6 +76,11 @@ class MarkdownSourcesTests(unittest.TestCase):
         (tools / "vendor/katex").mkdir(parents=True)
         shutil.copyfile(PROJECT / "tools/render_math.cjs", tools / "render_math.cjs")
         shutil.copyfile(PROJECT / "tools/vendor/katex/katex.cjs", tools / "vendor/katex/katex.cjs")
+        shutil.copyfile(PROJECT / "tools/render_comment_admin.mjs", tools / "render_comment_admin.mjs")
+        admin_sources = self.project / "services/blog-api/src"
+        admin_sources.mkdir(parents=True)
+        for source in (PROJECT / "services/blog-api/src").glob("admin*.mjs"):
+            shutil.copyfile(source, admin_sources / source.name)
         # No migration/sources directory exists: none of the original JSON can be a build input.
         (self.project / "migration").mkdir()
         for relative in ("assets/favicon.svg", "assets/x-script-icon.svg"):
@@ -107,6 +112,38 @@ class MarkdownSourcesTests(unittest.TestCase):
                 check_blog.main(list(arguments))
         finally:
             check_blog.ROOT = original_root
+
+    def test_comment_management_is_generated_and_uses_only_the_configured_api(self):
+        self.prepare_build()
+        self.build()
+        self.check()
+        admin = self.project / "blog/comment/index.html"
+        self.assertIn('data-admin-enabled="false"', admin.read_text(encoding="utf-8"))
+        features = self.content / "features.yaml"
+        features.write_text(features.read_text(encoding="utf-8").replace("api_base: ''", "api_base: 'https://comments.example.test'", 1), encoding="utf-8")
+        self.build()
+        self.check()
+        document = admin.read_text(encoding="utf-8")
+        self.assertIn('data-admin-enabled="true"', document)
+        self.assertIn('data-admin-api="https://comments.example.test"', document)
+        # Closing public submissions must not lock the owner out of moderation.
+        self.assertIn('data-comments-enabled="false"', (self.project / "blog/posts/7/index.html").read_text(encoding="utf-8"))
+        admin.write_text(document.replace('data-admin-api="https://comments.example.test"', 'data-admin-api="https://unexpected.example"'), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+
+    def test_shared_admin_client_changes_require_a_rebuild(self):
+        self.prepare_build()
+        self.build()
+        client = self.project / "services/blog-api/src/admin-client.mjs"
+        value = client.read_text(encoding="utf-8")
+        marker = "// isolated management-source rebuild evidence"
+        client.write_text(value.replace("function initAdmin() {", "function initAdmin() {\n  " + marker, 1), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+        self.build()
+        self.check()
+        self.assertIn(marker, (self.project / "blog/comment/admin.js").read_text(encoding="utf-8"))
 
     def test_markdown_preserves_literal_escapes_tex_and_exact_code(self):
         current = {"id": 7, "content_html": render_markdown(BODY)}
