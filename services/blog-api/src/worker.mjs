@@ -182,6 +182,18 @@ async function submitComment(request, env) {
 async function moderate(request, env, id, action) {
   if (!UUID.test(id)) fail(404, 'not_found', 'Comment not found.');
   const database = db(env);
+  if (action === 'delete_leaf') {
+    // Check for replies and delete this one row in the same SQLite statement.
+    // A reply that wins the race blocks cleanup; a later submit revalidates its parent.
+    const result = await database.prepare(`DELETE FROM comments WHERE id = ?
+      AND NOT EXISTS (SELECT 1 FROM comments reply WHERE reply.parent_id = comments.id AND reply.document = comments.document)
+      RETURNING id`).bind(id).all();
+    if (!result.results.length) {
+      if (!(await database.prepare('SELECT id FROM comments WHERE id = ?').bind(id).first())) fail(404, 'not_found', 'Comment not found.');
+      fail(409, 'comment_has_replies', 'Comment has replies and was not deleted.');
+    }
+    return json({ id, deleted: 1 });
+  }
   const comment = await database.prepare('SELECT document, parent_id FROM comments WHERE id = ?').bind(id).first();
   if (!comment) fail(404, 'not_found', 'Comment not found.');
   const now = new Date().toISOString();
@@ -287,7 +299,11 @@ async function route(request, env, url) {
     if (url.pathname === '/v1/admin/comments' && request.method === 'GET') return listComments(url, env, true);
     const moderation = /^\/v1\/admin\/comments\/([^/]+)(?:\/(approve|reject))?$/.exec(url.pathname);
     if (moderation && request.method === 'POST' && moderation[2]) return moderate(request, env, moderation[1], moderation[2]);
-    if (moderation && request.method === 'DELETE' && !moderation[2]) return moderate(request, env, moderation[1], 'delete');
+    if (moderation && request.method === 'DELETE' && !moderation[2]) {
+      const condition = url.searchParams.getAll('only_if_no_replies');
+      if (condition.length > 1 || (condition.length === 1 && condition[0] !== 'true')) fail(400, 'invalid_delete_condition', 'only_if_no_replies must be true when supplied.');
+      return moderate(request, env, moderation[1], condition.length ? 'delete_leaf' : 'delete');
+    }
     if (url.pathname === '/v1/admin/visits/baseline' && request.method === 'POST') return importBaseline(request, env);
   }
   fail(404, 'not_found', 'Endpoint not found.');

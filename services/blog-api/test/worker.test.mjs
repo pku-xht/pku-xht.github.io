@@ -109,6 +109,80 @@ test('rejection hides a subtree and deletion removes only that document subtree'
   assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM legacy_parents').get().n,2);
 });
 
+test('conditional cleanup requires admin, preserves replies and deletes only a leaf',async context=>{
+  const f=fixture(context);
+  const parent=(await f.post(f.comment())).data.id; await f.approve(parent);
+  const child=(await f.post(f.comment({parent_id:parent}))).data.id;
+  const path=id=>'/v1/admin/comments/'+id+'?only_if_no_replies=true';
+  assert.equal((await f.request(path(child),{method:'DELETE',requestOrigin:null})).status,401);
+  const blocked=await f.request(path(parent),{method:'DELETE',admin:true,requestOrigin:null});
+  assert.equal(blocked.status,409); assert.equal(blocked.data.error,'comment_has_replies');
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,2);
+  assert.equal(f.DB.sqlite.prepare('SELECT status FROM comments WHERE id = ?').get(child).status,'pending');
+  for (const condition of ['false', '', 'true&only_if_no_replies=true', 'true&only_if_no_replies=false']) {
+    const invalid=await f.request('/v1/admin/comments/'+parent+'?only_if_no_replies='+condition,{method:'DELETE',admin:true,requestOrigin:null});
+    assert.equal(invalid.status,400); assert.equal(invalid.data.error,'invalid_delete_condition');
+    assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,2);
+  }
+  const leaf=await f.request(path(child),{method:'DELETE',admin:true,requestOrigin:null});
+  assert.equal(leaf.status,200); assert.deepEqual(leaf.data,{id:child,deleted:1});
+  assert.equal(f.DB.sqlite.prepare('SELECT id FROM comments').get().id,parent);
+  const final=await f.request(path(parent),{method:'DELETE',admin:true,requestOrigin:null});
+  assert.equal(final.status,200); assert.equal(final.data.deleted,1);
+  assert.equal((await f.request(path(parent),{method:'DELETE',admin:true,requestOrigin:null})).status,404);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,0);
+});
+
+test('conditional cleanup and a racing reply cannot delete or orphan the reply',async context=>{
+  const f=fixture(context);
+  const parent=(await f.post(f.comment())).data.id; await f.approve(parent);
+  const originalPrepare=f.DB.prepare;
+  let reply;
+  f.DB.prepare=function(sql) {
+    const statement=originalPrepare.call(this,sql);
+    if (!/^DELETE FROM comments WHERE id = \?/i.test(sql)) return statement;
+    const wrap=prepared=>({
+      ...prepared,
+      bind(...values) { return wrap(prepared.bind(...values)); },
+      async all() {
+        // Force a valid reply to commit immediately before the conditional DELETE.
+        if (!reply) reply=await f.post(f.comment({parent_id:parent}));
+        return prepared.all();
+      },
+    });
+    return wrap(statement);
+  };
+  const deleted=await f.request('/v1/admin/comments/'+parent+'?only_if_no_replies=true',{method:'DELETE',admin:true,requestOrigin:null});
+  assert.equal(reply.status,202);
+  assert.equal(deleted.status,409); assert.equal(deleted.data.error,'comment_has_replies');
+  assert.equal(f.DB.sqlite.prepare('SELECT parent_id FROM comments WHERE id = ?').get(reply.data.id).parent_id,parent);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,2);
+
+  const g=fixture(context);
+  const otherParent=(await g.post(g.comment())).data.id; await g.approve(otherParent);
+  const otherPrepare=g.DB.prepare;
+  let cleanup;
+  g.DB.prepare=function(sql) {
+    const statement=otherPrepare.call(this,sql);
+    if (!/^SELECT 1 AS found WHERE/i.test(sql)) return statement;
+    const wrap=prepared=>({
+      ...prepared,
+      bind(...values) { return wrap(prepared.bind(...values)); },
+      async first() {
+        const found=await prepared.first();
+        // Force cleanup after submit's early parent read but before its INSERT batch.
+        cleanup=await g.request('/v1/admin/comments/'+otherParent+'?only_if_no_replies=true',{method:'DELETE',admin:true,requestOrigin:null});
+        return found;
+      },
+    });
+    return wrap(statement);
+  };
+  const lateReply=await g.post(g.comment({parent_id:otherParent}));
+  assert.equal(cleanup.status,200); assert.equal(cleanup.data.deleted,1);
+  assert.equal(lateReply.status,409); assert.equal(lateReply.data.error,'invalid_parent');
+  assert.equal(g.DB.sqlite.prepare('SELECT count(*) AS n FROM comments').get().n,0);
+});
+
 test('CORS permits only exact origins, requires public POST Origin and accepts same-origin admin',async context=>{
   const f=fixture(context);
   for (const requestOrigin of ['https://evil.example','https://pku-xht.github.io.evil.example','null',null]) {

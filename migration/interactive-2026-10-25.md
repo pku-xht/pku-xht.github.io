@@ -29,17 +29,33 @@
 - 完整构建与 `--original-snapshot` 校验通过：原 212 篇文章/页面、评论和友链三类来源独立对照，311 页索引、链接、标签归属、评论线程和正文一致。正文仍为 8,961 处公式、609 个代码块、940 个 code 元素、1,680 个标题、5 张表格、40 张原图与 5 个附件；评论公式单独计数。
 - 11 项 Markdown 源隔离测试、10 项评论源测试、11 项前端 DOM/网络行为测试通过。原隔离测试夹具同步提供空评论和友链证据，继续证明没有原始快照时也能构建和默认校验。
 - 后端 19 项真实 SQLite 测试通过，覆盖权限、待审隔离、回复归属、纯文本 XSS、CORS、频控、并发幂等、独立旧基线、原子增量和 Visits 关闭零写入。
-- Wrangler 4.152.0 官方 dry-run 打包成功，未上传或创建 Cloudflare 资源。这不是实际线上 D1 验收。
+- 部署前 Wrangler 4.152.0 官方 dry-run 打包成功；该阶段仅验证打包，后续真实部署结果单独记录于下文。
 - 真实本地浏览器已提交一条虚构测试留言：提交后显示“等待审核”，公开树不出现；在管理页点“公开”后，刷新可见，显示数由 49 变为 50。测试使用本机临时 SQLite 与虚构令牌，不向生产写入。
 - 实际查看 390px 历史评论/回复、320px 标签云和友链布局；禁用脚本的 390px 视口中，评论 85 的 5 处公式、原昵称、日期和回复可读。以上是浏览器 iframe 检查，不是手机实机验收；新提交需要脚本及可用后端。
 - 实际点击历史评论的“回复”可选择旧 `wp-*` 父节点，取消后恢复普通留言；首页点击“调和级数”显示 3 篇，与文本搜索取交集可为 0，清除标签保留搜索词，清空文本后恢复 211 篇，浏览器返回可恢复标签状态。
 
 截图保存在本地忽略目录 `output/blog-comment-pending.png`、`output/blog-comment-approved.png`、`output/blog-interactions-narrow.png`、`output/blog-comments-noscript.png`。具体命令的维护入口为根 README，后端配置、审核与未来切换入口为 `services/blog-api/README.md`。
 
+## Cloudflare 部署与联调
+
+2026-10-25，站主完成 Cloudflare 官方 OAuth 设备授权，随后创建 APAC D1 `xht37-blog-comments`，执行 `0001_initial.sql` 与公开登记 SQL，部署 `xht37-blog-api`。实际接口为 `https://xht37-blog-api.pku-xht-github-io.workers.dev`，当前部署版本为 `b081f789-3c80-4981-b959-d78730744afe`。该部署没有付费升级、旧站重定向或停用。
+
+真实绑定文件仅保存在被忽略的 `services/blog-api/wrangler.local.toml`，其中没有密钥。新生成的管理员令牌和限流盐通过 stdin 交给 Worker secrets，Windows DPAPI 加密备份保存在仓库外的用户私有配置目录。Wrangler 登录凭据也加密保存在仓库外，密钥位于 Windows Credential Manager；没有将凭据、Cookie、真实待审内容或数据库导出写入本仓库。
+
+真实服务核验：
+
+- D1 登记 211 篇文章、1 个历史页和 117 个旧公开评论父节点；`foreign_key_check` 无异常。
+- 远端冒烟检查全部通过：25 次请求，2 条明确虚构评论创建并精确清理，未遗留测试 ID。覆盖精确 CORS、管理权限和 CSP、昵称必填、待审隔离、审核公开、旧评论回复和跨文章回复拒绝。
+- 提交前独立审查发现验收清理的并发回复边界，已改为服务端单条 SQL 原子删除无回复的节点，脚本不再调用递归删除。新增“回复先提交”和“清理先完成”两种确定性交错回归，后端现为 21 项通过；显式 false、空值或重复条件参数也会被拒绝。修复已重新部署，并复跑真实服务冒烟检查。
+- 本地正式生成页直连真实 Worker，浏览器提交另一条虚构留言后只出现“已提交，等待审核”，公开数仍为 49；通过实际管理 API 审核后，刷新可见，计数变为 50。截图中的测试留言后来已精确删除，未保存待审响应到文件。
+- 实际 390px 同源 iframe 中评论正文、表单与按钮可读；DOM 核对视口 390px、正文与滚动宽均为 375px，没有页面横向溢出。该检查不是手机实机验收。
+- 清理后 D1 新评论为 0；Visits 的全站基线、逐文基线、事件和增量四表均为 0。`GET /v1/visits` 返回关闭、未初始化及 null 计数，POST 返回 `404 visits_disabled`。
+- 重新生成并通过完整 `--original-snapshot` 校验：311 页、212 篇正文、117 条历史评论、25 条友链和 91 个标签；11 项前端行为测试通过。正文、日期、原公式、代码和资源未改变。
+
+真实服务联调截图保存在本地忽略目录 `output/cloudflare-comment-pending.jpg`、`output/cloudflare-comment-approved.jpg` 与 `output/cloudflare-comment-iframe390.jpg`。管理令牌取用和可复用远端检查的正式入口见 [后端说明](../services/blog-api/README.md)。
+
 ## 当前交付状态
 
-当前只在本地完成，未推送或发布本互动批次。用户表示可能还没有 Cloudflare 账号，Wrangler whoami 确认本机未认证，等待站主注册或登录；尚未创建生产 D1、Worker 或实际管理密钥。
+**Cloudflare 评论后端已部署并通过真实服务验证；本批静态页面尚未推送或发布到 GitHub Pages。** 本地 `features.yaml` 已开启 comments 并指向真实 API，重建后的本地页面可以提交及读取已审核评论。此前 2026-10-24 上线的正文版本不包含这批评论、友链和标签页面，不能将后端部署等同于 Pages 已更新。
 
-`features.yaml` 的新评论与 Visits 均关闭，Worker 的 `VISITS_ENABLED` 也为 false。普通页面不加载 Visits 脚本，不显示计数，不发送 Visits 请求。当前没有导入任何旧 Visits 基线；旧站全站总数留待后续后台核实，不能用文章数值求和代替。
-
-待站主完成 Cloudflare 账号注册/登录后，才能配置真实后端、验证线上提交与审核流程，并明确启用新评论和发布本批静态资料。Visits 保持关闭，未来流量切换需另行确认；隐藏内容继续不动。
+Visits 在前端和 Worker 中仍关闭，普通页面不加载 Visits 脚本、不显示计数、不发送 Visits 请求，没有导入任何旧基线。旧站后台总数和逐篇旧数留待未来切换时重新核实；隐藏内容继续留在旧站。
