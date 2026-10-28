@@ -31,44 +31,44 @@ int n, m, c[N], ans;
 int f[N], g[N], d[N][3];
 
 inline void upd(int p) {
-    f[p] = c[p] ? 0 : inf, g[p] = c[p] ? p : 0;
-    if (ls &lt;= n &amp;&amp; f[p] &gt; f[ls] + (d[p][0] ? -1 : 1))
-        f[p] = f[ls] + (d[p][0] ? -1 : 1), g[p] = g[ls];
-    if (rs &lt;= n &amp;&amp; f[p] &gt; f[rs] + (d[p][1] ? -1 : 1))
-        f[p] = f[rs] + (d[p][1] ? -1 : 1), g[p] = g[rs];
+	f[p] = c[p] ? 0 : inf, g[p] = c[p] ? p : 0;
+	if (ls &lt;= n &amp;&amp; f[p] &gt; f[ls] + (d[p][0] ? -1 : 1))
+		f[p] = f[ls] + (d[p][0] ? -1 : 1), g[p] = g[ls];
+	if (rs &lt;= n &amp;&amp; f[p] &gt; f[rs] + (d[p][1] ? -1 : 1))
+		f[p] = f[rs] + (d[p][1] ? -1 : 1), g[p] = g[rs];
 }
 
 int main() {
-    rd(n, m), rda(c, n);
-    for (int i = n; i; i--) upd(i);
-    for (int i = 1, x; i &lt;= m; i++) {
-        rd(x);
-        int s = f[x], t = g[x], lca = x;
-        int o = 0, p = x;
-        while (p &gt; 1) {
-            o += d[p][2] ? -1 : 1, p &gt;&gt;= 1;
-            if (s &gt; o + f[p]) s = o + f[p], t = g[p], lca = p;
-        }
-        print(ans += s, " \n"[i==m]);
-        --c[t];
-        p = x;
-        while (p != lca) {
-            if (d[p][2]) --d[p][2];
-            else ++d[p&gt;&gt;1][p&amp;1];
-            p &gt;&gt;= 1;
-        }
-        p = t;
-        while (p != lca) {
-            if (d[p&gt;&gt;1][p&amp;1]) --d[p&gt;&gt;1][p&amp;1];
-            else ++d[p][2];
-            p &gt;&gt;= 1;
-        }
-        p = x;
-        while (p) upd(p), p &gt;&gt;= 1;
-        p = t;
-        while (p) upd(p), p &gt;&gt;= 1;
-    }
-    return 0;
+	rd(n, m), rda(c, n);
+	for (int i = n; i; i--) upd(i);
+	for (int i = 1, x; i &lt;= m; i++) {
+		rd(x);
+		int s = f[x], t = g[x], lca = x;
+		int o = 0, p = x;
+		while (p &gt; 1) {
+			o += d[p][2] ? -1 : 1, p &gt;&gt;= 1;
+			if (s &gt; o + f[p]) s = o + f[p], t = g[p], lca = p;
+		}
+		print(ans += s, " \n"[i==m]);
+		--c[t];
+		p = x;
+		while (p != lca) {
+			if (d[p][2]) --d[p][2];
+			else ++d[p&gt;&gt;1][p&amp;1];
+			p &gt;&gt;= 1;
+		}
+		p = t;
+		while (p != lca) {
+			if (d[p&gt;&gt;1][p&amp;1]) --d[p&gt;&gt;1][p&amp;1];
+			else ++d[p][2];
+			p &gt;&gt;= 1;
+		}
+		p = x;
+		while (p) upd(p), p &gt;&gt;= 1;
+		p = t;
+		while (p) upd(p), p &gt;&gt;= 1;
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="179" href="/blog/tags/179/">模拟费用流</a>、<a data-source-tag="147" href="/blog/tags/147/">网络流</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a>、<a data-source-tag="145" href="/blog/tags/145/">费用流</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/896/"><span>较新一篇</span>P4173 残缺的字符串 题解</a><a class="rel-next" rel="next" href="/blog/posts/880/"><span>较早一篇</span>Codeforces Round #638 (Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="891" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -15,18 +15,18 @@
 <h2 id="section-1">格雷码</h2>
 <p>依照题意模拟即可，注意开 <code>unsigned long long</code>。</p>
 <pre tabindex="0"><code class="language-cpp">inline void dfs(int n, ul k) {
-    if (!n--) return;
-    putchar('0' + ((k &gt;&gt; n) &amp; 1));
-    if ((k &gt;&gt; n) &amp; 1) k ^= (1llu &lt;&lt; n) - 1;
-    dfs(n, k);
+	if (!n--) return;
+	putchar('0' + ((k &gt;&gt; n) &amp; 1));
+	if ((k &gt;&gt; n) &amp; 1) k ^= (1llu &lt;&lt; n) - 1;
+	dfs(n, k);
 }
 
 int main() {
-    int n;
-    ul k;
-    rd(n), rd(k);
-    dfs(n, k);
-    return 0;
+	int n;
+	ul k;
+	rd(n), rd(k);
+	dfs(n, k);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">括号树</h2>
@@ -49,35 +49,35 @@ vi e[N], g[N];
 ll ans[N], Ans;
 
 void dfs(int x, int o) {
-    o += s[x] == '(' ? 1 : -1;
-    ans[x] = c[o];
-    ++c[o];
-    int w = p[o];
-    p[o] = x;
-    g[p[o-1]].pb(x);
-    for (ui i = 0; i &lt; e[x].size(); i++) dfs(e[x][i], o);
-    for (ui i = 0; i &lt; g[x].size(); i++) ans[g[x][i]] -= c[o+1];
-    --c[o];
-    p[o] = w;
+	o += s[x] == '(' ? 1 : -1;
+	ans[x] = c[o];
+	++c[o];
+	int w = p[o];
+	p[o] = x;
+	g[p[o-1]].pb(x);
+	for (ui i = 0; i &lt; e[x].size(); i++) dfs(e[x][i], o);
+	for (ui i = 0; i &lt; g[x].size(); i++) ans[g[x][i]] -= c[o+1];
+	--c[o];
+	p[o] = w;
 }
 
 void dfs(int x) {
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i];
-        ans[y] += ans[x];
-        dfs(y);
-    }
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i];
+		ans[y] += ans[x];
+		dfs(y);
+	}
 }
 
 int main() {
-    rd(n), rds(s, n);
-    for (int i = 2, x; i &lt;= n; i++) rd(x), e[x].pb(i);
-    c[n+1] = 1;
-    dfs(1, n + 1);
-    dfs(1);
-    for (int i = 1; i &lt;= n; i++) Ans ^= i * ans[i];
-    print(Ans);
-    return 0;
+	rd(n), rds(s, n);
+	for (int i = 2, x; i &lt;= n; i++) rd(x), e[x].pb(i);
+	c[n+1] = 1;
+	dfs(1, n + 1);
+	dfs(1);
+	for (int i = 1; i &lt;= n; i++) Ans ^= i * ans[i];
+	print(Ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">树上的数</h2>
@@ -96,31 +96,31 @@ int n, m;
 modint a[N][M], s[N], f[N][N&lt;&lt;1], ans = 1;
 
 inline modint calc(int x) {
-    f[0][n+3] = 1;
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = -i; j &lt;= i; j++) {
-            int k = j + n + 3;
-            f[i][k] = 0;
-            f[i][k] += f[i-1][k-1] * a[i][x];
-            f[i][k] += f[i-1][k];
-            f[i][k] += f[i-1][k+1] * (s[i] - a[i][x]);
-        }
-    modint ret = 0;
-    for (int i = 1; i &lt;= n; i++) ret += f[n][i+n+3];
-    return ret;
+	f[0][n+3] = 1;
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = -i; j &lt;= i; j++) {
+			int k = j + n + 3;
+			f[i][k] = 0;
+			f[i][k] += f[i-1][k-1] * a[i][x];
+			f[i][k] += f[i-1][k];
+			f[i][k] += f[i-1][k+1] * (s[i] - a[i][x]);
+		}
+	modint ret = 0;
+	for (int i = 1; i &lt;= n; i++) ret += f[n][i+n+3];
+	return ret;
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 1; j &lt;= m; j++)
-            rd(a[i][j]), s[i] += a[i][j];
-        ans *= s[i] + 1;
-    }
-    ans -= 1;
-    for (int i = 1; i &lt;= m; i++) ans -= calc(i);
-    print(ans);
-    return 0;
+	rd(n), rd(m);
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 1; j &lt;= m; j++)
+			rd(a[i][j]), s[i] += a[i][j];
+		ans *= s[i] + 1;
+	}
+	ans -= 1;
+	for (int i = 1; i &lt;= m; i++) ans -= calc(i);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">划分</h2>
@@ -132,37 +132,37 @@ ll s[N];
 __int128 ans;
 
 namespace GET {
-    const int M = 1e5 + 7, P = (1 &lt;&lt; 30) - 1;
-    int x, y, z, b[N], m, p[M], l[M], r[M];
-    inline void get() {
-        rd(x), rd(y), rd(z), rd(b[1]), rd(b[2]), rd(m);
-        for (int i = 3; i &lt;= n; i++) b[i] = (1ll * x * b[i-1] + 1ll * y * b[i-2] + z) &amp; P;
-        for (int j = 1; j &lt;= m; j++) {
-            rd(p[j]), rd(l[j]), rd(r[j]);
-            for (int i = p[j-1] + 1; i &lt;= p[j]; i++)
-                a[i] = b[i] % (r[j] - l[j] + 1) + l[j];
-        }
-    }
+	const int M = 1e5 + 7, P = (1 &lt;&lt; 30) - 1;
+	int x, y, z, b[N], m, p[M], l[M], r[M];
+	inline void get() {
+		rd(x), rd(y), rd(z), rd(b[1]), rd(b[2]), rd(m);
+		for (int i = 3; i &lt;= n; i++) b[i] = (1ll * x * b[i-1] + 1ll * y * b[i-2] + z) &amp; P;
+		for (int j = 1; j &lt;= m; j++) {
+			rd(p[j]), rd(l[j]), rd(r[j]);
+			for (int i = p[j-1] + 1; i &lt;= p[j]; i++)
+				a[i] = b[i] % (r[j] - l[j] + 1) + l[j];
+		}
+	}
 }
 
 inline ll calc(int x) {
-    return s[x] * 2 - s[p[x]];
+	return s[x] * 2 - s[p[x]];
 }
 
 int main() {
-    rd(n), rd(o);
-    if (o) GET::get();
-    else for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    for (int i = 1; i &lt;= n; i++) {
-        s[i] = s[i-1] + a[i];
-        while (l &lt; r &amp;&amp; calc(q[l+1]) &lt;= s[i]) ++l;
-        p[i] = q[l];
-        while (l &lt;= r &amp;&amp; calc(q[r]) &gt;= calc(i)) --r;
-        q[++r] = i;
-    }
-    while (n) ans += (__int128)(s[n] - s[p[n]]) * (s[n] - s[p[n]]), n = p[n];
-    print(ans);
-    return 0;
+	rd(n), rd(o);
+	if (o) GET::get();
+	else for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	for (int i = 1; i &lt;= n; i++) {
+		s[i] = s[i-1] + a[i];
+		while (l &lt; r &amp;&amp; calc(q[l+1]) &lt;= s[i]) ++l;
+		p[i] = q[l];
+		while (l &lt;= r &amp;&amp; calc(q[r]) &gt;= calc(i)) --r;
+		q[++r] = i;
+	}
+	while (n) ans += (__int128)(s[n] - s[p[n]]) * (s[n] - s[p[n]]), n = p[n];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">树的重心</h2>
@@ -170,39 +170,27 @@ int main() {
 <p>首先拿出一个重心来当作根 <span class="math-inline" data-original-math="$rt$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">rt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">t</span></span></span></span></span>。</p>
 <p>对于点 <span class="math-inline" data-original-math="$x \ne rt$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo mathvariant="normal">≠</mo><mi>r</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">x \ne rt</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord katex-vbox"><span class="katex-thinbox"><span class="rlap"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="katex-inner"><span class="mord"><span class="mrel"></span></span></span><span class="katex-fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mord mathnormal">t</span></span></span></span></span>，如果 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 为割掉某条边后的重心，那么这条边一定不在 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的子树内。</p>
 <p>设割掉一条边后，另外一棵树的大小为 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span>。</p>
-<p>设 <span class="math-inline" data-original-math="$g_x = \max_{y \in \text{son}(x)} \{s_y\}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>x</mi></msub><mo>=</mo><msub><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>y</mi><mo>∈</mo><mtext>son</mtext><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></msub><mo stretchy="false">{</mo><msub><mi>s</mi><mi>y</mi></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">g_x = \max_{y \in \text{son}(x)} \{s_y\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.1052em;vertical-align:-0.3552em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mrel mtight">∈</span><span class="mord text mtight"><span class="mord mtight">son</span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">x</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span></span>。</p>
+<p>设 <span class="math-inline" data-original-math="$g_x = \max_{y \in \text{son}(x)} \\{s_y\\}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mi>x</mi></msub><mo>=</mo><msub><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>y</mi><mo>∈</mo><mtext>son</mtext><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow></msub><mspace linebreak="newline"></mspace><mrow><msub><mi>s</mi><mi>y</mi></msub><mspace linebreak="newline"></mspace></mrow></mrow><annotation encoding="application/x-tex">g_x = \max_{y \in \text{son}(x)} \\{s_y\\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7858em;vertical-align:-0.3552em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mrel mtight">∈</span><span class="mord text mtight"><span class="mord mtight">son</span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">x</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span></span><span class="mspace katex-newline"></span><span class="katex-base"><span class="katex-strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace katex-newline"></span></span></span></span></span></span>。</p>
 <p>由于 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 为重心，所以要满足：<br>
 <span class="math-block" data-original-math="$$
-
-2 \times (n – S – s_x) \le n – S
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>S</mi><mo>−</mo><msub><mi>s</mi><mi>x</mi></msub><mo stretchy="false">)</mo><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
-
 2 \times (n - S - s_x) \le n - S
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>S</mi><mo>−</mo><msub><mi>s</mi><mi>x</mi></msub><mo stretchy="false">)</mo><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
+2 \times (n - S - s_x) \le n - S
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span></span></p>
 <p><span class="math-block" data-original-math="$$
-
-2 \times g_x \le n – S
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>g</mi><mi>x</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
-
 2 \times g_x \le n - S
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>g</mi><mi>x</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
+2 \times g_x \le n - S
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span></span></p>
 <p>即：<br>
 <span class="math-block" data-original-math="$$
-
-n – 2s_x \le S \le n – 2g_x
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>x</mi></msub><mo>≤</mo><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>g</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">
-
 n - 2s_x \le S \le n - 2g_x
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>x</mi></msub><mo>≤</mo><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>g</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">
+n - 2s_x \le S \le n - 2g_x
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 即我们要找到对于一个 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>，有多少条可以割掉的边满足：</p>
 <ol>
-<li><span class="math-inline" data-original-math="$n – 2s_x \le S \le n – 2g_x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>x</mi></msub><mo>≤</mo><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>g</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">n - 2s_x \le S \le n - 2g_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>。</li>
+<li><span class="math-inline" data-original-math="$n - 2s_x \le S \le n - 2g_x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>x</mi></msub><mo>≤</mo><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>g</mi><mi>x</mi></msub></mrow><annotation encoding="application/x-tex">n - 2s_x \le S \le n - 2g_x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>。</li>
 <li>边不在 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的子树内。</li>
 </ol>
 <p>如果只有第一个条件，那么我们可以进行一次 dfs，同时拿一个树状数组动态维护割掉当前点和其父亲之间的边后每一个 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 的值有多少个，那么对于每一个点的询问实质上就是一个区间求和。</p>
@@ -211,43 +199,27 @@ n - 2s_x \le S \le n - 2g_x
 <p>设 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的儿子中子树最大的节点为 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span>，次大的节点为 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>。</p>
 <p>若割掉的边在 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 的子树中，则需要满足：<br>
 <span class="math-block" data-original-math="$$
-
-2 \times s_v \le n – S
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>s</mi><mi>v</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
-
 2 \times s_v \le n - S
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>s</mi><mi>v</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
+2 \times s_v \le n - S
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span></span><br>
 即：<br>
 <span class="math-block" data-original-math="$$
-
-S \le n – 2s_v
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>v</mi></msub></mrow><annotation encoding="application/x-tex">
-
 S \le n - 2s_v
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>v</mi></msub></mrow><annotation encoding="application/x-tex">
+S \le n - 2s_v
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 否则，需要满足：<br>
 <span class="math-block" data-original-math="$$
-
-2 \times s_u \le n – S
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>s</mi><mi>u</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
-
 2 \times s_u \le n - S
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mn>2</mn><mo>×</mo><msub><mi>s</mi><mi>u</mi></msub><mo>≤</mo><mi>n</mi><mo>−</mo><mi>S</mi></mrow><annotation encoding="application/x-tex">
+2 \times s_u \le n - S
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span></span><br>
 即：<br>
 <span class="math-block" data-original-math="$$
-
-S \le n – 2s_u
-
-$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>u</mi></msub></mrow><annotation encoding="application/x-tex">
-
 S \le n - 2s_u
-
+$$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mo>≤</mo><mi>n</mi><mo>−</mo><mn>2</mn><msub><mi>s</mi><mi>u</mi></msub></mrow><annotation encoding="application/x-tex">
+S \le n - 2s_u
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord">2</span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
 <p>可以在 dfs 的时候直接维护。</p>
 <p>那么总时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n \log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
@@ -257,82 +229,82 @@ vi e[N];
 ll ans, c1[N], c2[N];
 
 inline void add(ll *c, int x, int k) {
-    ++x;
-    while (x &lt;= n + 1) c[x] += k, x += x &amp; -x;
+	++x;
+	while (x &lt;= n + 1) c[x] += k, x += x &amp; -x;
 }
 
 inline ll ask(ll *c, int x) {
-    ++x;
-    ll k = 0;
-    while (x) k += c[x], x -= x &amp; -x;
-    return k;
+	++x;
+	ll k = 0;
+	while (x) k += c[x], x -= x &amp; -x;
+	return k;
 }
 
 void dfs1(int x, int f) {
-    s[x] = 1, g[x] = 0;
-    bool fg = 1;
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i];
-        if (y == f) continue;
-        dfs1(y, x);
-        s[x] += s[y];
-        g[x] = max(g[x], s[y]);
-        if (s[y] &gt; (n &gt;&gt; 1)) fg = 0;
-    }
-    if (n - s[x] &gt; (n &gt;&gt; 1)) fg = 0;
-    if (fg) rt = x;
+	s[x] = 1, g[x] = 0;
+	bool fg = 1;
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i];
+		if (y == f) continue;
+		dfs1(y, x);
+		s[x] += s[y];
+		g[x] = max(g[x], s[y]);
+		if (s[y] &gt; (n &gt;&gt; 1)) fg = 0;
+	}
+	if (n - s[x] &gt; (n &gt;&gt; 1)) fg = 0;
+	if (fg) rt = x;
 }
 
 void dfs2(int x, int f) {
-    add(c1, s[f], -1);
-    add(c1, n - s[x], 1);
-    if (x ^ rt) {
-        ans += x * ask(c1, n - 2 * g[x]);
-        ans -= x * ask(c1, n - 2 * s[x] - 1);
-        ans += x * ask(c2, n - 2 * g[x]);
-        ans -= x * ask(c2, n - 2 * s[x] - 1);
-        if (!z[x] &amp;&amp; z[f]) z[x] = 1;
-        ans += rt * (s[x] &lt;= n - 2 * s[z[x]?v:u]);
-    }
-    add(c2, s[x], 1);
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i];
-        if (y == f) continue;
-        dfs2(y, x);
-    }
-    add(c1, s[f], 1);
-    add(c1, n - s[x], -1);
-    if (x ^ rt) {
-        ans -= x * ask(c2, n - 2 * g[x]);
-        ans += x * ask(c2, n - 2 * s[x] - 1);
-    }
+	add(c1, s[f], -1);
+	add(c1, n - s[x], 1);
+	if (x ^ rt) {
+		ans += x * ask(c1, n - 2 * g[x]);
+		ans -= x * ask(c1, n - 2 * s[x] - 1);
+		ans += x * ask(c2, n - 2 * g[x]);
+		ans -= x * ask(c2, n - 2 * s[x] - 1);
+		if (!z[x] &amp;&amp; z[f]) z[x] = 1;
+		ans += rt * (s[x] &lt;= n - 2 * s[z[x]?v:u]);
+	}
+	add(c2, s[x], 1);
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i];
+		if (y == f) continue;
+		dfs2(y, x);
+	}
+	add(c1, s[f], 1);
+	add(c1, n - s[x], -1);
+	if (x ^ rt) {
+		ans -= x * ask(c2, n - 2 * g[x]);
+		ans += x * ask(c2, n - 2 * s[x] - 1);
+	}
 }
 
 inline void solve() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) e[i].clear();
-    for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    ans = 0;
-    dfs1(1, 0);
-    dfs1(rt, 0);
-    u = v = 0;
-    for (ui i = 0; i &lt; e[rt].size(); i++) {
-        int x = e[rt][i];
-        if (s[x] &gt; s[v]) v = x;
-        if (s[v] &gt; s[u]) swap(u, v);
-    }
-    for (int i = 1; i &lt;= n + 1; i++) c1[i] = c2[i] = 0;
-    for (int i = 0; i &lt;= n; i++) add(c1, s[i], 1), z[i] = 0;
-    z[u] = 1;
-    dfs2(rt, 0);
-    print(ans);
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) e[i].clear();
+	for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	ans = 0;
+	dfs1(1, 0);
+	dfs1(rt, 0);
+	u = v = 0;
+	for (ui i = 0; i &lt; e[rt].size(); i++) {
+		int x = e[rt][i];
+		if (s[x] &gt; s[v]) v = x;
+		if (s[v] &gt; s[u]) swap(u, v);
+	}
+	for (int i = 1; i &lt;= n + 1; i++) c1[i] = c2[i] = 0;
+	for (int i = 0; i &lt;= n; i++) add(c1, s[i], 1), z[i] = 0;
+	z[u] = 1;
+	dfs2(rt, 0);
+	print(ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="63" href="/blog/tags/63/">单调队列</a>、<a data-source-tag="56" href="/blog/tags/56/">容斥</a>、<a data-source-tag="48" href="/blog/tags/48/">换根 DP</a>、<a data-source-tag="24" href="/blog/tags/24/">树形 DP</a>、<a data-source-tag="34" href="/blog/tags/34/">树状数组</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/171/"><span>较新一篇</span>计算几何 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/404/"><span>较早一篇</span>CSP2019 游记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="416" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

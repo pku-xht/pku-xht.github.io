@@ -18,13 +18,13 @@
 int n, k, a[N], ans;
 
 int main() {
-    rd(n, k), rda(a, n), ans = n;
-    pq&lt;int&gt; q;
-    for (int i = 1; i &lt; n; i++)
-        q.push(-a[i+1] + a[i] + 1);
-    while (k++ &lt; n) ans -= q.top(), q.pop();
-    print(ans);
-    return 0;
+	rd(n, k), rda(a, n), ans = n;
+	pq&lt;int&gt; q;
+	for (int i = 1; i &lt; n; i++)
+		q.push(-a[i+1] + a[i] + 1);
+	while (k++ &lt; n) ans -= q.top(), q.pop();
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_b" target="_blank" rel="noopener noreferrer">美術展 (Art Exhibition)</a></h2>
@@ -36,16 +36,16 @@ pair&lt;ll, ll&gt; a[N];
 ll now = inf, ans;
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i].fi, a[i].se);
-    sort(a + 1, a + n + 1);
-    for (int i = 1; i &lt;= n; i++) {
-        a[i].se += a[i-1].se;
-        now = min(now, a[i-1].se - a[i].fi);
-        ans = max(ans, a[i].se - a[i].fi - now);
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i].fi, a[i].se);
+	sort(a + 1, a + n + 1);
+	for (int i = 1; i &lt;= n; i++) {
+		a[i].se += a[i-1].se;
+		now = min(now, a[i-1].se - a[i].fi);
+		ans = max(ans, a[i].se - a[i].fi - now);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_c" target="_blank" rel="noopener noreferrer">団子職人 (Dango Maker)</a></h2>
@@ -57,29 +57,29 @@ int n, m, ans, f[2][N][N];
 char s[N][N];
 
 inline bool pd(int o, int i, int j) {
-    if (!o) return s[i][j-1] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i][j+1] == 'W';
-    return s[i-1][j] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i+1][j] == 'W';
+	if (!o) return s[i][j-1] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i][j+1] == 'W';
+	return s[i-1][j] == 'R' &amp;&amp; s[i][j] == 'G' &amp;&amp; s[i+1][j] == 'W';
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
-    for (int i = 0; i &lt;= n + 1; i++)
-        for (int j = 0; j &lt;= m + 1; j++)
-            f[0][i][j] = f[1][i][j] = -inf;
-    for (int i = 2; i &lt;= n + m; i++) {
-        int now = 0, X = 0, Y = 0;
-        for (int x = max(1, i - m); x &lt;= min(n, i - 1); x++) {
-            int y = i - x;
-            if (pd(0, x, y)) f[0][x][y] = max(f[0][x-1][y+1], now) + 1;
-            if (pd(1, x, y)) f[1][x][y] = max(f[1][x-1][y+1], now) + 1;
-            now = max(now, max(f[0][x-1][y+1], f[1][x-1][y+1]));
-            X = x, Y = y;
-        }
-        ans += max(now, max(f[0][X][Y], f[1][X][Y]));
-    }
-    print(ans);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+	for (int i = 0; i &lt;= n + 1; i++)
+		for (int j = 0; j &lt;= m + 1; j++)
+			f[0][i][j] = f[1][i][j] = -inf;
+	for (int i = 2; i &lt;= n + m; i++) {
+		int now = 0, X = 0, Y = 0;
+		for (int x = max(1, i - m); x &lt;= min(n, i - 1); x++) {
+			int y = i - x;
+			if (pd(0, x, y)) f[0][x][y] = max(f[0][x-1][y+1], now) + 1;
+			if (pd(1, x, y)) f[1][x][y] = max(f[1][x-1][y+1], now) + 1;
+			now = max(now, max(f[0][x-1][y+1], f[1][x-1][y+1]));
+			X = x, Y = y;
+		}
+		ans += max(now, max(f[0][X][Y], f[1][X][Y]));
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_d" target="_blank" rel="noopener noreferrer">定期券 (Commuter Pass)</a></h2>
@@ -97,48 +97,48 @@ bool v[N];
 pq&lt;pair&lt;ll, int&gt;&gt; q;
 
 inline void dij(int S, ll *d) {
-    for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
-    d[S] = 0, q.push(mp(0, S));
-    while (q.size()) {
-        int x = q.top().se;
-        q.pop();
-        if (v[x]) continue;
-        v[x] = 1;
-        for (pi o : e[x]) {
-            int y = o.fi, z = o.se;
-            if (d[y] &gt; d[x] + z)
-                d[y] = d[x] + z, q.push(mp(-d[y], y));
-        }
-    }
+	for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
+	d[S] = 0, q.push(mp(0, S));
+	while (q.size()) {
+		int x = q.top().se;
+		q.pop();
+		if (v[x]) continue;
+		v[x] = 1;
+		for (pi o : e[x]) {
+			int y = o.fi, z = o.se;
+			if (d[y] &gt; d[x] + z)
+				d[y] = d[x] + z, q.push(mp(-d[y], y));
+		}
+	}
 }
 
 vi g[N];
 ll fa[N], fb[N];
 
 void dfs(int x) {
-    if (v[x]) return;
-    v[x] = 1;
-    fa[x] = da[x], fb[x] = db[x];
-    for (int y : g[x])
-        dfs(y), fa[x] = min(fa[x], fa[y]), fb[x] = min(fb[x], fb[y]);
-    ans = min(ans, min(fa[x] + db[x], fb[x] + da[x]));
+	if (v[x]) return;
+	v[x] = 1;
+	fa[x] = da[x], fb[x] = db[x];
+	for (int y : g[x])
+		dfs(y), fa[x] = min(fa[x], fa[y]), fb[x] = min(fb[x], fb[y]);
+	ans = min(ans, min(fa[x] + db[x], fb[x] + da[x]));
 }
 
 int main() {
-    rd(n, m), rd(s, t), rd(a, b);
-    for (int i = 1, x, y, z; i &lt;= m; i++)
-        rd(x, y, z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
-    dij(s, ds), dij(t, dt), dij(a, da), dij(b, db);
-    ans = da[b];
-    for (int x = 1; x &lt;= n; x++)
-        for (pi o : e[x]) {
-            int y = o.fi, z = o.se;
-            if (ds[x] + z + dt[y] == ds[t]) g[x].pb(y);
-        }
-    for (int i = 1; i &lt;= n; i++) v[i] = 0;
-    dfs(s);
-    print(ans);
-    return 0;
+	rd(n, m), rd(s, t), rd(a, b);
+	for (int i = 1, x, y, z; i &lt;= m; i++)
+		rd(x, y, z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+	dij(s, ds), dij(t, dt), dij(a, da), dij(b, db);
+	ans = da[b];
+	for (int x = 1; x &lt;= n; x++)
+		for (pi o : e[x]) {
+			int y = o.fi, z = o.se;
+			if (ds[x] + z + dt[y] == ds[t]) g[x].pb(y);
+		}
+	for (int i = 1; i &lt;= n; i++) v[i] = 0;
+	dfs(s);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="https://atcoder.jp/contests/joi2018ho/tasks/joi2018ho_e" target="_blank" rel="noopener noreferrer">毒蛇の脱走 (Snake Escaping)</a></h2>
@@ -153,38 +153,38 @@ string s, t;
 int cx, c0, c1, kx, k0, k1, ans;
 
 int main() {
-    rd(l, q), n = 1 &lt;&lt; l, rds(s);
-    for (int i = 0; i &lt; n; i++) a[i] = b[i] = c[i] = s[i] &amp; 15;
-    for (int o = 2, k = 1; o &lt;= n; o &lt;&lt;= 1, k &lt;&lt;= 1)
-        for (int i = 0; i &lt; n; i += o)
-            for (int j = 0; j &lt; k; j++)
-                b[i+j+k] += b[i+j], c[i+j] += c[i+j+k];
-    while (q--) {
-        rds(t), cx = c0 = c1 = kx = k0 = k1 = ans = 0;
-        for (int i = 0; i &lt; l; i++)
-            switch (t[i]) {
-                case '?' : ++cx, kx |= 1 &lt;&lt; (l - 1 - i); break;
-                case '0' : ++c0, k0 |= 1 &lt;&lt; (l - 1 - i); break;
-                case '1' : ++c1, k1 |= 1 &lt;&lt; (l - 1 - i); break;
-            }
-        if (cx &lt;= c0 &amp;&amp; cx &lt;= c1) {
-            ans = a[k1];
-            for (int s = kx; s; s = (s - 1) &amp; kx) ans += a[s|k1];
-            print(ans);
-        } else if (c1 &lt;= c0) {
-            ans = (__builtin_popcount(k1) &amp; 1) ? -b[kx] : b[kx];
-            for (int s = k1; s; s = (s - 1) &amp; k1)
-                ans += (__builtin_popcount(s ^ k1) &amp; 1) ? -b[kx^s] : b[kx^s];
-            print(ans);
-        } else {
-            kx = (n - 1) ^ kx;
-            ans = (__builtin_popcount(k0) &amp; 1) ? -c[kx] : c[kx];
-            for (int s = k0; s; s = (s - 1) &amp; k0)
-                ans += (__builtin_popcount(s ^ k0) &amp; 1) ? -c[kx^s] : c[kx^s];
-            print(ans);
-        }
-    }
-    return 0;
+	rd(l, q), n = 1 &lt;&lt; l, rds(s);
+	for (int i = 0; i &lt; n; i++) a[i] = b[i] = c[i] = s[i] &amp; 15;
+	for (int o = 2, k = 1; o &lt;= n; o &lt;&lt;= 1, k &lt;&lt;= 1)
+		for (int i = 0; i &lt; n; i += o)
+			for (int j = 0; j &lt; k; j++)
+				b[i+j+k] += b[i+j], c[i+j] += c[i+j+k];
+	while (q--) {
+		rds(t), cx = c0 = c1 = kx = k0 = k1 = ans = 0;
+		for (int i = 0; i &lt; l; i++)
+			switch (t[i]) {
+				case '?' : ++cx, kx |= 1 &lt;&lt; (l - 1 - i); break;
+				case '0' : ++c0, k0 |= 1 &lt;&lt; (l - 1 - i); break;
+				case '1' : ++c1, k1 |= 1 &lt;&lt; (l - 1 - i); break;
+			}
+		if (cx &lt;= c0 &amp;&amp; cx &lt;= c1) {
+			ans = a[k1];
+			for (int s = kx; s; s = (s - 1) &amp; kx) ans += a[s|k1];
+			print(ans);
+		} else if (c1 &lt;= c0) {
+			ans = (__builtin_popcount(k1) &amp; 1) ? -b[kx] : b[kx];
+			for (int s = k1; s; s = (s - 1) &amp; k1)
+				ans += (__builtin_popcount(s ^ k1) &amp; 1) ? -b[kx^s] : b[kx^s];
+			print(ans);
+		} else {
+			kx = (n - 1) ^ kx;
+			ans = (__builtin_popcount(k0) &amp; 1) ? -c[kx] : c[kx];
+			for (int s = k0; s; s = (s - 1) &amp; k0)
+				ans += (__builtin_popcount(s ^ k0) &amp; 1) ? -c[kx^s] : c[kx^s];
+			print(ans);
+		}
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="111" href="/blog/tags/111/">FWT</a>、<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="56" href="/blog/tags/56/">容斥</a>、<a data-source-tag="85" href="/blog/tags/85/">最短路</a>、<a data-source-tag="91" href="/blog/tags/91/">状压</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="67" href="/blog/tags/67/">记忆化搜索</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/872/"><span>较新一篇</span>ARC096F Sweet Alchemy 题解</a><a class="rel-next" rel="next" href="/blog/posts/868/"><span>较早一篇</span>JOI Final 2019 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="870" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

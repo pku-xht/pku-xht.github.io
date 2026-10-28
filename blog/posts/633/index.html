@@ -42,88 +42,88 @@ vi e[N], g, h, A, B;
 pi o = mp(N, 0);
 
 bool dfs1(int x, int f) {
-    g.pb(x);
-    if (x == t) return 1;
-    for (auto y : e[x])
-        if (y != f &amp;&amp; dfs1(y, x)) return 1;
-    g.pop_back();
-    return 0;
+	g.pb(x);
+	if (x == t) return 1;
+	for (auto y : e[x])
+		if (y != f &amp;&amp; dfs1(y, x)) return 1;
+	g.pop_back();
+	return 0;
 }
 
 void dfs2(int x, int f, int d) {
-    if (a[x] != b[x]) {
-        h.pb(x), v[x] = 1;
-        if (d - 1 == o.fi &amp;&amp; f != o.se) Fail;
-        if (d - 1 &lt; o.fi) o = mp(d - 1, f);
-    }
-    for (auto y : e[x])
-        if (y != f) dfs2(y, x, d + 1);
+	if (a[x] != b[x]) {
+		h.pb(x), v[x] = 1;
+		if (d - 1 == o.fi &amp;&amp; f != o.se) Fail;
+		if (d - 1 &lt; o.fi) o = mp(d - 1, f);
+	}
+	for (auto y : e[x])
+		if (y != f) dfs2(y, x, d + 1);
 }
 
 void dfs3(int x, int f) {
-    if (x != p) A.pb(a[x]), B.pb(b[x]);
-    for (auto y : e[x])
-        if (y != f &amp;&amp; v[y]) dfs3(y, x);
+	if (x != p) A.pb(a[x]), B.pb(b[x]);
+	for (auto y : e[x])
+		if (y != f &amp;&amp; v[y]) dfs3(y, x);
 }
 
 int dfs4(int x, int f, int d, int t) {
-    if (x == t) return d;
-    for (auto y : e[x])
-        if (y != f) {
-            int o = dfs4(y, x, d + 1, t);
-            if (o) return o;
-        }
-    return 0;
+	if (x == t) return d;
+	for (auto y : e[x])
+		if (y != f) {
+			int o = dfs4(y, x, d + 1, t);
+			if (o) return o;
+		}
+	return 0;
 }
 
 inline int calc(vi A, vi B) {
-    int pos = 0, siz = A.size();
-    for (ui i = 0; i &lt; B.size(); i++)
-        if (B[i] == A[0]) pos = i;
-    if (!pos) return 0;
-    for (ui i = 0; i &lt; A.size(); i++)
-        if (A[i] != B[(i+pos)%siz]) return 0;
-    return pos;
+	int pos = 0, siz = A.size();
+	for (ui i = 0; i &lt; B.size(); i++)
+		if (B[i] == A[0]) pos = i;
+	if (!pos) return 0;
+	for (ui i = 0; i &lt; A.size(); i++)
+		if (A[i] != B[(i+pos)%siz]) return 0;
+	return pos;
 }
 
 inline int S(int x, int y) {
-    return dfs4(x, 0, 0, y);
+	return dfs4(x, 0, 0, y);
 }
 
 inline ll get(int x, int y) {
-    int c = calc(A, B);
-    return S(s, x) + 1ll * (c - 1) * (A.size() + 1) + 1 + S(y, t);
+	int c = calc(A, B);
+	return S(s, x) + 1ll * (c - 1) * (A.size() + 1) + 1 + S(y, t);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), s = a[i] ? s : i;
-    for (int i = 1; i &lt;= n; i++) rd(b[i]), t = b[i] ? t : i;
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    dfs1(s, 0);
-    for (ui i = 1; i &lt; g.size(); i++) swap(a[g[i-1]], a[g[i]]);
-    bool ok = 1;
-    for (int i = 1; i &lt;= n; i++) ok &amp;= a[i] == b[i];
-    if (ok) return print(0, ' '), print(g.size() - 1), 0;
-    dfs2(t, 0, 0), h.pb(p = o.se), v[p] = 1;
-    for (auto x : h)
-        for (auto y : e[x])
-            if (v[y]) ++d[x];
-    vi u;
-    for (auto x : h)
-        if (d[x] == 1) u.pb(x);
-        else if (d[x] != 2) Fail;
-    if (u.size() != 2u) Fail;
-    if (u[0] &gt; u[1]) swap(u[0], u[1]);
-    dfs3(u[0], 0);
-    if (!calc(A, B)) Fail;
-    print(u[0], ' '), print(u[1], ' ');
-    ll ans = get(u[0], u[1]);
-    reverse(A.begin(), A.end());
-    reverse(B.begin(), B.end());
-    print(min(ans, get(u[1], u[0])));
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), s = a[i] ? s : i;
+	for (int i = 1; i &lt;= n; i++) rd(b[i]), t = b[i] ? t : i;
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	dfs1(s, 0);
+	for (ui i = 1; i &lt; g.size(); i++) swap(a[g[i-1]], a[g[i]]);
+	bool ok = 1;
+	for (int i = 1; i &lt;= n; i++) ok &amp;= a[i] == b[i];
+	if (ok) return print(0, ' '), print(g.size() - 1), 0;
+	dfs2(t, 0, 0), h.pb(p = o.se), v[p] = 1;
+	for (auto x : h)
+		for (auto y : e[x])
+			if (v[y]) ++d[x];
+	vi u;
+	for (auto x : h)
+		if (d[x] == 1) u.pb(x);
+		else if (d[x] != 2) Fail;
+	if (u.size() != 2u) Fail;
+	if (u[0] &gt; u[1]) swap(u[0], u[1]);
+	dfs3(u[0], 0);
+	if (!calc(A, B)) Fail;
+	print(u[0], ' '), print(u[1], ' ');
+	ll ans = get(u[0], u[1]);
+	reverse(A.begin(), A.end());
+	reverse(B.begin(), B.end());
+	print(min(ans, get(u[1], u[0])));
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="44" href="/blog/tags/44/">基环树</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/635/"><span>较新一篇</span>CF571E Geometric Progressions 题解</a><a class="rel-next" rel="next" href="/blog/posts/631/"><span>较早一篇</span>【LGR-069】洛谷 2 月月赛 II &amp; EE Round 2 Div. 2 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="633" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

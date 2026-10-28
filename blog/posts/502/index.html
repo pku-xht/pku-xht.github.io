@@ -15,36 +15,36 @@
 <h2 id="section-1">Competitive Programmer</h2>
 <p><span class="math-inline" data-original-math="$60$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>60</mn></mrow><annotation encoding="application/x-tex">60</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">60</span></span></span></span></span> 的倍数要求至少有一个 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>，至少有两个数字是 <span class="math-inline" data-original-math="$2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 的倍数，且所有数字加起来是 <span class="math-inline" data-original-math="$3$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span> 的倍数。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int T;
-    cin &gt;&gt; T;
-    while (T--) {
-        string s;
-        cin &gt;&gt; s;
-        int c0 = 0, c2 = 0, S = 0;
-        int l = s.length();
-        for (int i = 0; i &lt; l; i++) {
-            if (s[i] == '0') c0++;
-            if ((s[i] - '0') % 2 == 0) c2++;
-            S += s[i] - '0';
-        }
-        if (c0 &amp;&amp; c2 &gt; 1 &amp;&amp; S % 3 == 0) cout &lt;&lt; "red" &lt;&lt; endl;
-        else cout &lt;&lt; "cyan" &lt;&lt; endl;
-    }
-    return 0;
+	int T;
+	cin &gt;&gt; T;
+	while (T--) {
+		string s;
+		cin &gt;&gt; s;
+		int c0 = 0, c2 = 0, S = 0;
+		int l = s.length();
+		for (int i = 0; i &lt; l; i++) {
+			if (s[i] == '0') c0++;
+			if ((s[i] - '0') % 2 == 0) c2++;
+			S += s[i] - '0';
+		}
+		if (c0 &amp;&amp; c2 &gt; 1 &amp;&amp; S % 3 == 0) cout &lt;&lt; "red" &lt;&lt; endl;
+		else cout &lt;&lt; "cyan" &lt;&lt; endl;
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Dice Tower</h2>
 <p>总和模 <span class="math-inline" data-original-math="$14$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>14</mn></mrow><annotation encoding="application/x-tex">14</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">14</span></span></span></span></span> 应该在 <span class="math-inline" data-original-math="$[1,6]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mn>6</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[1,6]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">6</span><span class="mclose">]</span></span></span></span></span> 之间。注意开 <code>long long</code>，还有 <span class="math-inline" data-original-math="$n&gt;14$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>&gt;</mo><mn>14</mn></mrow><annotation encoding="application/x-tex">n&gt;14</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">14</span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int T;
-    cin &gt;&gt; T;
-    while (T--) {
-        ll n;
-        cin &gt;&gt; n;
-        if (n &gt; 14 &amp;&amp; n % 14 &gt; 0 &amp;&amp; n % 14 &lt; 7) cout &lt;&lt; "YES" &lt;&lt; endl;
-        else cout &lt;&lt; "NO" &lt;&lt; endl;
-    }
-    return 0;
+	int T;
+	cin &gt;&gt; T;
+	while (T--) {
+		ll n;
+		cin &gt;&gt; n;
+		if (n &gt; 14 &amp;&amp; n % 14 &gt; 0 &amp;&amp; n % 14 &lt; 7) cout &lt;&lt; "YES" &lt;&lt; endl;
+		else cout &lt;&lt; "NO" &lt;&lt; endl;
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Diverse Matrix</h2>
@@ -53,21 +53,21 @@
 int a[N][N];
 
 int main() {
-    int n, m;
-    cin &gt;&gt; n &gt;&gt; m;
-    if (n == 1 &amp;&amp; m == 1) return cout &lt;&lt; 0 &lt;&lt; endl, 0;
-    if (n == 1) {
-        for (int i = 1; i &lt;= m; i++) cout &lt;&lt; i + 1 &lt;&lt; ' ';
-        return 0;
-    }
-    if (m == 1) {
-        for (int i = 1; i &lt;= n; i++) cout &lt;&lt; i + 1 &lt;&lt; endl;
-        return 0;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            cout &lt;&lt; i * (j + n) &lt;&lt; " \n"[j==m];
-    return 0;
+	int n, m;
+	cin &gt;&gt; n &gt;&gt; m;
+	if (n == 1 &amp;&amp; m == 1) return cout &lt;&lt; 0 &lt;&lt; endl, 0;
+	if (n == 1) {
+		for (int i = 1; i &lt;= m; i++) cout &lt;&lt; i + 1 &lt;&lt; ' ';
+		return 0;
+	}
+	if (m == 1) {
+		for (int i = 1; i &lt;= n; i++) cout &lt;&lt; i + 1 &lt;&lt; endl;
+		return 0;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			cout &lt;&lt; i * (j + n) &lt;&lt; " \n"[j==m];
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Decreasing Debts</h2>
@@ -78,28 +78,28 @@ ll a[N];
 pq&lt; pair&lt; ll, int &gt; &gt; p, q;
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 1; i &lt;= m; i++) {
-        int x, y, z;
-        rd(x), rd(y), rd(z);
-        a[x] += z, a[y] -= z;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (a[i] &gt; 0) p.push(mp(a[i], i));
-        else q.push(mp(-a[i], i));
-    vector&lt; pair &lt; pi, ll &gt; &gt; ans;
-    while (p.size()) {
-        int x = p.top().se, y = q.top().se;
-        ll s = p.top().fi, t = q.top().fi, z;
-        p.pop(), q.pop();
-        ans.pb(mp(mp(x, y), z = min(s, t)));
-        s -= z, t -= z;
-        if (s) p.push(mp(s, x));
-        if (t) q.push(mp(t, y));
-    }
-    cout &lt;&lt; ans.size() &lt;&lt; endl;
-    for (auto i : ans) printf("%d %d %lld\n", i.fi.fi, i.fi.se, i.se);
-    return 0;
+	rd(n), rd(m);
+	for (int i = 1; i &lt;= m; i++) {
+		int x, y, z;
+		rd(x), rd(y), rd(z);
+		a[x] += z, a[y] -= z;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (a[i] &gt; 0) p.push(mp(a[i], i));
+		else q.push(mp(-a[i], i));
+	vector&lt; pair &lt; pi, ll &gt; &gt; ans;
+	while (p.size()) {
+		int x = p.top().se, y = q.top().se;
+		ll s = p.top().fi, t = q.top().fi, z;
+		p.pop(), q.pop();
+		ans.pb(mp(mp(x, y), z = min(s, t)));
+		s -= z, t -= z;
+		if (s) p.push(mp(s, x));
+		if (t) q.push(mp(t, y));
+	}
+	cout &lt;&lt; ans.size() &lt;&lt; endl;
+	for (auto i : ans) printf("%d %d %lld\n", i.fi.fi, i.fi.se, i.se);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Spaceship Solitaire</h2>
@@ -111,32 +111,32 @@ map&lt; pi, int &gt; p;
 ll s;
 
 inline void del(int x, int y) {
-    --sz;
-    int z = p[mp(x,y)];
-    p.erase(mp(x,y));
-    if (c[z] &gt; a[z]) --s;
-    c[z]--;
+	--sz;
+	int z = p[mp(x,y)];
+	p.erase(mp(x,y));
+	if (c[z] &gt; a[z]) --s;
+	c[z]--;
 }
 
 inline void add(int x, int y, int z) {
-    ++sz;
-    p[mp(x,y)] = z;
-    ++c[z];
-    if (c[z] &gt; a[z]) ++s;
+	++sz;
+	p[mp(x,y)] = z;
+	++c[z];
+	if (c[z] &gt; a[z]) ++s;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), s += a[i];
-    rd(q);
-    while (q--) {
-        int x, y, z;
-        rd(x), rd(y), rd(z);
-        if (p[mp(x,y)]) del(x, y);
-        if (z) add(x, y, z);
-        print(s - sz);
-    }
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), s += a[i];
+	rd(q);
+	while (q--) {
+		int x, y, z;
+		rd(x), rd(y), rd(z);
+		if (p[mp(x,y)]) del(x, y);
+		if (z) add(x, y, z);
+		print(s - sz);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">Almost Same Distance</h2>

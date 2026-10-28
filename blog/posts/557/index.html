@@ -39,61 +39,61 @@ pq &lt;pair &lt;ld, int&gt; &gt; q;
 vi ans;
 
 inline void print() {
-    for (int i = 1; i &lt;= k; i++) {
-        for (ui j = 0; j &lt; t[i]; j++)
-            if (v2[i][j].se &lt; 0) ans.pb(-v2[i][j].se);
-        for (ui j = 0; j &lt; t[i]; j++)
-            if (v2[i][j].se &gt; 0) ans.pb(v2[i][j].se);
-    }
-    while (v3.size()) ans.pb(v3.back().se), v3.pop_back();
-    print(ans.size());
-    for (auto x : ans) print(x, ' ');
+	for (int i = 1; i &lt;= k; i++) {
+		for (ui j = 0; j &lt; t[i]; j++)
+			if (v2[i][j].se &lt; 0) ans.pb(-v2[i][j].se);
+		for (ui j = 0; j &lt; t[i]; j++)
+			if (v2[i][j].se &gt; 0) ans.pb(v2[i][j].se);
+	}
+	while (v3.size()) ans.pb(v3.back().se), v3.pop_back();
+	print(ans.size());
+	for (auto x : ans) print(x, ' ');
 }
 
 inline void get(int x) {
-    if (t[x] &lt; v2[x].size())
-        q.push(mp(1.0L * v2[x][t[x]++].fi / a[x], x));
+	if (t[x] &lt; v2[x].size())
+		q.push(mp(1.0L * v2[x][t[x]++].fi / a[x], x));
 }
 
 int main() {
-    rd(k), rd(n), rd(m);
-    for (int i = 1; i &lt;= k; i++) rd(a[i]);
-    for (int i = 1, o, x; i &lt;= n; i++) {
-        rd(o), rd(x), rd(b);
-        if (o == 1) v1[x] = max(v1[x], mp(b, i));
-        if (o == 2) v2[x].pb(mp(b, i));
-        if (o == 3) v3.pb(mp(b, i));
-    }
-    for (int i = 1; i &lt;= k; i++) {
-        if (v1[i].fi &gt; a[i])
-            v2[i].pb(mp(v1[i].fi - a[i], -v1[i].se));
-        sort(v2[i].begin(), v2[i].end());
-        reverse(v2[i].begin(), v2[i].end());
-        s += v2[i].size();
-    }
-    sort(v3.begin(), v3.end());
-    reverse(v3.begin(), v3.end());
-    while ((int)v3.size() &gt; m) v3.pop_back();
-    if (s + (int)v3.size() &lt;= m) {
-        for (int i = 1; i &lt;= k; i++) t[i] = v2[i].size();
-        return print(), 0;
-    }
-    for (int i = 1; i &lt;= k; i++) get(i);
-    for (int i = v3.size(); i &lt; m; i++) {
-        int x = q.top().se;
-        q.pop(), a[x] += v2[x][t[x]-1].fi, get(x);
-    }
-    while (v3.size()) {
-        int x = q.top().se;
-        ll b1 = v2[x][t[x]-1].fi, b2 = v3.back().fi;
-        if (b1 &lt;= a[x] * (b2 - 1)) break;
-        q.pop(), v3.pop_back(), a[x] += b1, get(x);
-    }
-    while (q.size()) {
-        int x = q.top().se;
-        q.pop(), --t[x];
-    }
-    return print(), 0;
+	rd(k), rd(n), rd(m);
+	for (int i = 1; i &lt;= k; i++) rd(a[i]);
+	for (int i = 1, o, x; i &lt;= n; i++) {
+		rd(o), rd(x), rd(b);
+		if (o == 1) v1[x] = max(v1[x], mp(b, i));
+		if (o == 2) v2[x].pb(mp(b, i));
+		if (o == 3) v3.pb(mp(b, i));
+	}
+	for (int i = 1; i &lt;= k; i++) {
+		if (v1[i].fi &gt; a[i])
+			v2[i].pb(mp(v1[i].fi - a[i], -v1[i].se));
+		sort(v2[i].begin(), v2[i].end());
+		reverse(v2[i].begin(), v2[i].end());
+		s += v2[i].size();
+	}
+	sort(v3.begin(), v3.end());
+	reverse(v3.begin(), v3.end());
+	while ((int)v3.size() &gt; m) v3.pop_back();
+	if (s + (int)v3.size() &lt;= m) {
+		for (int i = 1; i &lt;= k; i++) t[i] = v2[i].size();
+		return print(), 0;
+	}
+	for (int i = 1; i &lt;= k; i++) get(i);
+	for (int i = v3.size(); i &lt; m; i++) {
+		int x = q.top().se;
+		q.pop(), a[x] += v2[x][t[x]-1].fi, get(x);
+	}
+	while (v3.size()) {
+		int x = q.top().se;
+		ll b1 = v2[x][t[x]-1].fi, b2 = v3.back().fi;
+		if (b1 &lt;= a[x] * (b2 - 1)) break;
+		q.pop(), v3.pop_back(), a[x] += b1, get(x);
+	}
+	while (q.size()) {
+		int x = q.top().se;
+		q.pop(), --t[x];
+	}
+	return print(), 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/559/"><span>较新一篇</span>CF504E Misha and LCP on Tree 题解</a><a class="rel-next" rel="next" href="/blog/posts/553/"><span>较早一篇</span>Educational Codeforces Round 80 (Rated for Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="557" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

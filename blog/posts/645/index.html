@@ -34,77 +34,77 @@ ld p, q, a[N], b[N];
 pair&lt;ld, int&gt; s[N*2];
 
 inline void add(int x) {
-    while (x &lt;= t) ++c[x], x += x &amp; -x;
+	while (x &lt;= t) ++c[x], x += x &amp; -x;
 }
 
 inline int ask(int x) {
-    int k = 0;
-    while (x) k += c[x], x -= x &amp; -x;
-    return k;
+	int k = 0;
+	while (x) k += c[x], x -= x &amp; -x;
+	return k;
 }
 
 inline void work(ld r) {
-    t = 0;
-    for (int i = 1; i &lt;= n; i++) {
-        ld a = ::a[i], b = ::b[i];
-        ld d = 4 * a * a * b * b - 4 * (a * a + 1) * (b * b - r * r);
-        if (d &lt; eps) continue;
-        d = sqrt(d);
-        ld x1 = (-2 * a * b - d) / (2 * (a * a + 1));
-        ld x2 = (-2 * a * b + d) / (2 * (a * a + 1));
-        ld y1 = a * x1 + b, y2 = a * x2 + b;
-        s[++t] = mp(P(x1, y1).a(), i), s[++t] = mp(P(x2, y2).a(), i);
-        v[i] = 0;
-    }
-    sort(s + 1, s + t + 1);
-    for (int i = t; i; i--)
-        if (!v[s[i].se]) v[s[i].se] = i;
+	t = 0;
+	for (int i = 1; i &lt;= n; i++) {
+		ld a = ::a[i], b = ::b[i];
+		ld d = 4 * a * a * b * b - 4 * (a * a + 1) * (b * b - r * r);
+		if (d &lt; eps) continue;
+		d = sqrt(d);
+		ld x1 = (-2 * a * b - d) / (2 * (a * a + 1));
+		ld x2 = (-2 * a * b + d) / (2 * (a * a + 1));
+		ld y1 = a * x1 + b, y2 = a * x2 + b;
+		s[++t] = mp(P(x1, y1).a(), i), s[++t] = mp(P(x2, y2).a(), i);
+		v[i] = 0;
+	}
+	sort(s + 1, s + t + 1);
+	for (int i = t; i; i--)
+		if (!v[s[i].se]) v[s[i].se] = i;
 }
 
 inline bool pd(ld r) {
-    work(r);
-    for (int i = 1; i &lt;= t; i++) c[i] = 0;
-    ll ret = 0;
-    for (int i = 1; i &lt;= t; i++)
-        if (v[s[i].se] != i) {
-            ret += ask(v[s[i].se]) - ask(i - 1);
-            add(v[s[i].se]);
-        }
-    return ret &gt;= m;
+	work(r);
+	for (int i = 1; i &lt;= t; i++) c[i] = 0;
+	ll ret = 0;
+	for (int i = 1; i &lt;= t; i++)
+		if (v[s[i].se] != i) {
+			ret += ask(v[s[i].se]) - ask(i - 1);
+			add(v[s[i].se]);
+		}
+	return ret &gt;= m;
 }
 
 inline ld calc(int i, int j) {
-    ld x = (b[j] - b[i]) / (a[i] - a[j]), y = a[i] * x + b[i];
-    return sqrt(x * x + y * y);
+	ld x = (b[j] - b[i]) / (a[i] - a[j]), y = a[i] * x + b[i];
+	return sqrt(x * x + y * y);
 }
 
 inline ld calc(ld r) {
-    work(r);
-    set&lt;pi&gt; st;
-    ld ret = 0;
-    int cnt = 0;
-    for (int i = 1; i &lt;= t; i++)
-        if (v[s[i].se] != i) {
-            auto it = st.upper_bound(mp(i + 1, 0));
-            while (it != st.end() &amp;&amp; (it -&gt; fi) &lt; v[s[i].se])
-                ret += calc(s[i].se, it -&gt; se), ++it, ++cnt;
-            st.insert(mp(v[s[i].se], s[i].se));
-        }
-    return ret + (m - cnt) * r;
+	work(r);
+	set&lt;pi&gt; st;
+	ld ret = 0;
+	int cnt = 0;
+	for (int i = 1; i &lt;= t; i++)
+		if (v[s[i].se] != i) {
+			auto it = st.upper_bound(mp(i + 1, 0));
+			while (it != st.end() &amp;&amp; (it -&gt; fi) &lt; v[s[i].se])
+				ret += calc(s[i].se, it -&gt; se), ++it, ++cnt;
+			st.insert(mp(v[s[i].se], s[i].se));
+		}
+	return ret + (m - cnt) * r;
 }
 
 int main() {
-    rd(n), rd(x), rd(y), rd(m), p = x / 1e3, q = y / 1e3;
-    for (int i = 1; i &lt;= n; i++)
-        rd(x), rd(y), a[i] = x / 1e3, b[i] = y / 1e3 + a[i] * p - q;
-    ld l = 0, r = 1e10;
-    for (int i = 1; i &lt;= 100; i++) {
-        ld mid = (l + r) / 2;
-        if (pd(mid)) r = mid;
-        else l = mid;
-    }
-    printf("%.10Lf\n", max(0.0L, calc(r)));
-    return 0;
+	rd(n), rd(x), rd(y), rd(m), p = x / 1e3, q = y / 1e3;
+	for (int i = 1; i &lt;= n; i++)
+		rd(x), rd(y), a[i] = x / 1e3, b[i] = y / 1e3 + a[i] * p - q;
+	ld l = 0, r = 1e10;
+	for (int i = 1; i &lt;= 100; i++) {
+		ld mid = (l + r) / 2;
+		if (pd(mid)) r = mid;
+		else l = mid;
+	}
+	printf("%.10Lf\n", max(0.0L, calc(r)));
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="35" href="/blog/tags/35/">二分</a>、<a data-source-tag="70" href="/blog/tags/70/">扫描线</a>、<a data-source-tag="34" href="/blog/tags/34/">树状数组</a>、<a data-source-tag="89" href="/blog/tags/89/">计算几何</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/646/"><span>较新一篇</span>CF575E Spectator Riots 题解</a><a class="rel-next" rel="next" href="/blog/posts/636/"><span>较早一篇</span>Codeforces Round #621 (Div. 1 + Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="645" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

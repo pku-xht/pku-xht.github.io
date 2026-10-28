@@ -16,11 +16,11 @@
 <p>每一轮会从 <span class="math-inline" data-original-math="$(a,b,c)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a,b,c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></span> 变成 <span class="math-inline" data-original-math="$(b+c,a+c,a+c)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>b</mi><mo>+</mo><mi>c</mi><mo separator="true">,</mo><mi>a</mi><mo>+</mo><mi>c</mi><mo separator="true">,</mo><mi>a</mi><mo>+</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(b+c,a+c,a+c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">c</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">c</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></span>，第 <span class="math-inline" data-original-math="$1,2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">1,2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span></span></span></span></span> 个数之差取反。</p>
 <p>所以如果 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 为奇数答案为 <span class="math-inline" data-original-math="$b-a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi><mo>−</mo><mi>a</mi></mrow><annotation encoding="application/x-tex">b-a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span>，否则为 <span class="math-inline" data-original-math="$a-b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>−</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a-b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int a, b, c;
-    ll k;
-    rd(a, b, c), rd(k);
-    print(k &amp; 1 ? b - a : a - b);
-    return 0;
+	int a, b, c;
+	ll k;
+	rd(a, b, c), rd(k);
+	print(k &amp; 1 ? b - a : a - b);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc024/tasks/agc024_b" target="_blank" rel="noopener noreferrer">Backfront</a></h2>
@@ -29,30 +29,30 @@
 int n, a[N], p[N], ans;
 
 int main() {
-    rd(n), rda(a, n);
-    for (int i = 1; i &lt;= n; i++) p[a[i]] = i;
-    for (int i = 1, c = 0; i &lt;= n; i++)
-        if (i == n || p[i+1] &lt; p[i]) ans = max(ans, ++c), c = 0;
-        else ++c;
-    print(n - ans);
-    return 0;
+	rd(n), rda(a, n);
+	for (int i = 1; i &lt;= n; i++) p[a[i]] = i;
+	for (int i = 1, c = 0; i &lt;= n; i++)
+		if (i == n || p[i+1] &lt; p[i]) ans = max(ans, ++c), c = 0;
+		else ++c;
+	print(n - ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc024/tasks/agc024_c" target="_blank" rel="noopener noreferrer">Sequence Growing Easy</a></h2>
-<p>如果 <span class="math-inline" data-original-math="$a_i \ge i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub><mo>≥</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">a_i \ge i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 或者 <span class="math-inline" data-original-math="$a_i – a_{i-1} &gt; 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_i - a_{i-1} &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7474em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 就无解。</p>
+<p>如果 <span class="math-inline" data-original-math="$a_i \ge i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub><mo>≥</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">a_i \ge i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.786em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 或者 <span class="math-inline" data-original-math="$a_i - a_{i-1} &gt; 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>a</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a_i - a_{i-1} &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7474em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 就无解。</p>
 <p>否则我们每次可以使用 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 次操作造出来一个 <span class="math-inline" data-original-math="$0,1,2,\cdots,t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>⋯</mo><mtext> </mtext><mo separator="true">,</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">0,1,2,\cdots,t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 的序列。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
 int n, a[N];
 ll ans;
 
 int main() {
-    rd(n), rda(a, n);
-    for (int i = 1; i &lt;= n; i++)
-        if (a[i] &gt;= i || a[i] - a[i-1] &gt; 1) return print(-1), 0;
-    for (int i = 1; i &lt;= n; i++)
-        if (i == n || a[i] != a[i+1] - 1) ans += a[i];
-    print(ans);
-    return 0;
+	rd(n), rda(a, n);
+	for (int i = 1; i &lt;= n; i++)
+		if (a[i] &gt;= i || a[i] - a[i-1] &gt; 1) return print(-1), 0;
+	for (int i = 1; i &lt;= n; i++)
+		if (i == n || a[i] != a[i+1] - 1) ans += a[i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Isomorphism_Freak" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc024/tasks/agc024_d" target="_blank" rel="noopener noreferrer">Isomorphism Freak</a></h2>
@@ -79,57 +79,57 @@ int n, d[N], f[N], ans;
 vi e[N];
 
 void dfs(int x) {
-    for (int y : e[x])
-        if (y != f[x]) f[y] = x, d[y] = d[x] + 1, dfs(y);
+	for (int y : e[x])
+		if (y != f[x]) f[y] = x, d[y] = d[x] + 1, dfs(y);
 }
 
 inline ll calc(int x) {
-    d[x] = 1, f[x] = 0, dfs(x);
-    static int c[N];
-    for (int i = 1; i &lt;= ans; i++) c[i] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        c[d[i]] = max(c[d[i]], (int)e[i].size());
-    ll ret = e[x].size();
-    for (int i = 2; i &lt; ans; i++) ret *= c[i] - 1;
-    return ret;
+	d[x] = 1, f[x] = 0, dfs(x);
+	static int c[N];
+	for (int i = 1; i &lt;= ans; i++) c[i] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		c[d[i]] = max(c[d[i]], (int)e[i].size());
+	ll ret = e[x].size();
+	for (int i = 2; i &lt; ans; i++) ret *= c[i] - 1;
+	return ret;
 }
 
 inline ll calc(int x, int y) {
-    d[x] = 1, f[x] = y, dfs(x);
-    d[y] = 1, f[y] = x, dfs(y);
-    static int c[N];
-    for (int i = 1; i &lt;= ans; i++) c[i] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        c[d[i]] = max(c[d[i]], (int)e[i].size()); 
-    ll ret = 1;
-    for (int i = 1; i &lt; ans; i++) ret *= c[i] - 1;
-    return ret * 2;
+	d[x] = 1, f[x] = y, dfs(x);
+	d[y] = 1, f[y] = x, dfs(y);
+	static int c[N];
+	for (int i = 1; i &lt;= ans; i++) c[i] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		c[d[i]] = max(c[d[i]], (int)e[i].size()); 
+	ll ret = 1;
+	for (int i = 1; i &lt; ans; i++) ret *= c[i] - 1;
+	return ret * 2;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    d[1] = 1, f[1] = 0, dfs(1);
-    int x = max_element(d + 1, d + n + 1) - d;
-    d[x] = 1, f[x] = 0, dfs(x);
-    int y = max_element(d + 1, d + n + 1) - d;
-    int c = d[y];
-    if (c &amp; 1) {
-        ans = (d[y] + 1) / 2;
-        while (d[y] != ans) y = f[y];
-        x = y;
-        ll now = calc(x);
-        for (int y : e[x])
-            now = min(now, calc(x, y));
-        print((ll)ans, now);
-    } else {
-        ans = d[y] / 2;
-        while (d[y] != ans + 1) y = f[y];
-        x = f[y];
-        print((ll)ans, calc(x, y));
-    }
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	d[1] = 1, f[1] = 0, dfs(1);
+	int x = max_element(d + 1, d + n + 1) - d;
+	d[x] = 1, f[x] = 0, dfs(x);
+	int y = max_element(d + 1, d + n + 1) - d;
+	int c = d[y];
+	if (c &amp; 1) {
+		ans = (d[y] + 1) / 2;
+		while (d[y] != ans) y = f[y];
+		x = y;
+		ll now = calc(x);
+		for (int y : e[x])
+			now = min(now, calc(x, y));
+		print((ll)ans, now);
+	} else {
+		ans = d[y] / 2;
+		while (d[y] != ans + 1) y = f[y];
+		x = f[y];
+		print((ll)ans, calc(x, y));
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Sequence_Growing_Hard" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc024/tasks/agc024_e" target="_blank" rel="noopener noreferrer">Sequence Growing Hard</a></h2>
@@ -155,18 +155,18 @@ int n, m;
 modint f[N][N][N];
 
 int main() {
-    rd(n, m, P);
-    f[0][1][0] = 1;
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            for (int k = i; ~k; k--)
-                if (!!f[i][j][k]) {
-                    if (k) f[i][j][k-1] += f[i][j][k];
-                    else f[i][j+1][i] += f[i][j][k];
-                    f[i+1][j][k] += f[i][j][k] * (k + 1);
-                }
-    print(f[n][m][0]);
-    return 0;
+	rd(n, m, P);
+	f[0][1][0] = 1;
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			for (int k = i; ~k; k--)
+				if (!!f[i][j][k]) {
+					if (k) f[i][j][k-1] += f[i][j][k];
+					else f[i][j+1][i] += f[i][j][k];
+					f[i+1][j][k] += f[i][j][k] * (k + 1);
+				}
+	print(f[n][m][0]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Simple_Subsequence_Problem" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc024/tasks/agc024_f" target="_blank" rel="noopener noreferrer">Simple Subsequence Problem</a></h2>
@@ -202,29 +202,29 @@ int n, k, b[1&lt;&lt;N|1], t[1&lt;&lt;N|1][2], f[N][1&lt;&lt;N|1], ans = 1;
 char c;
 
 int main() {
-    rd(n, k);
-    for (int i = 0; i &lt;= n; i++)
-        for (int x = 0; x &lt; 1 &lt;&lt; i; x++)
-            rdc(c), f[i][1&lt;&lt;i^x] = c - '0';
-    b[0] = -1;
-    for (int x = 1; x &lt; 2 &lt;&lt; n; x++) b[x] = b[x&gt;&gt;1] + 1;
-    for (int x = 2; x &lt; 2 &lt;&lt; n; x++)
-        if (x &gt;&gt; (b[x] - 1) &amp; 1) t[x][1] = x ^ 1 &lt;&lt; b[x], t[x][0] = t[t[x][1]][0];
-        else t[x][0] = x ^ 3 &lt;&lt; (b[x] - 1), t[x][1] = t[t[x][0]][1];
-    for (int i = n; i; i--)
-        for (int x = 1 &lt;&lt; i; x &lt; 2 &lt;&lt; n; x++)
-            if (f[i][x]) {
-                int o = x &gt;&gt; i, B = (x &amp; ((1 &lt;&lt; i) - 1)) ^ 1 &lt;&lt; i;
-                if (t[B][0]) f[b[t[B][0]]][(o&lt;&lt;1^1)&lt;&lt;b[t[B][0]]^t[B][0]] += f[i][x];
-                if (t[B][1]) f[b[t[B][1]]][(o&lt;&lt;1^0)&lt;&lt;b[t[B][1]]^t[B][1]] += f[i][x];
-                f[0][o] += f[i][x];
-            }
-    for (int x = 2; x &lt; 2 &lt;&lt; n; x++)
-        if (f[0][x] &gt;= k &amp;&amp; b[x] &gt; b[ans]) ans = x;
-    int i = n;
-    while (!(ans &gt;&gt; i &amp; 1)) i--;
-    while (i--) printc((ans &gt;&gt; i &amp; 1) + '0');
-    return 0;
+	rd(n, k);
+	for (int i = 0; i &lt;= n; i++)
+		for (int x = 0; x &lt; 1 &lt;&lt; i; x++)
+			rdc(c), f[i][1&lt;&lt;i^x] = c - '0';
+	b[0] = -1;
+	for (int x = 1; x &lt; 2 &lt;&lt; n; x++) b[x] = b[x&gt;&gt;1] + 1;
+	for (int x = 2; x &lt; 2 &lt;&lt; n; x++)
+		if (x &gt;&gt; (b[x] - 1) &amp; 1) t[x][1] = x ^ 1 &lt;&lt; b[x], t[x][0] = t[t[x][1]][0];
+		else t[x][0] = x ^ 3 &lt;&lt; (b[x] - 1), t[x][1] = t[t[x][0]][1];
+	for (int i = n; i; i--)
+		for (int x = 1 &lt;&lt; i; x &lt; 2 &lt;&lt; n; x++)
+			if (f[i][x]) {
+				int o = x &gt;&gt; i, B = (x &amp; ((1 &lt;&lt; i) - 1)) ^ 1 &lt;&lt; i;
+				if (t[B][0]) f[b[t[B][0]]][(o&lt;&lt;1^1)&lt;&lt;b[t[B][0]]^t[B][0]] += f[i][x];
+				if (t[B][1]) f[b[t[B][1]]][(o&lt;&lt;1^0)&lt;&lt;b[t[B][1]]^t[B][1]] += f[i][x];
+				f[0][o] += f[i][x];
+			}
+	for (int x = 2; x &lt; 2 &lt;&lt; n; x++)
+		if (f[0][x] &gt;= k &amp;&amp; b[x] &gt; b[ans]) ans = x;
+	int i = n;
+	while (!(ans &gt;&gt; i &amp; 1)) i--;
+	while (i--) printc((ans &gt;&gt; i &amp; 1) + '0');
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a>、<a data-source-tag="91" href="/blog/tags/91/">状压</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/1017/"><span>较新一篇</span>AtCoder Grand Contest 023 题解</a><a class="rel-next" rel="next" href="/blog/posts/1014/"><span>较早一篇</span>AtCoder Grand Contest 025 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="1016" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

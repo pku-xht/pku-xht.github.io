@@ -16,7 +16,7 @@
 <ul>
 <li>给定一棵 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 个点的树，边有边权。</li>
 <li>定义 <span class="math-inline" data-original-math="$f_x = \max_{i=1}^n \text{dist}(x,i)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>x</mi></msub><mo>=</mo><msubsup><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mtext>dist</mtext><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>i</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f_x = \max_{i=1}^n \text{dist}(x,i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0087em;vertical-align:-0.2587em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-2.4413em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">dist</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">i</span><span class="mclose">)</span></span></span></span></span>。</li>
-<li><span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span> 次询问最大的满足 <span class="math-inline" data-original-math="$\max_{x \in s} f_x – \min_{x \in s} f_x \le l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>x</mi><mo>∈</mo><mi>s</mi></mrow></msub><msub><mi>f</mi><mi>x</mi></msub><mo>−</mo><msub><mrow><mi>min</mi><mo>⁡</mo></mrow><mrow><mi>x</mi><mo>∈</mo><mi>s</mi></mrow></msub><msub><mi>f</mi><mi>x</mi></msub><mo>≤</mo><mi>l</mi></mrow><annotation encoding="application/x-tex">\max_{x \in s} f_x - \min_{x \in s} f_x \le l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2274em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1774em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mop">min</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2274em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1774em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 的连通块 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 包含的点数。</li>
+<li><span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span> 次询问最大的满足 <span class="math-inline" data-original-math="$\max_{x \in s} f_x - \min_{x \in s} f_x \le l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mi>max</mi><mo>⁡</mo></mrow><mrow><mi>x</mi><mo>∈</mo><mi>s</mi></mrow></msub><msub><mi>f</mi><mi>x</mi></msub><mo>−</mo><msub><mrow><mi>min</mi><mo>⁡</mo></mrow><mrow><mi>x</mi><mo>∈</mo><mi>s</mi></mrow></msub><msub><mi>f</mi><mi>x</mi></msub><mo>≤</mo><mi>l</mi></mrow><annotation encoding="application/x-tex">\max_{x \in s} f_x - \min_{x \in s} f_x \le l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2274em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1774em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mop">min</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2274em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1774em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 的连通块 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 包含的点数。</li>
 <li><span class="math-inline" data-original-math="$n \le 10^5$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><msup><mn>10</mn><mn>5</mn></msup></mrow><annotation encoding="application/x-tex">n \le 10^5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">5</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="math-inline" data-original-math="$q \le 50$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mo>≤</mo><mn>50</mn></mrow><annotation encoding="application/x-tex">q \le 50</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">50</span></span></span></span></span>。</li>
 </ul>
 <h2 id="section-2">题解</h2>
@@ -29,64 +29,64 @@ pair&lt; ll, int &gt; p[N];
 vector&lt; pi &gt; e[N];
 
 void dfs1(int x, int fa) {
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i].fi;
-        if (y == fa) continue;
-        dfs1(y, x);
-        ll z = f[y][0] + e[x][i].se;
-        if (z &gt; f[x][1]) f[x][1] = z;
-        if (z &gt; f[x][0]) swap(f[x][0], f[x][1]);
-    }
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i].fi;
+		if (y == fa) continue;
+		dfs1(y, x);
+		ll z = f[y][0] + e[x][i].se;
+		if (z &gt; f[x][1]) f[x][1] = z;
+		if (z &gt; f[x][0]) swap(f[x][0], f[x][1]);
+	}
 }
 
 void dfs2(int x, int fa) {
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i].fi;
-        if (y == fa) continue;
-        int z = e[x][i].se;
-        g[y] = max(g[x], f[y][0] + z == f[x][0] ? f[x][1] : f[x][0]) + z;
-        dfs2(y, x);
-    } 
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i].fi;
+		if (y == fa) continue;
+		int z = e[x][i].se;
+		g[y] = max(g[x], f[y][0] + z == f[x][0] ? f[x][1] : f[x][0]) + z;
+		dfs2(y, x);
+	} 
 }
 
 int get(int x) {
-    return x == fa[x] ? x : (fa[x] = get(fa[x]));
+	return x == fa[x] ? x : (fa[x] = get(fa[x]));
 }
 
 inline void merge(int x, int y) {
-    if (x == y) return;
-    if (s[x] &gt; s[y]) swap(x, y);
-    fa[x] = y, s[y] += s[x];
-    ans = max(ans, s[y]);
+	if (x == y) return;
+	if (s[x] &gt; s[y]) swap(x, y);
+	fa[x] = y, s[y] += s[x];
+	ans = max(ans, s[y]);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y, z; i &lt; n; i++)
-        rd(x), rd(y), rd(z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
-    dfs1(1, 0);
-    dfs2(1, 0);
-    for (int i = 1; i &lt;= n; i++) p[i] = mp(max(f[i][0], g[i]), i);
-    sort(p + 1, p + n + 1);
-    reverse(p + 1, p + n + 1);
-    rd(q);
-    while (q--) {
-        rd(m), ans = 1;
-        for (int i = 1; i &lt;= n; i++) fa[i] = i, s[i] = 1, v[i] = 0;
-        for (int l = 1, r = 0; l &lt;= n; l++) {
-            while (r &lt; n &amp;&amp; p[l].fi - p[r+1].fi &lt;= m) {
-                int x = p[++r].se;
-                v[x] = 1;
-                for (ui i = 0; i &lt; e[x].size(); i++) {
-                    int y = e[x][i].fi;
-                    if (v[y]) merge(get(x), get(y));
-                }
-            }
-            --s[get(p[l].se)], v[get(p[l].se)] = 0;
-        }
-        print(ans);
-    }
-    return 0;
+	rd(n);
+	for (int i = 1, x, y, z; i &lt; n; i++)
+		rd(x), rd(y), rd(z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+	dfs1(1, 0);
+	dfs2(1, 0);
+	for (int i = 1; i &lt;= n; i++) p[i] = mp(max(f[i][0], g[i]), i);
+	sort(p + 1, p + n + 1);
+	reverse(p + 1, p + n + 1);
+	rd(q);
+	while (q--) {
+		rd(m), ans = 1;
+		for (int i = 1; i &lt;= n; i++) fa[i] = i, s[i] = 1, v[i] = 0;
+		for (int l = 1, r = 0; l &lt;= n; l++) {
+			while (r &lt; n &amp;&amp; p[l].fi - p[r+1].fi &lt;= m) {
+				int x = p[++r].se;
+				v[x] = 1;
+				for (ui i = 0; i &lt; e[x].size(); i++) {
+					int y = e[x][i].fi;
+					if (v[y]) merge(get(x), get(y));
+				}
+			}
+			--s[get(p[l].se)], v[get(p[l].se)] = 0;
+		}
+		print(ans);
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="64" href="/blog/tags/64/">并查集</a>、<a data-source-tag="48" href="/blog/tags/48/">换根 DP</a>、<a data-source-tag="24" href="/blog/tags/24/">树形 DP</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/460/"><span>较新一篇</span>CF505E Mr. Kitayuta vs. Bamboos 题解</a><a class="rel-next" rel="next" href="/blog/posts/451/"><span>较早一篇</span>CF582E Boolean Function 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="458" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

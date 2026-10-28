@@ -18,58 +18,58 @@
 int n, a[N], f[N][N][N];
 
 inline void upd(int &amp;x, int y) {
-    x = min(x, y);
+	x = min(x, y);
 }
 
 int main() {
-    rd(n);
-    if (n == 1) return print(0), 0;
-    for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    memset(f, 0x3f, sizeof(f));
-    if (a[1]) {
-        if (a[1] &amp; 1) {
-            upd(f[1][0][a[1]], 0);
-        } else {
-            upd(f[1][1][a[1]], 0);
-        }
-    } else {
-        for (a[1] = 1; a[1] &lt;= n; a[1]++) {
-            if (a[1] &amp; 1) {
-                upd(f[1][0][a[1]], 0);
-            } else {
-                upd(f[1][1][a[1]], 0);
-            }
-        }
-    }
-    for (int i = 2; i &lt;= n; i++) {
-        for (int j = 0; j &lt;= min(i - 1, n &gt;&gt; 1); j++)
-            for (int k = 1; k &lt;= n; k++) {
-                if (a[i]) {
-                    if (a[i] &amp; 1) {
-                        if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
-                        upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
-                    } else {
-                        if (j == (n &gt;&gt; 1)) continue;
-                        upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
-                    }
-                } else {
-                    for (a[i] = 1; a[i] &lt;= n; a[i]++) {
-                        if (a[i] &amp; 1) {
-                            if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
-                            upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
-                        } else {
-                            if (j == (n &gt;&gt; 1)) continue;
-                            upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
-                        }
-                    }
-                    a[i] = 0;
-                }
-            }
-    }
-    int ans = 0x3f3f3f3f;
-    for (int i = 1; i &lt;= n; i++) ans = min(ans, f[n][n&gt;&gt;1][i]);
-    print(ans);
-    return 0;
+	rd(n);
+	if (n == 1) return print(0), 0;
+	for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	memset(f, 0x3f, sizeof(f));
+	if (a[1]) {
+		if (a[1] &amp; 1) {
+			upd(f[1][0][a[1]], 0);
+		} else {
+			upd(f[1][1][a[1]], 0);
+		}
+	} else {
+		for (a[1] = 1; a[1] &lt;= n; a[1]++) {
+			if (a[1] &amp; 1) {
+				upd(f[1][0][a[1]], 0);
+			} else {
+				upd(f[1][1][a[1]], 0);
+			}
+		}
+	}
+	for (int i = 2; i &lt;= n; i++) {
+		for (int j = 0; j &lt;= min(i - 1, n &gt;&gt; 1); j++)
+			for (int k = 1; k &lt;= n; k++) {
+				if (a[i]) {
+					if (a[i] &amp; 1) {
+						if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
+						upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+					} else {
+						if (j == (n &gt;&gt; 1)) continue;
+						upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+					}
+				} else {
+					for (a[i] = 1; a[i] &lt;= n; a[i]++) {
+						if (a[i] &amp; 1) {
+							if (i - 1 - j == n - (n &gt;&gt; 1)) continue;
+							upd(f[i][j][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+						} else {
+							if (j == (n &gt;&gt; 1)) continue;
+							upd(f[i][j+1][a[i]], f[i-1][j][k] + ((k ^ a[i]) &amp; 1));
+						}
+					}
+					a[i] = 0;
+				}
+			}
+	}
+	int ans = 0x3f3f3f3f;
+	for (int i = 1; i &lt;= n; i++) ans = min(ans, f[n][n&gt;&gt;1][i]);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Numbers on Tree</h2>
@@ -79,30 +79,30 @@ int n, a[N], rt, ans[N];
 vi e[N], p[N];
 
 void dfs(int x) {
-    for (int y : e[x]) {
-        dfs(y);
-        for (auto z : p[y]) p[x].pb(z);
-    }
-    if (a[x] &gt; (int)p[x].size()) prints("NO"), exit(0);
-    vi o;
-    while ((int)p[x].size() &gt; a[x]) o.pb(p[x].back()), p[x].pop_back();
-    p[x].pb(x);
-    while (o.size()) p[x].pb(o.back()), o.pop_back();
+	for (int y : e[x]) {
+		dfs(y);
+		for (auto z : p[y]) p[x].pb(z);
+	}
+	if (a[x] &gt; (int)p[x].size()) prints("NO"), exit(0);
+	vi o;
+	while ((int)p[x].size() &gt; a[x]) o.pb(p[x].back()), p[x].pop_back();
+	p[x].pb(x);
+	while (o.size()) p[x].pb(o.back()), o.pop_back();
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) {
-        int f;
-        rd(f), rd(a[i]);
-        if (f) e[f].pb(i);
-        else rt = i;
-    }
-    dfs(rt);
-    for (int i = 1; i &lt;= n; i++) ans[p[rt][i-1]] = i;
-    prints("YES");
-    for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) {
+		int f;
+		rd(f), rd(a[i]);
+		if (f) e[f].pb(i);
+		else rt = i;
+	}
+	dfs(rt);
+	for (int i = 1; i &lt;= n; i++) ans[p[rt][i-1]] = i;
+	prints("YES");
+	for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Madhouse</h2>

@@ -15,15 +15,15 @@
 <h2 id="section-1">Mezo Playing Zoma</h2>
 <p>贪心。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int n;
-    string s;
-    cin &gt;&gt; n &gt;&gt; s;
-    int l = 0, r = 0;
-    for (int i = 0; i &lt; n; i++)
-        if (s[i] == 'L') ++l;
-        else ++r;
-    print(r + l + 1);
-    return 0;
+	int n;
+	string s;
+	cin &gt;&gt; n &gt;&gt; s;
+	int l = 0, r = 0;
+	for (int i = 0; i &lt; n; i++)
+		if (s[i] == 'L') ++l;
+		else ++r;
+	print(r + l + 1);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Just Eat It!</h2>
@@ -33,21 +33,21 @@ int n;
 ll a[N], b[N], c[N];
 
 inline void solve() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), b[i] = a[i] + b[i-1];
-    c[n+1] = 0;
-    for (int i = n; i; i--) c[i] = c[i+1] + a[i];
-    bool ok = 1;
-    for (int i = 1; i &lt;= n; i++)
-        if (b[i] &lt;= 0 || c[i] &lt;= 0) ok = 0;
-    prints(ok ? "YES" : "NO");
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), b[i] = a[i] + b[i-1];
+	c[n+1] = 0;
+	for (int i = n; i; i--) c[i] = c[i+1] + a[i];
+	bool ok = 1;
+	for (int i = 1; i &lt;= n; i++)
+		if (b[i] &lt;= 0 || c[i] &lt;= 0) ok = 0;
+	prints(ok ? "YES" : "NO");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Fadi and LCM</h2>
@@ -57,26 +57,26 @@ int main() {
 <pre tabindex="0"><code class="language-cpp">vector &lt;ll&gt; p;
 
 int main() {
-    ll x, X;
-    rd(x), X = x;
-    for (ll i = 2; i * i &lt;= x; i++)
-        if (x % i == 0) {
-            ll o = 1;
-            while (x % i == 0) o *= i, x /= i;
-            p.pb(o);
-        }
-    if (x != 1) p.pb(x);
-    sort(p.begin(), p.end());
-    int c = p.size();
-    ll ans = 1e18;
-    for (int i = 0; i &lt; (1 &lt;&lt; c); i++) {
-        ll o = 1;
-        for (int j = 0; j &lt; c; j++)
-            if ((i &gt;&gt; j) &amp; 1) o *= p[j];
-        ans = min(ans, max(o, X / o));
-    }
-    print(ans, ' '), print(X / ans);
-    return 0;
+	ll x, X;
+	rd(x), X = x;
+	for (ll i = 2; i * i &lt;= x; i++)
+		if (x % i == 0) {
+			ll o = 1;
+			while (x % i == 0) o *= i, x /= i;
+			p.pb(o);
+		}
+	if (x != 1) p.pb(x);
+	sort(p.begin(), p.end());
+	int c = p.size();
+	ll ans = 1e18;
+	for (int i = 0; i &lt; (1 &lt;&lt; c); i++) {
+		ll o = 1;
+		for (int j = 0; j &lt; c; j++)
+			if ((i &gt;&gt; j) &amp; 1) o *= p[j];
+		ans = min(ans, max(o, X / o));
+	}
+	print(ans, ' '), print(X / ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Dr. Evil Underscores</h2>
@@ -85,26 +85,26 @@ int main() {
 int n, a[N], trie[N&lt;&lt;5|1][2], t = 1;
 
 inline void ins(int x) {
-    int p = 1;
-    for (int i = M; ~i; i--) {
-        int c = (x &gt;&gt; i) &amp; 1;
-        if (!trie[p][c]) trie[p][c] = ++t;
-        p = trie[p][c];
-    }
+	int p = 1;
+	for (int i = M; ~i; i--) {
+		int c = (x &gt;&gt; i) &amp; 1;
+		if (!trie[p][c]) trie[p][c] = ++t;
+		p = trie[p][c];
+	}
 }
 
 int dfs(int x, int d) {
-    if (!trie[x][0] &amp;&amp; !trie[x][1]) return 0;
-    if (!trie[x][0]) return dfs(trie[x][1], d - 1);
-    if (!trie[x][1]) return dfs(trie[x][0], d - 1);
-    return 1 &lt;&lt; d | min(dfs(trie[x][0], d - 1), dfs(trie[x][1], d - 1));
+	if (!trie[x][0] &amp;&amp; !trie[x][1]) return 0;
+	if (!trie[x][0]) return dfs(trie[x][1], d - 1);
+	if (!trie[x][1]) return dfs(trie[x][0], d - 1);
+	return 1 &lt;&lt; d | min(dfs(trie[x][0], d - 1), dfs(trie[x][1], d - 1));
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), ins(a[i]);
-    print(dfs(1, M));
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), ins(a[i]);
+	print(dfs(1, M));
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Delete a Segment</h2>
@@ -114,44 +114,44 @@ int main() {
 int n, l[N], r[N], c[N&lt;&lt;2], p[N&lt;&lt;2], d[N&lt;&lt;2], t, s;
 
 inline void solve() {
-    rd(n), t = 0;
-    for (int i = 1; i &lt;= n; i++)
-        rd(l[i]), rd(r[i]), l[i] *= 2, r[i] *= 2,
-        p[++t] = l[i] - 1, p[++t] = l[i],
-        p[++t] = r[i], p[++t] = r[i] + 1;
-    sort(p + 1, p + t + 1);
-    t = unique(p + 1, p + t + 1) - (p + 1);
-    for (int i = 1; i &lt;= t + 1; i++) c[i] = d[i] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        l[i] = lower_bound(p + 1, p + t + 1, l[i]) - p,
-        r[i] = lower_bound(p + 1, p + t + 1, r[i]) - p,
-        ++c[l[i]], --c[r[i]+1];
-    for (int i = 1; i &lt;= t; i++) c[i] += c[i-1];
-    s = 0;
-    for (int i = 1; i &lt;= t; i++) s += c[i] &amp;&amp; !c[i-1];
-    set&lt; pi &gt; st;
-    for (int i = 1, j = 1; i &lt;= t; i = ++j) {
-        if (c[i] != 1) continue;
-        while (c[j+1] == 1) ++j;
-        if (!c[i-1] &amp;&amp; !c[j+1]) {
-            st.insert(mp(i, j));
-            continue;
-        }
-        if (!c[i-1] || !c[j+1]) continue;
-        d[i] = 1;
-    }
-    for (int i = 1; i &lt;= t; i++) d[i] += d[i-1];
-    int ans = -1;
-    for (int i = 1; i &lt;= n; i++)
-        ans = max(ans, d[r[i]] - d[l[i]-1] - (st.find(mp(l[i], r[i])) != st.end()));
-    print(ans + s);
+	rd(n), t = 0;
+	for (int i = 1; i &lt;= n; i++)
+		rd(l[i]), rd(r[i]), l[i] *= 2, r[i] *= 2,
+		p[++t] = l[i] - 1, p[++t] = l[i],
+		p[++t] = r[i], p[++t] = r[i] + 1;
+	sort(p + 1, p + t + 1);
+	t = unique(p + 1, p + t + 1) - (p + 1);
+	for (int i = 1; i &lt;= t + 1; i++) c[i] = d[i] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		l[i] = lower_bound(p + 1, p + t + 1, l[i]) - p,
+		r[i] = lower_bound(p + 1, p + t + 1, r[i]) - p,
+		++c[l[i]], --c[r[i]+1];
+	for (int i = 1; i &lt;= t; i++) c[i] += c[i-1];
+	s = 0;
+	for (int i = 1; i &lt;= t; i++) s += c[i] &amp;&amp; !c[i-1];
+	set&lt; pi &gt; st;
+	for (int i = 1, j = 1; i &lt;= t; i = ++j) {
+		if (c[i] != 1) continue;
+		while (c[j+1] == 1) ++j;
+		if (!c[i-1] &amp;&amp; !c[j+1]) {
+			st.insert(mp(i, j));
+			continue;
+		}
+		if (!c[i-1] || !c[j+1]) continue;
+		d[i] = 1;
+	}
+	for (int i = 1; i &lt;= t; i++) d[i] += d[i-1];
+	int ans = -1;
+	for (int i = 1; i &lt;= n; i++)
+		ans = max(ans, d[r[i]] - d[l[i]-1] - (st.find(mp(l[i], r[i])) != st.end()));
+	print(ans + s);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">Classical?</h2>
@@ -169,32 +169,32 @@ int n, m, a[N], u[N], c[N];
 vi p[N], s;
 
 int main() {
-    rd(n);
-    for (int i = 1, x; i &lt;= n; i++) rd(x), a[x] = 1, m = max(m, x);
-    ll ans = m;
-    u[1] = 1;
-    for (int i = 1; i &lt;= m; i++) {
-        p[i].pb(i);
-        for (int j = 2 * i; j &lt;= m; j += i)
-            p[j].pb(i), a[i] |= a[j], u[j] -= u[i];
-    }
-    for (int i = m; i; i--)
-        if (a[i]) {
-            int o = 0;
-            for (int j : p[i]) o += u[j] * c[j];
-            while (o) {
-                for (int j : p[s.back()]) {
-                    --c[j];
-                    if (i % j == 0) o -= u[j];
-                }
-                ans = max(ans, 1ll * i * s.back());
-                s.pop_back();
-            }
-            for (int j : p[i]) ++c[j];
-            s.pb(i);
-        }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1, x; i &lt;= n; i++) rd(x), a[x] = 1, m = max(m, x);
+	ll ans = m;
+	u[1] = 1;
+	for (int i = 1; i &lt;= m; i++) {
+		p[i].pb(i);
+		for (int j = 2 * i; j &lt;= m; j += i)
+			p[j].pb(i), a[i] |= a[j], u[j] -= u[i];
+	}
+	for (int i = m; i; i--)
+		if (a[i]) {
+			int o = 0;
+			for (int j : p[i]) o += u[j] * c[j];
+			while (o) {
+				for (int j : p[s.back()]) {
+					--c[j];
+					if (i % j == 0) o -= u[j];
+				}
+				ans = max(ans, 1ll * i * s.back());
+				s.pop_back();
+			}
+			for (int j : p[i]) ++c[j];
+			s.pb(i);
+		}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="25" href="/blog/tags/25/">Trie</a>、<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="91" href="/blog/tags/91/">状压</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/547/"><span>较新一篇</span>多项式 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/542/"><span>较早一篇</span>CF526F Pudding Monsters 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="546" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

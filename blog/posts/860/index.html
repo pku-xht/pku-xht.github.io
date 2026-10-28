@@ -32,47 +32,47 @@ vi e[N];
 bool v[N];
 
 inline int find(int x) {
-    for (int y : e[x])
-        if (!v[y] &amp;&amp; d[y] != 1) return y;
-    return 0;
+	for (int y : e[x])
+		if (!v[y] &amp;&amp; d[y] != 1) return y;
+	return 0;
 }
 
 inline vi work(int l, int r) {
-    vi ret(1, 1), p(1, d[l] - 2);
-    for (int i = 1; i &lt;= n; i++) v[i] = 0;
-    while (l != r) v[l] = 1, l = find(l), p.pb(d[l] - 2);
-    int t = 1;
-    for (int x : p) {
-        dbg(x);
-        for (int i = 1; i &lt;= x; i++) ret.pb(t + i + 1);
-        ret.pb(t + 1), t += x + 1;
-    }
-    ret.pb(n);
-    return ret;
+	vi ret(1, 1), p(1, d[l] - 2);
+	for (int i = 1; i &lt;= n; i++) v[i] = 0;
+	while (l != r) v[l] = 1, l = find(l), p.pb(d[l] - 2);
+	int t = 1;
+	for (int x : p) {
+		dbg(x);
+		for (int i = 1; i &lt;= x; i++) ret.pb(t + i + 1);
+		ret.pb(t + 1), t += x + 1;
+	}
+	ret.pb(n);
+	return ret;
 }
 
 int main() {
-    rd(n);
-    if (n == 2) return prints("1 2"), 0;
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x), ++d[x], ++d[y];
-    for (int i = 1; i &lt;= n; i++) c[i] = d[i];
-    for (int i = 1; i &lt;= n; i++)
-        if (d[i] == 1) --c[e[i][0]], --c[i];
-    if (*max_element(c + 1, c + n + 1) &gt; 2) return print(-1), 0;
-    if (!*max_element(c + 1, c + n + 1)) {
-        print(1, ' ');
-        for (int i = 3; i &lt; n; i++) print(i, ' ');
-        print(2, ' '), print(n);
-        return 0;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (c[i] == 1) r = i;
-    for (int i = n; i; i--)
-        if (c[i] == 1) l = i;
-    vi ans = min(work(l, r), work(r, l));
-    for (int x : ans) print(x, ' ');
-    return 0;
+	rd(n);
+	if (n == 2) return prints("1 2"), 0;
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x), ++d[x], ++d[y];
+	for (int i = 1; i &lt;= n; i++) c[i] = d[i];
+	for (int i = 1; i &lt;= n; i++)
+		if (d[i] == 1) --c[e[i][0]], --c[i];
+	if (*max_element(c + 1, c + n + 1) &gt; 2) return print(-1), 0;
+	if (!*max_element(c + 1, c + n + 1)) {
+		print(1, ' ');
+		for (int i = 3; i &lt; n; i++) print(i, ' ');
+		print(2, ' '), print(n);
+		return 0;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (c[i] == 1) r = i;
+	for (int i = n; i; i--)
+		if (c[i] == 1) l = i;
+	vi ans = min(work(l, r), work(r, l));
+	for (int x : ans) print(x, ' ');
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/862/"><span>较新一篇</span>ARC100F Colorful Sequences 题解</a><a class="rel-next" rel="next" href="/blog/posts/859/"><span>较早一篇</span>ARC101E Ribbons on Tree 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="860" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

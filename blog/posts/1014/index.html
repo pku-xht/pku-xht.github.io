@@ -15,34 +15,34 @@
 <h2 id="section-1"><a href="https://atcoder.jp/contests/agc025/tasks/agc025_a" target="_blank" rel="noopener noreferrer">Digits Sum</a></h2>
 <p>枚举。</p>
 <pre tabindex="0"><code class="language-cpp">inline int calc(int x) {
-    int s = 0;
-    while (x) s += x % 10, x /= 10;
-    return s;
+	int s = 0;
+	while (x) s += x % 10, x /= 10;
+	return s;
 }
 
 int main() {
-    int n, ans = 1e9;
-    rd(n);
-    for (int i = 1; i &lt; n; i++)
-        ans = min(ans, calc(i) + calc(n - i));
-    print(ans);
-    return 0;
+	int n, ans = 1e9;
+	rd(n);
+	for (int i = 1; i &lt; n; i++)
+		ans = min(ans, calc(i) + calc(n - i));
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc025/tasks/agc025_b" target="_blank" rel="noopener noreferrer">RGB Coloring</a></h2>
 <p>有 <span class="math-inline" data-original-math="$f_aa + f_bb = k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>a</mi></msub><mi>a</mi><mo>+</mo><msub><mi>f</mi><mi>b</mi></msub><mi>b</mi><mo>=</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">f_aa + f_bb = k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>，枚举 <span class="math-inline" data-original-math="$f_a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">f_a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，如果存在 <span class="math-inline" data-original-math="$f_b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>b</mi></msub></mrow><annotation encoding="application/x-tex">f_b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，有贡献 <span class="math-inline" data-original-math="$\binom n{f_a}\binom b{f_b}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mi>n</mi><msub><mi>f</mi><mi>a</mi></msub></mfrac><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mi>b</mi><msub><mi>f</mi><mi>b</mi></msub></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\binom n{f_a}\binom b{f_b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.4112em;vertical-align:-0.4811em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7454em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1645em;"><span style="top:-2.357em;margin-left:-0.1076em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9301em;"><span style="top:-2.355em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.1076em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">b</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int n;
-    ll a, b, k;
-    rd(n), rd(a, b, k), init(n);
-    modint ans;
-    for (int i = 0; i &lt;= n &amp;&amp; i * a &lt;= k; i++)
-        if (!((k - i * a) % b) &amp;&amp; (k - i * a) / b &lt;= n) {
-            int j = (k - i * a) / b;
-            ans += binom(n, i) * binom(n, j);
-        }
-    print(ans);
-    return 0;
+	int n;
+	ll a, b, k;
+	rd(n), rd(a, b, k), init(n);
+	modint ans;
+	for (int i = 0; i &lt;= n &amp;&amp; i * a &lt;= k; i++)
+		if (!((k - i * a) % b) &amp;&amp; (k - i * a) / b &lt;= n) {
+			int j = (k - i * a) / b;
+			ans += binom(n, i) * binom(n, j);
+		}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc025/tasks/agc025_c" target="_blank" rel="noopener noreferrer">Interval Game</a></h2>
@@ -52,38 +52,38 @@ int n, l[N], r[N];
 bool v[N];
 
 inline void work(int l, int r, int &amp;t, ll &amp;now) {
-    if (l &lt;= t &amp;&amp; r &gt;= t) return;
-    if (t &lt; l) now += l - t, t = l;
-    else now += t - r, t = r;
+	if (l &lt;= t &amp;&amp; r &gt;= t) return;
+	if (t &lt; l) now += l - t, t = l;
+	else now += t - r, t = r;
 }
 
 inline ll solve(int o) {
-    pq&lt;pi&gt; p, q;
-    for (int i = 1; i &lt;= n; i++)
-        v[i] = 0, p.push(mp(l[i], i)), q.push(mp(-r[i], i));
-    ll now = 0;
-    int t = 0;
-    for (int i = 1; i &lt;= n; i++)
-        if ((i &amp; 1) == o) {
-            while (v[p.top().se]) p.pop();
-            int x = p.top().se;
-            p.pop(), v[x] = 1;
-            work(l[x], r[x], t, now);
-        } else {
-            while (v[q.top().se]) q.pop();
-            int x = q.top().se;
-            q.pop(), v[x] = 1;
-            work(l[x], r[x], t, now);
-        }
-    work(0, 0, t, now);
-    return now;
+	pq&lt;pi&gt; p, q;
+	for (int i = 1; i &lt;= n; i++)
+		v[i] = 0, p.push(mp(l[i], i)), q.push(mp(-r[i], i));
+	ll now = 0;
+	int t = 0;
+	for (int i = 1; i &lt;= n; i++)
+		if ((i &amp; 1) == o) {
+			while (v[p.top().se]) p.pop();
+			int x = p.top().se;
+			p.pop(), v[x] = 1;
+			work(l[x], r[x], t, now);
+		} else {
+			while (v[q.top().se]) q.pop();
+			int x = q.top().se;
+			q.pop(), v[x] = 1;
+			work(l[x], r[x], t, now);
+		}
+	work(0, 0, t, now);
+	return now;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(l[i], r[i]);
-    print(max(solve(0), solve(1)));
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(l[i], r[i]);
+	print(max(solve(0), solve(1)));
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Choosing_Points" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc025/tasks/agc025_d" target="_blank" rel="noopener noreferrer">Choosing Points</a></h2>
@@ -138,44 +138,44 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <pre tabindex="0"><code class="language-cpp">const int N = 607;
 int n;
 struct G {
-    int d, c[N][N];
-    vector&lt;pi&gt; p;
-    inline bool pd(int x, int y) {
-        return x &gt;= 0 &amp;&amp; x &lt; n * 2 &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; n * 2 &amp;&amp; !~c[x][y];
-    }
-    void dfs(int x, int y, int z) {
-        c[x][y] = z;
-        for (pi o : p) {
-            int X = x + o.fi, Y = y + o.se;
-            if (pd(X, Y)) dfs(X, Y, z ^ 1);
-        }
-    }
-    inline void main() {
-        rd(d);
-        for (int i = 0; i &lt; n * 2; i++)
-            for (int j = 0; j &lt; n * 2; j++)
-                c[i][j] = -1;
-        for (int i = 1 - n * 2; i &lt; n * 2; i++)
-            for (int j = 1 - n * 2; j &lt; n * 2; j++)
-                if (i * i + j * j == d) p.pb(mp(i, j));
-        for (int i = 0; i &lt; n * 2; i++)
-            for (int j = 0; j &lt; n * 2; j++)
-                if (pd(i, j)) dfs(i, j, 0);
-    }
+	int d, c[N][N];
+	vector&lt;pi&gt; p;
+	inline bool pd(int x, int y) {
+		return x &gt;= 0 &amp;&amp; x &lt; n * 2 &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; n * 2 &amp;&amp; !~c[x][y];
+	}
+	void dfs(int x, int y, int z) {
+		c[x][y] = z;
+		for (pi o : p) {
+			int X = x + o.fi, Y = y + o.se;
+			if (pd(X, Y)) dfs(X, Y, z ^ 1);
+		}
+	}
+	inline void main() {
+		rd(d);
+		for (int i = 0; i &lt; n * 2; i++)
+			for (int j = 0; j &lt; n * 2; j++)
+				c[i][j] = -1;
+		for (int i = 1 - n * 2; i &lt; n * 2; i++)
+			for (int j = 1 - n * 2; j &lt; n * 2; j++)
+				if (i * i + j * j == d) p.pb(mp(i, j));
+		for (int i = 0; i &lt; n * 2; i++)
+			for (int j = 0; j &lt; n * 2; j++)
+				if (pd(i, j)) dfs(i, j, 0);
+	}
 } g[2];
 vector&lt;pi&gt; p[4];
 
 int main() {
-    rd(n), g[0].main(), g[1].main();
-    for (int i = 0; i &lt; n * 2; i++)
-        for (int j = 0; j &lt; n * 2; j++)
-            p[g[1].c[i][j]*2+g[0].c[i][j]].pb(mp(i, j));
-    int o = 0;
-    for (int i = 1; i &lt; 4; i++)
-        if (p[i].size() &gt; p[o].size()) o = i;
-    while ((int)p[o].size() &gt; n * n) p[o].pop_back();
-    for (pi x : p[o]) print(x.fi, x.se);
-    return 0;
+	rd(n), g[0].main(), g[1].main();
+	for (int i = 0; i &lt; n * 2; i++)
+		for (int j = 0; j &lt; n * 2; j++)
+			p[g[1].c[i][j]*2+g[0].c[i][j]].pb(mp(i, j));
+	int o = 0;
+	for (int i = 1; i &lt; 4; i++)
+		if (p[i].size() &gt; p[o].size()) o = i;
+	while ((int)p[o].size() &gt; n * n) p[o].pop_back();
+	for (pi x : p[o]) print(x.fi, x.se);
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Walking_on_a_Tree" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc025/tasks/agc025_e" target="_blank" rel="noopener noreferrer">Walking on a Tree</a></h2>
@@ -204,77 +204,77 @@ int u[N], v[N], fu[N], fv[N], f[N], g[N], tot;
 bool w[N], o[N], r[N];
 
 void dfs(int x) {
-    for (int y : e[x])
-        if (y != fa[x]) fa[y] = x, de[y] = de[x] + 1, dfs(y);
+	for (int y : e[x])
+		if (y != fa[x]) fa[y] = x, de[y] = de[x] + 1, dfs(y);
 }
 
 void mark(int a, int b, int c, int d) {
-    static int t[N];
-    memset(t, 0, sizeof(t));
-    while (a != b) {
-        if (de[a] &lt; de[b]) swap(a, b);
-        ++t[a], a = fa[a];
-    }
-    while (c != d) {
-        if (de[c] &lt; de[d]) swap(c, d);
-        ++t[c], c = fa[c];
-    }
-    for (int i = 1; i &lt;= n; i++) o[i] |= t[i] &gt;= 2;
+	static int t[N];
+	memset(t, 0, sizeof(t));
+	while (a != b) {
+		if (de[a] &lt; de[b]) swap(a, b);
+		++t[a], a = fa[a];
+	}
+	while (c != d) {
+		if (de[c] &lt; de[d]) swap(c, d);
+		++t[c], c = fa[c];
+	}
+	for (int i = 1; i &lt;= n; i++) o[i] |= t[i] &gt;= 2;
 }
 
 void work(int x) {
-    for (int y : e[x])
-        if (y != fa[x]) work(y);
-    if (x == 1) return;
-    int t = 0;
-    for (int i = 1; i &lt;= tot; i++)
-        if (!w[i]) t += (fu[i] == x) ^ (fv[i] == x);
-    ans += min(max(t, o[x] * 2), 2);
-    if (t &lt;= 1 || o[x]) {
-        for (int i = 1; i &lt;= tot; i++)
-            if (!w[i]) {
-                if (fu[i] == x) fu[i] = fa[x];
-                if (fv[i] == x) fv[i] = fa[x];
-            }
-        return;
-    }
-    vi p;
-    for (int i = 1; i &lt;= tot; i++)
-        if (!w[i] &amp;&amp; ((fu[i] == x) ^ (fv[i] == x))) p.pb(i);
-    int a = p[0], b = p[1];
-    mark(fu[a], fv[a], fu[b], fv[b]);
-    w[a] = w[b] = 1, f[++tot] = a, g[tot] = b;
-    if (fu[a] == x) u[tot] = v[a], fu[tot] = fv[a];
-    else u[tot] = u[a], fu[tot] = fu[a];
-    if (fu[b] == x) v[tot] = v[b], fv[tot] = fv[b];
-    else v[tot] = u[b], fv[tot] = fu[b];
-    for (int i = 1; i &lt;= tot; i++)
-        if (!w[i]) {
-            if (fu[i] == x) fu[i] = fa[x];
-            if (fv[i] == x) fv[i] = fa[x];
-        }
+	for (int y : e[x])
+		if (y != fa[x]) work(y);
+	if (x == 1) return;
+	int t = 0;
+	for (int i = 1; i &lt;= tot; i++)
+		if (!w[i]) t += (fu[i] == x) ^ (fv[i] == x);
+	ans += min(max(t, o[x] * 2), 2);
+	if (t &lt;= 1 || o[x]) {
+		for (int i = 1; i &lt;= tot; i++)
+			if (!w[i]) {
+				if (fu[i] == x) fu[i] = fa[x];
+				if (fv[i] == x) fv[i] = fa[x];
+			}
+		return;
+	}
+	vi p;
+	for (int i = 1; i &lt;= tot; i++)
+		if (!w[i] &amp;&amp; ((fu[i] == x) ^ (fv[i] == x))) p.pb(i);
+	int a = p[0], b = p[1];
+	mark(fu[a], fv[a], fu[b], fv[b]);
+	w[a] = w[b] = 1, f[++tot] = a, g[tot] = b;
+	if (fu[a] == x) u[tot] = v[a], fu[tot] = fv[a];
+	else u[tot] = u[a], fu[tot] = fu[a];
+	if (fu[b] == x) v[tot] = v[b], fv[tot] = fv[b];
+	else v[tot] = u[b], fv[tot] = fu[b];
+	for (int i = 1; i &lt;= tot; i++)
+		if (!w[i]) {
+			if (fu[i] == x) fu[i] = fa[x];
+			if (fv[i] == x) fv[i] = fa[x];
+		}
 }
 
 int main() {
-    rd(n, m), tot = m;
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    de[1] = 1, dfs(1);
-    for (int i = 1; i &lt;= m; i++)
-        rd(u[i], v[i]), fu[i] = u[i], fv[i] = v[i];
-    work(1), print(ans);
-    for (int i = tot; i; i--) {
-        if (!w[i]) r[i] = 1;
-        if (i &gt; m) {
-            int a = f[i], b = g[i];
-            r[a] = r[i] ^ (u[i] != u[a]);
-            r[b] = r[i] ^ (v[i] != v[b]);
-        }
-    }
-    for (int i = 1; i &lt;= m; i++)
-        if (r[i]) print(u[i], v[i]);
-        else print(v[i], u[i]);
-    return 0;
+	rd(n, m), tot = m;
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	de[1] = 1, dfs(1);
+	for (int i = 1; i &lt;= m; i++)
+		rd(u[i], v[i]), fu[i] = u[i], fv[i] = v[i];
+	work(1), print(ans);
+	for (int i = tot; i; i--) {
+		if (!w[i]) r[i] = 1;
+		if (i &gt; m) {
+			int a = f[i], b = g[i];
+			r[a] = r[i] ^ (u[i] != u[a]);
+			r[b] = r[i] ^ (v[i] != v[b]);
+		}
+	}
+	for (int i = 1; i &lt;= m; i++)
+		if (r[i]) print(u[i], v[i]);
+		else print(v[i], u[i]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Addition_and_Andition" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc025/tasks/agc025_f" target="_blank" rel="noopener noreferrer">Addition and Andition</a></h2>
@@ -344,48 +344,48 @@ int n, m, k, a[N], b[N], s[N], t[N];
 stack&lt;pi&gt; st;
 
 inline void in(int *a, int n) {
-    static char s[N];
-    rds(s, n);
-    for (int i = 1; i &lt;= n; i++) a[n+1-i] = s[i] - '0';
+	static char s[N];
+	rds(s, n);
+	for (int i = 1; i &lt;= n; i++) a[n+1-i] = s[i] - '0';
 }
 
 inline void out(int *a) {
-    int l = max(n, m) + k;
-    while (!a[l]) --l;
-    for (int i = l; i; i--) printc(a[i] + '0');
-    printc('\n');
+	int l = max(n, m) + k;
+	while (!a[l]) --l;
+	for (int i = l; i; i--) printc(a[i] + '0');
+	printc('\n');
 }
 
 int main() {
-    rd(n, m, k), in(a, n), in(b, m);
-    for (int i = max(n, m); i; i--) {
-        if (a[i] + b[i] == 1) st.push(mp(i, a[i] * 2 + b[i]));
-        if (a[i] + b[i] &lt;= 1) continue;
-        int c = k, p = i, x = 3;
-        stack&lt;pi&gt; sa;
-        while (st.size()) {
-            pi o = st.top();
-            if (p == o.fi) {
-                st.pop();
-                if ((x ^ o.se) == 3) {
-                    x = 3;
-                    if (c) c--;
-                    else break;
-                } else if (x == 3) x &amp;= o.se, sa.push(mp(o.fi, o.se ^ 3));
-                p++;
-            } else if (x == 3 &amp;&amp; o.fi - p &lt;= c) c -= o.fi - p, p = o.fi;
-            else break;
-        }
-        if (x == 3) s[p+c] = t[p+c] = 1;
-        else sa.push(mp(p, x));
-        while (sa.size()) st.push(sa.top()), sa.pop();
-    }
-    while (st.size()) {
-        pi o = st.top();
-        s[o.fi] += o.se &gt;&gt; 1 &amp; 1, t[o.fi] += o.se &amp; 1, st.pop();
-    }
-    out(s), out(t);
-    return 0;
+	rd(n, m, k), in(a, n), in(b, m);
+	for (int i = max(n, m); i; i--) {
+		if (a[i] + b[i] == 1) st.push(mp(i, a[i] * 2 + b[i]));
+		if (a[i] + b[i] &lt;= 1) continue;
+		int c = k, p = i, x = 3;
+		stack&lt;pi&gt; sa;
+		while (st.size()) {
+			pi o = st.top();
+			if (p == o.fi) {
+				st.pop();
+				if ((x ^ o.se) == 3) {
+					x = 3;
+					if (c) c--;
+					else break;
+				} else if (x == 3) x &amp;= o.se, sa.push(mp(o.fi, o.se ^ 3));
+				p++;
+			} else if (x == 3 &amp;&amp; o.fi - p &lt;= c) c -= o.fi - p, p = o.fi;
+			else break;
+		}
+		if (x == 3) s[p+c] = t[p+c] = 1;
+		else sa.push(mp(p, x));
+		while (sa.size()) st.push(sa.top()), sa.pop();
+	}
+	while (st.size()) {
+		pi o = st.top();
+		s[o.fi] += o.se &gt;&gt; 1 &amp; 1, t[o.fi] += o.se &amp; 1, st.pop();
+	}
+	out(s), out(t);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/1016/"><span>较新一篇</span>AtCoder Grand Contest 024 题解</a><a class="rel-next" rel="next" href="/blog/posts/1010/"><span>较早一篇</span>AtCoder Grand Contest 026 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="1014" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

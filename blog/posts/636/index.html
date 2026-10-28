@@ -18,20 +18,20 @@
 int n, d, a[N];
 
 inline void solve() {
-    rd(n), rd(d);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    for (int i = 2; i &lt;= n; i++) {
-        int now = min(d, a[i] * (i - 1));
-        a[1] += now / (i - 1), d -= now;
-    }
-    print(a[1]);
+	rd(n), rd(d);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	for (int i = 2; i &lt;= n; i++) {
+		int now = min(d, a[i] * (i - 1));
+		a[1] += now / (i - 1), d -= now;
+	}
+	print(a[1]);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Cow and Friend</h2>
@@ -40,20 +40,20 @@ int main() {
 int n, d, a[N], x;
 
 inline void solve() {
-    rd(n), rd(d);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    sort(a + 1, a + n + 1);
-    x = upper_bound(a + 1, a + n + 1, d) - a - 1;
-    if (!x) print(2);
-    else if (x == n) print((d - 1) / a[x] + 1);
-    else print(min(2, (d - 1) / a[x] + 1));
+	rd(n), rd(d);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	sort(a + 1, a + n + 1);
+	x = upper_bound(a + 1, a + n + 1, d) - a - 1;
+	if (!x) print(2);
+	else if (x == n) print((d - 1) / a[x] + 1);
+	else print(min(2, (d - 1) / a[x] + 1));
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Cow and Message</h2>
@@ -64,18 +64,18 @@ char s[N];
 ll ans, f[26][26];
 
 int main() {
-    rds(s, n);
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 0; j &lt; 26; j++)
-            f[j][s[i]-'a'] += c[j];
-        ++c[s[i]-'a'];
-    }
-    ans = *max_element(c, c + 26);
-    for (int j = 0; j &lt; 26; j++)
-        for (int k = 0; k &lt; 26; k++)
-            ans = max(ans, f[j][k]);
-    print(ans);
-    return 0;
+	rds(s, n);
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 0; j &lt; 26; j++)
+			f[j][s[i]-'a'] += c[j];
+		++c[s[i]-'a'];
+	}
+	ans = *max_element(c, c + 26);
+	for (int j = 0; j &lt; 26; j++)
+		for (int k = 0; k &lt; 26; k++)
+			ans = max(ans, f[j][k]);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Cow and Fields</h2>
@@ -85,30 +85,30 @@ int n, m, k, a[N], ds[N], dt[N], v[N], ans;
 vi e[N];
 
 inline void dij(int s, int *d) {
-    for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
-    pq&lt;pi&gt; q;
-    d[s] = 0, q.push(mp(0, s));
-    while (q.size()) {
-        int x = q.top().se;
-        q.pop();
-        if (v[x]) continue;
-        v[x] = 1;
-        for (int y : e[x])
-            if (d[y] &gt; d[x] + 1)
-                d[y] = d[x] + 1, q.push(mp(-d[y], y));
-    }
+	for (int i = 1; i &lt;= n; i++) d[i] = inf, v[i] = 0;
+	pq&lt;pi&gt; q;
+	d[s] = 0, q.push(mp(0, s));
+	while (q.size()) {
+		int x = q.top().se;
+		q.pop();
+		if (v[x]) continue;
+		v[x] = 1;
+		for (int y : e[x])
+			if (d[y] &gt; d[x] + 1)
+				d[y] = d[x] + 1, q.push(mp(-d[y], y));
+	}
 }
 
 int main() {
-    rd(n), rd(m), rd(k);
-    for (int i = 1; i &lt;= k; i++) rd(a[i]);
-    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    dij(1, ds), dij(n, dt);
-    sort(a + 1, a + k + 1, [&amp;](int i, int j) { return dt[i] &lt; dt[j]; });
-    for (int i = 1; i &lt; k; i++)
-        ans = max(ans, ds[a[i+1]] + 1 + dt[a[i]]);
-    print(min(ans, ds[n]));
-    return 0;
+	rd(n), rd(m), rd(k);
+	for (int i = 1; i &lt;= k; i++) rd(a[i]);
+	for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	dij(1, ds), dij(n, dt);
+	sort(a + 1, a + k + 1, [&amp;](int i, int j) { return dt[i] &lt; dt[j]; });
+	for (int i = 1; i &lt; k; i++)
+		ans = max(ans, ds[a[i+1]] + 1 + dt[a[i]]);
+	print(min(ans, ds[n]));
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Cow and Treats</h2>

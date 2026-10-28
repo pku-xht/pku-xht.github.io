@@ -36,60 +36,60 @@ char s[N], a[D], b[D];
 modint p[N][2], f[D][N*D][2];
 
 inline void build() {
-    int m = d / 2;
-    for (int i = 1; i + m - 1 &lt;= n; i++) {
-        int p = 1;
-        for (int j = i, k = 1; k &lt;= m; j++, k++) {
-            int c = s[j] - '0';
-            if (!trie[p][c]) trie[p][c] = ++tot;
-            p = trie[p][c];
-        }
-        ed[p] = 1;
-    }
-    queue&lt; int &gt; q;
-    for (int i = 0; i &lt; 10; i++)
-        if (trie[1][i]) fail[trie[1][i]] = 1, q.push(trie[1][i]);
-        else trie[1][i] = 1;
-    while (q.size()) {
-        int x = q.front();
-        q.pop();
-        for (int i = 0; i &lt; 10; i++)
-            if (trie[x][i]) fail[trie[x][i]] = trie[fail[x]][i], q.push(trie[x][i]);
-            else trie[x][i] = trie[fail[x]][i];
-    }
+	int m = d / 2;
+	for (int i = 1; i + m - 1 &lt;= n; i++) {
+		int p = 1;
+		for (int j = i, k = 1; k &lt;= m; j++, k++) {
+			int c = s[j] - '0';
+			if (!trie[p][c]) trie[p][c] = ++tot;
+			p = trie[p][c];
+		}
+		ed[p] = 1;
+	}
+	queue&lt; int &gt; q;
+	for (int i = 0; i &lt; 10; i++)
+		if (trie[1][i]) fail[trie[1][i]] = 1, q.push(trie[1][i]);
+		else trie[1][i] = 1;
+	while (q.size()) {
+		int x = q.front();
+		q.pop();
+		for (int i = 0; i &lt; 10; i++)
+			if (trie[x][i]) fail[trie[x][i]] = trie[fail[x]][i], q.push(trie[x][i]);
+			else trie[x][i] = trie[fail[x]][i];
+	}
 }
 
 inline modint calc(char *t) {
-    p[d+1][0] = p[d+1][1] = 1;
-    for (int i = d; i; i--) p[i][0] = p[i+1][0] * 10, p[i][1] = (t[i] - '0') * p[i+1][0] + p[i+1][1];
-    modint ans = 0;
-    for (int i = 1; i &lt;= d; i++)
-        for (int j = 1; j &lt;= tot; j++)
-            for (int k = 0; k &lt; 2; k++)
-                f[i][j][k] = 0;
-    f[0][1][1] = 1;
-    for (int i = 0; i &lt; d; i++)
-        for (int j = 1; j &lt;= tot; j++)
-            if (!ed[j])
-                for (int k = 0; k &lt; 10; k++) {
-                    int o = trie[j][k];
-                    f[i+1][o][0] += f[i][j][0];
-                    if (k &lt; t[i+1] - '0') f[i+1][o][0] += f[i][j][1];
-                    if (k == t[i+1] - '0') f[i+1][o][1] += f[i][j][1];
-                }
-    for (int i = 1; i &lt;= d; i++)
-        for (int j = 1; j &lt;= tot; j++)
-            if (ed[j]) ans += f[i][j][0] * p[i+1][0] + f[i][j][1] * p[i+1][1];
-    return ans;
+	p[d+1][0] = p[d+1][1] = 1;
+	for (int i = d; i; i--) p[i][0] = p[i+1][0] * 10, p[i][1] = (t[i] - '0') * p[i+1][0] + p[i+1][1];
+	modint ans = 0;
+	for (int i = 1; i &lt;= d; i++)
+		for (int j = 1; j &lt;= tot; j++)
+			for (int k = 0; k &lt; 2; k++)
+				f[i][j][k] = 0;
+	f[0][1][1] = 1;
+	for (int i = 0; i &lt; d; i++)
+		for (int j = 1; j &lt;= tot; j++)
+			if (!ed[j])
+				for (int k = 0; k &lt; 10; k++) {
+					int o = trie[j][k];
+					f[i+1][o][0] += f[i][j][0];
+					if (k &lt; t[i+1] - '0') f[i+1][o][0] += f[i][j][1];
+					if (k == t[i+1] - '0') f[i+1][o][1] += f[i][j][1];
+				}
+	for (int i = 1; i &lt;= d; i++)
+		for (int j = 1; j &lt;= tot; j++)
+			if (ed[j]) ans += f[i][j][0] * p[i+1][0] + f[i][j][1] * p[i+1][1];
+	return ans;
 }
 
 int main() {
-    rds(s, n), rds(a, d), rds(b, d), build();
-    int k = d;
-    while (a[k] == '0') a[k--] = '9';
-    --a[k];
-    print(calc(b) - calc(a));
-    return 0;
+	rds(s, n), rds(a, d), rds(b, d), build();
+	int k = d;
+	while (a[k] == '0') a[k--] = '9';
+	--a[k];
+	print(calc(b) - calc(a));
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="105" href="/blog/tags/105/">AC 自动机</a>、<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="25" href="/blog/tags/25/">Trie</a>、<a data-source-tag="106" href="/blog/tags/106/">数位 DP</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/447/"><span>较新一篇</span>CF555E Case of Computer Network 题解</a><a class="rel-next" rel="next" href="/blog/posts/443/"><span>较早一篇</span>CF578E Walking! 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="445" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

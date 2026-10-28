@@ -18,12 +18,12 @@
 <h2 id="section-2">核心操作：合并</h2>
 <p>合并两个堆时，由于要满足堆性质，先取值较小的那个根作为合并后堆的根节点，然后将这个根的左儿子作为合并后堆的左儿子，递归地合并其右儿子与另一个堆，作为合并后的堆的右儿子。为了满足左偏性质，合并后若左儿子的 <span class="math-inline" data-original-math="$\mathrm{dist}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi></mrow><annotation encoding="application/x-tex">\mathrm{dist}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord"><span class="mord mathrm">dist</span></span></span></span></span></span> 小于右儿子的 <span class="math-inline" data-original-math="$\mathrm{dist}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">s</mi><mi mathvariant="normal">t</mi></mrow><annotation encoding="application/x-tex">\mathrm{dist}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord"><span class="mord mathrm">dist</span></span></span></span></span></span>，就交换两个儿子，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(\log n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">int merge(int x, int y) {
-    if (!x || !y) return x | y;
-    if (t[x].x &gt; t[y].x) swap(x, y);
-    t[t[x].r=merge(t[x].r,y)].f = x;
-    if (t[t[x].r].d &gt; t[t[x].l].d) swap(t[x].l, t[x].r);
-    t[x].d = t[t[x].r].d + 1;
-    return x;
+	if (!x || !y) return x | y;
+	if (t[x].x &gt; t[y].x) swap(x, y);
+	t[t[x].r=merge(t[x].r,y)].f = x;
+	if (t[t[x].r].d &gt; t[t[x].l].d) swap(t[x].l, t[x].r);
+	t[x].d = t[t[x].r].d + 1;
+	return x;
 }
 </code></pre>
 <h4 id="section-3">【模板】<a href="https://www.luogu.com.cn/problem/P3377" target="_blank" rel="noopener noreferrer">P3377 【模板】左偏树（可并堆）</a></h4>
@@ -32,39 +32,39 @@
 int n, m, f[N];
 bool v[N];
 struct T {
-    int x, l, r, f, d;
+	int x, l, r, f, d;
 } t[N];
 
 int get(int x) {
-    return x == f[x] ? x : (f[x] = get(f[x]));
+	return x == f[x] ? x : (f[x] = get(f[x]));
 }
 
 int merge(int x, int y) {
-    if (!x || !y) return x | y;
-    if (t[x].x &gt; t[y].x || (t[x].x == t[y].x &amp;&amp; x &gt; y)) swap(x, y);
-    t[t[x].r=merge(t[x].r,y)].f = x;
-    if (t[t[x].l].d &lt; t[t[x].r].d) swap(t[x].l, t[x].r);
-    t[x].d = t[t[x].r].d + 1;
-    return f[y] = x;
+	if (!x || !y) return x | y;
+	if (t[x].x &gt; t[y].x || (t[x].x == t[y].x &amp;&amp; x &gt; y)) swap(x, y);
+	t[t[x].r=merge(t[x].r,y)].f = x;
+	if (t[t[x].l].d &lt; t[t[x].r].d) swap(t[x].l, t[x].r);
+	t[x].d = t[t[x].r].d + 1;
+	return f[y] = x;
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 1; i &lt;= n; i++) rd(t[i].x), t[i].d = 1, f[i] = i;
-    for (int i = 1, o, x, y; i &lt;= m; i++) {
-        rd(o), rd(x);
-        if (o == 1) {
-            rd(y);
-            if (v[x] || v[y]) continue;
-            x = get(x), y = get(y);
-            if (x != y) merge(x, y);
-        } else if (v[x]) print(-1);
-        else {
-            x = get(x), v[x] = 1, print(t[x].x);
-            f[x] = f[t[x].l] = f[t[x].r] = merge(t[x].l, t[x].r);
-        }
-    }
-    return 0;
+	rd(n), rd(m);
+	for (int i = 1; i &lt;= n; i++) rd(t[i].x), t[i].d = 1, f[i] = i;
+	for (int i = 1, o, x, y; i &lt;= m; i++) {
+		rd(o), rd(x);
+		if (o == 1) {
+			rd(y);
+			if (v[x] || v[y]) continue;
+			x = get(x), y = get(y);
+			if (x != y) merge(x, y);
+		} else if (v[x]) print(-1);
+		else {
+			x = get(x), v[x] = 1, print(t[x].x);
+			f[x] = f[t[x].l] = f[t[x].r] = merge(t[x].l, t[x].r);
+		}
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">参考资料</h2>

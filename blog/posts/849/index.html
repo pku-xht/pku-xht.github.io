@@ -43,29 +43,29 @@ const int N = 3e5 + 7;
 int n, p[N];
 
 inline bool pd(int l, int r) {
-    if (l == r) return 0;
-    int L = 0, R = 0;
-    for (int i = l; i &lt;= r; i += 2)
-        if (p[i] &lt; l || p[i] &gt; r) return 0;
-        else if (i &lt; p[i]) {
-            if (L &amp;&amp; p[i] &lt; L) return 0;
-            else L = p[i];
-        } else {
-            if (R &amp;&amp; p[i] &lt; R) return 0;
-            else R = p[i];
-        }
-    return 1;
+	if (l == r) return 0;
+	int L = 0, R = 0;
+	for (int i = l; i &lt;= r; i += 2)
+		if (p[i] &lt; l || p[i] &gt; r) return 0;
+		else if (i &lt; p[i]) {
+			if (L &amp;&amp; p[i] &lt; L) return 0;
+			else L = p[i];
+		} else {
+			if (R &amp;&amp; p[i] &lt; R) return 0;
+			else R = p[i];
+		}
+	return 1;
 }
 
 int main() {
-    rd(n), rda(p, n);
-    for (int l = 1, r = 1; l &lt;= n; l = ++r) {
-        if (p[r] == r) continue;
-        while (r + 2 &lt;= n &amp;&amp; p[r+1] == r + 1 &amp;&amp; p[r+2] != r + 2) r += 2;
-        if (!pd(l, r)) Fail;
-    }
-    prints("Yes");
-    return 0;
+	rd(n), rda(p, n);
+	for (int l = 1, r = 1; l &lt;= n; l = ++r) {
+		if (p[r] == r) continue;
+		while (r + 2 &lt;= n &amp;&amp; p[r+1] == r + 1 &amp;&amp; p[r+2] != r + 2) r += 2;
+		if (!pd(l, r)) Fail;
+	}
+	prints("Yes");
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/852/"><span>较新一篇</span>ARC093F Dark Horse 题解</a><a class="rel-next" rel="next" href="/blog/posts/848/"><span>较早一篇</span>ARC092F Two Faced Edges 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="849" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

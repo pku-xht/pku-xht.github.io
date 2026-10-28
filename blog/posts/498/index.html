@@ -29,43 +29,43 @@ ll b[N];
 modint f[2][2][N], g[2][2][N], ans;
 
 int main() {
-    rd(p), rd(c), rds(s, n);
-    for (int i = 1; i &lt;= n; i++) a[i] = s[n+1-i] - '0';
-    for (int i = n; i; i--) {
-        for (int j = 1; j &lt; N - 1; j++) b[j] *= 10;
-        b[1] += a[i];
-        for (int j = 1; j &lt; N - 1; j++)
-            if (b[j] &gt;= p) b[j+1] += b[j] / p, b[j] %= p;
-    }
-    for (int i = 1; i &lt;= N; ++i) a[i] = b[i];
-    n = N - 1;
-    while (n &amp;&amp; !a[n]) --n;
-    if (!n) return print(0), 0;
-    f[1][0][0] = 1;
-    for (int i = n; i; i--) {
-        modint a0 = 1ll * p * (p + 1) / 2 % P;
-        modint a1 = 1ll * p * (p - 1) / 2 % P;
-        modint a2 = 1ll * a[i] * (a[i] + 1) / 2 % P;
-        modint a3 = 1ll * a[i] * (a[i] - 1) / 2 % P;
-        modint a4 = 1ll * a[i] * (p + p - a[i] - 1) / 2 % P;
-        modint a5 = 1ll * a[i] * (p + p - a[i] + 1) / 2 % P;
-        for (int j = 0; j &lt;= n + 1 - i; j++) g[0][0][j] = g[0][1][j] = g[1][0][j] = g[1][1][j] = 0;
-        for (int j = 0; j &lt;= n - i; j++) {
-            modint f0 = f[0][0][j], f1 = f[0][1][j], f2 = f[1][0][j], f3 = f[1][1][j];
-            g[0][0][j] += f0 * a0 + f2 * a2;
-            g[0][1][j] += f0 * a1 + f2 * a3;
-            g[1][0][j] += f2 * (a[i] + 1);
-            g[1][1][j] += f2 * a[i];
-            g[0][0][j+1] += f1 * a1 + f3 * a4;
-            g[0][1][j+1] += f1 * a0 + f3 * a5;
-            g[1][0][j+1] += f3 * (p - a[i] - 1);
-            g[1][1][j+1] += f3 * (p - a[i]);
-        }
-        swap(f, g);
-    }
-    for (int i = c; i &lt;= n; i++) ans += f[0][0][i] + f[1][0][i];
-    print(ans);
-    return 0;
+	rd(p), rd(c), rds(s, n);
+	for (int i = 1; i &lt;= n; i++) a[i] = s[n+1-i] - '0';
+	for (int i = n; i; i--) {
+		for (int j = 1; j &lt; N - 1; j++) b[j] *= 10;
+		b[1] += a[i];
+		for (int j = 1; j &lt; N - 1; j++)
+			if (b[j] &gt;= p) b[j+1] += b[j] / p, b[j] %= p;
+	}
+	for (int i = 1; i &lt;= N; ++i) a[i] = b[i];
+	n = N - 1;
+	while (n &amp;&amp; !a[n]) --n;
+	if (!n) return print(0), 0;
+	f[1][0][0] = 1;
+	for (int i = n; i; i--) {
+		modint a0 = 1ll * p * (p + 1) / 2 % P;
+		modint a1 = 1ll * p * (p - 1) / 2 % P;
+		modint a2 = 1ll * a[i] * (a[i] + 1) / 2 % P;
+		modint a3 = 1ll * a[i] * (a[i] - 1) / 2 % P;
+		modint a4 = 1ll * a[i] * (p + p - a[i] - 1) / 2 % P;
+		modint a5 = 1ll * a[i] * (p + p - a[i] + 1) / 2 % P;
+		for (int j = 0; j &lt;= n + 1 - i; j++) g[0][0][j] = g[0][1][j] = g[1][0][j] = g[1][1][j] = 0;
+		for (int j = 0; j &lt;= n - i; j++) {
+			modint f0 = f[0][0][j], f1 = f[0][1][j], f2 = f[1][0][j], f3 = f[1][1][j];
+			g[0][0][j] += f0 * a0 + f2 * a2;
+			g[0][1][j] += f0 * a1 + f2 * a3;
+			g[1][0][j] += f2 * (a[i] + 1);
+			g[1][1][j] += f2 * a[i];
+			g[0][0][j+1] += f1 * a1 + f3 * a4;
+			g[0][1][j+1] += f1 * a0 + f3 * a5;
+			g[1][0][j+1] += f3 * (p - a[i] - 1);
+			g[1][1][j+1] += f3 * (p - a[i]);
+		}
+		swap(f, g);
+	}
+	for (int i = c; i &lt;= n; i++) ans += f[0][0][i] + f[1][0][i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="106" href="/blog/tags/106/">数位 DP</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/502/"><span>较新一篇</span>Codeforces Global Round 6 题解</a><a class="rel-next" rel="next" href="/blog/posts/491/"><span>较早一篇</span>Codeforces Round #608 (Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="498" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

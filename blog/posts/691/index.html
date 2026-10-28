@@ -39,38 +39,38 @@ vector&lt;pi&gt; R[N], C[N];
 ll ans;
 
 inline ll calc(int i, int j, int o) {
-    ll ret = 1ll * (t[o] - j + 1) * (a[o].se - a[p[o]].se) * (c - a[v[o]].se + 1);
-    return t[o] = j - 1, ret;
+	ll ret = 1ll * (t[o] - j + 1) * (a[o].se - a[p[o]].se) * (c - a[v[o]].se + 1);
+	return t[o] = j - 1, ret;
 }
 
 int main() {
-    rd(r), rd(c), rd(n), rd(k);
-    for (int i = 1, x, y; i &lt;= n; i++)
-        rd(x), rd(y), a[i] = mp(x, y), R[x].pb(mp(y, i)), C[y].pb(mp(x, i));
-    for (int i = 1; i &lt;= r; i++) sort(R[i].begin(), R[i].end());
-    for (int i = 1; i &lt;= c; i++) sort(C[i].begin(), C[i].end());
-    a[n+1] = mp(r + 1, c + 1);
-    for (int i = 1; i &lt;= r; i++) {
-        int o = 0;
-        for (int j = 1; j &lt;= c; j++)
-            for (pi x : C[j])
-                if (x.fi &gt;= i)
-                    q[o] = x.se, p[x.se] = o, o = x.se, t[o] = r, v[o] = 0;
-        q[o] = q[n+1] = v[n+1] = n + 1, t[n+1] = r, o = 0;
-        for (int j = 1; j &lt;= k; j++) o = q[o];
-        for (int j = q[0]; j != n + 1; j = q[j], o = q[o]) v[j] = o;
-        for (int j = r; j &gt;= i; j--)
-            for (pi x : R[j]) {
-                ans += calc(i, j, q[x.se]), o = x.se;
-                for (int l = 1; o &amp;&amp; l &lt;= k; l++, o = p[o]) ans += calc(i, j, o);
-                q[p[x.se]] = q[x.se], p[q[x.se]] = p[x.se];
-                int w = o = q[o];
-                for (int l = 1; l &lt; k; l++) w = q[w];
-                while (o != q[x.se]) v[o] = w, o = q[o], w = q[w];
-            }
-    }
-    print(ans);
-    return 0;
+	rd(r), rd(c), rd(n), rd(k);
+	for (int i = 1, x, y; i &lt;= n; i++)
+		rd(x), rd(y), a[i] = mp(x, y), R[x].pb(mp(y, i)), C[y].pb(mp(x, i));
+	for (int i = 1; i &lt;= r; i++) sort(R[i].begin(), R[i].end());
+	for (int i = 1; i &lt;= c; i++) sort(C[i].begin(), C[i].end());
+	a[n+1] = mp(r + 1, c + 1);
+	for (int i = 1; i &lt;= r; i++) {
+		int o = 0;
+		for (int j = 1; j &lt;= c; j++)
+			for (pi x : C[j])
+				if (x.fi &gt;= i)
+					q[o] = x.se, p[x.se] = o, o = x.se, t[o] = r, v[o] = 0;
+		q[o] = q[n+1] = v[n+1] = n + 1, t[n+1] = r, o = 0;
+		for (int j = 1; j &lt;= k; j++) o = q[o];
+		for (int j = q[0]; j != n + 1; j = q[j], o = q[o]) v[j] = o;
+		for (int j = r; j &gt;= i; j--)
+			for (pi x : R[j]) {
+				ans += calc(i, j, q[x.se]), o = x.se;
+				for (int l = 1; o &amp;&amp; l &lt;= k; l++, o = p[o]) ans += calc(i, j, o);
+				q[p[x.se]] = q[x.se], p[q[x.se]] = p[x.se];
+				int w = o = q[o];
+				for (int l = 1; l &lt; k; l++) w = q[w];
+				while (o != q[x.se]) v[o] = w, o = q[o], w = q[w];
+			}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="157" href="/blog/tags/157/">链表</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/693/"><span>较新一篇</span>CF698D Limak and Shooting Points 题解</a><a class="rel-next" rel="next" href="/blog/posts/689/"><span>较早一篇</span>CF704B Ant Man 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="691" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

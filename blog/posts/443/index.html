@@ -31,74 +31,74 @@ vi e[2], Ans;
 vector&lt; pi &gt; g[4], ans;
 
 int main() {
-    rds(s, n);
-    map&lt; char, int &gt; p;
-    p['L'] = 0, p['R'] = 1;
-    for (int i = 1; i &lt;= n; i++) {
-        int c = p[s[i]];
-        if (e[c^1].size()) {
-            t[i] = e[c^1].back();
-            e[c^1].pop_back();
-        }
-        e[c].pb(i);
-    }
-    print(e[0].size() + e[1].size() - 1);
-    for (ui i = 0; i &lt; e[0].size(); i++) {
-        int x = e[0][i], y = x;
-        while (t[y]) y = t[y];
-        g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
-    }
-    for (ui i = 0; i &lt; e[1].size(); i++) {
-        int x = e[1][i], y = x;
-        while (t[y]) y = t[y];
-        g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
-    }
-    while (g[1].size() &gt; 1u) {
-        pi x = g[1].back();
-        g[1].pop_back(); 
-        t[x.fi] = g[1].back().se;
-        g[1].back().se = x.se;
-    }
-    while (g[2].size() &gt; 1u) {
-        pi x = g[2].back();
-        g[2].pop_back(); 
-        t[x.fi] = g[2].back().se;
-        g[2].back().se = x.se;
-    }
-    if (g[1].size() &amp;&amp; g[2].size()) {
-        pi x = g[1][0], y = g[2][0];
-        g[1].pop_back(), g[2].pop_back();
-        if (x.se &gt; y.se) {
-            g[0].pb(mp(x.fi, t[x.se]));
-            t[x.se] = y.se;
-            g[3].pb(mp(y.fi, x.se));
-        } else {
-            g[3].pb(mp(y.fi, t[y.se]));
-            t[y.se] = x.se;
-            g[0].pb(mp(x.fi, y.se));
-        }
-    }
-    if (g[0].size() &gt; g[3].size() || (g[0].size() == g[3].size() &amp;&amp; !g[2].size())) {
-        if (g[1].size()) ans.pb(g[1][0]);
-        for (ui i = 0; i &lt; g[3].size(); i++)
-            ans.pb(g[0][i]), ans.pb(g[3][i]);
-        if (g[0].size() &gt; g[3].size()) ans.pb(g[0].back());
-    } else {
-        if (g[2].size()) ans.pb(g[2][0]);
-        for (ui i = 0; i &lt; g[0].size(); i++)
-            ans.pb(g[3][i]), ans.pb(g[0][i]);
-        if (g[3].size() &gt; g[0].size()) ans.pb(g[3].back());
-    }
-    while (ans.size() &gt; 1u) {
-        pi x = ans.back();
-        ans.pop_back(); 
-        t[x.fi] = ans.back().se;
-        ans.back().se = x.se;
-    }
-    Ans.pb(ans.back().se);
-    while (t[Ans.back()]) Ans.pb(t[Ans.back()]);
-    while (Ans.size()) print(Ans.back(), " \n"[Ans.size()==1u]), Ans.pop_back();
-    return 0;
+	rds(s, n);
+	map&lt; char, int &gt; p;
+	p['L'] = 0, p['R'] = 1;
+	for (int i = 1; i &lt;= n; i++) {
+		int c = p[s[i]];
+		if (e[c^1].size()) {
+			t[i] = e[c^1].back();
+			e[c^1].pop_back();
+		}
+		e[c].pb(i);
+	}
+	print(e[0].size() + e[1].size() - 1);
+	for (ui i = 0; i &lt; e[0].size(); i++) {
+		int x = e[0][i], y = x;
+		while (t[y]) y = t[y];
+		g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
+	}
+	for (ui i = 0; i &lt; e[1].size(); i++) {
+		int x = e[1][i], y = x;
+		while (t[y]) y = t[y];
+		g[p[s[y]]&lt;&lt;1|p[s[x]]].pb(mp(y, x));
+	}
+	while (g[1].size() &gt; 1u) {
+		pi x = g[1].back();
+		g[1].pop_back(); 
+		t[x.fi] = g[1].back().se;
+		g[1].back().se = x.se;
+	}
+	while (g[2].size() &gt; 1u) {
+		pi x = g[2].back();
+		g[2].pop_back(); 
+		t[x.fi] = g[2].back().se;
+		g[2].back().se = x.se;
+	}
+	if (g[1].size() &amp;&amp; g[2].size()) {
+		pi x = g[1][0], y = g[2][0];
+		g[1].pop_back(), g[2].pop_back();
+		if (x.se &gt; y.se) {
+			g[0].pb(mp(x.fi, t[x.se]));
+			t[x.se] = y.se;
+			g[3].pb(mp(y.fi, x.se));
+		} else {
+			g[3].pb(mp(y.fi, t[y.se]));
+			t[y.se] = x.se;
+			g[0].pb(mp(x.fi, y.se));
+		}
+	}
+	if (g[0].size() &gt; g[3].size() || (g[0].size() == g[3].size() &amp;&amp; !g[2].size())) {
+		if (g[1].size()) ans.pb(g[1][0]);
+		for (ui i = 0; i &lt; g[3].size(); i++)
+			ans.pb(g[0][i]), ans.pb(g[3][i]);
+		if (g[0].size() &gt; g[3].size()) ans.pb(g[0].back());
+	} else {
+		if (g[2].size()) ans.pb(g[2][0]);
+		for (ui i = 0; i &lt; g[0].size(); i++)
+			ans.pb(g[3][i]), ans.pb(g[0][i]);
+		if (g[3].size() &gt; g[0].size()) ans.pb(g[3].back());
+	}
+	while (ans.size() &gt; 1u) {
+		pi x = ans.back();
+		ans.pop_back(); 
+		t[x.fi] = ans.back().se;
+		ans.back().se = x.se;
+	}
+	Ans.pb(ans.back().se);
+	while (t[Ans.back()]) Ans.pb(t[Ans.back()]);
+	while (Ans.size()) print(Ans.back(), " \n"[Ans.size()==1u]), Ans.pop_back();
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/445/"><span>较新一篇</span>CF585F Digits of Number Pi 题解</a><a class="rel-next" rel="next" href="/blog/posts/441/"><span>较早一篇</span>CF568C New Language 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="443" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

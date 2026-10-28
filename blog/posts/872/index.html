@@ -46,47 +46,47 @@ vi e[N];
 ll x, d, w[N], v[N], c[N];
 
 void dfs(int x) {
-    v[x] = 1;
-    for (int y : e[x])
-        dfs(y), v[x] += v[y], w[x] += w[y];
+	v[x] = 1;
+	for (int y : e[x])
+		dfs(y), v[x] += v[y], w[x] += w[y];
 }
 
 const ll inf = 1e18;
 ll W[N&lt;&lt;3|1], V[N&lt;&lt;3|1], f[N*N*N], s, ans;
 
 int main() {
-    rd(n), rd(x, d, w[1]), p[1] = 1;
-    for (int i = 2, f; i &lt;= n; i++)
-        rd(w[i]), rd(f), e[f].pb(i), p[i] = i, c[i] = d;
-    dfs(1), c[1] = x / w[1] * v[1];
-    sort(p + 1, p + n + 1, [&amp;](int i, int j) {
-        return w[i] * v[j] &lt; w[j] * v[i];
-    });
-    for (int i = 1; i &lt;= n; i++) {
-        int p = ::p[i];
-        ll c = min(::c[p], (ll)n);
-        s += c * v[p];
-        ll k = 0, x = 0;
-        while (x + (1 &lt;&lt; k) &lt;= c)
-            x += 1 &lt;&lt; k, V[++t] = (1 &lt;&lt; k) * v[p], W[t] = (1 &lt;&lt; k) * w[p], ++k;
-        if (c - x) V[++t] = (c - x) * v[p], W[t] = (c - x) * w[p];
-    }
-    for (int i = 1; i &lt;= s; i++) f[i] = inf;
-    for (int i = 1, k = 0; i &lt;= t; k += V[i++])
-        for (int j = k; ~j; j--)
-            f[j+V[i]] = min(f[j+V[i]], f[j] + W[i]);
-    for (int i = 0; i &lt;= s; i++)
-        if (f[i] &lt;= x) {
-            ll now = i, sum = f[i];
-            for (int j = 1; j &lt;= n; j++) {
-                int p = ::p[j];
-                ll c = min(::c[p] - min(::c[p], (ll)n), (x - sum) / w[p]);
-                now += c * v[p], sum += c * w[p];
-            }
-            ans = max(ans, now);
-        }
-    print(ans);
-    return 0;
+	rd(n), rd(x, d, w[1]), p[1] = 1;
+	for (int i = 2, f; i &lt;= n; i++)
+		rd(w[i]), rd(f), e[f].pb(i), p[i] = i, c[i] = d;
+	dfs(1), c[1] = x / w[1] * v[1];
+	sort(p + 1, p + n + 1, [&amp;](int i, int j) {
+		return w[i] * v[j] &lt; w[j] * v[i];
+	});
+	for (int i = 1; i &lt;= n; i++) {
+		int p = ::p[i];
+		ll c = min(::c[p], (ll)n);
+		s += c * v[p];
+		ll k = 0, x = 0;
+		while (x + (1 &lt;&lt; k) &lt;= c)
+			x += 1 &lt;&lt; k, V[++t] = (1 &lt;&lt; k) * v[p], W[t] = (1 &lt;&lt; k) * w[p], ++k;
+		if (c - x) V[++t] = (c - x) * v[p], W[t] = (c - x) * w[p];
+	}
+	for (int i = 1; i &lt;= s; i++) f[i] = inf;
+	for (int i = 1, k = 0; i &lt;= t; k += V[i++])
+		for (int j = k; ~j; j--)
+			f[j+V[i]] = min(f[j+V[i]], f[j] + W[i]);
+	for (int i = 0; i &lt;= s; i++)
+		if (f[i] &lt;= x) {
+			ll now = i, sum = f[i];
+			for (int j = 1; j &lt;= n; j++) {
+				int p = ::p[j];
+				ll c = min(::c[p] - min(::c[p], (ll)n), (x - sum) / w[p]);
+				now += c * v[p], sum += c * w[p];
+			}
+			ans = max(ans, now);
+		}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="84" href="/blog/tags/84/">背包</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/874/"><span>较新一篇</span>ARC097F Monochrome Cat 题解</a><a class="rel-next" rel="next" href="/blog/posts/870/"><span>较早一篇</span>JOI Final 2018 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="872" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

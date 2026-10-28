@@ -246,6 +246,39 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.assertEqual([n.attrs["data-original-math"] for n in check_blog.nodes(prose) if "data-original-math" in n.attrs], ["$a_b$"])
         self.assertEqual([check_blog.content(n) for n in check_blog.nodes(prose) if n.tag == "code"], ["$literal", "$code$\n"])
 
+    def test_native_editor_soft_breaks_and_escaped_asterisk_math(self):
+        markdown = "第一行\n第二行 $f\\*g$ 与 $fwt\\[a\\]$。\n\n```text\nfirst\nsecond\n```\n"
+        self.write_source(FRONTMATTER + markdown)
+        self.prepare_build()
+        self.build()
+        document = check_blog.read_document(self.project / "blog/posts/7/index.html")
+        prose = next(n for n in check_blog.nodes(document) if check_blog.has_class(n, "prose"))
+        self.assertEqual(sum(n.tag == "br" for n in check_blog.nodes(prose)), 1)
+        self.assertEqual([n.attrs["data-original-math"] for n in check_blog.nodes(prose) if "data-original-math" in n.attrs], [r"$f\*g$", r"$fwt\[a\]$"])
+        self.assertEqual([check_blog.content(n) for n in check_blog.nodes(prose) if n.tag == "code"], ["first\nsecond\n"])
+        even_backslashes = build_blog.split_math(r"$a\\*b$", 7)[0]
+        self.assertEqual(even_backslashes.tex, r"a\\*b")
+
+    def test_native_editor_strikethrough_and_one_space_nested_list(self):
+        source = "- 父项\n - 子项 ~~删除~~\n - 子项二\n- 同级\n\n```text\n- code\n - still code\n```\n"
+        rendered = render_markdown(source)
+        self.assertIn("<li>父项\n<ul>", rendered)
+        self.assertIn("<del>删除</del>", rendered)
+        self.assertIn("- code\n - still code\n", rendered)
+
+    def test_legacy_math_aliases_preserve_original(self):
+        self.write_source(FRONTMATTER + r"$p \or q$, $p \and q$, $x \in \Q$." + "\n")
+        self.prepare_build()
+        self.build()
+        document = check_blog.read_document(self.project / "blog/posts/7/index.html")
+        prose = next(n for n in check_blog.nodes(document) if check_blog.has_class(n, "prose"))
+        formulas = [n for n in check_blog.nodes(prose) if "data-original-math" in n.attrs]
+        self.assertEqual([n.attrs["data-original-math"] for n in formulas], [r"$p \or q$", r"$p \and q$", r"$x \in \Q$"])
+        self.assertEqual(len(formulas), 3)
+        page_html = (self.project / "blog/posts/7/index.html").read_text(encoding="utf-8")
+        for expected in ("<mo>∨</mo>", "<mo>∧</mo>", '<mi mathvariant="double-struck">Q</mi>'):
+            self.assertIn(expected, page_html)
+
     def test_metadata_and_file_hash_come_from_formal_source(self):
         batch = self.load()
         self.assertEqual(batch["count"], 1)

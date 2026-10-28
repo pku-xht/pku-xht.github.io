@@ -37,41 +37,41 @@
 int n;
 char s[N];
 struct H {
-    vector&lt;modint&gt; a;
-    inline H() { a.resize(M); }
-    inline modint &amp;operator [] (int i) { return a[i]; }
-    inline friend bool operator &lt; (H x, H y) { return x.a &lt; y.a; }
-    inline friend H operator + (H x, H y) {
-        for (int i = 0; i &lt; M; i++) x[i] += y[i];
-        return x;
-    }
-    inline friend H operator - (H x, H y) {
-        for (int i = 0; i &lt; M; i++) x[i] -= y[i];
-        return x;
-    }
-    inline friend H operator * (H x, H y) {
-        for (int i = 0; i &lt; M; i++) x[i] *= y[i];
-        return x;
-    }
+	vector&lt;modint&gt; a;
+	inline H() { a.resize(M); }
+	inline modint &amp;operator [] (int i) { return a[i]; }
+	inline friend bool operator &lt; (H x, H y) { return x.a &lt; y.a; }
+	inline friend H operator + (H x, H y) {
+		for (int i = 0; i &lt; M; i++) x[i] += y[i];
+		return x;
+	}
+	inline friend H operator - (H x, H y) {
+		for (int i = 0; i &lt; M; i++) x[i] -= y[i];
+		return x;
+	}
+	inline friend H operator * (H x, H y) {
+		for (int i = 0; i &lt; M; i++) x[i] *= y[i];
+		return x;
+	}
 } a[N], x, y, h[N];
 map&lt;H, int&gt; f;
 ll ans;
 
 int main() {
-    srand(time(0));
-    rd(n), rds(s, n);
-    for (int i = 0; i &lt; M; i++)
-        a[0][i] = 1, x[i] = rdm(1, P - 1), y[i] = 1 / x[i];
-    for (int i = 1; i &lt;= n; i++)
-        switch (s[i]) {
-            case '+' : h[i] = h[i-1] + (a[i] = a[i-1]); break;
-            case '-' : h[i] = h[i-1] - (a[i] = a[i-1]); break;
-            case '&gt;' : h[i] = h[i-1], a[i] = a[i-1] * x; break;
-            case '&lt;' : h[i] = h[i-1], a[i] = a[i-1] * y; break;
-        }
-    for (int i = 1; i &lt;= n; i++) ++f[h[i-1]+h[n]*a[i-1]], ans += f[h[i]];
-    print(ans);
-    return 0;
+	srand(time(0));
+	rd(n), rds(s, n);
+	for (int i = 0; i &lt; M; i++)
+		a[0][i] = 1, x[i] = rdm(1, P - 1), y[i] = 1 / x[i];
+	for (int i = 1; i &lt;= n; i++)
+		switch (s[i]) {
+			case '+' : h[i] = h[i-1] + (a[i] = a[i-1]); break;
+			case '-' : h[i] = h[i-1] - (a[i] = a[i-1]); break;
+			case '&gt;' : h[i] = h[i-1], a[i] = a[i-1] * x; break;
+			case '&lt;' : h[i] = h[i-1], a[i] = a[i-1] * y; break;
+		}
+	for (int i = 1; i &lt;= n; i++) ++f[h[i-1]+h[n]*a[i-1]], ans += f[h[i]];
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="29" href="/blog/tags/29/">Hash</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/868/"><span>较新一篇</span>JOI Final 2019 题解</a><a class="rel-next" rel="next" href="/blog/posts/863/"><span>较早一篇</span>ARC089F ColoringBalls 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="865" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

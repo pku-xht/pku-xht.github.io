@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
 <main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>虚树 学习笔记</h1><p class="post-meta"><time datetime="2020-02-26T22:02:06+08:00">2020 年 2 月 26 日</time><a href="/blog/categories/13/">笔记</a><span>更新于 2020 年 4 月 3 日</span></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">概念</a></li><li class="toc-level-2"><a href="#section-2">构造</a></li><li class="toc-level-4"><a href="#section-3">【模板】</a></li><li class="toc-level-4"><a href="#section-4">【练习】P3320 [SDOI2015]寻宝游戏</a></li><li class="toc-level-2"><a href="#section-5">参考资料</a></li></ol></details><div class="prose"><blockquote>
-<p>又是以前学过的知识……<br>
+<p>又是以前学过的知识......<br>
 对于一类特殊的树上问题，虚树通常可以简化树的结构，从而降低时间复杂度。</p>
 </blockquote>
 <h2 id="section-1">概念</h2>
@@ -25,72 +25,72 @@
 <p>若 <span class="math-inline" data-original-math="$p = v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">p = v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，说明 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 是 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 的祖先，因此直接将 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 加入栈，延长右链。</p>
 <p>否则说明 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span> 和 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 在 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 的不同子树中，因此我们要更新右链，注意此时 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 一定在右链中，但不一定在栈中。</p>
 <p>所以我们不断退栈并连边，直到栈顶的第二个元素的深度比 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 小，分类讨论一下栈顶和 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 是否为同一个点，然后退栈，加入 <span class="math-inline" data-original-math="$p,u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo separator="true">,</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">p,u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span></span></span></span></span>。</p>
-<p>最后将栈中的点连边即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n) – \mathcal O(k \log k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mi>log</mi><mo>⁡</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n) - \mathcal O(k \log k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span>。</p>
+<p>最后将栈中的点连边即可，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n) - \mathcal O(k \log k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mi>log</mi><mo>⁡</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n) - \mathcal O(k \log k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span>。</p>
 <h4 id="section-3">【模板】</h4>
 <pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
 int n, m, q, dfn[N], tot, f[N][21], d[N], s[N], t;
 vi e[N], g[N];
 
 void dfs(int x) {
-    dfn[x] = ++tot;
-    for (int y : e[x])
-        if (y != f[x][0]) {
-            d[y] = d[x] + 1, f[y][0] = x;
-            for (int i = 1; f[y][i-1]; i++)
-                f[y][i] = f[f[y][i-1]][i-1];
-            dfs(y);
-        }
+	dfn[x] = ++tot;
+	for (int y : e[x])
+		if (y != f[x][0]) {
+			d[y] = d[x] + 1, f[y][0] = x;
+			for (int i = 1; f[y][i-1]; i++)
+				f[y][i] = f[f[y][i-1]][i-1];
+			dfs(y);
+		}
 }
 
 inline int lca(int x, int y) {
-    if (d[x] &gt; d[y]) swap(x, y);
-    for (int i = 20; ~i; i--)
-        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
-    if (x == y) return x;
-    for (int i = 20; ~i; i--)
-        if (f[x][i] != f[y][i])
-            x = f[x][i], y = f[y][i];
-    return f[x][0];
+	if (d[x] &gt; d[y]) swap(x, y);
+	for (int i = 20; ~i; i--)
+		if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+	if (x == y) return x;
+	for (int i = 20; ~i; i--)
+		if (f[x][i] != f[y][i])
+			x = f[x][i], y = f[y][i];
+	return f[x][0];
 }
 
 inline void virtual_tree(vi &amp;p) {
-    sort(p.begin(), p.end(), [](int x, int y) { return dfn[x] &lt; dfn[y]; });
-    //p.erase(unique(p.begin(), p.end()), p.end());
-    vi q = p;
-    for (int x : p) {
-        int lca = ::lca(x, s[t]);
-        if (lca != s[t]) {
-            while (t &amp;&amp; d[s[t-1]] &gt;= d[lca])
-                g[s[t-1]].pb(s[t]), g[s[t]].pb(s[t-1]), --t;
-            if (lca != s[t])
-                g[lca].pb(s[t]), g[s[t]].pb(lca), s[t] = lca, q.pb(lca);
-        }
-        s[++t] = x;
-    }
-    if (t) while (--t) g[s[t]].pb(s[t+1]), g[s[t+1]].pb(s[t]);
-    p = q;
+	sort(p.begin(), p.end(), [](int x, int y) { return dfn[x] &lt; dfn[y]; });
+	//p.erase(unique(p.begin(), p.end()), p.end());
+	vi q = p;
+	for (int x : p) {
+		int lca = ::lca(x, s[t]);
+		if (lca != s[t]) {
+			while (t &amp;&amp; d[s[t-1]] &gt;= d[lca])
+				g[s[t-1]].pb(s[t]), g[s[t]].pb(s[t-1]), --t;
+			if (lca != s[t])
+				g[lca].pb(s[t]), g[s[t]].pb(lca), s[t] = lca, q.pb(lca);
+		}
+		s[++t] = x;
+	}
+	if (t) while (--t) g[s[t]].pb(s[t+1]), g[s[t+1]].pb(s[t]);
+	p = q;
 }
 
 int main() {
-    rd(n), rd(q);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    d[1] = 1, dfs(1);
-    while (q--) {
-        rd(m);
-        vi a, p;
-        for (int i = 1, x; i &lt;= m; i++)
-            rd(x), a.pb(x), p.pb(x);
-        virtual_tree(p);
-        /*
-        for (int x : p)
-            for (int y : g[x])
-                if (x &lt; y) debug("%d %d\n", x, y);
-        */
-        // to do
-        for (int x : p) g[x].clear();
-    }
-    return 0;
+	rd(n), rd(q);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	d[1] = 1, dfs(1);
+	while (q--) {
+		rd(m);
+		vi a, p;
+		for (int i = 1, x; i &lt;= m; i++)
+			rd(x), a.pb(x), p.pb(x);
+		virtual_tree(p);
+		/*
+		for (int x : p)
+			for (int y : g[x])
+				if (x &lt; y) debug("%d %d\n", x, y);
+		*/
+		// to do
+		for (int x : p) g[x].clear();
+	}
+	return 0;
 }
 </code></pre>
 <h4 id="section-4">【练习】<a href="https://www.luogu.com.cn/problem/P3320" target="_blank" rel="noopener noreferrer">P3320 [SDOI2015]寻宝游戏</a></h4>
@@ -102,48 +102,48 @@ ll s[N], ans;
 set&lt;int&gt; st;
 
 void dfs(int x, int fa) {
-    dfn[x] = ++num, rnk[num] = x, d[x] = d[f[x][0]=fa] + 1;
-    for (int j = 1; f[x][j-1]; j++) f[x][j] = f[f[x][j-1]][j-1];
-    for (pi o : e[x])
-        if (o.fi != fa) s[o.fi] = s[x] + o.se, dfs(o.fi, x);
+	dfn[x] = ++num, rnk[num] = x, d[x] = d[f[x][0]=fa] + 1;
+	for (int j = 1; f[x][j-1]; j++) f[x][j] = f[f[x][j-1]][j-1];
+	for (pi o : e[x])
+		if (o.fi != fa) s[o.fi] = s[x] + o.se, dfs(o.fi, x);
 }
 
 inline int lca(int x, int y) {
-    if (d[x] &gt; d[y]) swap(x, y);
-    for (int i = 20; ~i; i--)
-        if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
-    if (x == y) return x;
-    for (int i = 20; ~i; i--)
-        if (f[x][i] != f[y][i])
-            x = f[x][i], y = f[y][i];
-    return f[x][0];
+	if (d[x] &gt; d[y]) swap(x, y);
+	for (int i = 20; ~i; i--)
+		if (d[f[y][i]] &gt;= d[x]) y = f[y][i];
+	if (x == y) return x;
+	for (int i = 20; ~i; i--)
+		if (f[x][i] != f[y][i])
+			x = f[x][i], y = f[y][i];
+	return f[x][0];
 }
 
 inline ll S(int x, int y) {
-    return s[x] + s[y] - 2 * s[lca(x,y)];
+	return s[x] + s[y] - 2 * s[lca(x,y)];
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 1, x, y, z; i &lt; n; i++)
-        rd(x), rd(y), rd(z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
-    dfs(1, 0);
-    while (m--) {
-        int x;
-        rd(x), x = dfn[x];
-        if (!v[rnk[x]]) st.insert(x);
-        auto it = st.lower_bound(x);
-        int y = rnk[it==st.begin()?*--st.end():*--it];
-        it = st.upper_bound(x);
-        int z = rnk[it==st.end()?*st.begin():*it];
-        if (v[rnk[x]]) st.erase(x);
-        x = rnk[x];
-        ll d = S(x, y) + S(x, z) - S(y, z);
-        if (!v[x]) v[x] = 1, ans += d;
-        else v[x] = 0, ans -= d;
-        print(ans);
-    }
-    return 0;
+	rd(n), rd(m);
+	for (int i = 1, x, y, z; i &lt; n; i++)
+		rd(x), rd(y), rd(z), e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+	dfs(1, 0);
+	while (m--) {
+		int x;
+		rd(x), x = dfn[x];
+		if (!v[rnk[x]]) st.insert(x);
+		auto it = st.lower_bound(x);
+		int y = rnk[it==st.begin()?*--st.end():*--it];
+		it = st.upper_bound(x);
+		int z = rnk[it==st.end()?*st.begin():*it];
+		if (v[rnk[x]]) st.erase(x);
+		x = rnk[x];
+		ll d = S(x, y) + S(x, z) - S(y, z);
+		if (!v[x]) v[x] = 1, ans += d;
+		else v[x] = 0, ans -= d;
+		print(ans);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">参考资料</h2>

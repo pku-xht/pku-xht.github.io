@@ -32,85 +32,85 @@ bool ok[2] = {1, 1};
 modint a[K][K];
 
 inline int g(int x, int y) {
-    return x * (m + 1) + y;
+	return x * (m + 1) + y;
 }
 
 inline void G(int &amp;x, int &amp;y, int z) {
-    x = z / (m + 1), y = z % (m + 1);
+	x = z / (m + 1), y = z % (m + 1);
 }
 
 int get(int x) {
-    return x == f[x] ? x : (f[x] = get(f[x]));
+	return x == f[x] ? x : (f[x] = get(f[x]));
 }
 
 inline void add(int x, int y) {
-    a[x][x] += 1, a[y][y] += 1, a[x][y] -= 1, a[y][x] -= 1;
+	a[x][x] += 1, a[y][y] += 1, a[x][y] -= 1, a[y][x] -= 1;
 }
 
 inline modint calc(int o) {
-    if (!ok[o]) return 0;
-    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) fa[i] = f[i];
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            if (s[i][j] == '*') {
-                int a = i, b = j, c = i - 1, d = j - 1;
-                if (((i ^ j) &amp; 1) != o) swap(a, c);
-                int x = get(g(a, b)), y = get(g(c, d));
-                if (x != y) f[x] = y;
-            }
-    int rt = get(o);
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 0; j &lt;= m; j++)
-            if (((i ^ j) &amp; 1) == o &amp;&amp; get(g(i, j)) != rt) return 0;
-    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = fa[i];
-    int t = 0;
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 0; j &lt;= m; j++)
-            if (((i ^ j) &amp; 1) == o) {
-                int x = g(i, j);
-                if (x == get(x)) p[++t] = x, q[x] = t;
-            }
-    for (int i = 1; i &lt;= t; i++)
-        for (int j = 1; j &lt;= t; j++)
-            a[i][j] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            if (s[i][j] == '*') {
-                int a = i, b = j, c = i - 1, d = j - 1;
-                if (((i ^ j) &amp; 1) != o) swap(a, c);
-                int x = get(g(a, b)), y = get(g(c, d));
-                if (x != y) add(q[x], q[y]);
-            }
-    modint ans = 1;
-    for (int i = 1; i &lt; t; i++) {
-        for (int j = i + 1; j &lt; t; j++)
-            while (a[j][i] != 0) {
-                int d = a[i][i].x / a[j][i].x;
-                for (int k = i; k &lt; t; k++)
-                    a[i][k] -= d * a[j][k];
-                swap(a[i], a[j]), ans = -ans; 
-            }
-        ans *= a[i][i];
-    }
-    return ans;
+	if (!ok[o]) return 0;
+	for (int i = 0; i &lt; (n + 1) * (m + 1); i++) fa[i] = f[i];
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			if (s[i][j] == '*') {
+				int a = i, b = j, c = i - 1, d = j - 1;
+				if (((i ^ j) &amp; 1) != o) swap(a, c);
+				int x = get(g(a, b)), y = get(g(c, d));
+				if (x != y) f[x] = y;
+			}
+	int rt = get(o);
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 0; j &lt;= m; j++)
+			if (((i ^ j) &amp; 1) == o &amp;&amp; get(g(i, j)) != rt) return 0;
+	for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = fa[i];
+	int t = 0;
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 0; j &lt;= m; j++)
+			if (((i ^ j) &amp; 1) == o) {
+				int x = g(i, j);
+				if (x == get(x)) p[++t] = x, q[x] = t;
+			}
+	for (int i = 1; i &lt;= t; i++)
+		for (int j = 1; j &lt;= t; j++)
+			a[i][j] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			if (s[i][j] == '*') {
+				int a = i, b = j, c = i - 1, d = j - 1;
+				if (((i ^ j) &amp; 1) != o) swap(a, c);
+				int x = get(g(a, b)), y = get(g(c, d));
+				if (x != y) add(q[x], q[y]);
+			}
+	modint ans = 1;
+	for (int i = 1; i &lt; t; i++) {
+		for (int j = i + 1; j &lt; t; j++)
+			while (a[j][i] != 0) {
+				int d = a[i][i].x / a[j][i].x;
+				for (int k = i; k &lt; t; k++)
+					a[i][k] -= d * a[j][k];
+				swap(a[i], a[j]), ans = -ans; 
+			}
+		ans *= a[i][i];
+	}
+	return ans;
 }
 
 int main() {
-    rd(n), rd(m), rd(P);
-    for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = i;
-    for (int i = 1; i &lt;= n; i++) {
-        rds(s[i], m);
-        for (int j = 1; j &lt;= m; j++)
-            if (s[i][j] != '*') {
-                int a = i, b = j, c = i - 1, d = j - 1;
-                if (s[i][j] == '/') swap(a, c);
-                int x = get(g(a, b)), y = get(g(c, d));
-                if (x == y) ok[(a^b)&amp;1] = 0;
-                else f[x] = y;
-            }
-    }
-    print(calc(0) + calc(1));
-    return 0;
+	rd(n), rd(m), rd(P);
+	for (int i = 0; i &lt; (n + 1) * (m + 1); i++) f[i] = i;
+	for (int i = 1; i &lt;= n; i++) {
+		rds(s[i], m);
+		for (int j = 1; j &lt;= m; j++)
+			if (s[i][j] != '*') {
+				int a = i, b = j, c = i - 1, d = j - 1;
+				if (s[i][j] == '/') swap(a, c);
+				int x = get(g(a, b)), y = get(g(c, d));
+				if (x == y) ok[(a^b)&amp;1] = 0;
+				else f[x] = y;
+			}
+	}
+	print(calc(0) + calc(1));
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="119" href="/blog/tags/119/">矩阵树定理</a>、<a data-source-tag="120" href="/blog/tags/120/">高斯消元</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/489/"><span>较新一篇</span>Codeforces Round #606 (Div. 1, based on Technocup 2020 Elimination Round 4) 题解</a><a class="rel-next" rel="next" href="/blog/posts/486/"><span>较早一篇</span>矩阵树定理 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="488" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

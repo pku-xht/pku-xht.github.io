@@ -22,24 +22,24 @@ __int128 a[N];
 vi s(1, 0);
 
 inline bool pd(int i, int j, int k) {
-    return (a[j] - a[i]) * (k - i) &lt;= (a[k] - a[i]) * (j - i);
+	return (a[j] - a[i]) * (k - i) &lt;= (a[k] - a[i]) * (j - i);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n + 1; i++) {
-        if (i != n + 1) rd(a[i]), a[i] *= 1e5;
-        while (s.size() &gt; 1u &amp;&amp; pd(s[s.size()-2], s.back(), i))
-            s.pop_back();
-        s.pb(i);
-    }
-    for (ui i = 1; i &lt; s.size(); i++) {
-        int l = s[i-1], r = s[i];
-        for (int k = l + 1; k &lt; r; k++)
-            print(((k - l) * a[r] + (r - k) * a[l]) / (r - l));
-        if (r != n + 1) print(a[r]);
-    }
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n + 1; i++) {
+		if (i != n + 1) rd(a[i]), a[i] *= 1e5;
+		while (s.size() &gt; 1u &amp;&amp; pd(s[s.size()-2], s.back(), i))
+			s.pop_back();
+		s.pb(i);
+	}
+	for (ui i = 1; i &lt; s.size(); i++) {
+		int l = s[i-1], r = s[i];
+		for (int k = l + 1; k &lt; r; k++)
+			print(((k - l) * a[r] + (r - k) * a[l]) / (r - l));
+		if (r != n + 1) print(a[r]);
+	}
+	return 0;
 }
 </code></pre>
 <h3 id="section-3"><a href="https://www.luogu.com.cn/problem/P5156" target="_blank" rel="noopener noreferrer">Sort It Out</a></h3>
@@ -56,47 +56,47 @@ bool v[N];
 vi e[N];
 
 struct T {
-    int x;
-    ll c;
-    inline T() {}
-    inline T(int x, ll c) : x(x), c(c) {}
-    inline friend void operator += (T &amp;a, const T &amp;b) {
-        if (a.x &lt; b.x) a.x = b.x, a.c = b.c;
-        else if (a.x == b.x) a.c = min(inf, a.c + b.c);
-    }
+	int x;
+	ll c;
+	inline T() {}
+	inline T(int x, ll c) : x(x), c(c) {}
+	inline friend void operator += (T &amp;a, const T &amp;b) {
+		if (a.x &lt; b.x) a.x = b.x, a.c = b.c;
+		else if (a.x == b.x) a.c = min(inf, a.c + b.c);
+	}
 } t[N];
 
 inline void add(int x, T y) {
-    while (x) t[x] += y, x -= x &amp; -x;
+	while (x) t[x] += y, x -= x &amp; -x;
 }
 
 T ask(int x) {
-    T y = T(0, 1);
-    while (x &lt;= n) y += t[x], x += x &amp; -x;
-    return y;
+	T y = T(0, 1);
+	while (x &lt;= n) y += t[x], x += x &amp; -x;
+	return y;
 }
 
 int main() {
-    rd(n), rd(k);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), b[a[i]] = i;
-    for (int i = n; i; i--) {
-        T o = ask(b[i] + 1);
-        e[++o.x].push_back(i), c[i] = o.c, add(b[i], o);
-    }
-    m = ask(1).x;
-    int now = -1;
-    for (int i = m; i; i--)
-        for (int j : e[i])
-            if (b[j] &gt;= now) {
-                if (k &lt;= c[j]) {
-                    v[j] = 1, now = b[j];
-                    break;
-                } else k -= c[j];
-            }
-    print(n - m);
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) print(i);
-    return 0;
+	rd(n), rd(k);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), b[a[i]] = i;
+	for (int i = n; i; i--) {
+		T o = ask(b[i] + 1);
+		e[++o.x].push_back(i), c[i] = o.c, add(b[i], o);
+	}
+	m = ask(1).x;
+	int now = -1;
+	for (int i = m; i; i--)
+		for (int j : e[i])
+			if (b[j] &gt;= now) {
+				if (k &lt;= c[j]) {
+					v[j] = 1, now = b[j];
+					break;
+				} else k -= c[j];
+			}
+	print(n - m);
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) print(i);
+	return 0;
 }
 </code></pre>
 <h3 id="section-4"><a href="https://www.luogu.com.cn/problem/P5157" target="_blank" rel="noopener noreferrer">The Cow Gathering</a></h3>
@@ -112,87 +112,87 @@ pi p[N];
 bool v[N], ans[N];
 
 void dfs(int x) {
-    d[x] = d[f[x][0]] + 1;
-    for (int i = 0; f[x][i]; i++)
-        f[x][i+1] = f[f[x][i]][i];
-    for (int y : e[x])
-        if (y != f[x][0])
-            f[y][0] = x, dfs(y);
+	d[x] = d[f[x][0]] + 1;
+	for (int i = 0; f[x][i]; i++)
+		f[x][i+1] = f[f[x][i]][i];
+	for (int y : e[x])
+		if (y != f[x][0])
+			f[y][0] = x, dfs(y);
 }
 
 inline int jump(int x, int d) {
-    while (d) x = f[x][b[d&amp;-d]], d -= d &amp; -d;
-    return x;
+	while (d) x = f[x][b[d&amp;-d]], d -= d &amp; -d;
+	return x;
 }
 
 inline bool pd(int x, int y) {
-    if (d[y] &lt; d[x]) return 0;
-    return jump(y, d[y] - d[x]) == x;
+	if (d[y] &lt; d[x]) return 0;
+	return jump(y, d[y] - d[x]) == x;
 }
 
 void dfs1(int x) {
-    if (v[x]) return;
-    ans[x] = 1;
-    for (int y : e[x])
-        if (y != f[x][0]) dfs1(y);
+	if (v[x]) return;
+	ans[x] = 1;
+	for (int y : e[x])
+		if (y != f[x][0]) dfs1(y);
 }
 
 namespace work {
-    int d[N], c[N];
-    vi e[N];
-    bool v[N];
-
-    void dfs(int x, int f) {
-        for (int y : ::e[x])
-            if (y != f) d[y] = d[x] + 1, dfs(y, x);
-    }
-
-    inline bool main(int rt) {
-        d[rt] = 1, dfs(rt, 0);
-        for (int x = 1; x &lt;= n; x++)
-            for (int y : ::e[x])
-                if (d[x] &gt; d[y]) e[x].pb(y), ++c[y];
-        for (int i = 1; i &lt;= m; i++)
-            e[p[i].fi].pb(p[i].se), ++c[p[i].se];
-        queue&lt;int&gt; q;
-        for (int i = 1; i &lt;= n; i++)
-            if (!c[i]) q.push(i);
-        while (q.size()) {
-            int x = q.front();
-            q.pop();
-            for (int y : e[x])
-                if (!--c[y]) q.push(y);
-        }
-        for (int i = 1; i &lt;= n; i++)
-            if (c[i]) return 0;
-        return 1;
-    }
+	int d[N], c[N];
+	vi e[N];
+	bool v[N];
+	
+	void dfs(int x, int f) {
+		for (int y : ::e[x])
+			if (y != f) d[y] = d[x] + 1, dfs(y, x);
+	}
+	
+	inline bool main(int rt) {
+		d[rt] = 1, dfs(rt, 0);
+		for (int x = 1; x &lt;= n; x++)
+			for (int y : ::e[x])
+				if (d[x] &gt; d[y]) e[x].pb(y), ++c[y];
+		for (int i = 1; i &lt;= m; i++)
+			e[p[i].fi].pb(p[i].se), ++c[p[i].se];
+		queue&lt;int&gt; q;
+		for (int i = 1; i &lt;= n; i++)
+			if (!c[i]) q.push(i);
+		while (q.size()) {
+			int x = q.front();
+			q.pop();
+			for (int y : e[x])
+				if (!--c[y]) q.push(y);
+		}
+		for (int i = 1; i &lt;= n; i++)
+			if (c[i]) return 0;
+		return 1;
+	}
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1, t = 2; t &lt; n; i++, t &lt;&lt;= 1) b[t] = i;
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    dfs(rt = 1);
-    for (int i = 1; i &lt;= m; i++) {
-        rd(p[i].fi, p[i].se);
-        if (pd(p[i].fi, p[i].se)) {
-            int x = jump(p[i].se, d[p[i].se] - d[p[i].fi] - 1);
-            if (pd(rt, x)) rt = x;
-            else if (!pd(x, rt)) Fail;
-        } else {
-            if (pd(rt, p[i].fi)) {
-                if (rt == p[i].fi) Fail;
-                v[p[i].fi] = 1;
-            } else if (pd(p[i].fi, rt)) Fail;
-        }
-    }
-    if (work::main(rt)) {
-        dfs1(rt);
-        for (int i = 1; i &lt;= n; i++) print(ans[i]);
-    } else Fail;
-    return 0;
+	rd(n, m);
+	for (int i = 1, t = 2; t &lt; n; i++, t &lt;&lt;= 1) b[t] = i;
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	dfs(rt = 1);
+	for (int i = 1; i &lt;= m; i++) {
+		rd(p[i].fi, p[i].se);
+		if (pd(p[i].fi, p[i].se)) {
+			int x = jump(p[i].se, d[p[i].se] - d[p[i].fi] - 1);
+			if (pd(rt, x)) rt = x;
+			else if (!pd(x, rt)) Fail;
+		} else {
+			if (pd(rt, p[i].fi)) {
+				if (rt == p[i].fi) Fail;
+				v[p[i].fi] = 1;
+			} else if (pd(p[i].fi, rt)) Fail;
+		}
+	}
+	if (work::main(rt)) {
+		dfs1(rt);
+		for (int i = 1; i &lt;= n; i++) print(ans[i]);
+	} else Fail;
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="http://www.usaco.org/index.php?page=jan19results" target="_blank" rel="noopener noreferrer">2019 January Contest</a></h2>
@@ -203,64 +203,64 @@ int n, k, a[N], f[N];
 char s[N];
 
 struct SGT {
-    struct T {
-        int l, r, x;
-    } t[N&lt;&lt;3|1];
-    multiset&lt;int&gt; st[N&lt;&lt;1|1];
+	struct T {
+		int l, r, x;
+	} t[N&lt;&lt;3|1];
+	multiset&lt;int&gt; st[N&lt;&lt;1|1];
 
-    inline void update(int p) {
-        t[p].x = min(t[ls].x, t[rs].x);
-    }
+	inline void update(int p) {
+		t[p].x = min(t[ls].x, t[rs].x);
+	}
 
-    void build(int p, int l, int r) {
-        t[p].l = l, t[p].r = r;
-        if (l == r) return t[p].x = inf, void();
-        build(ls, l, md), build(rs, md + 1, r);
-        update(p);
-    }
+	void build(int p, int l, int r) {
+		t[p].l = l, t[p].r = r;
+		if (l == r) return t[p].x = inf, void();
+		build(ls, l, md), build(rs, md + 1, r);
+		update(p);
+	}
 
-    void ins(int p, int x, int k) {
-        if (t[p].l == t[p].r) {
-            st[x].insert(k);
-            t[p].x = *st[x].begin();
-            return;
-        }
-        ins(x &lt;= md ? ls : rs, x, k);
-        update(p);
-    }
+	void ins(int p, int x, int k) {
+		if (t[p].l == t[p].r) {
+			st[x].insert(k);
+			t[p].x = *st[x].begin();
+			return;
+		}
+		ins(x &lt;= md ? ls : rs, x, k);
+		update(p);
+	}
 
-    void del(int p, int x, int k) {
-        if (t[p].l == t[p].r) {
-            st[x].erase(st[x].find(k));
-            t[p].x = st[x].size() ? *st[x].begin() : inf;
-            return;
-        }
-        del(x &lt;= md ? ls : rs, x, k);
-        update(p);
-    }
+	void del(int p, int x, int k) {
+		if (t[p].l == t[p].r) {
+			st[x].erase(st[x].find(k));
+			t[p].x = st[x].size() ? *st[x].begin() : inf;
+			return;
+		}
+		del(x &lt;= md ? ls : rs, x, k);
+		update(p);
+	}
 
-    int ask(int p, int l, int r) {
-        if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x;
-        int ret = inf;
-        if (l &lt;= md) ret = min(ret, ask(ls, l, r));
-        if (r &gt; md) ret = min(ret, ask(rs, l, r));
-        return ret;
-    }
+	int ask(int p, int l, int r) {
+		if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x;
+		int ret = inf;
+		if (l &lt;= md) ret = min(ret, ask(ls, l, r));
+		if (r &gt; md) ret = min(ret, ask(rs, l, r));
+		return ret;
+	}
 } t;
 
 int main() {
-    rd(n, k), rds(s, n);
-    for (int i = 1; i &lt;= n; i++) a[i] = a[i-1] + (s[i] == 'G');
-    for (int i = 0; i &lt;= n; i++) a[i] = 2 * a[i] - i + n + 1;
-    t.build(1, 1, n * 2 + 2);
-    t.ins(1, a[0], 0);
-    for (int i = 1; i &lt;= n; i++) {
-        if (i &gt; k) t.del(1, a[i-k-1], f[i-k-1]);
-        f[i] = min(t.ask(1, 1, a[i]) + 1, t.ask(1, a[i] + 1, n * 2 + 2));
-        t.ins(1, a[i], f[i]);
-    }
-    print(f[n]);
-    return 0;
+	rd(n, k), rds(s, n);
+	for (int i = 1; i &lt;= n; i++) a[i] = a[i-1] + (s[i] == 'G');
+	for (int i = 0; i &lt;= n; i++) a[i] = 2 * a[i] - i + n + 1;
+	t.build(1, 1, n * 2 + 2);
+	t.ins(1, a[0], 0);
+	for (int i = 1; i &lt;= n; i++) {
+		if (i &gt; k) t.del(1, a[i-k-1], f[i-k-1]);
+		f[i] = min(t.ask(1, 1, a[i]) + 1, t.ask(1, a[i] + 1, n * 2 + 2));
+		t.ins(1, a[i], f[i]);
+	}
+	print(f[n]);
+	return 0;
 }
 </code></pre>
 <h3 id="section-7"><a href="https://www.luogu.com.cn/problem/P5203" target="_blank" rel="noopener noreferrer">Exercise Route</a></h3>
@@ -272,7 +272,7 @@ int main() {
 <h3 id="section-8"><a href="https://www.luogu.com.cn/problem/P5204" target="_blank" rel="noopener noreferrer">Train Tracking 2</a></h3>
 <p>先考虑所有限制都相同的情况。</p>
 <p>设大于限制的数有 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 个，限制的区间长度为 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>。</p>
-<p>考虑 DP，设 <span class="math-inline" data-original-math="$f_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">f_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 表示 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个数的答案，则有 <span class="math-inline" data-original-math="$f_i = (x+1)f_{i-1} – x^kf_{i-k-1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msub><mi>f</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msup><mi>x</mi><mi>k</mi></msup><msub><mi>f</mi><mrow><mi>i</mi><mo>−</mo><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">f_i = (x+1)f_{i-1} - x^kf_{i-k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0574em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span></span>。</p>
+<p>考虑 DP，设 <span class="math-inline" data-original-math="$f_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">f_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 表示 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个数的答案，则有 <span class="math-inline" data-original-math="$f_i = (x+1)f_{i-1} - x^kf_{i-k-1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>i</mi></msub><mo>=</mo><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo><msub><mi>f</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msup><mi>x</mi><mi>k</mi></msup><msub><mi>f</mi><mrow><mi>i</mi><mo>−</mo><mi>k</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">f_i = (x+1)f_{i-1} - x^kf_{i-k-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0574em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span></span>。</p>
 <p>解释一下就是，第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个数有 <span class="math-inline" data-original-math="$x+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 种填法，而其中 <span class="math-inline" data-original-math="$i-k+1\sim i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mi>k</mi><mo>+</mo><mn>1</mn><mo>∼</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">i-k+1\sim i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 都大于限制的情况不合法，而在这种情况下 <span class="math-inline" data-original-math="$i-k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">i-k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 处必须等于限制。</p>
 <p>现在考虑限制不同的情况，若相邻两个限制不同，一定可以确定一个数。</p>
 <p>对每一个相同限制的段，去掉确定的数之后计算即可。</p>
@@ -281,25 +281,25 @@ int n, k, a[N];
 modint f[N], ans = 1;
 
 inline modint calc(modint x, int n) {
-    modint w = x ^ k;
-    f[0] = f[1] = 1;
-    for (int i = 2; i &lt;= n; i++)
-        f[i] = (x + 1) * f[i-1] - (i - k - 1 &gt;= 0 ? w * f[i-k-1] : 0);
-    return f[n];
+	modint w = x ^ k;
+	f[0] = f[1] = 1;
+	for (int i = 2; i &lt;= n; i++)
+		f[i] = (x + 1) * f[i-1] - (i - k - 1 &gt;= 0 ? w * f[i-k-1] : 0);
+	return f[n];
 }
 
 int main() {
-    rd(n, k), rda(a, n + 1 - k);
-    for (int i = 1; i &lt;= n + 1 - k; i++) a[i] = inf - a[i];
-    for (int i = 1, j = 1; i &lt;= n + 1 - k; i = ++j) {
-        while (j &lt; n - k + 1 &amp;&amp; a[j+1] == a[i]) ++j;
-        int m = j - i + k + 1;
-        if (i != 1 &amp;&amp; a[i-1] &lt; a[i]) m -= k;
-        if (j != n - k + 1 &amp;&amp; a[j+1] &lt; a[i]) m -= k;
-        if (m &gt; 1) ans = 1ll * ans * calc(a[i], m);
-    }
-    print(ans);
-    return 0;
+	rd(n, k), rda(a, n + 1 - k);
+	for (int i = 1; i &lt;= n + 1 - k; i++) a[i] = inf - a[i];
+	for (int i = 1, j = 1; i &lt;= n + 1 - k; i = ++j) {
+		while (j &lt; n - k + 1 &amp;&amp; a[j+1] == a[i]) ++j;
+		int m = j - i + k + 1;
+		if (i != 1 &amp;&amp; a[i-1] &lt; a[i]) m -= k;
+		if (j != n - k + 1 &amp;&amp; a[j+1] &lt; a[i]) m -= k;
+		if (m &gt; 1) ans = 1ll * ans * calc(a[i], m);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-9"><a href="http://www.usaco.org/index.php?page=feb19results" target="_blank" rel="noopener noreferrer">2019 February Contest</a></h2>
@@ -311,18 +311,18 @@ int n;
 ld a[N], A = 1, B, ans;
 
 int main() {
-    rd(n);
-    for (int i = 1, x; i &lt;= n; i++) rd(x), a[i] = x / 1e6;
-    for (int l = 1, r = 0; l &lt;= n; A /= 1 - a[l], B -= a[l] / (1 - a[l]), l++) {
-        while (r &lt; n &amp;&amp; B &lt; 1) ++r, A *= 1 - a[r], B += a[r] / (1 - a[r]);
-        ans = max(ans, A * B);
-    }
-    print((int)(ans * 1e6));
-    return 0;
+	rd(n);
+	for (int i = 1, x; i &lt;= n; i++) rd(x), a[i] = x / 1e6;
+	for (int l = 1, r = 0; l &lt;= n; A /= 1 - a[l], B -= a[l] / (1 - a[l]), l++) {
+		while (r &lt; n &amp;&amp; B &lt; 1) ++r, A *= 1 - a[r], B += a[r] / (1 - a[r]);
+		ans = max(ans, A * B);
+	}
+	print((int)(ans * 1e6));
+	return 0;
 }
 </code></pre>
 <h3 id="section-11"><a href="https://www.luogu.com.cn/problem/P5243" target="_blank" rel="noopener noreferrer">Moorio Kart</a></h3>
-<p>这题目说了个啥……</p>
+<p>这题目说了个啥......</p>
 <p>读一年没读懂题目系列，扔了。</p>
 <h3 id="section-12"><a href="https://www.luogu.com.cn/problem/P5244" target="_blank" rel="noopener noreferrer">Mowing Mischief</a></h3>
 <p>题目太神仙了，先咕咕咕着。</p>

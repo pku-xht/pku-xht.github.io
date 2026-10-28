@@ -106,131 +106,131 @@ int n, k, r[N], l[N], t, z[N], p[N];
 char s[N], ans[N], ss[N*2];
 
 inline void Lyndon(char *s, int n, int *r, int *l, int &amp;t) {
-    t = 0;
-    int i = 1;
-    while (i &lt;= n) {
-        int j = i, k = i + 1;
-        while (k &lt;= n &amp;&amp; s[j] &lt;= s[k]) j = s[j] == s[k++] ? j + 1 : i;
-        while (i &lt;= j) i += k - j;
-        r[++t] = i - 1, l[t] = k - j;
-    }
+	t = 0;
+	int i = 1;
+	while (i &lt;= n) {
+		int j = i, k = i + 1;
+		while (k &lt;= n &amp;&amp; s[j] &lt;= s[k]) j = s[j] == s[k++] ? j + 1 : i;
+		while (i &lt;= j) i += k - j;
+		r[++t] = i - 1, l[t] = k - j;
+	}
 }
 
 inline void k1() {
-    for (int i = 1; i &lt;= n; i++) {
-        if (s[n+1-i] == s[i]) continue;
-        if (s[n+1-i] &lt; s[i]) reverse(s + 1, s + n + 1);
-        break;
-    }
-    for (int i = 1; i &lt;= n; i++) pc(s[i]);
+	for (int i = 1; i &lt;= n; i++) {
+		if (s[n+1-i] == s[i]) continue;
+		if (s[n+1-i] &lt; s[i]) reverse(s + 1, s + n + 1);
+		break;
+	}
+	for (int i = 1; i &lt;= n; i++) pc(s[i]);
 }
 
 inline void k3() {
-    for (int i = r[t-1] + 1; i &lt;= r[t]; i++) pc(s[i]);
-    k -= l[t] != 1 || l[t-1] != 1, --t;
+	for (int i = r[t-1] + 1; i &lt;= r[t]; i++) pc(s[i]);
+	k -= l[t] != 1 || l[t-1] != 1, --t;
 }
 
 inline void upd(char *s) {
-    for (int i = 1; i &lt;= n; i++) {
-        if (s[i] &gt; ans[i]) return;
-        if (s[i] &lt; ans[i]) break;
-    }
-    for (int i = 1; i &lt;= n; i++) ans[i] = s[i];
+	for (int i = 1; i &lt;= n; i++) {
+		if (s[i] &gt; ans[i]) return;
+		if (s[i] &lt; ans[i]) break;
+	}
+	for (int i = 1; i &lt;= n; i++) ans[i] = s[i];
 }
 
 inline void upd1() {
-    reverse(s + 1, s + n + 1);
-    upd(s);
-    reverse(s + 1, s + n + 1);
+	reverse(s + 1, s + n + 1);
+	upd(s);
+	reverse(s + 1, s + n + 1);
 }
 
 inline void upd2() {
-    for (int i = 1; i &lt;= n; i++) ss[i] = ss[i+n] = s[i];
-    int i = 1, o;
-    while (i &lt;= n) {
-        o = i;
-        int j = i, k = i + 1;
-        while (k &lt;= n * 2 &amp;&amp; ss[j] &lt;= ss[k]) j = ss[j] == ss[k++] ? j + 1 : i;
-        while (i &lt;= j) i += k - j;
-    }
-    upd(ss + o - 1);
+	for (int i = 1; i &lt;= n; i++) ss[i] = ss[i+n] = s[i];
+	int i = 1, o;
+	while (i &lt;= n) {
+		o = i;
+		int j = i, k = i + 1;
+		while (k &lt;= n * 2 &amp;&amp; ss[j] &lt;= ss[k]) j = ss[j] == ss[k++] ? j + 1 : i;
+		while (i &lt;= j) i += k - j;
+	}
+	upd(ss + o - 1);
 }
 
 inline void Z(char *s, int n, int *z) {
-    for (int i = 1; i &lt;= n; i++) z[i] = 0;
-    z[1] = n;
-    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
-        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
-        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
-    }
+	for (int i = 1; i &lt;= n; i++) z[i] = 0;
+	z[1] = n;
+	for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+		while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+		if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+	}
 }
 
 inline void exkmp(char *s, int n, char *t, int m, int *z, int *p) {
-    Z(t, m, z);
-    for (int i = 1; i &lt;= n; i++) p[i] = 0;
-    for (int i = 1, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) p[i] = min(z[i-l+1], r - i + 1);
-        while (i + p[i] &lt;= n &amp;&amp; s[i+p[i]] == t[p[i]+1]) ++p[i];
-        if (i + p[i] - 1 &gt; r) l = i, r = i + p[i] - 1;
-    }
+	Z(t, m, z);
+	for (int i = 1; i &lt;= n; i++) p[i] = 0;
+	for (int i = 1, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) p[i] = min(z[i-l+1], r - i + 1);
+		while (i + p[i] &lt;= n &amp;&amp; s[i+p[i]] == t[p[i]+1]) ++p[i];
+		if (i + p[i] - 1 &gt; r) l = i, r = i + p[i] - 1;
+	}
 }
 
 inline void upd3() {
-    for (int i = 1; i &lt;= n; i++) ss[i] = s[i];
-    reverse(ss + 1, ss + n + 1);
-    exkmp(ss, n, s, n, z, p);
-    reverse(p + 1, p + n + 1);
-    int j = n;
-    for (int i = n - 1; i; i--)
-        if (p[j-1] &lt; j - i) {
-            if (s[j-1-p[j-1]] &lt; s[p[j-1]+1]) j = i;
-        } else if (z[j-i+1] &lt; i - 1) {
-            if (s[z[j-i+1]+1] &lt; s[j-i+1+z[j-i+1]]) j = i;
-        }
-    reverse(s + 1, s + j);
-    reverse(s + 1, s + n + 1);
-    upd(s);
-    reverse(s + 1, s + n + 1);
-    reverse(s + 1, s + j);
+	for (int i = 1; i &lt;= n; i++) ss[i] = s[i];
+	reverse(ss + 1, ss + n + 1);
+	exkmp(ss, n, s, n, z, p);
+	reverse(p + 1, p + n + 1);
+	int j = n;
+	for (int i = n - 1; i; i--)
+		if (p[j-1] &lt; j - i) {
+			if (s[j-1-p[j-1]] &lt; s[p[j-1]+1]) j = i;
+		} else if (z[j-i+1] &lt; i - 1) {
+			if (s[z[j-i+1]+1] &lt; s[j-i+1+z[j-i+1]]) j = i;
+		}
+	reverse(s + 1, s + j);
+	reverse(s + 1, s + n + 1);
+	upd(s);
+	reverse(s + 1, s + n + 1);
+	reverse(s + 1, s + j);
 }
 
 inline void upd4() {
-    int p = t + 1;
-    while (--p &gt; 1) {
-        bool ok = 1;
-        for (int i = r[p-1] + 1, j = r[p-2] + 1; ok &amp;&amp; i &lt;= r[p]; i++, j++)
-            if (s[i] != s[j]) ok = 0;
-        if (!ok) break;
-    }
-    int q = p;
-    while (++q &lt;= t)
-        for (int i = r[q-1], j = r[q-2] + 1 + n - i; i &gt; r[q-2]; i--, j++) {
-            if (s[i] == s[j]) continue;
-            if (s[i] &lt; s[j]) p = q;
-            break;
-        }
-    reverse(s + r[p-1] + 1, s + n + 1);
-    reverse(s + 1, s + n + 1);
-    upd(s);
-    reverse(s + 1, s + n + 1);
-    reverse(s + r[p-1] + 1, s + n + 1);
+	int p = t + 1;
+	while (--p &gt; 1) {
+		bool ok = 1;
+		for (int i = r[p-1] + 1, j = r[p-2] + 1; ok &amp;&amp; i &lt;= r[p]; i++, j++)
+			if (s[i] != s[j]) ok = 0;
+		if (!ok) break;
+	}
+	int q = p;
+	while (++q &lt;= t)
+		for (int i = r[q-1], j = r[q-2] + 1 + n - i; i &gt; r[q-2]; i--, j++) {
+			if (s[i] == s[j]) continue;
+			if (s[i] &lt; s[j]) p = q;
+			break;
+		}
+	reverse(s + r[p-1] + 1, s + n + 1);
+	reverse(s + 1, s + n + 1);
+	upd(s);
+	reverse(s + 1, s + n + 1);
+	reverse(s + r[p-1] + 1, s + n + 1);
 }
 
 inline void k2() {
-    for (int i = 1; i &lt;= n; i++) ans[i] = s[i];
-    upd1(), upd2(), upd3(), upd4();
+	for (int i = 1; i &lt;= n; i++) ans[i] = s[i];
+	upd1(), upd2(), upd3(), upd4();
 }
 
 int main() {
-    rds(s, n), rd(k);
-    if (k == 1) return k1(), 0;
-    reverse(s + 1, s + n + 1);
-    Lyndon(s, n, r, l, t);
-    while (k &gt;= 3 &amp;&amp; t) k3();
-    if ((n = r[t])) k2();
-    for (int i = 1; i &lt;= n; i++) pc(ans[i]);
-    return 0;
+	rds(s, n), rd(k);
+	if (k == 1) return k1(), 0;
+	reverse(s + 1, s + n + 1);
+	Lyndon(s, n, r, l, t);
+	while (k &gt;= 3 &amp;&amp; t) k3();
+	if ((n = r[t])) k2();
+	for (int i = 1; i &lt;= n; i++) pc(ans[i]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="150" href="/blog/tags/150/">exKMP</a>、<a data-source-tag="152" href="/blog/tags/152/">Lyndon 分解</a>、<a data-source-tag="153" href="/blog/tags/153/">最小表示法</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/669/"><span>较新一篇</span>CF679E Bear and Bad Powers of 42 题解</a><a class="rel-next" rel="next" href="/blog/posts/663/"><span>较早一篇</span>Codeforces Round #623 (Div. 1, based on VK Cup 2019-2020 – Elimination Round, Engine) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="648" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

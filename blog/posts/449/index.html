@@ -23,26 +23,26 @@
 <p>注意本题根据写法不同可能需要开 <code>unsigned long long</code>，但同时需要对答案取模，因此细节很多。</p>
 <h2 id="section-3">代码</h2>
 <pre tabindex="0"><code class="language-cpp">struct Po {
-    int x, y;
-    inline Po &amp;operator -= (Po o) { return x -= o.x, y -= o.y, *this; }
-    inline friend Po operator - (Po a, Po b) { return a -= b; }
-    inline friend ll operator % (Po a, Po b) { return 1ll * a.x * b.y - 1ll * a.y * b.x; }
+	int x, y;
+	inline Po &amp;operator -= (Po o) { return x -= o.x, y -= o.y, *this; }
+	inline friend Po operator - (Po a, Po b) { return a -= b; }
+	inline friend ll operator % (Po a, Po b) { return 1ll * a.x * b.y - 1ll * a.y * b.x; }
 };
 
 inline pair&lt; modint, modint &gt; &amp;operator += (pair&lt; modint, modint &gt; &amp;a, Po b) {
-    return a.fi += (b.x % P + P) % P, a.se += (b.y % P + P) % P, a;
+	return a.fi += (b.x % P + P) % P, a.se += (b.y % P + P) % P, a;
 }
 
 inline modint operator % (pair&lt; modint, modint &gt; a, Po b) {
-    return a.fi * ((b.y % P + P) % P) - a.se * ((b.x % P + P) % P);
+	return a.fi * ((b.y % P + P) % P) - a.se * ((b.x % P + P) % P);
 }
 
 inline pair&lt; modint, modint &gt; operator * (modint a, Po b) {
-    return mp(a * ((b.x % P + P) % P), a * ((b.y % P + P) % P));
+	return mp(a * ((b.x % P + P) % P), a * ((b.y % P + P) % P));
 }
 
 inline pair&lt; modint, modint &gt; &amp;operator -= (pair&lt; modint, modint &gt; &amp;a, pair&lt; modint, modint &gt; b) {
-    return a.fi -= b.fi, a.se -= b.se, a;
+	return a.fi -= b.fi, a.se -= b.se, a;
 }
 
 const int N = 5e5 + 7;
@@ -53,30 +53,30 @@ pair&lt; modint, modint &gt; p;
 ul s, m;
 
 int main() {
-    rd(n);
-    for (int i = 0; i &lt; n; i++) rd(a[i].x), rd(a[i].y);
-    for (int i = 2; i &lt; n; i++) s += (a[i] - a[0]) % (a[i-1] - a[0]);
-    for (int i = 0, j = 0; i &lt; n; i++) {
-        while (1) {
-            int k = (j + 1) % n;
-            ul w = (a[k] - a[i]) % (a[j] - a[i]);
-            if (2 * (m + w) &gt;= s) {
-                if (2 * (m + w) == s) ++cnt;
-                break;
-            }
-            o += (m += w) % P;
-            p += a[k] - a[i];
-            j = k;
-        }
-        ans -= o * 2;
-        int k = (i + 1) % n;
-        m -= (a[j] - a[i]) % (a[k] - a[i]);
-        o -= p % (a[k] - a[i]);
-        p -= (modint)((j - i + n) % n) * (a[k] - a[i]);
-    }
-    ans += (modint)((1ll * n * (n - 3) - cnt) / 2 % P) * (modint)(s % P);
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 0; i &lt; n; i++) rd(a[i].x), rd(a[i].y);
+	for (int i = 2; i &lt; n; i++) s += (a[i] - a[0]) % (a[i-1] - a[0]);
+	for (int i = 0, j = 0; i &lt; n; i++) {
+		while (1) {
+			int k = (j + 1) % n;
+			ul w = (a[k] - a[i]) % (a[j] - a[i]);
+			if (2 * (m + w) &gt;= s) {
+				if (2 * (m + w) == s) ++cnt;
+				break;
+			}
+			o += (m += w) % P;
+			p += a[k] - a[i];
+			j = k;
+		}
+		ans -= o * 2;
+		int k = (i + 1) % n;
+		m -= (a[j] - a[i]) % (a[k] - a[i]);
+		o -= p % (a[k] - a[i]);
+		p -= (modint)((j - i + n) % n) * (a[k] - a[i]);
+	}
+	ans += (modint)((1ll * n * (n - 3) - cnt) / 2 % P) * (modint)(s % P);
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="89" href="/blog/tags/89/">计算几何</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/451/"><span>较新一篇</span>CF582E Boolean Function 题解</a><a class="rel-next" rel="next" href="/blog/posts/447/"><span>较早一篇</span>CF555E Case of Computer Network 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="449" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

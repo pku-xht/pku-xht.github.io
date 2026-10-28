@@ -29,30 +29,30 @@ int n, m, a[N], s[N], son[N], dfn[N], num, c[N], now, ans[N];
 vi e[N];
 
 void dfs(int x, int f) {
-    s[x] = 1, dfn[x] = ++num;
-    for (auto y : e[x]) if (y != f) dfs(y, x), s[x] += s[y], son[x] = s[y] &gt; s[son[x]] ? y : son[x];
+	s[x] = 1, dfn[x] = ++num;
+	for (auto y : e[x]) if (y != f) dfs(y, x), s[x] += s[y], son[x] = s[y] &gt; s[son[x]] ? y : son[x];
 }
 
 inline void add(int x) {
-    now += !c[x]++;
+	now += !c[x]++;
 }
 
 void dfs(int x, int f, bool k) {
-    for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) dfs(y, x, 0);
-    if (son[x]) dfs(son[x], x, 1);
-    for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) for (int i = 0; i &lt; s[y]; i++) add(a[dfn[y]+i]);
-    add(a[dfn[x]]), ans[x] = now;
-    if (!k) for (int i = now = 0; i &lt; s[x]; i++) c[a[dfn[x]+i]] = 0;
+	for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) dfs(y, x, 0);
+	if (son[x]) dfs(son[x], x, 1);
+	for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) for (int i = 0; i &lt; s[y]; i++) add(a[dfn[y]+i]);
+	add(a[dfn[x]]), ans[x] = now;
+	if (!k) for (int i = now = 0; i &lt; s[x]; i++) c[a[dfn[x]+i]] = 0;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    dfs(1, 0);
-    for (int i = 1; i &lt;= n; i++) rd(a[dfn[i]]);
-    dfs(1, 0, 1), rd(m);
-    for (int i = 1, x; i &lt;= m; i++) rd(x), print(ans[x]);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	dfs(1, 0);
+	for (int i = 1; i &lt;= n; i++) rd(a[dfn[i]]);
+	dfs(1, 0, 1), rd(m);
+	for (int i = 1, x; i &lt;= m; i++) rd(x), print(ans[x]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">证明</h2>
@@ -67,32 +67,32 @@ ll now, ans[N];
 vi e[N];
 
 void dfs(int x, int f) {
-    s[x] = 1, dfn[x] = ++num;
-    for (auto y : e[x]) if (y != f) dfs(y, x), s[x] += s[y], son[x] = s[y] &gt; s[son[x]] ? y : son[x];
+	s[x] = 1, dfn[x] = ++num;
+	for (auto y : e[x]) if (y != f) dfs(y, x), s[x] += s[y], son[x] = s[y] &gt; s[son[x]] ? y : son[x];
 }
 
 inline void add(int x) {
-    if (++c[x] &gt; mx) mx = c[x], now = 0;
-    if (c[x] == mx) now += x;
+	if (++c[x] &gt; mx) mx = c[x], now = 0;
+	if (c[x] == mx) now += x;
 }
 
 void dfs(int x, int f, bool k) {
-    for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) dfs(y, x, 0);
-    if (son[x]) dfs(son[x], x, 1);
-    for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) for (int i = 0; i &lt; s[y]; i++) add(a[dfn[y]+i]);
-    add(a[dfn[x]]), ans[x] = now;
-    if (!k) for (int i = mx = now = 0; i &lt; s[x]; i++) c[a[dfn[x]+i]] = 0;
+	for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) dfs(y, x, 0);
+	if (son[x]) dfs(son[x], x, 1);
+	for (auto y : e[x]) if (y != f &amp;&amp; y != son[x]) for (int i = 0; i &lt; s[y]; i++) add(a[dfn[y]+i]);
+	add(a[dfn[x]]), ans[x] = now;
+	if (!k) for (int i = mx = now = 0; i &lt; s[x]; i++) c[a[dfn[x]+i]] = 0;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(b[i]);
-    for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    dfs(1, 0);
-    for (int i = 1; i &lt;= n; i++) a[dfn[i]] = b[i];
-    dfs(1, 0, 1);
-    for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(b[i]);
+	for (int i = 1, x, y; i &lt; n; i++) rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	dfs(1, 0);
+	for (int i = 1; i &lt;= n; i++) a[dfn[i]] = b[i];
+	dfs(1, 0, 1);
+	for (int i = 1; i &lt;= n; i++) print(ans[i], " \n"[i==n]);
+	return 0;
 }
 </code></pre>
 <h4 id="section-5">【练习】<a href="https://codeforces.com/problemset/problem/741/D" target="_blank" rel="noopener noreferrer">CF741D Arpa’s letter-marked tree and Mehrdad’s Dokhtar-kosh paths</a></h4>

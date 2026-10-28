@@ -29,77 +29,77 @@
 <pre tabindex="0"><code class="language-cpp">const int N = 1.5e5 + 7;
 int n, m, p, k, a[N];
 struct T {
-    int l, r, z;
-    vector&lt;pi&gt; c;
+	int l, r, z;
+	vector&lt;pi&gt; c;
 } t[N&lt;&lt;2];
 
 inline vector&lt;pi&gt; merge(vector&lt;pi&gt; a, vector&lt;pi&gt; b) {
-    for (pi o : b) {
-        bool ok = 0;
-        for (pi &amp;p : a)
-            if (p.fi == o.fi) {
-                p.se += o.se, ok = 1;
-                break;
-            }
-        if (ok) continue;
-        a.pb(o);
-        if ((int)a.size() &lt;= k) continue;
-        int x = n;
-        for (pi p : a) x = min(x, p.se);
-        vector&lt;pi&gt; c;
-        for (pi p : a)
-            if (p.se - x) c.pb(mp(p.fi, p.se - x));
-        a = c;
-    }
-    return a;
+	for (pi o : b) {
+		bool ok = 0;
+		for (pi &amp;p : a)
+			if (p.fi == o.fi) {
+				p.se += o.se, ok = 1;
+				break;
+			}
+		if (ok) continue;
+		a.pb(o);
+		if ((int)a.size() &lt;= k) continue;
+		int x = n;
+		for (pi p : a) x = min(x, p.se);
+		vector&lt;pi&gt; c;
+		for (pi p : a)
+			if (p.se - x) c.pb(mp(p.fi, p.se - x));
+		a = c;
+	}
+	return a;
 }
 
 void build(int p, int l, int r) {
-    t[p].l = l, t[p].r = r;
-    if (t[p].l == t[p].r) return t[p].c.pb(mp(a[l], 1)), void();
-    build(ls, l, md), build(rs, md + 1, r);
-    t[p].c = merge(t[ls].c, t[rs].c);
+	t[p].l = l, t[p].r = r;
+	if (t[p].l == t[p].r) return t[p].c.pb(mp(a[l], 1)), void();
+	build(ls, l, md), build(rs, md + 1, r);
+	t[p].c = merge(t[ls].c, t[rs].c);
 }
 
 inline void setx(int p, int x) {
-    t[p].z = x, t[p].c.clear(), t[p].c.pb(mp(x, t[p].r - t[p].l + 1));
+	t[p].z = x, t[p].c.clear(), t[p].c.pb(mp(x, t[p].r - t[p].l + 1));
 }
 
 inline void spd(int p) {
-    if (t[p].z) setx(ls, t[p].z), setx(rs, t[p].z), t[p].z = 0;
+	if (t[p].z) setx(ls, t[p].z), setx(rs, t[p].z), t[p].z = 0;
 }
 
 void change(int p, int l, int r, int x) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return setx(p, x);
-    spd(p);
-    if (l &lt;= md) change(ls, l, r, x);
-    if (r &gt; md) change(rs, l, r, x);
-    t[p].c = merge(t[ls].c, t[rs].c);
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return setx(p, x);
+	spd(p);
+	if (l &lt;= md) change(ls, l, r, x);
+	if (r &gt; md) change(rs, l, r, x);
+	t[p].c = merge(t[ls].c, t[rs].c);
 }
 
 vector&lt;pi&gt; ask(int p, int l, int r) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].c;
-    spd(p);
-    vector&lt;pi&gt; c;
-    if (l &lt;= md) c = ask(ls, l, r);
-    if (r &gt; md) c = merge(c, ask(rs, l, r));
-    return c;
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].c;
+	spd(p);
+	vector&lt;pi&gt; c;
+	if (l &lt;= md) c = ask(ls, l, r);
+	if (r &gt; md) c = merge(c, ask(rs, l, r));
+	return c;
 }
 
 int main() {
-    rd(n), rd(m), rd(p), k = 100 / p, rda(a, n);
-    build(1, 1, n);
-    for (int i = 1, o, l, r, x; i &lt;= m; i++) {
-        rd(o), rd(l), rd(r);
-        if (o == 1) rd(x), change(1, l, r, x);
-        else {
-            auto ans = ask(1, l, r);
-            print(ans.size(), ' ');
-            for (pi o : ans) print(o.fi, ' ');
-            prints("");
-        }
-    }
-    return 0;
+	rd(n), rd(m), rd(p), k = 100 / p, rda(a, n);
+	build(1, 1, n);
+	for (int i = 1, o, l, r, x; i &lt;= m; i++) {
+		rd(o), rd(l), rd(r);
+		if (o == 1) rd(x), change(1, l, r, x);
+		else {
+			auto ans = ask(1, l, r);
+			print(ans.size(), ' ');
+			for (pi o : ans) print(o.fi, ' ');
+			prints("");
+		}
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="27" href="/blog/tags/27/">线段树</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/687/"><span>较新一篇</span>Ozon Tech Challenge 2020 (Div.1 + Div.2, Rated, T-shirts + prizes!) 题解</a><a class="rel-next" rel="next" href="/blog/posts/680/"><span>较早一篇</span>CF704D Captain America 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="685" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

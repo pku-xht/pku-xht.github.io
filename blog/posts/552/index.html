@@ -29,61 +29,61 @@
 <p>这样就可以直接算出最长上升子序列的长度了，接下来的问题是如何还原这个序列。</p>
 <p>显然需要倒序还原，设此时已经还原了最长上升子序列中的第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个数 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>，它在原序列的位置为 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span>。</p>
 <p>若该位置不是空缺的，可以直接用 <span class="math-inline" data-original-math="$p_j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">p_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 找到上一项的位置。</p>
-<p>若该位置是空缺的，则先在它前面的不是空缺的位置里找到位置 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 满足 <span class="math-inline" data-original-math="$l_s = i – 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><mi>s</mi></msub><mo>=</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">l_s = i - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0197em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 同时 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 上的数 <span class="math-inline" data-original-math="$&lt; x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">&lt; x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>。如果找到了，那么上一项的位置就是 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>；否则，上一项的位置就是上一个空缺的位置，且这个空缺上的数为用于填补的数中 <span class="math-inline" data-original-math="$&lt;x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">&lt;x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的最大的数。</p>
+<p>若该位置是空缺的，则先在它前面的不是空缺的位置里找到位置 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 满足 <span class="math-inline" data-original-math="$l_s = i - 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>l</mi><mi>s</mi></msub><mo>=</mo><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">l_s = i - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0197em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 同时 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 上的数 <span class="math-inline" data-original-math="$&lt; x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">&lt; x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>。如果找到了，那么上一项的位置就是 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>；否则，上一项的位置就是上一个空缺的位置，且这个空缺上的数为用于填补的数中 <span class="math-inline" data-original-math="$&lt;x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&lt;</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">&lt;x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 的最大的数。</p>
 <p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n \log n + m \log m + (n + m)k)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi>n</mi><mo>+</mo><mi>m</mi><mi>log</mi><mo>⁡</mo><mi>m</mi><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>+</mo><mi>m</mi><mo stretchy="false">)</mo><mi>k</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log n + m \log m + (n + m)k)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">)</span></span></span></span></span>。</p>
 <h2 id="section-3">代码</h2>
 <pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7, inf = INT_MAX &gt;&gt; 1;
 int n, m, a[N], b[N], l[N], p[N], f[N], g[N], v[N], ans[N];
 
 inline void get(int i, int k, int &amp;x) {
-    int o = lower_bound(b + 1, b + m + 1, k) - b - 1;
-    v[o] = 1, x = ans[i] = b[o];
+	int o = lower_bound(b + 1, b + m + 1, k) - b - 1;
+	v[o] = 1, x = ans[i] = b[o];
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), f[i] = inf;
-    ++n, a[n] = f[n] = inf;
-    rd(m);
-    for (int i = 1; i &lt;= m; i++) rd(b[i]);
-    sort(b + 1, b + m + 1);
-    for (int i = 1; i &lt;= n; i++)
-        if (~a[i]) {
-            int j = lower_bound(f + 1, f + n + 1, a[i]) - f - 1;
-            l[i] = j + 1, p[i] = g[j], f[j+1] = a[i], g[j+1] = i;
-        } else
-            for (int j = n, o = m; o; o--) {
-                while (f[j] &gt;= b[o]) --j;
-                f[j+1] = b[o], g[j+1] = i;
-            }
-    int i = l[n], j = n, x = a[n];
-    while (i--)
-        if (~a[j]) {
-            if (!~a[p[j]]) get(p[j], a[j], x);
-            else x = a[p[j]];
-            j = p[j];
-        } else {
-            bool ok = 0;
-            for (int s = j - 1; s; s--)
-                if (~a[s] &amp;&amp; l[s] == i &amp;&amp; a[s] &lt; x) {
-                    x = a[j=s], ok = 1;
-                    break;
-                }
-            if (ok) continue;
-            for (int s = j - 1; s; s--)
-                if (!~a[s]) {
-                    get(s, x, x), j = s;
-                    break;
-                }
-        }
-    for (int i = 1, j = 1; i &lt;= n; i++)
-        if (!~a[i]) {
-            if (ans[i]) continue;
-            while (v[j]) ++j;
-            v[j] = 1, ans[i] = b[j];
-        } else ans[i] = a[i];
-    for (int i = 1; i &lt; n; i++) print(ans[i], " \n"[i==n]);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), f[i] = inf;
+	++n, a[n] = f[n] = inf;
+	rd(m);
+	for (int i = 1; i &lt;= m; i++) rd(b[i]);
+	sort(b + 1, b + m + 1);
+	for (int i = 1; i &lt;= n; i++)
+		if (~a[i]) {
+			int j = lower_bound(f + 1, f + n + 1, a[i]) - f - 1;
+			l[i] = j + 1, p[i] = g[j], f[j+1] = a[i], g[j+1] = i;
+		} else
+			for (int j = n, o = m; o; o--) {
+				while (f[j] &gt;= b[o]) --j;
+				f[j+1] = b[o], g[j+1] = i;
+			}
+	int i = l[n], j = n, x = a[n];
+	while (i--)
+		if (~a[j]) {
+			if (!~a[p[j]]) get(p[j], a[j], x);
+			else x = a[p[j]];
+			j = p[j];
+		} else {
+			bool ok = 0;
+			for (int s = j - 1; s; s--)
+				if (~a[s] &amp;&amp; l[s] == i &amp;&amp; a[s] &lt; x) {
+					x = a[j=s], ok = 1;
+					break;
+				}
+			if (ok) continue;
+			for (int s = j - 1; s; s--)
+				if (!~a[s]) {
+					get(s, x, x), j = s;
+					break;
+				}
+		}
+	for (int i = 1, j = 1; i &lt;= n; i++)
+		if (!~a[i]) {
+			if (ans[i]) continue;
+			while (v[j]) ++j;
+			v[j] = 1, ans[i] = b[j];
+		} else ans[i] = a[i];
+	for (int i = 1; i &lt; n; i++) print(ans[i], " \n"[i==n]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="35" href="/blog/tags/35/">二分</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/553/"><span>较新一篇</span>Educational Codeforces Round 80 (Rated for Div. 2) 题解</a><a class="rel-next" rel="next" href="/blog/posts/550/"><span>较早一篇</span>CF538H Summer Dichotomy 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="552" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

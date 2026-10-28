@@ -20,14 +20,14 @@ int n, ans = -1;
 char s[N];
 
 int main() {
-    rds(s, n);
-    for (int i = 1, o = 0, k = 0; i &lt;= n; i++) {
-        k += (s[i] == '0' ? 1 : -1);
-        ans = Max(ans, k - o);
-        o = Min(o, k);
-    }
-    print(ans);
-    return 0;
+	rds(s, n);
+	for (int i = 1, o = 0, k = 0; i &lt;= n; i++) {
+		k += (s[i] == '0' ? 1 : -1);
+		ans = Max(ans, k - o);
+		o = Min(o, k);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">基础最短路练习题</h2>
@@ -37,27 +37,27 @@ int n, m, q, v[N], d[N];
 vector&lt; pi &gt; e[N];
 
 void dfs(int x) {
-    v[x] = 1;
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i].fi;
-        if (v[y]) continue;
-        d[y] = d[x] ^ e[x][i].se;
-        dfs(y);
-    }
+	v[x] = 1;
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i].fi;
+		if (v[y]) continue;
+		d[y] = d[x] ^ e[x][i].se;
+		dfs(y);
+	}
 }
 
 int main() {
-    rd(n), rd(m), rd(q);
-    for (int i = 1, x, y, z; i &lt;= m; i++) {
-        rd(x), rd(y), rd(z);
-        e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
-    }
-    dfs(1);
-    for (int i = 1, x, y; i &lt;= q; i++) {
-        rd(x), rd(y);
-        print(d[x] ^ d[y]);
-    }
-    return 0;
+	rd(n), rd(m), rd(q);
+	for (int i = 1, x, y, z; i &lt;= m; i++) {
+		rd(x), rd(y), rd(z);
+		e[x].pb(mp(y, z)), e[y].pb(mp(x, z));
+	}
+	dfs(1);
+	for (int i = 1, x, y; i &lt;= q; i++) {
+		rd(x), rd(y);
+		print(d[x] ^ d[y]);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">基础博弈练习题</h2>
@@ -71,37 +71,37 @@ ui ans;
 vector&lt; int &gt; e[N];
 
 inline int rnd() {
-    return A = (A * B + C) % P;
+	return A = (A * B + C) % P;
 }
 
 void dfs(int x) {
-    L[x] = ++num;
-    for (ui i = 0; i &lt; e[x].size(); i++) dfs(e[x][i]);
-    R[x] = num;
+	L[x] = ++num;
+	for (ui i = 0; i &lt; e[x].size(); i++) dfs(e[x][i]);
+	R[x] = num;
 }
 
 int main() {
-    rd(n), rd(m), ++m, rd(q), rd(o);
-    for (int i = 1, j = 0; i &lt;= n; i++) {
-        rd(a[i]), a[i] &amp;= 1;
-        if (a[i]) {
-            j = i;
-            e[p[Max(0,i-m)]].pb(i);
-        }
-        p[i] = j;
-    }
-    dfs(0);
-    if (o) rd(A), rd(B), rd(C), rd(P);
-    for (int i = 1; i &lt;= q; i++) {
-        int l, r;
-        if (o) {
-            l = rnd() % n + 1, r = rnd() % n + 1;
-            if (l &gt; r) swap(l, r);
-        } else rd(l), rd(r);
-        if (!a[l] || L[l] &gt; L[p[r]] || L[p[r]] &gt; R[l]) ans += 1ll * i * i;
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(m), ++m, rd(q), rd(o);
+	for (int i = 1, j = 0; i &lt;= n; i++) {
+		rd(a[i]), a[i] &amp;= 1;
+		if (a[i]) {
+			j = i;
+			e[p[Max(0,i-m)]].pb(i);
+		}
+		p[i] = j;
+	}
+	dfs(0);
+	if (o) rd(A), rd(B), rd(C), rd(P);
+	for (int i = 1; i &lt;= q; i++) {
+		int l, r;
+		if (o) {
+			l = rnd() % n + 1, r = rnd() % n + 1;
+			if (l &gt; r) swap(l, r);
+		} else rd(l), rd(r);
+		if (!a[l] || L[l] &gt; L[p[r]] || L[p[r]] &gt; R[l]) ans += 1ll * i * i;
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">基础最优化练习题</h2>
@@ -114,23 +114,23 @@ ll b[N], ans;
 pq&lt; pi &gt; q;
 
 int main() {
-    rd(n), rd(k);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    for (int i = 1; i &lt;= n; i++) rd(b[i]);
-    for (int i = n; i; i--) b[i] += b[i+1];
-    for (int i = 1; i &lt;= n; i++) {
-        if (b[i] &gt;= 0) now += k, ans += k * b[i], q.push(mp(-b[i], k &lt;&lt; 1));
-        else now -= k, ans -= k * b[i];
-        while (now &gt; a[i]) {
-            pi o = q.top();
-            q.pop();
-            int w = Min(o.se, now - a[i]);
-            now -= w, ans += w * o.fi;
-            if ((o.se -= w)) q.push(o);
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(k);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	for (int i = 1; i &lt;= n; i++) rd(b[i]);
+	for (int i = n; i; i--) b[i] += b[i+1];
+	for (int i = 1; i &lt;= n; i++) {
+		if (b[i] &gt;= 0) now += k, ans += k * b[i], q.push(mp(-b[i], k &lt;&lt; 1));
+		else now -= k, ans -= k * b[i];
+		while (now &gt; a[i]) {
+			pi o = q.top();
+			q.pop();
+			int w = Min(o.se, now - a[i]);
+			now -= w, ans += w * o.fi;
+			if ((o.se -= w)) q.push(o);
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="88" href="/blog/tags/88/">博弈论</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/404/"><span>较新一篇</span>CSP2019 游记</a><a class="rel-next" rel="next" href="/blog/posts/401/"><span>较早一篇</span>2011~2018 年 NOIP 真题分析</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="402" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

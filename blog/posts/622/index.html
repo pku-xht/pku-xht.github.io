@@ -58,67 +58,67 @@ Hash p[N], h[2][3][N];
 bool a[2][N][N], b[2][N][N];
 
 inline Hash H(int o, int i, int l, int r) {
-    if (!o) return h[o][i][r] - h[o][i][l-1] * p[r-l+1];
-    return h[o][i][l] - h[o][i][r+1] * p[r-l+1];
+	if (!o) return h[o][i][r] - h[o][i][l-1] * p[r-l+1];
+	return h[o][i][l] - h[o][i][r+1] * p[r-l+1];
 }
 
 inline bool pd(int o, int i, int j, int k) {
-    if (!o) {
-        if (j &lt; k) return 0;
-        if (H(1, i ^ 1, j - k + 1, j) != H(0, 2, 1, k)) return 0;
-        if (H(0, i, j - k + 1, j) != H(0, 2, k + 1, 2 * k)) return 0;
-        return 1;
-    }
-    if (j + k - 1 &gt; n) return 0;
-    if (H(0, i, j, j + k - 1) != H(0, 2, m - 2 * k + 1, m - k)) return 0;
-    if (H(1, i ^ 1, j, j + k - 1) != H(0, 2, m - k + 1, m)) return 0;
-    return 1; 
+	if (!o) {
+		if (j &lt; k) return 0;
+		if (H(1, i ^ 1, j - k + 1, j) != H(0, 2, 1, k)) return 0;
+		if (H(0, i, j - k + 1, j) != H(0, 2, k + 1, 2 * k)) return 0;
+		return 1;
+	}
+	if (j + k - 1 &gt; n) return 0;
+	if (H(0, i, j, j + k - 1) != H(0, 2, m - 2 * k + 1, m - k)) return 0;
+	if (H(1, i ^ 1, j, j + k - 1) != H(0, 2, m - k + 1, m)) return 0;
+	return 1; 
 }
 
 inline void solve() {
-    for (int i = 1; i &lt;= m; i++) h[0][2][i] = h[0][2][i-1] * B + s[2][i];
-    for (int i = 0; i &lt;= 1; i++)
-        for (int j = 1; j &lt;= n; j++)
-            for (int k = 1; k &lt;= m; k++) {
-                f[i][j][k] = g[i][j][k] = 0;
-                if (k == 1) {
-                    g[i][j][k] = a[i][j][k] = s[i][j] == s[2][1];
-                    b[i][j][k] = s[i][j] == s[2][m];
-                } else if (!(k &amp; 1)) {
-                    g[i][j][k] = a[i][j][k] = pd(0, i, j, k / 2);
-                    b[i][j][k] = pd(1, i, j, k / 2);
-                }
-                if (k == m) {
-                    now += a[i][j][k];
-                    if (m &gt; 2) now += b[i][j][k];
-                }
-            }
-    dbg(ans.x);
-    for (int j = 1; j &lt;= n; j++)
-        for (int k = 1; k &lt;= m; k++) {
-            for (int i = 0; i &lt;= 1; i++)
-                if (s[i][j] == s[2][k])
-                    f[i][j][k] += f[i][j-1][k-1] + g[i][j-1][k-1];
-            for (int i = 0; i &lt;= 1; i++)
-                if (s[i][j] == s[2][k])
-                    g[i][j][k] += f[i^1][j][k-1];
-            for (int i = 0; i &lt;= 1; i++)
-                if (b[i][j+1][m-k])
-                    ans += f[i][j][k] + g[i][j][k];
-        }
+	for (int i = 1; i &lt;= m; i++) h[0][2][i] = h[0][2][i-1] * B + s[2][i];
+	for (int i = 0; i &lt;= 1; i++)
+		for (int j = 1; j &lt;= n; j++)
+			for (int k = 1; k &lt;= m; k++) {
+				f[i][j][k] = g[i][j][k] = 0;
+				if (k == 1) {
+					g[i][j][k] = a[i][j][k] = s[i][j] == s[2][1];
+					b[i][j][k] = s[i][j] == s[2][m];
+				} else if (!(k &amp; 1)) {
+					g[i][j][k] = a[i][j][k] = pd(0, i, j, k / 2);
+					b[i][j][k] = pd(1, i, j, k / 2);
+				}
+				if (k == m) {
+					now += a[i][j][k];
+					if (m &gt; 2) now += b[i][j][k];
+				}
+			}
+	dbg(ans.x);
+	for (int j = 1; j &lt;= n; j++)
+		for (int k = 1; k &lt;= m; k++) {
+			for (int i = 0; i &lt;= 1; i++)
+				if (s[i][j] == s[2][k])
+					f[i][j][k] += f[i][j-1][k-1] + g[i][j-1][k-1];
+			for (int i = 0; i &lt;= 1; i++)
+				if (s[i][j] == s[2][k])
+					g[i][j][k] += f[i^1][j][k-1];
+			for (int i = 0; i &lt;= 1; i++)
+				if (b[i][j+1][m-k])
+					ans += f[i][j][k] + g[i][j][k];
+		}
 }
 
 int main() {
-    rds(s[0], n), rds(s[1], n), rds(s[2], m), p[0] = mp(1, 1);
-    for (int i = 1; i &lt;= max(n, m); i++) p[i] = p[i-1] * B;
-    for (int i = 0; i &lt;= 1; i++) {
-        for (int j = 1; j &lt;= n; j++)
-            h[0][i][j] = h[0][i][j-1] * B + s[i][j];
-        for (int j = n; j; j--)
-            h[1][i][j] = h[1][i][j+1] * B + s[i][j];
-    }
-    solve(), reverse(s[2] + 1, s[2] + m + 1), solve(), print(ans + now / 2);
-    return 0;
+	rds(s[0], n), rds(s[1], n), rds(s[2], m), p[0] = mp(1, 1);
+	for (int i = 1; i &lt;= max(n, m); i++) p[i] = p[i-1] * B;
+	for (int i = 0; i &lt;= 1; i++) {
+		for (int j = 1; j &lt;= n; j++)
+			h[0][i][j] = h[0][i][j-1] * B + s[i][j];
+		for (int j = n; j; j--)
+			h[1][i][j] = h[1][i][j+1] * B + s[i][j];
+	}
+	solve(), reverse(s[2] + 1, s[2] + m + 1), solve(), print(ans + now / 2);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="29" href="/blog/tags/29/">Hash</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/624/"><span>较新一篇</span>CF566E Restoring Map 题解</a><a class="rel-next" rel="next" href="/blog/posts/620/"><span>较早一篇</span>CF527E Data Center Drama 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="622" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

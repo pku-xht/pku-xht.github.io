@@ -20,19 +20,19 @@ char s[N][N];
 ll ans;
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = m; j; j--)
-            c[0][i][j] = c[0][i][j+1] + (s[i][j] == 'O');
-    for (int j = 1; j &lt;= m; j++)
-        for (int i = n; i; i--)
-            c[1][i][j] = c[1][i+1][j] + (s[i][j] == 'I');
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            ans += (s[i][j] == 'J') * c[0][i][j] * c[1][i][j];
-    print(ans);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = m; j; j--)
+			c[0][i][j] = c[0][i][j+1] + (s[i][j] == 'O');
+	for (int j = 1; j &lt;= m; j++)
+		for (int i = n; i; i--)
+			c[1][i][j] = c[1][i+1][j] + (s[i][j] == 'I');
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			ans += (s[i][j] == 'J') * c[0][i][j] * c[1][i][j];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_b" target="_blank" rel="noopener noreferrer">展覧会 (Exhibition)</a></h2>
@@ -42,17 +42,17 @@ int n, m, c[N], ans;
 pi a[N];
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++) rd(a[i].se, a[i].fi);
-    sort(a + 1, a + n + 1);
-    rda(c, m);
-    sort(c + 1, c + m + 1);
-    for (int i = m, j = n; i &amp;&amp; j; i--) {
-        while (j &amp;&amp; a[j].se &gt; c[i]) --j;
-        if (j) ++ans, --j;
-    }
-    print(ans);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++) rd(a[i].se, a[i].fi);
+	sort(a + 1, a + n + 1);
+	rda(c, m);
+	sort(c + 1, c + m + 1);
+	for (int i = m, j = n; i &amp;&amp; j; i--) {
+		while (j &amp;&amp; a[j].se &gt; c[i]) --j;
+		if (j) ++ans, --j;
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_c" target="_blank" rel="noopener noreferrer">たのしいたのしいたのしい家庭菜園 (Growing Vegetables is Fun 3)</a></h2>
@@ -65,39 +65,39 @@ int n, p[3][N], f[3][N][N][N], a[N], b[N], c[N];
 char s[N];
 
 inline void upd(int &amp;x, int y) {
-    x = min(x, y);
+	x = min(x, y);
 }
 
 int main() {
-    rd(n), rds(s, n);
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 0; j &lt; 3; j++) p[j][i] = p[j][i-1];
-        switch (s[i]) {
-            case 'R' : a[++a[0]] = i, ++p[0][i]; break;
-            case 'G' : b[++b[0]] = i, ++p[1][i]; break;
-            case 'Y' : c[++c[0]] = i, ++p[2][i]; break;
-        }
-    }
-    for (int i = 0; i &lt; 3; i++)
-        for (int x = 0; x &lt;= a[0]; x++)
-            for (int y = 0; y &lt;= b[0]; y++)
-                for (int z = 0; z &lt;= c[0]; z++)
-                    f[i][x][y][z] = inf;
-    if (a[0]) f[0][a[0]-1][b[0]][c[0]] = abs(n - a[a[0]]);
-    if (b[0]) f[1][a[0]][b[0]-1][c[0]] = abs(n - b[b[0]]);
-    if (c[0]) f[2][a[0]][b[0]][c[0]-1] = abs(n - c[c[0]]);
-    for (int i = n - 1; i; i--)
-        for (int x = 0; x &lt;= a[0] &amp;&amp; x &lt;= i; x++)
-            for (int y = 0; y &lt;= b[0] &amp;&amp; x + y &lt;= i; y++) {
-                int z = i - x - y;
-                if (z &gt; c[0]) continue;
-                if (x) upd(f[0][x-1][y][z], min(f[1][x][y][z], f[2][x][y][z]) + abs(p[1][a[x]] - y) + abs(p[2][a[x]] - z));
-                if (y) upd(f[1][x][y-1][z], min(f[0][x][y][z], f[2][x][y][z]) + abs(p[0][b[y]] - x) + abs(p[2][b[y]] - z));
-                if (z) upd(f[2][x][y][z-1], min(f[0][x][y][z], f[1][x][y][z]) + abs(p[0][c[z]] - x) + abs(p[1][c[z]] - y));
-            }
-    int ans = min(min(f[0][0][0][0], f[1][0][0][0]), f[2][0][0][0]);
-    print(ans == inf ? -1 : (ans &gt;&gt; 1));
-    return 0;
+	rd(n), rds(s, n);
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 0; j &lt; 3; j++) p[j][i] = p[j][i-1];
+		switch (s[i]) {
+			case 'R' : a[++a[0]] = i, ++p[0][i]; break;
+			case 'G' : b[++b[0]] = i, ++p[1][i]; break;
+			case 'Y' : c[++c[0]] = i, ++p[2][i]; break;
+		}
+	}
+	for (int i = 0; i &lt; 3; i++)
+		for (int x = 0; x &lt;= a[0]; x++)
+			for (int y = 0; y &lt;= b[0]; y++)
+				for (int z = 0; z &lt;= c[0]; z++)
+					f[i][x][y][z] = inf;
+	if (a[0]) f[0][a[0]-1][b[0]][c[0]] = abs(n - a[a[0]]);
+	if (b[0]) f[1][a[0]][b[0]-1][c[0]] = abs(n - b[b[0]]);
+	if (c[0]) f[2][a[0]][b[0]][c[0]-1] = abs(n - c[c[0]]);
+	for (int i = n - 1; i; i--)
+		for (int x = 0; x &lt;= a[0] &amp;&amp; x &lt;= i; x++)
+			for (int y = 0; y &lt;= b[0] &amp;&amp; x + y &lt;= i; y++) {
+				int z = i - x - y;
+				if (z &gt; c[0]) continue;
+				if (x) upd(f[0][x-1][y][z], min(f[1][x][y][z], f[2][x][y][z]) + abs(p[1][a[x]] - y) + abs(p[2][a[x]] - z));
+				if (y) upd(f[1][x][y-1][z], min(f[0][x][y][z], f[2][x][y][z]) + abs(p[0][b[y]] - x) + abs(p[2][b[y]] - z));
+				if (z) upd(f[2][x][y][z-1], min(f[0][x][y][z], f[1][x][y][z]) + abs(p[0][c[z]] - x) + abs(p[1][c[z]] - y));
+			}
+	int ans = min(min(f[0][0][0][0], f[1][0][0][0]), f[2][0][0][0]);
+	print(ans == inf ? -1 : (ans &gt;&gt; 1));
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_d" target="_blank" rel="noopener noreferrer">コイン集め (Coin Collecting)</a></h2>
@@ -107,23 +107,23 @@ int n, c[N][3];
 ll ans;
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt;= (n &lt;&lt; 1); i++) {
-        rd(x, y);
-        if (x &lt; 1) ans += 1 - x, x = 1;
-        if (x &gt; n) ans += x - n, x = n;
-        if (y &lt; 1) ans += 1 - y, y = 1;
-        if (y &gt; 2) ans += y - 2, y = 2;
-        ++c[x][y];
-    }
-    for (int i = 1, c1 = 0, c2 = 0; i &lt;= n; i++) {
-        c1 += c[i][1] - 1, c2 += c[i][2] - 1;
-        while (c1 &lt; 0 &amp;&amp; c2 &gt; 0) ++c1, --c2, ++ans;
-        while (c1 &gt; 0 &amp;&amp; c2 &lt; 0) --c1, ++c2, ++ans;
-        if (i &lt; n) ans += abs(c1) + abs(c2);
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt;= (n &lt;&lt; 1); i++) {
+		rd(x, y);
+		if (x &lt; 1) ans += 1 - x, x = 1;
+		if (x &gt; n) ans += x - n, x = n;
+		if (y &lt; 1) ans += 1 - y, y = 1;
+		if (y &gt; 2) ans += y - 2, y = 2;
+		++c[x][y];
+	}
+	for (int i = 1, c1 = 0, c2 = 0; i &lt;= n; i++) {
+		c1 += c[i][1] - 1, c2 += c[i][2] - 1;
+		while (c1 &lt; 0 &amp;&amp; c2 &gt; 0) ++c1, --c2, ++ans;
+		while (c1 &gt; 0 &amp;&amp; c2 &lt; 0) --c1, ++c2, ++ans;
+		if (i &lt; n) ans += abs(c1) + abs(c2);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="https://atcoder.jp/contests/joi2019ho/tasks/joi2019ho_e" target="_blank" rel="noopener noreferrer">珍しい都市 (Unique Cities)</a></h2>
@@ -141,10 +141,10 @@ vi e[N];
 int rt, d[N];
 
 void dfs1(int x, int fa) {
-    d[x] = d[fa] + 1;
-    if (d[x] &gt; d[rt]) rt = x;
-    for (int y : e[x])
-        if (y != fa) dfs1(y, x);
+	d[x] = d[fa] + 1;
+	if (d[x] &gt; d[rt]) rt = x;
+	for (int y : e[x])
+		if (y != fa) dfs1(y, x);
 }
 
 int f[N], son[N][2];
@@ -152,59 +152,59 @@ int f[N], son[N][2];
 #define s1 son[x][1]
 
 void dfs2(int x, int fa) {
-    d[x] = d[fa] + 1;
-    s0 = s1 = 0;
-    for (int y : e[x])
-        if (y != fa) {
-            dfs2(y, x);
-            if (f[y] &gt; f[s1]) s1 = y;
-            if (f[s1] &gt; f[s0]) swap(s0, s1);
-        }
-    f[x] = f[s0] + 1;
+	d[x] = d[fa] + 1;
+	s0 = s1 = 0;
+	for (int y : e[x])
+		if (y != fa) {
+			dfs2(y, x);
+			if (f[y] &gt; f[s1]) s1 = y;
+			if (f[s1] &gt; f[s0]) swap(s0, s1);
+		}
+	f[x] = f[s0] + 1;
 }
 
 int st[N], tp;
 int c[N], cnt;
 
 inline void ins(int x) {
-    cnt += !c[x]++;
+	cnt += !c[x]++;
 }
 
 inline void del(int x) {
-    cnt -= !--c[x];
+	cnt -= !--c[x];
 }
 
 void dfs3(int x, int fa) {
-    if (fa) ins(a[fa]), st[++tp] = fa;
-    if (s0) {
-        while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s1]) del(a[st[tp--]]);
-        dfs3(s0, x);
-    }
-    while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s0]) del(a[st[tp--]]);
-    for (int y : e[x])
-        if (y != fa &amp;&amp; y != s0)
-            dfs3(y, x);
-    ans[x] = max(ans[x], cnt);
-    if (st[tp] == fa) del(a[st[tp--]]);
+	if (fa) ins(a[fa]), st[++tp] = fa;
+	if (s0) {
+		while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s1]) del(a[st[tp--]]);
+		dfs3(s0, x);
+	}
+	while (tp &amp;&amp; d[st[tp]] &gt;= d[x] - f[s0]) del(a[st[tp--]]);
+	for (int y : e[x])
+		if (y != fa &amp;&amp; y != s0)
+			dfs3(y, x);
+	ans[x] = max(ans[x], cnt);
+	if (st[tp] == fa) del(a[st[tp--]]);
 }
 
 inline void work(int x) {
-    rt = x;
-    dfs1(x, 0);
-    dfs2(rt, 0);
-    for (int i = 1; i &lt;= m; i++) c[i] = 0;
-    cnt = tp = 0;
-    dfs3(rt, 0);
+	rt = x;
+	dfs1(x, 0);
+	dfs2(rt, 0);
+	for (int i = 1; i &lt;= m; i++) c[i] = 0;
+	cnt = tp = 0;
+	dfs3(rt, 0);
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    rda(a, n);
-    work(1), work(rt);
-    for (int i = 1; i &lt;= n; i++) print(ans[i]);
-    return 0;
+	rd(n, m);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	rda(a, n);
+	work(1), work(rt);
+	for (int i = 1; i &lt;= n; i++) print(ans[i]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a>、<a data-source-tag="125" href="/blog/tags/125/">长链剖分</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/870/"><span>较新一篇</span>JOI Final 2018 题解</a><a class="rel-next" rel="next" href="/blog/posts/865/"><span>较早一篇</span>ARC099F Eating Symbols Hard 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="868" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -34,64 +34,64 @@
 const ll inf = 1e18;
 int n, m;
 struct E {
-    int x, y, z;
-    inline void input() { rd(x), rd(y), rd(z), --x, --y; }
-    inline friend bool operator &lt; (E a, E b) { return a.z &lt; b.z; }
+	int x, y, z;
+	inline void input() { rd(x), rd(y), rd(z), --x, --y; }
+	inline friend bool operator &lt; (E a, E b) { return a.z &lt; b.z; }
 } e[N];
 ll d[N], ans;
 #define bt bitset&lt;N&gt;
 bt v;
 struct mt {
-    bt a[N];
-    inline friend bt operator * (bt x, mt y) {
-        bt z;
-        for (int i = 0; i &lt; n; i++) z[i] = (x &amp; y.a[i]).any();
-        return z;
-    }
-    inline friend mt operator * (mt x, mt y) {
-        mt z;
-        for (int i = 0; i &lt; n; i++)
-            for (int j = 0; j &lt; n; j++)
-                if (x.a[i][j]) z.a[i] |= y.a[j];
-        return z;
-    }
+	bt a[N];
+	inline friend bt operator * (bt x, mt y) {
+		bt z;
+		for (int i = 0; i &lt; n; i++) z[i] = (x &amp; y.a[i]).any();
+		return z;
+	}
+	inline friend mt operator * (mt x, mt y) {
+		mt z;
+		for (int i = 0; i &lt; n; i++)
+			for (int j = 0; j &lt; n; j++)
+				if (x.a[i][j]) z.a[i] |= y.a[j];
+		return z;
+	}
 } a;
 
 inline void ksm(mt x, int y, bt &amp;z) {
-    while (y) {
-        if (y &amp; 1) z = z * x;
-        x = x * x, y &gt;&gt;= 1;
-    }
+	while (y) {
+		if (y &amp; 1) z = z * x;
+		x = x * x, y &gt;&gt;= 1;
+	}
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 0; i &lt; m; i++) e[i].input();
-    sort(e, e + m);
-    v[0] = 1;
-    ans = inf;
-    for (int i = 0, t = 0; i &lt; m; i++) {
-        if (e[i].z &gt;= ans) break;
-        int o = e[i].z - t;
-        ksm(a, o, v);
-        a.a[e[i].y][e[i].x] = 1;
-        t = e[i].z;
-        queue&lt;int&gt; q;
-        for (int x = 0; x &lt; n; x++)
-            if (v[x]) q.push(x), d[x] = 0;
-            else d[x] = inf;
-        while (q.size()) {
-            int x = q.front();
-            q.pop();
-            for (int y = 0; y &lt; n; y++)
-                if (a.a[y][x] &amp;&amp; d[y] == inf)
-                    d[y] = d[x] + 1, q.push(y);
-        }
-        ans = min(ans, t + d[n-1]);
-    }
-    if (ans == inf) prints("Impossible");
-    else print(ans);
-    return 0;
+	rd(n), rd(m);
+	for (int i = 0; i &lt; m; i++) e[i].input();
+	sort(e, e + m);
+	v[0] = 1;
+	ans = inf;
+	for (int i = 0, t = 0; i &lt; m; i++) {
+		if (e[i].z &gt;= ans) break;
+		int o = e[i].z - t;
+		ksm(a, o, v);
+		a.a[e[i].y][e[i].x] = 1;
+		t = e[i].z;
+		queue&lt;int&gt; q;
+		for (int x = 0; x &lt; n; x++)
+			if (v[x]) q.push(x), d[x] = 0;
+			else d[x] = inf;
+		while (q.size()) {
+			int x = q.front();
+			q.pop();
+			for (int y = 0; y &lt; n; y++)
+				if (a.a[y][x] &amp;&amp; d[y] == inf)
+					d[y] = d[x] + 1, q.push(y);
+		}
+		ans = min(ans, t + d[n-1]);
+	}
+	if (ans == inf) prints("Impossible");
+	else print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="38" href="/blog/tags/38/">bitset</a>、<a data-source-tag="57" href="/blog/tags/57/">矩阵</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/466/"><span>较新一篇</span>CF512D Fox And Travelling 题解</a><a class="rel-next" rel="next" href="/blog/posts/460/"><span>较早一篇</span>CF505E Mr. Kitayuta vs. Bamboos 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="462" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

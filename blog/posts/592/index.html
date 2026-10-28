@@ -18,24 +18,24 @@
 int n, m, k, a[N];
 
 inline void solve() {
-    rd(n), rd(m), rd(k);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]);
-    if (k &gt;= m - 1) return print(max(*max_element(a + 1, a + m + 1), *max_element(a + n - m + 1, a + n + 1)));
-    int ans = 0;
-    for (int i = 0; i &lt;= k; i++) {
-        int p = i + 1, q = n - (k - i), now = 1e9;
-        for (int j = 0; j &lt;= m - 1 - k; j++)
-            now = min(now, max(a[p+j], a[q-(m-1-k-j)]));
-        ans = max(ans, now);
-    }
-    print(ans);
+	rd(n), rd(m), rd(k);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]);
+	if (k &gt;= m - 1) return print(max(*max_element(a + 1, a + m + 1), *max_element(a + n - m + 1, a + n + 1)));
+	int ans = 0;
+	for (int i = 0; i &lt;= k; i++) {
+		int p = i + 1, q = n - (k - i), now = 1e9;
+		for (int j = 0; j &lt;= m - 1 - k; j++)
+			now = min(now, max(a[p+j], a[q-(m-1-k-j)]));
+		ans = max(ans, now);
+	}
+	print(ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Irreducible Anagrams</h2>
@@ -45,23 +45,23 @@ int n, m, a[N][26];
 char s[N];
 
 int main() {
-    rds(s, n), rd(m);
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 0; j &lt; 26; j++) a[i][j] = a[i-1][j];
-        a[i][s[i]-'a']++;
-    }
-    for (int i = 1, l, r; i &lt;= m; i++) {
-        rd(l), rd(r);
-        if (l == r) prints("Yes");
-        else if (s[l] != s[r]) prints("Yes");
-        else {
-            int cnt = 0;
-            for (int j = 0; j &lt; 26; j++) cnt += a[r][j] &gt; a[l-1][j];
-            if (cnt &lt;= 2) prints("No");
-            else prints("Yes");
-        }
-    }
-    return 0;
+	rds(s, n), rd(m);
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 0; j &lt; 26; j++) a[i][j] = a[i-1][j];
+		a[i][s[i]-'a']++;
+	}
+	for (int i = 1, l, r; i &lt;= m; i++) {
+		rd(l), rd(r);
+		if (l == r) prints("Yes");
+		else if (s[l] != s[r]) prints("Yes");
+		else {
+			int cnt = 0;
+			for (int j = 0; j &lt; 26; j++) cnt += a[r][j] &gt; a[l-1][j];
+			if (cnt &lt;= 2) prints("No");
+			else prints("Yes");
+		}
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Prefix Enlightenment</h2>
@@ -81,40 +81,40 @@ vi e[N];
 char s[N];
 
 inline int get(int x) {
-    return x == f[x] ? x : (f[x] = get(f[x]));
+	return x == f[x] ? x : (f[x] = get(f[x]));
 }
 
 inline void merge(int x, int y) {
-    x = get(x), y = get(y);
-    if (x == y) return;
-    f[x] = y, a[y] += a[x];
+	x = get(x), y = get(y);
+	if (x == y) return;
+	f[x] = y, a[y] += a[x];
 }
 
 inline int ask(int x) {
-    return min(a[get(x)], a[get(x+m)]);
+	return min(a[get(x)], a[get(x+m)]);
 }
 
 int main() {
-    rd(n), rd(m), rds(s, n), t = m &lt;&lt; 1 | 1, f[t] = t, a[t] = 1e9;
-    for (int i = 1, k; i &lt;= m; i++) {
-        rd(k), f[i] = i, f[i+m] = i + m, a[i] = 0, a[i+m] = 1;
-        for (int j = 1, x; j &lt;= k; j++) rd(x), e[x].pb(i);
-    }
-    for (int i = 1; i &lt;= n; i++) {
-        if (e[i].size() == 1u) {
-            int x = e[i][0], o = s[i] - '0';
-            ans -= ask(x), merge(x + o * m, t), ans += ask(x);
-        } else if (e[i].size() == 2u) {
-            int x = e[i][0], y = e[i][1], o = s[i] - '0';
-            if (get(x) != get(y + (!o) * m))
-                ans -= ask(x) + ask(y),
-                merge(x, y + (!o) * m),
-                merge(x + m, y + o * m),
-                ans += ask(x);
-        }
-        print(ans);
-    }
-    return 0;
+	rd(n), rd(m), rds(s, n), t = m &lt;&lt; 1 | 1, f[t] = t, a[t] = 1e9;
+	for (int i = 1, k; i &lt;= m; i++) {
+		rd(k), f[i] = i, f[i+m] = i + m, a[i] = 0, a[i+m] = 1;
+		for (int j = 1, x; j &lt;= k; j++) rd(x), e[x].pb(i);
+	}
+	for (int i = 1; i &lt;= n; i++) {
+		if (e[i].size() == 1u) {
+			int x = e[i][0], o = s[i] - '0';
+			ans -= ask(x), merge(x + o * m, t), ans += ask(x);
+		} else if (e[i].size() == 2u) {
+			int x = e[i][0], y = e[i][1], o = s[i] - '0';
+			if (get(x) != get(y + (!o) * m))
+				ans -= ask(x) + ask(y),
+				merge(x, y + (!o) * m),
+				merge(x + m, y + o * m),
+				ans += ask(x);
+		}
+		print(ans);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Coffee Varieties</h2>

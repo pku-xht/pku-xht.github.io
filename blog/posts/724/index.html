@@ -9,7 +9,7 @@
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
-<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>后缀自动机 学习笔记</h1><p class="post-meta"><time datetime="2020-03-14T21:40:27+08:00">2020 年 3 月 14 日</time><a href="/blog/categories/13/">笔记</a><span>更新于 2020 年 7 月 29 日</span></p></header><details class="article-toc"><summary>本文目录（20 节）</summary><ol><li class="toc-level-2"><a href="#section-1">确定有限状态自动机 (DFA)</a></li><li class="toc-level-3"><a href="#section-2">定义</a></li><li class="toc-level-3"><a href="#section-3">作用</a></li><li class="toc-level-2"><a href="#section-4">后缀自动机 (SAM)</a></li><li class="toc-level-3"><a href="#section-5">构造</a></li><li class="toc-level-4"><a href="#section-6"><span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类</a></li><li class="toc-level-4"><a href="#section-7"><span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 性质</a></li><li class="toc-level-4"><a href="#section-8">后缀链接 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span></a></li><li class="toc-level-4"><a href="#section-9"><span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 性质</a></li><li class="toc-level-4"><a href="#section-10">构造 SAM</a></li><li class="toc-level-4"><a href="#section-11">复杂度</a></li><li class="toc-level-4"><a href="#section-12">状态数和转移数上界</a></li><li class="toc-level-3"><a href="#section-13">性质</a></li><li class="toc-level-3"><a href="#section-14">应用</a></li><li class="toc-level-4"><a href="#section-15">【模板】P3804 【模板】后缀自动机 (SAM)</a></li><li class="toc-level-4"><a href="#section-16">【例题】P4070 [SDOI2016]生成魔咒</a></li><li class="toc-level-4"><a href="#section-17">【例题】SP7258 SUBLEX – Lexicographical Substring Search</a></li><li class="toc-level-4"><a href="#section-18">【例题】SP1811 LCS – Longest Common Substring</a></li><li class="toc-level-4"><a href="#section-19">【例题】SP10570 LONGCS – Longest Common Substring</a></li><li class="toc-level-2"><a href="#section-20">参考资料</a></li></ol></details><div class="prose"><blockquote>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>后缀自动机 学习笔记</h1><p class="post-meta"><time datetime="2020-03-14T21:40:27+08:00">2020 年 3 月 14 日</time><a href="/blog/categories/13/">笔记</a><span>更新于 2020 年 7 月 29 日</span></p></header><details class="article-toc"><summary>本文目录（20 节）</summary><ol><li class="toc-level-2"><a href="#section-1">确定有限状态自动机 (DFA)</a></li><li class="toc-level-3"><a href="#section-2">定义</a></li><li class="toc-level-3"><a href="#section-3">作用</a></li><li class="toc-level-2"><a href="#section-4">后缀自动机 (SAM)</a></li><li class="toc-level-3"><a href="#section-5">构造</a></li><li class="toc-level-4"><a href="#section-6"><span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类</a></li><li class="toc-level-4"><a href="#section-7"><span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 性质</a></li><li class="toc-level-4"><a href="#section-8">后缀链接 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span></a></li><li class="toc-level-4"><a href="#section-9"><span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 性质</a></li><li class="toc-level-4"><a href="#section-10">构造 SAM</a></li><li class="toc-level-4"><a href="#section-11">复杂度</a></li><li class="toc-level-4"><a href="#section-12">状态数和转移数上界</a></li><li class="toc-level-3"><a href="#section-13">性质</a></li><li class="toc-level-3"><a href="#section-14">应用</a></li><li class="toc-level-4"><a href="#section-15">【模板】P3804 【模板】后缀自动机 (SAM)</a></li><li class="toc-level-4"><a href="#section-16">【例题】P4070 [SDOI2016]生成魔咒</a></li><li class="toc-level-4"><a href="#section-17">【例题】SP7258 SUBLEX - Lexicographical Substring Search</a></li><li class="toc-level-4"><a href="#section-18">【例题】SP1811 LCS - Longest Common Substring</a></li><li class="toc-level-4"><a href="#section-19">【例题】SP10570 LONGCS - Longest Common Substring</a></li><li class="toc-level-2"><a href="#section-20">参考资料</a></li></ol></details><div class="prose"><blockquote>
 <p>因为 SA 就很有用了，所以一直不想学 SAM。突然不知道为什么就想学了，可能是为了吊打兔兔吧。<br>
 <strong>后缀自动机 (SAM)</strong> 是一个能解决许多字符串相关问题的有力的数据结构。<br>
 直观上，SAM 可以理解为将字符串的<strong>所有子串</strong>高度压缩至理论复杂度下界 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 的形式。</p>
@@ -59,7 +59,7 @@
 如果还未能增加新位置，则还在同一个 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类中；<br>
 否则，会跳到其 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 等价类中。<br>
 因此，对于一个不是 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 的状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，将其视作 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 集合，有 <span class="math-inline" data-original-math="$v \subseteq \operatorname{parent}(v)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>⊆</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">v \subseteq \operatorname{parent}(v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⊆</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)</span></span></span></span></span>。</li>
-<li>根据上条性质，对于一个不是 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 的状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，它对应的 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类中，子串的长度区间为 <span class="math-inline" data-original-math="$(\operatorname{len}(\operatorname{parent}(v)), \operatorname{len}(v)]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo separator="true">,</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">(\operatorname{len}(\operatorname{parent}(v)), \operatorname{len}(v)]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)]</span></span></span></span></span>，<strong>即 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的子串数量为 <span class="math-inline" data-original-math="$\operatorname{len}(v) – (\operatorname{len}(\operatorname{parent}(v))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span></span></span></span></span></strong>。</li>
+<li>根据上条性质，对于一个不是 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 的状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，它对应的 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类中，子串的长度区间为 <span class="math-inline" data-original-math="$(\operatorname{len}(\operatorname{parent}(v)), \operatorname{len}(v)]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo separator="true">,</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">(\operatorname{len}(\operatorname{parent}(v)), \operatorname{len}(v)]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)]</span></span></span></span></span>，<strong>即 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的子串数量为 <span class="math-inline" data-original-math="$\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span></span></span></span></span></strong>。</li>
 <li><strong>所有 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 构成一棵以 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 为根的树，我们称其为 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 树。</strong></li>
 </ul>
 <h4 id="section-10">构造 SAM</h4>
@@ -88,12 +88,12 @@
 <p>如果转移用 <code>map</code> 存储，则时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n \log |\Sigma|)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi>log</mi><mo>⁡</mo><mi mathvariant="normal">∣</mi><mi mathvariant="normal">Σ</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n \log |\Sigma|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣Σ∣</span><span class="mclose">)</span></span></span></span></span>，空间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>。</p>
 <p>如果转移用数组存储，<strong>同时借助链表</strong>，则时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span>，空间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n |\Sigma|)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi mathvariant="normal">∣</mi><mi mathvariant="normal">Σ</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n |\Sigma|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord">∣Σ∣</span><span class="mclose">)</span></span></span></span></span>。如果不借助链表，时间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n |\Sigma|)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi mathvariant="normal">∣</mi><mi mathvariant="normal">Σ</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n |\Sigma|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord">∣Σ∣</span><span class="mclose">)</span></span></span></span></span>，空间复杂度为 <span class="math-inline" data-original-math="$\mathcal O(n |\Sigma|)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mi mathvariant="normal">∣</mi><mi mathvariant="normal">Σ</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n |\Sigma|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mord">∣Σ∣</span><span class="mclose">)</span></span></span></span></span>。</p>
 <h4 id="section-12">状态数和转移数上界</h4>
-<p>对于 <span class="math-inline" data-original-math="$|s| \ge 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">|s| \ge 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 的字符串，状态数 <span class="math-inline" data-original-math="$\le 2 |s| – 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\le 2 |s| - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，上界可以在 <span class="math-inline" data-original-math="$\texttt{abb}\dots\texttt{b}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">abb</mtext><mo>…</mo><mtext mathvariant="monospace">b</mtext></mrow><annotation encoding="application/x-tex">\texttt{abb}\dots\texttt{b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6111em;"></span><span class="mord text"><span class="mord texttt">abb</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord texttt">b</span></span></span></span></span></span> 达到。</p>
-<p>对于 <span class="math-inline" data-original-math="$|s| \ge 3$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">|s| \ge 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span> 的字符串，转移数 <span class="math-inline" data-original-math="$\le 3 |s| – 4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>3</mn><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>−</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\le 3 |s| - 4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span></span>，上界可以在 <span class="math-inline" data-original-math="$\texttt{abb}\dots\texttt{bc}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">abb</mtext><mo>…</mo><mtext mathvariant="monospace">bc</mtext></mrow><annotation encoding="application/x-tex">\texttt{abb}\dots\texttt{bc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6111em;"></span><span class="mord text"><span class="mord texttt">abb</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord texttt">bc</span></span></span></span></span></span> 达到。</p>
+<p>对于 <span class="math-inline" data-original-math="$|s| \ge 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">|s| \ge 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 的字符串，状态数 <span class="math-inline" data-original-math="$\le 2 |s| - 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>2</mn><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\le 2 |s| - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，上界可以在 <span class="math-inline" data-original-math="$\texttt{abb}\dots\texttt{b}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">abb</mtext><mo>…</mo><mtext mathvariant="monospace">b</mtext></mrow><annotation encoding="application/x-tex">\texttt{abb}\dots\texttt{b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6111em;"></span><span class="mord text"><span class="mord texttt">abb</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord texttt">b</span></span></span></span></span></span> 达到。</p>
+<p>对于 <span class="math-inline" data-original-math="$|s| \ge 3$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">|s| \ge 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span> 的字符串，转移数 <span class="math-inline" data-original-math="$\le 3 |s| - 4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>3</mn><mi mathvariant="normal">∣</mi><mi>s</mi><mi mathvariant="normal">∣</mi><mo>−</mo><mn>4</mn></mrow><annotation encoding="application/x-tex">\le 3 |s| - 4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">3∣</span><span class="mord mathnormal">s</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">4</span></span></span></span></span>，上界可以在 <span class="math-inline" data-original-math="$\texttt{abb}\dots\texttt{bc}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">abb</mtext><mo>…</mo><mtext mathvariant="monospace">bc</mtext></mrow><annotation encoding="application/x-tex">\texttt{abb}\dots\texttt{bc}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6111em;"></span><span class="mord text"><span class="mord texttt">abb</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord texttt">bc</span></span></span></span></span></span> 达到。</p>
 <h3 id="section-13">性质</h3>
 <ul>
 <li><strong><span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 的子串和 SAM 中从 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 开始的路径一一对应。</strong><br>
-对于一个非 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，<span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类大小 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的子串数量 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> 从 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 开始到 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 的路径数量 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> <span class="math-inline" data-original-math="$\operatorname{len}(v) – (\operatorname{len}(\operatorname{parent}(v))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span></span></span></span></span>。</li>
+对于一个非 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，<span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 等价类大小 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的子串数量 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> 从 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 开始到 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 的路径数量 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> <span class="math-inline" data-original-math="$\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(v) - (\operatorname{len}(\operatorname{parent}(v))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="mclose">))</span></span></span></span></span>。</li>
 <li>称 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 的前缀在 SAM 上对应的节点为<strong>终点节点</strong>。<br>
 对于一个非 <span class="math-inline" data-original-math="$S$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></span> 状态 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，<span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 集合 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> 其 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 树的<strong>子树</strong>内的终点节点所对应前缀的位置 <span class="math-inline" data-original-math="$=$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.3669em;"></span><span class="mrel">=</span></span></span></span></span> <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span> 对应的子串在 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span> 中出现的位置。<br>
 根据此条性质，我们可以方便地采用<strong>线段树合并</strong>求出 <span class="math-inline" data-original-math="$\operatorname{rightpos}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">rightpos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{rightpos}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">rightpos</span></span></span></span></span></span> 集合。</li>
@@ -111,53 +111,53 @@
 <p>那么，对每个状态求出其 <span class="math-inline" data-original-math="$\operatorname{parent}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">parent</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{parent}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8095em;vertical-align:-0.1944em;"></span><span class="mop"><span class="mord mathrm">parent</span></span></span></span></span></span> 树上的子树贡献和，然后乘上这个状态的 <span class="math-inline" data-original-math="$\operatorname{len}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mop"><span class="mord mathrm">len</span></span></span></span></span></span>，最后取 <span class="math-inline" data-original-math="$\max$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\max</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mop">max</span></span></span></span></span> 即可。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
 struct SAM {
-    int n, l, ch[N&lt;&lt;1][26], len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
-    char s[N];
-    inline void init() { pa[0] = -1; }
-    inline void add(int c) {
-        int w = ++t, p = l;
-        len[w] = len[l] + 1;
-        while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
-        if (!~p) return pa[l=w] = 0, void();
-        int q = ch[p][c];
-        if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
-        int k = ++t;
-        pa[k] = pa[q], memcpy(ch[k], ch[q], sizeof(ch[k]));
-        len[k] = len[p] + 1, pa[w] = pa[q] = k;
-        while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
-        l = w;
-    }
-    inline void build() {
-        init();
-        for (int i = 1; i &lt;= n; i++) add(s[i] - 'a');
-    }
+	int n, l, ch[N&lt;&lt;1][26], len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
+	char s[N];
+	inline void init() { pa[0] = -1; }
+	inline void add(int c) {
+		int w = ++t, p = l;
+		len[w] = len[l] + 1;
+		while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
+		if (!~p) return pa[l=w] = 0, void();
+		int q = ch[p][c];
+		if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
+		int k = ++t;
+		pa[k] = pa[q], memcpy(ch[k], ch[q], sizeof(ch[k]));
+		len[k] = len[p] + 1, pa[w] = pa[q] = k;
+		while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
+		l = w;
+	}
+	inline void build() {
+		init();
+		for (int i = 1; i &lt;= n; i++) add(s[i] - 'a');
+	}
 
-    int cnt[N&lt;&lt;1];
-    ll ans;
-    vi e[N&lt;&lt;1];
-    void dfs(int x) {
-        for (int y : e[x]) dfs(y), cnt[x] += cnt[y];
-        if (cnt[x] &gt; 1) ans = max(ans, 1ll * cnt[x] * len[x]);
-    }
-    inline void calc() {
-        for (int i = 1, p = 0; i &lt;= n; i++) p = ch[p][s[i]-'a'], ++cnt[p];
-        for (int i = 1; i &lt;= t; i++) e[pa[i]].pb(i);
-        dfs(0), print(ans);
-    }
+	int cnt[N&lt;&lt;1];
+	ll ans;
+	vi e[N&lt;&lt;1];
+	void dfs(int x) {
+		for (int y : e[x]) dfs(y), cnt[x] += cnt[y];
+		if (cnt[x] &gt; 1) ans = max(ans, 1ll * cnt[x] * len[x]);
+	}
+	inline void calc() {
+		for (int i = 1, p = 0; i &lt;= n; i++) p = ch[p][s[i]-'a'], ++cnt[p];
+		for (int i = 1; i &lt;= t; i++) e[pa[i]].pb(i);
+		dfs(0), print(ans);
+	}
 } sam;
 
 int main() {
-    rds(sam.s, sam.n);
-    sam.build(), sam.calc();
-    return 0;
+	rds(sam.s, sam.n);
+	sam.build(), sam.calc();
+	return 0;
 }
 </code></pre>
 <h4 id="section-16">【例题】<a href="https://www.luogu.com.cn/problem/P4070" target="_blank" rel="noopener noreferrer">P4070 [SDOI2016]生成魔咒</a></h4>
 <blockquote>
 <p>动态子串数。</p>
 </blockquote>
-<p>每加入一个字符，本质不同的子串数就会加 <span class="math-inline" data-original-math="$\operatorname{len}(l) – \operatorname{len}(\operatorname{parent}(k))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>l</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(l) - \operatorname{len}(\operatorname{parent}(k))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">))</span></span></span></span></span> 个。</p>
-<h4 id="section-17">【例题】<a href="https://www.luogu.com.cn/problem/SP7258" target="_blank" rel="noopener noreferrer">SP7258 SUBLEX – Lexicographical Substring Search</a></h4>
+<p>每加入一个字符，本质不同的子串数就会加 <span class="math-inline" data-original-math="$\operatorname{len}(l) - \operatorname{len}(\operatorname{parent}(k))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>l</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="normal">len</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">parent</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{len}(l) - \operatorname{len}(\operatorname{parent}(k))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm">len</span></span><span class="mopen">(</span><span class="mop"><span class="mord mathrm">parent</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">))</span></span></span></span></span> 个。</p>
+<h4 id="section-17">【例题】<a href="https://www.luogu.com.cn/problem/SP7258" target="_blank" rel="noopener noreferrer">SP7258 SUBLEX - Lexicographical Substring Search</a></h4>
 <blockquote>
 <p>第 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 小子串。</p>
 </blockquote>
@@ -166,62 +166,62 @@ int main() {
 <p>找答案时，从根开始贪心地找。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 9e4 + 7;
 struct SAM {
-    int n, l, len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
-    char s[N];
-    map&lt;char, int&gt; ch[N&lt;&lt;1];
-    inline void init() { pa[0] = -1; }
-    inline void add(char c) {
-        int w = ++t, p = l;
-        len[w] = len[l] + 1;
-        while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
-        if (!~p) return pa[l=w] = 0, void();
-        int q = ch[p][c];
-        if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
-        int k = ++t;
-        pa[k] = pa[q], ch[k] = ch[q];
-        len[k] = len[p] + 1, pa[w] = pa[q] = k;
-        while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
-        l = w;
-    }
-    inline void build() {
-        init();
-        for (int i = 1; i &lt;= n; i++) add(s[i]);
-    }
+	int n, l, len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
+	char s[N];
+	map&lt;char, int&gt; ch[N&lt;&lt;1];
+	inline void init() { pa[0] = -1; }
+	inline void add(char c) {
+		int w = ++t, p = l;
+		len[w] = len[l] + 1;
+		while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
+		if (!~p) return pa[l=w] = 0, void();
+		int q = ch[p][c];
+		if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
+		int k = ++t;
+		pa[k] = pa[q], ch[k] = ch[q];
+		len[k] = len[p] + 1, pa[w] = pa[q] = k;
+		while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
+		l = w;
+	}
+	inline void build() {
+		init();
+		for (int i = 1; i &lt;= n; i++) add(s[i]);
+	}
 
-    int b[N&lt;&lt;1], c[N];
-    ll cnt[N&lt;&lt;1];
-    inline void sort() {
-        for (int i = 1; i &lt;= t; i++) ++c[len[i]];
-        for (int i = 1; i &lt;= n; i++) c[i] += c[i-1];
-        for (int i = 1; i &lt;= t; i++) b[c[len[i]]--] = i;
-        for (int i = t; ~i; i--) {
-            int x = b[i];
-            cnt[x] = 1;
-            for (auto o : ch[x]) cnt[x] += cnt[o.se];
-        }
-    }
-    inline void ask(int x) {
-        int p = 0;
-        while (x)
-            for (auto o : ch[p])
-                if (x - cnt[o.se] &gt; 0) x -= cnt[o.se];
-                else {
-                    putchar(o.fi), p = o.se, --x;
-                    break;
-                }
-        putchar('\n');
-    }
+	int b[N&lt;&lt;1], c[N];
+	ll cnt[N&lt;&lt;1];
+	inline void sort() {
+		for (int i = 1; i &lt;= t; i++) ++c[len[i]];
+		for (int i = 1; i &lt;= n; i++) c[i] += c[i-1];
+		for (int i = 1; i &lt;= t; i++) b[c[len[i]]--] = i;
+		for (int i = t; ~i; i--) {
+			int x = b[i];
+			cnt[x] = 1;
+			for (auto o : ch[x]) cnt[x] += cnt[o.se];
+		}
+	}
+	inline void ask(int x) {
+		int p = 0;
+		while (x)
+			for (auto o : ch[p])
+				if (x - cnt[o.se] &gt; 0) x -= cnt[o.se];
+				else {
+					putchar(o.fi), p = o.se, --x;
+					break;
+				}
+		putchar('\n');
+	}
 } sam;
 
 int main() {
-    rds(sam.s, sam.n), sam.build(), sam.sort();
-    int q, x;
-    rd(q);
-    while (q--) rd(x), sam.ask(x);
-    return 0;
+	rds(sam.s, sam.n), sam.build(), sam.sort();
+	int q, x;
+	rd(q);
+	while (q--) rd(x), sam.ask(x);
+	return 0;
 }
 </code></pre>
-<h4 id="section-18">【例题】<a href="https://www.luogu.com.cn/problem/SP1811" target="_blank" rel="noopener noreferrer">SP1811 LCS – Longest Common Substring</a></h4>
+<h4 id="section-18">【例题】<a href="https://www.luogu.com.cn/problem/SP1811" target="_blank" rel="noopener noreferrer">SP1811 LCS - Longest Common Substring</a></h4>
 <blockquote>
 <p>两个串的最大公共子串。</p>
 </blockquote>
@@ -230,48 +230,48 @@ int main() {
 <p>每次的解取 <span class="math-inline" data-original-math="$\max$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>max</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\max</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mop">max</span></span></span></span></span> 即为最优解。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 2.5e5 + 7;
 struct SAM {
-    int n, l, len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
-    char s[N];
-    map&lt;char, int&gt; ch[N&lt;&lt;1];
-    inline void init() { pa[0] = -1; }
-    inline void add(char c) {
-        int w = ++t, p = l;
-        len[w] = len[l] + 1;
-        while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
-        if (!~p) return pa[l=w] = 0, void();
-        int q = ch[p][c];
-        if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
-        int k = ++t;
-        pa[k] = pa[q], ch[k] = ch[q];
-        len[k] = len[p] + 1, pa[w] = pa[q] = k;
-        while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
-        l = w;
-    }
-    inline void build() {
-        init();
-        for (int i = 1; i &lt;= n; i++) add(s[i]);
-    }
+	int n, l, len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
+	char s[N];
+	map&lt;char, int&gt; ch[N&lt;&lt;1];
+	inline void init() { pa[0] = -1; }
+	inline void add(char c) {
+		int w = ++t, p = l;
+		len[w] = len[l] + 1;
+		while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
+		if (!~p) return pa[l=w] = 0, void();
+		int q = ch[p][c];
+		if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
+		int k = ++t;
+		pa[k] = pa[q], ch[k] = ch[q];
+		len[k] = len[p] + 1, pa[w] = pa[q] = k;
+		while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
+		l = w;
+	}
+	inline void build() {
+		init();
+		for (int i = 1; i &lt;= n; i++) add(s[i]);
+	}
 
-    int op, ol, ans;
-    inline void calc(char c) {
-        while (op &amp;&amp; !ch[op][c]) op = pa[op], ol = len[op];
-        if (ch[op][c]) op = ch[op][c], ++ol;
-        ans = max(ans, ol);
-    }
+	int op, ol, ans;
+	inline void calc(char c) {
+		while (op &amp;&amp; !ch[op][c]) op = pa[op], ol = len[op];
+		if (ch[op][c]) op = ch[op][c], ++ol;
+		ans = max(ans, ol);
+	}
 } sam;
 
 char s[N];
 int n;
 
 int main() {
-    rds(sam.s, sam.n), sam.build();
-    rds(s, n);
-    for (int i = 1; i &lt;= n; i++) sam.calc(s[i]);
-    print(sam.ans);
-    return 0;
+	rds(sam.s, sam.n), sam.build();
+	rds(s, n);
+	for (int i = 1; i &lt;= n; i++) sam.calc(s[i]);
+	print(sam.ans);
+	return 0;
 }
 </code></pre>
-<h4 id="section-19">【例题】<a href="https://www.luogu.com.cn/problem/SP10570" target="_blank" rel="noopener noreferrer">SP10570 LONGCS – Longest Common Substring</a></h4>
+<h4 id="section-19">【例题】<a href="https://www.luogu.com.cn/problem/SP10570" target="_blank" rel="noopener noreferrer">SP10570 LONGCS - Longest Common Substring</a></h4>
 <blockquote>
 <p>多个串的最大公共子串。</p>
 </blockquote>
@@ -281,69 +281,69 @@ int main() {
 char s[N];
 int n, ans[N&lt;&lt;1];
 struct SAM {
-    int n, l, ch[N&lt;&lt;1][26], len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
-    char s[N];
-    inline void init() {
-        for (int i = 0; i &lt;= t; i++)
-            memset(ch[i], 0, sizeof(ch[i]));
-        t = l = len[0] = 0, pa[0] = -1;
-    }
-    inline void add(int c) {
-        int w = ++t, p = l;
-        len[w] = len[l] + 1;
-        while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
-        if (!~p) return pa[l=w] = 0, void();
-        int q = ch[p][c];
-        if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
-        int k = ++t;
-        pa[k] = pa[q], memcpy(ch[k], ch[q], sizeof(ch[k]));
-        len[k] = len[p] + 1, pa[w] = pa[q] = k;
-        while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
-        l = w;
-    }
-    inline void build() {
-        init();
-        for (int i = 1; i &lt;= n; i++) add(s[i] - 'a');
-    }
+	int n, l, ch[N&lt;&lt;1][26], len[N&lt;&lt;1], pa[N&lt;&lt;1], t;
+	char s[N];
+	inline void init() {
+		for (int i = 0; i &lt;= t; i++)
+			memset(ch[i], 0, sizeof(ch[i]));
+		t = l = len[0] = 0, pa[0] = -1;
+	}
+	inline void add(int c) {
+		int w = ++t, p = l;
+		len[w] = len[l] + 1;
+		while (~p &amp;&amp; !ch[p][c]) ch[p][c] = w, p = pa[p];
+		if (!~p) return pa[l=w] = 0, void();
+		int q = ch[p][c];
+		if (len[p] + 1 == len[q]) return pa[l=w] = q, void();
+		int k = ++t;
+		pa[k] = pa[q], memcpy(ch[k], ch[q], sizeof(ch[k]));
+		len[k] = len[p] + 1, pa[w] = pa[q] = k;
+		while (~p &amp;&amp; ch[p][c] == q) ch[p][c] = k, p = pa[p];
+		l = w;
+	}
+	inline void build() {
+		init();
+		for (int i = 1; i &lt;= n; i++) add(s[i] - 'a');
+	}
 
-    int b[N&lt;&lt;1], c[N];
-    inline void sort() {
-        for (int i = 1; i &lt;= n; i++) c[i] = 0;
-        for (int i = 1; i &lt;= t; i++) ++c[len[i]];
-        for (int i = 1; i &lt;= n; i++) c[i] += c[i-1];
-        for (int i = 1; i &lt;= t; i++) b[c[len[i]]--] = i;
-    }
-    int op, ol, ans[N&lt;&lt;1];
-    inline void calc(int c) {
-        while (op &amp;&amp; !ch[op][c]) op = pa[op], ol = len[op];
-        if (ch[op][c]) op = ch[op][c], ++ol, ans[op] = max(ans[op], ol);
-    }
-    inline void update() {
-        for (int i = t; i; i--) {
-            int x = b[i];
-            ans[pa[x]] = max(ans[pa[x]], min(ans[x], len[pa[x]]));
-            ::ans[x] = min(::ans[x], ans[x]), ans[x] = 0;
-        }
-    }
+	int b[N&lt;&lt;1], c[N];
+	inline void sort() {
+		for (int i = 1; i &lt;= n; i++) c[i] = 0;
+		for (int i = 1; i &lt;= t; i++) ++c[len[i]];
+		for (int i = 1; i &lt;= n; i++) c[i] += c[i-1];
+		for (int i = 1; i &lt;= t; i++) b[c[len[i]]--] = i;
+	}
+	int op, ol, ans[N&lt;&lt;1];
+	inline void calc(int c) {
+		while (op &amp;&amp; !ch[op][c]) op = pa[op], ol = len[op];
+		if (ch[op][c]) op = ch[op][c], ++ol, ans[op] = max(ans[op], ol);
+	}
+	inline void update() {
+		for (int i = t; i; i--) {
+			int x = b[i];
+			ans[pa[x]] = max(ans[pa[x]], min(ans[x], len[pa[x]]));
+			::ans[x] = min(::ans[x], ans[x]), ans[x] = 0;
+		}
+	}
 } sam;
 
 inline void solve() {
-    int m;
-    rd(m), rds(sam.s, sam.n), sam.build(), sam.sort();
-    for (int i = 1; i &lt;= sam.t; i++) ans[i] = 1e9;
-    while (--m) {
-        rds(s, n), sam.op = sam.ol = 0;
-        for (int i = 1; i &lt;= n; i++) sam.calc(s[i] - 'a');
-        sam.update();
-    }
-    print(*max_element(ans + 1, ans + sam.t + 1));
+	int m;
+	rd(m), rds(sam.s, sam.n), sam.build(), sam.sort();
+	for (int i = 1; i &lt;= sam.t; i++) ans[i] = 1e9;
+	while (--m) {
+		rds(s, n), sam.op = sam.ol = 0;
+		for (int i = 1; i &lt;= n; i++) sam.calc(s[i] - 'a');
+		sam.update();
+	}
+	print(*max_element(ans + 1, ans + sam.t + 1));
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-20">参考资料</h2>

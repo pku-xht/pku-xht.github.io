@@ -21,26 +21,26 @@ int n, m, d[N][N], ans;
 queue&lt;pi&gt; q; 
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++) {
-            char c;
-            rdc(c);
-            if (c == '#') q.push(mp(i, j));
-            else d[i][j] = -1; 
-        }
-    while (q.size()) {
-        int x = q.front().fi, y = q.front().se;
-        q.pop();
-        ans = d[x][y];
-        for (int i = 0; i &lt; 4; i++) {
-            int X = x + dx[i], Y = y + dy[i];
-            if (X &lt; 1 || X &gt; n || Y &lt; 1 || Y &gt; m || ~d[X][Y]) continue;
-            d[X][Y] = d[x][y] + 1, q.push(mp(X, Y));
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++) {
+			char c;
+			rdc(c);
+			if (c == '#') q.push(mp(i, j));
+			else d[i][j] = -1; 
+		}
+	while (q.size()) {
+		int x = q.front().fi, y = q.front().se;
+		q.pop();
+		ans = d[x][y];
+		for (int i = 0; i &lt; 4; i++) {
+			int X = x + dx[i], Y = y + dy[i];
+			if (X &lt; 1 || X &gt; n || Y &lt; 1 || Y &gt; m || ~d[X][Y]) continue;
+			d[X][Y] = d[x][y] + 1, q.push(mp(X, Y));
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc033/tasks/agc033_b" target="_blank" rel="noopener noreferrer">LRUD Game</a></h2>
@@ -50,22 +50,22 @@ int n, m, k, x, y;
 char a[N], b[N];
 
 inline bool pd(int t, int w, char p, char q) {
-    for (int i = 1; i &lt;= k; i++) {
-        if (a[i] == p) --t;
-        if (!t) return 0;
-        if (t != w &amp;&amp; b[i] == q) ++t;
-    }
-    return 1;
+	for (int i = 1; i &lt;= k; i++) {
+		if (a[i] == p) --t;
+		if (!t) return 0;
+		if (t != w &amp;&amp; b[i] == q) ++t;
+	}
+	return 1;
 }
 
 int main() {
-    rd(n, m, k), rd(x, y), rds(a, k), rds(b, k);
-    if (!pd(x, n, 'U', 'D')) return prints("NO"), 0;
-    if (!pd(n - x + 1, n, 'D', 'U')) return prints("NO"), 0;
-    if (!pd(y, m, 'L', 'R')) return prints("NO"), 0;
-    if (!pd(m - y + 1, m, 'R', 'L')) return prints("NO"), 0;
-    prints("YES");
-    return 0;
+	rd(n, m, k), rd(x, y), rds(a, k), rds(b, k);
+	if (!pd(x, n, 'U', 'D')) return prints("NO"), 0;
+	if (!pd(n - x + 1, n, 'D', 'U')) return prints("NO"), 0;
+	if (!pd(y, m, 'L', 'R')) return prints("NO"), 0;
+	if (!pd(m - y + 1, m, 'R', 'L')) return prints("NO"), 0;
+	prints("YES");
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc033/tasks/agc033_c" target="_blank" rel="noopener noreferrer">Removing Coins</a></h2>
@@ -76,20 +76,20 @@ int n, d[N];
 vi e[N];
 
 void dfs(int x, int f) {
-    for (int y : e[x])
-        if (y != f) d[y] = d[x] + 1, dfs(y, x);
+	for (int y : e[x])
+		if (y != f) d[y] = d[x] + 1, dfs(y, x);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    d[1] = 1, dfs(1, 0);
-    int rt = max_element(d + 1, d + n + 1) - d;
-    d[rt] = 1, dfs(rt, 0);
-    int ans = *max_element(d + 1, d + n + 1);
-    prints(ans % 3 == 2 ? "Second" : "First");
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	d[1] = 1, dfs(1, 0);
+	int rt = max_element(d + 1, d + n + 1) - d;
+	d[rt] = 1, dfs(rt, 0);
+	int ans = *max_element(d + 1, d + n + 1);
+	prints(ans % 3 == 2 ? "Second" : "First");
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Complexity" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc033/tasks/agc033_d" target="_blank" rel="noopener noreferrer">Complexity</a></h2>
@@ -116,50 +116,50 @@ char a[N][N];
 int f[N][N][N], g[N][N][N], F[N], G[N];
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++) rds(a[i], m);
-    int tn = n - 1, tm = m - 1;
-    while (tn) ++w, tn &gt;&gt;= 1;
-    while (tm) ++w, tm &gt;&gt;= 1;
-    for (int l = 1; l &lt;= n; l++)
-        for (int r = l; r &lt;= n; r++) {
-            f[l][r][m+1] = m;
-            for (int j = m; j; j--)
-                if (!(l == r || (a[l][j] == a[r][j] &amp;&amp; f[l][r-1][j] &gt;= j))) f[l][r][j] = j - 1;
-                else f[l][r][j] = a[l][j] == a[l][j+1] ? f[l][r][j+1] : j;
-        }
-    for (int l = 1; l &lt;= m; l++)
-        for (int r = l; r &lt;= m; r++) {
-            g[l][r][n+1] = n;
-            for (int i = n; i; i--)
-                if (!(l == r || (a[i][l] == a[i][r] &amp;&amp; g[l][r-1][i] &gt;= i))) g[l][r][i] = i - 1;
-                else g[l][r][i] = a[i][l] == a[i+1][l] ? g[l][r][i+1] : i;
-        }
-    if (f[1][n][1] == m) return print(0), 0;
-    for (int k = 1; k &lt;= w; k++) {
-        for (int l = 1; l &lt;= n; l++)
-            for (int r = l; r &lt;= n; r++)
-                for (int j = 1; j &lt;= m; j++)
-                    f[l][r][j] = f[l][r][f[l][r][j]+1];
-        for (int l = 1; l &lt;= m; l++)
-            for (int r = l; r &lt;= m; r++)
-                for (int i = 1; i &lt;= n; i++)
-                    g[l][r][i] = g[l][r][g[l][r][i]+1];
-        for (int i = 1; i &lt;= n; i++)
-            for (int j = 1; j &lt;= m; j++) {
-                for (int p = i; p &lt;= n; p++) F[p] = f[i][p][j];
-                for (int p = j; p &lt;= m; p++) G[p] = g[j][p][i];
-                F[n+1] = j - 1, G[m+1] = i - 1;
-                for (int p = i; p &lt;= n; p++)
-                    for (int w = F[p]; w &gt; F[p+1]; w--)
-                        g[j][w][i] = max(g[j][w][i], p);
-                for (int p = j; p &lt;= m; p++)
-                    for (int w = G[p]; w &gt; G[p+1]; w--)
-                        f[i][w][j] = max(f[i][w][j], p);
-            }
-        if (f[1][n][1] == m) return print(k), 0;
-    }
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++) rds(a[i], m);
+	int tn = n - 1, tm = m - 1;
+	while (tn) ++w, tn &gt;&gt;= 1;
+	while (tm) ++w, tm &gt;&gt;= 1;
+	for (int l = 1; l &lt;= n; l++)
+		for (int r = l; r &lt;= n; r++) {
+			f[l][r][m+1] = m;
+			for (int j = m; j; j--)
+				if (!(l == r || (a[l][j] == a[r][j] &amp;&amp; f[l][r-1][j] &gt;= j))) f[l][r][j] = j - 1;
+				else f[l][r][j] = a[l][j] == a[l][j+1] ? f[l][r][j+1] : j;
+		}
+	for (int l = 1; l &lt;= m; l++)
+		for (int r = l; r &lt;= m; r++) {
+			g[l][r][n+1] = n;
+			for (int i = n; i; i--)
+				if (!(l == r || (a[i][l] == a[i][r] &amp;&amp; g[l][r-1][i] &gt;= i))) g[l][r][i] = i - 1;
+				else g[l][r][i] = a[i][l] == a[i+1][l] ? g[l][r][i+1] : i;
+		}
+	if (f[1][n][1] == m) return print(0), 0;
+	for (int k = 1; k &lt;= w; k++) {
+		for (int l = 1; l &lt;= n; l++)
+			for (int r = l; r &lt;= n; r++)
+				for (int j = 1; j &lt;= m; j++)
+					f[l][r][j] = f[l][r][f[l][r][j]+1];
+		for (int l = 1; l &lt;= m; l++)
+			for (int r = l; r &lt;= m; r++)
+				for (int i = 1; i &lt;= n; i++)
+					g[l][r][i] = g[l][r][g[l][r][i]+1];
+		for (int i = 1; i &lt;= n; i++)
+			for (int j = 1; j &lt;= m; j++) {
+				for (int p = i; p &lt;= n; p++) F[p] = f[i][p][j];
+				for (int p = j; p &lt;= m; p++) G[p] = g[j][p][i];
+				F[n+1] = j - 1, G[m+1] = i - 1;
+				for (int p = i; p &lt;= n; p++)
+					for (int w = F[p]; w &gt; F[p+1]; w--)
+						g[j][w][i] = max(g[j][w][i], p);
+				for (int p = j; p &lt;= m; p++)
+					for (int w = G[p]; w &gt; G[p+1]; w--)
+						f[i][w][j] = max(f[i][w][j], p);
+			}
+		if (f[1][n][1] == m) return print(k), 0;
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Go_around_a_Circle" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc033/tasks/agc033_e" target="_blank" rel="noopener noreferrer">Go around a Circle</a></h2>
@@ -188,38 +188,38 @@ int n, m, c[N], k, w;
 char s[N];
 
 namespace k1 {
-    modint f[N][2][2];
-    inline void main() {
-        f[1][0][0] = f[1][1][1] = 1;
-        for (int i = 1; i &lt; n; i++)
-            f[i+1][0][0] = f[i][0][0] + f[i][0][1],
-            f[i+1][0][1] = f[i][0][0],
-            f[i+1][1][0] = f[i][1][0] + f[i][1][1],
-            f[i+1][1][1] = f[i][1][0];
-        print(f[n][0][0] + f[n][0][1] + f[n][1][0]);
-    }
+	modint f[N][2][2];
+	inline void main() {
+		f[1][0][0] = f[1][1][1] = 1;
+		for (int i = 1; i &lt; n; i++)
+			f[i+1][0][0] = f[i][0][0] + f[i][0][1],
+			f[i+1][0][1] = f[i][0][0],
+			f[i+1][1][0] = f[i][1][0] + f[i][1][1],
+			f[i+1][1][1] = f[i][1][0];
+		print(f[n][0][0] + f[n][0][1] + f[n][1][0]);
+	}
 }
 
 modint f[N], g[N], ans;
 
 int main() {
-    rd(n, m), rds(s, m);
-    for (int l = 1, r = 1; l &lt;= m; l = ++r) {
-        while (r &lt; m &amp;&amp; s[r+1] == s[l]) ++r;
-        c[++k] = r - l + 1;
-    }
-    if (k == 1) return k1::main(), 0;
-    if (n &amp; 1) return print(0), 0;
-    w = c[1] + !(c[1] &amp; 1), k -= k &amp; 1;
-    for (int i = 3; i &lt;= k; i += 2)
-        if (c[i] &amp; 1) w = min(w, c[i]);
-    n &gt;&gt;= 1, w &gt;&gt;= 1;
-    f[1] = g[1] = 1;
-    for (int i = 2; i &lt;= n; i++)
-        g[i] = g[i-1] + (f[i] = g[i-1] - (i - w - 2 &gt;= 0 ? g[i-w-2] : 0));
-    for (int i = 0; i &lt;= min(n, w); i++) ans += f[n-i] * (i + 1);
-    print(ans + ans);
-    return 0;
+	rd(n, m), rds(s, m);
+	for (int l = 1, r = 1; l &lt;= m; l = ++r) {
+		while (r &lt; m &amp;&amp; s[r+1] == s[l]) ++r;
+		c[++k] = r - l + 1;
+	}
+	if (k == 1) return k1::main(), 0;
+	if (n &amp; 1) return print(0), 0;
+	w = c[1] + !(c[1] &amp; 1), k -= k &amp; 1;
+	for (int i = 3; i &lt;= k; i += 2)
+		if (c[i] &amp; 1) w = min(w, c[i]);
+	n &gt;&gt;= 1, w &gt;&gt;= 1;
+	f[1] = g[1] = 1;
+	for (int i = 2; i &lt;= n; i++)
+		g[i] = g[i-1] + (f[i] = g[i-1] - (i - w - 2 &gt;= 0 ? g[i-w-2] : 0));
+	for (int i = 0; i &lt;= min(n, w); i++) ans += f[n-i] * (i + 1);
+	print(ans + ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Adding_Edges" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc033/tasks/agc033_f" target="_blank" rel="noopener noreferrer">Adding Edges</a></h2>
@@ -254,48 +254,48 @@ int f[N][N], p[N][N];
 bool g[N][N];
 
 void dfs(int x, int *f) {
-    for (int y : e[x])
-        if (y != f[x]) f[y] = x, dfs(y, f);
+	for (int y : e[x])
+		if (y != f[x]) f[y] = x, dfs(y, f);
 }
 
 inline void add(int x, int y) {
-    if (p[x][y] == y || p[y][x] == x) return;
-    if (p[x][y]) return add(p[x][y], y);
-    if (p[y][x]) return add(p[y][x], x);
-    vector&lt;pi&gt; a;
-    for (int i = 0; i &lt; 2; i++) {
-        g[x][y] = 1, p[x][y] = y;
-        queue&lt;int&gt; q;
-        q.push(y);
-        while (q.size()) {
-            int u = q.front();
-            q.pop();
-            for (int v : e[u])
-                if (v != f[x][u]) {
-                    if (!p[x][v]) p[x][v] = y, q.push(v);
-                    else if (g[x][v]) g[x][v] = g[v][x] = 0, a.pb(mp(y, v));
-                }
-        }
-        swap(x, y);
-    }
-    for (pi o : a) add(o.fi, o.se);
+	if (p[x][y] == y || p[y][x] == x) return;
+	if (p[x][y]) return add(p[x][y], y);
+	if (p[y][x]) return add(p[y][x], x);
+	vector&lt;pi&gt; a;
+	for (int i = 0; i &lt; 2; i++) {
+		g[x][y] = 1, p[x][y] = y;
+		queue&lt;int&gt; q;
+		q.push(y);
+		while (q.size()) {
+			int u = q.front();
+			q.pop();
+			for (int v : e[u])
+				if (v != f[x][u]) {
+					if (!p[x][v]) p[x][v] = y, q.push(v);
+					else if (g[x][v]) g[x][v] = g[v][x] = 0, a.pb(mp(y, v));
+				}
+		}
+		swap(x, y);
+	}
+	for (pi o : a) add(o.fi, o.se);
 }
 
 void dfs1(int x, int t, int *f) {
-    if (p[t][x] == x) ++ans, t = x;
-    for (int y : e[x])
-        if (y != f[x]) dfs1(y, t, f);
+	if (p[t][x] == x) ++ans, t = x;
+	for (int y : e[x])
+		if (y != f[x]) dfs1(y, t, f);
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
-    for (int x = 1; x &lt;= n; x++) dfs(x, f[x]);
-    for (int i = 1, x, y; i &lt;= m; i++) rd(x, y), add(x, y);
-    for (int x = 1; x &lt;= n; x++)
-        for (int y : e[x]) dfs1(y, x, f[x]);
-    print(ans &gt;&gt; 1);
-    return 0;
+	rd(n, m);
+	for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
+	for (int x = 1; x &lt;= n; x++) dfs(x, f[x]);
+	for (int i = 1, x, y; i &lt;= m; i++) rd(x, y), add(x, y);
+	for (int x = 1; x &lt;= n; x++)
+		for (int y : e[x]) dfs1(y, x, f[x]);
+	print(ans &gt;&gt; 1);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="88" href="/blog/tags/88/">博弈论</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/998/"><span>较新一篇</span>AtCoder Grand Contest 032 题解</a><a class="rel-next" rel="next" href="/blog/posts/994/"><span>较早一篇</span>AtCoder Grand Contest 034 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="996" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

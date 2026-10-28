@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
 <main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov! 题解</h1><p class="post-meta"><time datetime="2020-04-04T11:27:58+08:00">2020 年 4 月 4 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（5 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Dreamoon Likes Coloring</a></li><li class="toc-level-2"><a href="#section-2">Dreamoon Likes Sequences</a></li><li class="toc-level-2"><a href="#section-3">Drazil Likes Heap</a></li><li class="toc-level-2"><a href="#section-4">Dreamoon Likes Strings</a></li><li class="toc-level-2"><a href="#section-5">Dreamoon Loves AA</a></li></ol></details><div class="prose"><blockquote>
-<p><a href="https://codeforces.com/contest/1329" target="_blank" rel="noopener noreferrer">Codeforces Round #631 (Div. 1) – Thanks, Denis aramis Shitov!</a></p>
+<p><a href="https://codeforces.com/contest/1329" target="_blank" rel="noopener noreferrer">Codeforces Round #631 (Div. 1) - Thanks, Denis aramis Shitov!</a></p>
 </blockquote>
 <h2 id="section-1">Dreamoon Likes Coloring</h2>
 <p>简单构造题。</p>
@@ -23,17 +23,17 @@ int n, m, a[N], b[N];
 ll s;
 
 int main() {
-    rd(n), rd(m), rda(a, m);
-    for (int i = 1; i &lt;= m; i++) s += a[i];
-    if (s &lt; n) Fail;
-    for (int i = 1; i &lt;= m; i++)
-        if (a[i] &gt; n - i + 1) Fail;
-    for (int i = m, j = n + 1; i; i--) {
-        b[i] = j -= a[i];
-        if (b[i] &lt; i) b[i] = j = i;
-    }
-    for (int i = 1; i &lt;= m; i++) print(b[i], " \n"[i==m]);
-    return 0;
+	rd(n), rd(m), rda(a, m);
+	for (int i = 1; i &lt;= m; i++) s += a[i];
+	if (s &lt; n) Fail;
+	for (int i = 1; i &lt;= m; i++)
+		if (a[i] &gt; n - i + 1) Fail;
+	for (int i = m, j = n + 1; i; i--) {
+		b[i] = j -= a[i];
+		if (b[i] &lt; i) b[i] = j = i;
+	}
+	for (int i = 1; i &lt;= m; i++) print(b[i], " \n"[i==m]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Dreamoon Likes Sequences</h2>
@@ -44,19 +44,19 @@ int main() {
 <pre tabindex="0"><code class="language-cpp">int n;
 
 inline void solve() {
-    rd(n), rd(P);
-    if (P == 1) return print(0);
-    modint ans = 1;
-    int t = 1;
-    while (t &lt;= n) ans *= min(n, (t &lt;&lt; 1) - 1) - t + 2, t &lt;&lt;= 1;
-    print(ans - 1);
+	rd(n), rd(P);
+	if (P == 1) return print(0);
+	modint ans = 1;
+	int t = 1;
+	while (t &lt;= n) ans *= min(n, (t &lt;&lt; 1) - 1) - t + 2, t &lt;&lt;= 1;
+	print(ans - 1);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Drazil Likes Heap</h2>
@@ -70,47 +70,47 @@ int h, g, a[N], d[N], p[N], t;
 pq&lt;int&gt; q;
 
 inline int find(int p) {
-    if (!a[ls] &amp;&amp; !a[rs]) return p;
-    if (a[ls] &gt; a[rs]) return find(ls);
-    return find(rs);
+	if (!a[ls] &amp;&amp; !a[rs]) return p;
+	if (a[ls] &gt; a[rs]) return find(ls);
+	return find(rs);
 }
 
 inline void work(int p) {
-    if (!a[ls] &amp;&amp; !a[rs]) return;
-    if (a[ls] &gt; a[rs]) return swap(a[p], a[ls]), ::p[a[p]] = p, work(ls);
-    swap(a[p], a[rs]), ::p[a[p]] = p, work(rs);
+	if (!a[ls] &amp;&amp; !a[rs]) return;
+	if (a[ls] &gt; a[rs]) return swap(a[p], a[ls]), ::p[a[p]] = p, work(ls);
+	swap(a[p], a[rs]), ::p[a[p]] = p, work(rs);
 }
 
 inline int work() {
-    while (d[find(p[q.top()])] == g) q.pop();
-    int p = ::p[q.top()];
-    q.pop();
-    a[p] = 0, work(p);
-    return p;
+	while (d[find(p[q.top()])] == g) q.pop();
+	int p = ::p[q.top()];
+	q.pop();
+	a[p] = 0, work(p);
+	return p;
 }
 
 inline void solve() {
-    rd(h), rd(g);
-    for (int i = 1; i &lt; (1 &lt;&lt; (h + 1)); i++) a[i] = 0;
-    rda(a, (1 &lt;&lt; h) - 1), t = 0;
-    d[1] = 1;
-    for (int i = 2; i &lt; (1 &lt;&lt; h); i++) d[i] = d[i&gt;&gt;1] + 1;
-    while (q.size()) q.pop();
-    for (int i = 1; i &lt; (1 &lt;&lt; h); i++) q.push(a[i]), p[a[i]] = i;
-    vi p;
-    for (int i = 1; i &lt;= (1 &lt;&lt; h) - (1 &lt;&lt; g); i++) p.pb(work());
-    ll ans = 0;
-    for (int i = 1; i &lt; (1 &lt;&lt; g); i++) ans += a[i];
-    print(ans);
-    for (int x : p) print(x, ' ');
-    prints("");
+	rd(h), rd(g);
+	for (int i = 1; i &lt; (1 &lt;&lt; (h + 1)); i++) a[i] = 0;
+	rda(a, (1 &lt;&lt; h) - 1), t = 0;
+	d[1] = 1;
+	for (int i = 2; i &lt; (1 &lt;&lt; h); i++) d[i] = d[i&gt;&gt;1] + 1;
+	while (q.size()) q.pop();
+	for (int i = 1; i &lt; (1 &lt;&lt; h); i++) q.push(a[i]), p[a[i]] = i;
+	vi p;
+	for (int i = 1; i &lt;= (1 &lt;&lt; h) - (1 &lt;&lt; g); i++) p.pb(work());
+	ll ans = 0;
+	for (int i = 1; i &lt; (1 &lt;&lt; g); i++) ans += a[i];
+	print(ans);
+	for (int x : p) print(x, ' ');
+	prints("");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Dreamoon Likes Strings</h2>

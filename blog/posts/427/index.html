@@ -28,27 +28,27 @@ int n, v[N];
 ld p[N][N], a[N], d[N];
 
 inline bool work() {
-    int o;
-    ld x = 1e100L;
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i] &amp;&amp; (d[i] + a[i]) / (1 - a[i]) &lt;= x) x = (d[i] + a[i]) / (1 - a[i]), o = i;
-    v[o] = 1, d[o] = (d[o] + a[o]) / (1 - a[o]);
-    if (o == 1) return 1;
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) d[i] += a[i] * p[i][o] * (d[o] + 1), a[i] *= 1 - p[i][o];
-    return 0;
+	int o;
+	ld x = 1e100L;
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i] &amp;&amp; (d[i] + a[i]) / (1 - a[i]) &lt;= x) x = (d[i] + a[i]) / (1 - a[i]), o = i;
+	v[o] = 1, d[o] = (d[o] + a[o]) / (1 - a[o]);
+	if (o == 1) return 1;
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) d[i] += a[i] * p[i][o] * (d[o] + 1), a[i] *= 1 - p[i][o];
+	return 0;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x; i &lt;= n; i++) {
-        for (int j = 1; j &lt;= n; j++) rd(x), p[i][j] = 0.01L * x;
-        a[i] = 1;
-    }
-    a[n] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        if (work()) return cout &lt;&lt; fixed &lt;&lt; setprecision(15) &lt;&lt; d[1] &lt;&lt; endl, 0;
-    return 0;
+	rd(n);
+	for (int i = 1, x; i &lt;= n; i++) {
+		for (int j = 1; j &lt;= n; j++) rd(x), p[i][j] = 0.01L * x;
+		a[i] = 1;
+	}
+	a[n] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		if (work()) return cout &lt;&lt; fixed &lt;&lt; setprecision(15) &lt;&lt; d[1] &lt;&lt; endl, 0;
+	return 0;
 }
 
 </code></pre>

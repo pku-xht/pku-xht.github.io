@@ -35,96 +35,96 @@ int n, m, x[M], y[M], z[M], v[M], cnt;
 pq&lt;pair&lt;int, int&gt;&gt; q;
 
 struct LCT {
-    int f[N], ch[N][2], s[N], v[N], a[N], c[N], d[N];
-    #define lc ch[p][0]
-    #define rc ch[p][1]
-    #define get(p) (p == ch[f[p]][1])
-    #define rev(p) v[p] ^= 1, swap(ch[p][0], ch[p][1])
-    #define isrt(p) (ch[f[p]][0] != p &amp;&amp; ch[f[p]][1] != p)
-    inline void upd(int p) {
-        s[p] = s[ch[p][0]] + s[ch[p][1]] + d[p] + (p &lt;= n);
-        int o = a[c[lc]] &gt; a[c[rc]] ? c[lc] : c[rc];
-        c[p] = a[o] &gt; a[p] ? o : p;
-    }
-    inline void spd(int p) {
-        if (p &amp;&amp; v[p]) {
-            if (lc) rev(lc);
-            if (rc) rev(rc);
-            v[p] = 0;
-        }
-    }
-    inline void rot(int p) {
-        int x = f[p], y = f[x], u = get(p), v = get(x), o = isrt(x);
-        f[ch[p][u^1]] = x, ch[x][u] = ch[p][u^1];
-        f[x] = p, ch[p][u^1] = x, upd(x), upd(p);
-        if ((f[p] = y) &amp;&amp; !o) ch[y][v] = p;
-    }
-    void pre(int p) {
-        if (!isrt(p)) pre(f[p]);
-        spd(p);
-    }
-    inline void splay(int p) {
-        pre(p);
-        for (int x = f[p]; x = f[p], !isrt(p); rot(p))
-            if (!isrt(x)) rot(get(p) == get(x) ? x : p);
-    }
-    inline void access(int p) {
-        for (int x = 0; p; p = f[x=p])
-            splay(p), d[p] += s[rc], d[p] -= s[rc=x], upd(p);
-    }
-    inline void mkrt(int p) {
-        access(p), splay(p), rev(p);
-    }
-    inline void split(int x, int y) {
-        mkrt(x), access(y), splay(y);
-    }
-    inline int fdrt(int p) {
-        access(p), splay(p);
-        while (lc) spd(p), p = lc;
-        return splay(p), p;
-    }
-    inline void link(int x, int y) {
-        mkrt(x), access(y), splay(y), cnt -= s[x] &amp; 1, cnt -= s[y] &amp; 1;
-        d[f[x]=y] += s[x], upd(y), cnt += s[y] &amp; 1;
-    }
-    inline void cut(int x, int y) {
-        split(x, y), cnt -= s[y] &amp; 1;
-        f[x] = ch[y][0] = 0, upd(y), cnt += s[x] &amp; 1, cnt += s[y] &amp; 1;
-    }
-    inline int add(int i) {
-        int x = ::x[i], y = ::y[i], z = ::z[i];
-        bool ok = 1;
-        if (fdrt(x) == fdrt(y)) {
-            split(x, y);
-            int o = c[y];
-            if (a[o] &gt; z) cut(::x[o-n], o), cut(::y[o-n], o), v[o] = 1;
-            else ok = 0;
-        }
-        if (ok) {
-            s[i+n] = 1, a[i+n] = z, c[i+n] = i + n;
-            link(x, i + n), link(y, i + n), q.push(mp(z, i));
-        }
-        if (cnt) return -1;
-        while (q.size()) {
-            int o = q.top().se;
-            q.pop();
-            if (::v[o]) continue;
-            cut(::x[o], o + n), cut(::y[o], o + n);
-            if (cnt) {
-                link(::x[o], o + n), link(::y[o], o + n);
-                return q.push(mp(::z[o], o)), ::z[o];
-            }
-        }
-        return 0;
-    }
+	int f[N], ch[N][2], s[N], v[N], a[N], c[N], d[N];
+	#define lc ch[p][0]
+	#define rc ch[p][1]
+	#define get(p) (p == ch[f[p]][1])
+	#define rev(p) v[p] ^= 1, swap(ch[p][0], ch[p][1])
+	#define isrt(p) (ch[f[p]][0] != p &amp;&amp; ch[f[p]][1] != p)
+	inline void upd(int p) {
+		s[p] = s[ch[p][0]] + s[ch[p][1]] + d[p] + (p &lt;= n);
+		int o = a[c[lc]] &gt; a[c[rc]] ? c[lc] : c[rc];
+		c[p] = a[o] &gt; a[p] ? o : p;
+	}
+	inline void spd(int p) {
+		if (p &amp;&amp; v[p]) {
+			if (lc) rev(lc);
+			if (rc) rev(rc);
+			v[p] = 0;
+		}
+	}
+	inline void rot(int p) {
+		int x = f[p], y = f[x], u = get(p), v = get(x), o = isrt(x);
+		f[ch[p][u^1]] = x, ch[x][u] = ch[p][u^1];
+		f[x] = p, ch[p][u^1] = x, upd(x), upd(p);
+		if ((f[p] = y) &amp;&amp; !o) ch[y][v] = p;
+	}
+	void pre(int p) {
+		if (!isrt(p)) pre(f[p]);
+		spd(p);
+	}
+	inline void splay(int p) {
+		pre(p);
+		for (int x = f[p]; x = f[p], !isrt(p); rot(p))
+			if (!isrt(x)) rot(get(p) == get(x) ? x : p);
+	}
+	inline void access(int p) {
+		for (int x = 0; p; p = f[x=p])
+			splay(p), d[p] += s[rc], d[p] -= s[rc=x], upd(p);
+	}
+	inline void mkrt(int p) {
+		access(p), splay(p), rev(p);
+	}
+	inline void split(int x, int y) {
+		mkrt(x), access(y), splay(y);
+	}
+	inline int fdrt(int p) {
+		access(p), splay(p);
+		while (lc) spd(p), p = lc;
+		return splay(p), p;
+	}
+	inline void link(int x, int y) {
+		mkrt(x), access(y), splay(y), cnt -= s[x] &amp; 1, cnt -= s[y] &amp; 1;
+		d[f[x]=y] += s[x], upd(y), cnt += s[y] &amp; 1;
+	}
+	inline void cut(int x, int y) {
+		split(x, y), cnt -= s[y] &amp; 1;
+		f[x] = ch[y][0] = 0, upd(y), cnt += s[x] &amp; 1, cnt += s[y] &amp; 1;
+	}
+	inline int add(int i) {
+		int x = ::x[i], y = ::y[i], z = ::z[i];
+		bool ok = 1;
+		if (fdrt(x) == fdrt(y)) {
+			split(x, y);
+			int o = c[y];
+			if (a[o] &gt; z) cut(::x[o-n], o), cut(::y[o-n], o), v[o] = 1;
+			else ok = 0;
+		}
+		if (ok) {
+			s[i+n] = 1, a[i+n] = z, c[i+n] = i + n;
+			link(x, i + n), link(y, i + n), q.push(mp(z, i));
+		}
+		if (cnt) return -1;
+		while (q.size()) {
+			int o = q.top().se;
+			q.pop();
+			if (::v[o]) continue;
+			cut(::x[o], o + n), cut(::y[o], o + n);
+			if (cnt) {
+				link(::x[o], o + n), link(::y[o], o + n);
+				return q.push(mp(::z[o], o)), ::z[o];
+			}
+		}
+		return 0;
+	}
 } lct;
 
 int main() {
-    rd(n), rd(m), cnt = n;
-    for (int i = 1; i &lt;= n; i++) lct.s[i] = 1, lct.c[i] = i;
-    for (int i = 1; i &lt;= m; i++)
-        rd(x[i]), rd(y[i]), rd(z[i]), print(lct.add(i));
-    return 0;
+	rd(n), rd(m), cnt = n;
+	for (int i = 1; i &lt;= n; i++) lct.s[i] = 1, lct.c[i] = i;
+	for (int i = 1; i &lt;= m; i++)
+		rd(x[i]), rd(y[i]), rd(z[i]), print(lct.add(i));
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="140" href="/blog/tags/140/">LCT</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/594/"><span>较新一篇</span>EA 的练习赛 题解</a><a class="rel-next" rel="next" href="/blog/posts/581/"><span>较早一篇</span>平衡树学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="589" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

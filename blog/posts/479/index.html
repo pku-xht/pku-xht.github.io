@@ -37,73 +37,73 @@
 <pre tabindex="0"><code class="language-cpp">const int N = 5e5 + 7, K = 51;
 int n, m, k, q, f[K][N&lt;&lt;1], d[K][N&lt;&lt;1], u[N], v[N], a[N], c[N], p[N];
 struct T {
-    int l, r;
-    vi e;
+	int l, r;
+	vi e;
 } t[N&lt;&lt;2];
 struct S {
-    int c, x, z;
-    inline S() {}
-    inline S(int c, int x, int z) : c(c), x(x), z(z) {}
+	int c, x, z;
+	inline S() {}
+	inline S(int c, int x, int z) : c(c), x(x), z(z) {}
 };
 stack&lt; S &gt; s;
 
 void build(int p, int l, int r) {
-    t[p].l = l, t[p].r = r;
-    if (l == r) return;
-    build(ls, l, md), build(rs, md + 1, r);
+	t[p].l = l, t[p].r = r;
+	if (l == r) return;
+	build(ls, l, md), build(rs, md + 1, r);
 }
 
 void ins(int p, int l, int r, int x) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].e.pb(x), void();
-    if (l &lt;= md) ins(ls, l, r, x);
-    if (r &gt; md) ins(rs, l, r, x);
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].e.pb(x), void();
+	if (l &lt;= md) ins(ls, l, r, x);
+	if (r &gt; md) ins(rs, l, r, x);
 }
 
 inline int get(int o, int x) {
-    while (x ^ f[o][x]) x = f[o][x];
-    return x;
+	while (x ^ f[o][x]) x = f[o][x];
+	return x;
 }
 
 inline void merge(int o, int x, int y) {
-    if (x == y) return;
-    if (d[o][x] &gt; d[o][y]) swap(x, y);
-    int z = d[o][x] == d[o][y];
-    s.push(S(o, x, z)), f[o][x] = y, d[o][y] += z;
+	if (x == y) return;
+	if (d[o][x] &gt; d[o][y]) swap(x, y);
+	int z = d[o][x] == d[o][y];
+	s.push(S(o, x, z)), f[o][x] = y, d[o][y] += z;
 }
 
 void dfs(int p, int l, int r) {
-    ui o = s.size();
-    for (ui i = 0; i &lt; t[p].e.size(); i++) {
-        int x = t[p].e[i], a = ::a[x], c = ::c[x], u = ::u[a], v = ::v[a];
-        if (c) merge(c, get(c, u + n), get(c, v)), merge(c, get(c, v + n), get(c, u));
-    }
-    if (l == r) {
-        int a = ::a[l], c = ::c[l], u = ::u[a], v = ::v[a];
-        if (get(c, u) == get(c, v)) prints("NO"), ::c[l] = ::p[a];
-        else prints("YES"), ::p[a] = ::c[l];
-    } else dfs(ls, l, md), dfs(rs, md + 1, r);
-    while (s.size() &gt; o) {
-        int c = s.top().c, x = s.top().x, z = s.top().z;
-        s.pop(), d[c][f[c][x]] -= z, f[c][x] = x;
-    }
+	ui o = s.size();
+	for (ui i = 0; i &lt; t[p].e.size(); i++) {
+		int x = t[p].e[i], a = ::a[x], c = ::c[x], u = ::u[a], v = ::v[a];
+		if (c) merge(c, get(c, u + n), get(c, v)), merge(c, get(c, v + n), get(c, u));
+	}
+	if (l == r) {
+		int a = ::a[l], c = ::c[l], u = ::u[a], v = ::v[a];
+		if (get(c, u) == get(c, v)) prints("NO"), ::c[l] = ::p[a];
+		else prints("YES"), ::p[a] = ::c[l];
+	} else dfs(ls, l, md), dfs(rs, md + 1, r);
+	while (s.size() &gt; o) {
+		int c = s.top().c, x = s.top().x, z = s.top().z;
+		s.pop(), d[c][f[c][x]] -= z, f[c][x] = x;
+	}
 }
 
 int main() {
-    rd(n), rd(m), rd(k), rd(q);
-    build(1, 1, q);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= k; j++)
-            f[j][i] = i, f[j][i+n] = i + n;
-    for (int i = 1; i &lt;= m; i++) rd(u[i]), rd(v[i]), p[i] = q + 1;
-    for (int i = 1; i &lt;= q; i++) rd(a[i]), rd(c[i]);
-    for (int i = q; i; i--) {
-        int a = ::a[i];
-        if (i &lt; p[a] - 1) ins(1, i + 1, p[a] - 1, i);
-        p[a] = i;
-    }
-    for (int i = 1; i &lt;= m; i++) p[i] = 0;
-    dfs(1, 1, q);
-    return 0;
+	rd(n), rd(m), rd(k), rd(q);
+	build(1, 1, q);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= k; j++)
+			f[j][i] = i, f[j][i+n] = i + n;
+	for (int i = 1; i &lt;= m; i++) rd(u[i]), rd(v[i]), p[i] = q + 1;
+	for (int i = 1; i &lt;= q; i++) rd(a[i]), rd(c[i]);
+	for (int i = q; i; i--) {
+		int a = ::a[i];
+		if (i &lt; p[a] - 1) ins(1, i + 1, p[a] - 1, i);
+		p[a] = i;
+	}
+	for (int i = 1; i &lt;= m; i++) p[i] = 0;
+	dfs(1, 1, q);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="175" href="/blog/tags/175/">可回退化</a>、<a data-source-tag="64" href="/blog/tags/64/">并查集</a>、<a data-source-tag="115" href="/blog/tags/115/">线段树分治</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/481/"><span>较新一篇</span>同余最短路 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/478/"><span>较早一篇</span>线段树分治 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="479" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

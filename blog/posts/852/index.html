@@ -36,28 +36,28 @@ int n, m, a[N|1];
 modint f[N|1][1&lt;&lt;N|1], ans;
 
 int main() {
-    rd(n, m), rda(a, m);
-    reverse(a + 1, a + m + 1);
-    init(1 &lt;&lt; n);
-    f[0][0] = 1;
-    for (int i = 1; i &lt;= m; i++)
-        for (int j = 0; j &lt; (1 &lt;&lt; n); j++) {
-            f[i][j] += f[i-1][j];
-            for (int k = 0; k &lt; n; k++)
-                if (!(j &gt;&gt; k &amp; 1))
-                    f[i][j|1&lt;&lt;k] += f[i-1][j] * binom((1 &lt;&lt; n) - a[i] - j, (1 &lt;&lt; k) - 1);
-        }
-    for (int i = 0; i &lt; (1 &lt;&lt; n); i++) {
-        int s = (1 &lt;&lt; n) - 1 - i;
-        for (int j = 0; j &lt; n; j++)
-            if (!(i &gt;&gt; j &amp; 1)) f[m][i] *= binom(s, 1 &lt;&lt; j), s -= 1 &lt;&lt; j;
-        if (__builtin_popcount(i) &amp; 1) ans -= f[m][i];
-        else ans += f[m][i];
-    }
-    ans *= 1 &lt;&lt; n;
-    for (int i = 0; i &lt; n; i++) ans *= p[1&lt;&lt;i];
-    print(ans);
-    return 0;
+	rd(n, m), rda(a, m);
+	reverse(a + 1, a + m + 1);
+	init(1 &lt;&lt; n);
+	f[0][0] = 1;
+	for (int i = 1; i &lt;= m; i++)
+		for (int j = 0; j &lt; (1 &lt;&lt; n); j++) {
+			f[i][j] += f[i-1][j];
+			for (int k = 0; k &lt; n; k++)
+				if (!(j &gt;&gt; k &amp; 1))
+					f[i][j|1&lt;&lt;k] += f[i-1][j] * binom((1 &lt;&lt; n) - a[i] - j, (1 &lt;&lt; k) - 1);
+		}
+	for (int i = 0; i &lt; (1 &lt;&lt; n); i++) {
+		int s = (1 &lt;&lt; n) - 1 - i;
+		for (int j = 0; j &lt; n; j++)
+			if (!(i &gt;&gt; j &amp; 1)) f[m][i] *= binom(s, 1 &lt;&lt; j), s -= 1 &lt;&lt; j;
+		if (__builtin_popcount(i) &amp; 1) ans -= f[m][i];
+		else ans += f[m][i];
+	}
+	ans *= 1 &lt;&lt; n;
+	for (int i = 0; i &lt; n; i++) ans *= p[1&lt;&lt;i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="56" href="/blog/tags/56/">容斥</a>、<a data-source-tag="91" href="/blog/tags/91/">状压</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/854/"><span>较新一篇</span>ARC096E Everything on It 题解</a><a class="rel-next" rel="next" href="/blog/posts/849/"><span>较早一篇</span>ARC102F Revenge of BBuBBBlesort!</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="852" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

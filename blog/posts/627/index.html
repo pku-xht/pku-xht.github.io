@@ -46,51 +46,51 @@ int n, m, k, a[N], b[N], p[N], l[M], r[M];
 ll f[N], ans;
 
 struct T {
-    int l, r, q[M];
-    ll k, b;
-    inline ll c(int i) {
-        return f[i] + k * a[i] + b;
-    }
-    inline ld s(int i, int j) {
-        if (a[i] == a[j]) return f[i] &gt; f[j] ? -inf : inf;
-        return 1.0L * (f[i] - f[j]) / (a[i] - a[j]);
-    }
-    inline void build(int x) {
-        for (int i = ::l[x]; i &lt;= ::r[x]; i++) f[i] += k * a[i] + b;
-        k = b = l = r = 0;
-        for (int i = ::l[x]; i &lt;= ::r[x]; i++) {
-            while (r - l &gt; 1 &amp;&amp; s(q[r-2], q[r-1]) &lt; s(q[r-1], p[i])) --r;
-            q[r++] = p[i];
-        }
-    }
-    inline pair&lt;ll, int&gt; ask() {
-        while (r - l &gt; 1 &amp;&amp; c(q[l]) &lt;= c(q[l+1])) ++l;
-        return mp(c(q[l]), q[l]);
-    }
+	int l, r, q[M];
+	ll k, b;
+	inline ll c(int i) {
+		return f[i] + k * a[i] + b;
+	}
+	inline ld s(int i, int j) {
+		if (a[i] == a[j]) return f[i] &gt; f[j] ? -inf : inf;
+		return 1.0L * (f[i] - f[j]) / (a[i] - a[j]);
+	}
+	inline void build(int x) {
+		for (int i = ::l[x]; i &lt;= ::r[x]; i++) f[i] += k * a[i] + b;
+		k = b = l = r = 0;
+		for (int i = ::l[x]; i &lt;= ::r[x]; i++) {
+			while (r - l &gt; 1 &amp;&amp; s(q[r-2], q[r-1]) &lt; s(q[r-1], p[i])) --r;
+			q[r++] = p[i];
+		}
+	}
+	inline pair&lt;ll, int&gt; ask() {
+		while (r - l &gt; 1 &amp;&amp; c(q[l]) &lt;= c(q[l+1])) ++l;
+		return mp(c(q[l]), q[l]);
+	}
 } t[M];
 
 int main() {
-    rd(n), m = sqrt(n);
-    for (int i = k = 1; i &lt;= n; k += !(i % m), i++)
-        rd(a[i]), f[i] = a[i], p[i] = i, b[i] = k;
-    if (!(n % m)) --k;
-    for (int i = 1; i &lt;= k; i++) {
-        l[i] = r[i-1] + 1, r[i] = min(i * m, n);
-        sort(p + l[i], p + r[i] + 1, [&amp;](int i, int j) { return a[i] &lt; a[j]; });
-        t[i].build(i);
-    }
-    while (1) {
-        pair&lt;ll, int&gt; o = mp(0ll, 0);
-        for (int i = 1; i &lt;= k; i++) o = max(o, t[i].ask());
-        if (!o.fi) return print(ans), 0;
-        ans += o.fi, f[o.se] = -inf;
-        for (int i = 1; i &lt; b[o.se]; i++) t[i].b += a[o.se];
-        for (int i = l[b[o.se]]; i &lt; o.se; i++) f[i] += a[o.se];
-        for (int i = o.se + 1; i &lt;= r[b[o.se]]; i++) f[i] += a[i];
-        for (int i = b[o.se] + 1; i &lt;= k; i++) ++t[i].k;
-        t[b[o.se]].build(b[o.se]);
-    }
-    return 0;
+	rd(n), m = sqrt(n);
+	for (int i = k = 1; i &lt;= n; k += !(i % m), i++)
+		rd(a[i]), f[i] = a[i], p[i] = i, b[i] = k;
+	if (!(n % m)) --k;
+	for (int i = 1; i &lt;= k; i++) {
+		l[i] = r[i-1] + 1, r[i] = min(i * m, n);
+		sort(p + l[i], p + r[i] + 1, [&amp;](int i, int j) { return a[i] &lt; a[j]; });
+		t[i].build(i);
+	}
+	while (1) {
+		pair&lt;ll, int&gt; o = mp(0ll, 0);
+		for (int i = 1; i &lt;= k; i++) o = max(o, t[i].ask());
+		if (!o.fi) return print(ans), 0;
+		ans += o.fi, f[o.se] = -inf;
+		for (int i = 1; i &lt; b[o.se]; i++) t[i].b += a[o.se];
+		for (int i = l[b[o.se]]; i &lt; o.se; i++) f[i] += a[o.se];
+		for (int i = o.se + 1; i &lt;= r[b[o.se]]; i++) f[i] += a[i];
+		for (int i = b[o.se] + 1; i &lt;= k; i++) ++t[i].k;
+		t[b[o.se]].build(b[o.se]);
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="100" href="/blog/tags/100/">凸包</a>、<a data-source-tag="77" href="/blog/tags/77/">分块</a>、<a data-source-tag="63" href="/blog/tags/63/">单调队列</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/629/"><span>较新一篇</span>CF538G Berserk Robot 题解</a><a class="rel-next" rel="next" href="/blog/posts/624/"><span>较早一篇</span>CF566E Restoring Map 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="627" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

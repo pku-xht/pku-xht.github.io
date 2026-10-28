@@ -31,45 +31,45 @@
 <pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
 int n, m, a[N], b[N], x[N], y[N], X[N], Y[N], p[N], t;
 struct BIT {
-    vector&lt;modint&gt; c;
-    inline BIT() {}
-    inline BIT(int n) { c.resize(n); }
-    inline void add(ui x, modint k) {
-        while (x &lt; c.size()) c[x] += k, x += x &amp; -x;
-    }
-    inline modint ask(ui x) {
-        modint k = 0;
-        while (x) k += c[x], x -= x &amp; -x;
-        return k;
-    }
+	vector&lt;modint&gt; c;
+	inline BIT() {}
+	inline BIT(int n) { c.resize(n); }
+	inline void add(ui x, modint k) {
+		while (x &lt; c.size()) c[x] += k, x += x &amp; -x;
+	}
+	inline modint ask(ui x) {
+		modint k = 0;
+		while (x) k += c[x], x -= x &amp; -x;
+		return k;
+	}
 };
 
 int main() {
-    rd(n), rd(m), rda(a, n), rda(b, m);
-    for (int i = 1; i &lt;= n; i++) {
-        if (a[i] &lt; b[1] || a[i] &gt; b[m]) continue;
-        int p = upper_bound(b + 1, b + m + 1, a[i]) - b;
-        x[++t] = a[i] - b[p-1], y[t] = b[p] - a[i], ::p[t] = t;
-        X[t] = x[t], Y[t] = y[t];
-    }
-    sort(X + 1, X + t + 1), sort(Y + 1, Y + t + 1);
-    int u = unique(X + 1, X + t + 1) - X - 1;
-    int v = unique(Y + 1, Y + t + 1) - Y - 1;
-    for (int i = 1; i &lt;= t; i++)
-        x[i] = lower_bound(X + 1, X + u + 1, x[i]) - X,
-        y[i] = lower_bound(Y + 1, Y + v + 1, y[i]) - Y;
-    sort(p + 1, p + t + 1, [&amp;](int i, int j) {
-        return x[i] == x[j] ? y[i] &gt; y[j] : x[i] &lt; x[j];
-    });
-    t = unique(p + 1, p + t + 1, [&amp;](int i, int j) {
-        return x[i] == x[j] &amp;&amp; y[i] == y[j];
-    }) - p - 1;
-    BIT c(v + 1);
-    modint ans = 1, now;
-    for (int i = 1; i &lt;= t; i++)
-        ans += now = c.ask(y[p[i]] - 1) + 1, c.add(y[p[i]], now);
-    print(ans);
-    return 0;
+	rd(n), rd(m), rda(a, n), rda(b, m);
+	for (int i = 1; i &lt;= n; i++) {
+		if (a[i] &lt; b[1] || a[i] &gt; b[m]) continue;
+		int p = upper_bound(b + 1, b + m + 1, a[i]) - b;
+		x[++t] = a[i] - b[p-1], y[t] = b[p] - a[i], ::p[t] = t;
+		X[t] = x[t], Y[t] = y[t];
+	}
+	sort(X + 1, X + t + 1), sort(Y + 1, Y + t + 1);
+	int u = unique(X + 1, X + t + 1) - X - 1;
+	int v = unique(Y + 1, Y + t + 1) - Y - 1;
+	for (int i = 1; i &lt;= t; i++)
+		x[i] = lower_bound(X + 1, X + u + 1, x[i]) - X,
+		y[i] = lower_bound(Y + 1, Y + v + 1, y[i]) - Y;
+	sort(p + 1, p + t + 1, [&amp;](int i, int j) {
+		return x[i] == x[j] ? y[i] &gt; y[j] : x[i] &lt; x[j];
+	});
+	t = unique(p + 1, p + t + 1, [&amp;](int i, int j) {
+		return x[i] == x[j] &amp;&amp; y[i] == y[j];
+	}) - p - 1;
+	BIT c(v + 1);
+	modint ans = 1, now;
+	for (int i = 1; i &lt;= t; i++)
+		ans += now = c.ask(y[p[i]] - 1) + 1, c.add(y[p[i]], now);
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="34" href="/blog/tags/34/">树状数组</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/848/"><span>较新一篇</span>ARC092F Two Faced Edges 题解</a><a class="rel-next" rel="next" href="/blog/posts/846/"><span>较早一篇</span>ARC103D Robot Arms 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="847" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

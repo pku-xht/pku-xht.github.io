@@ -15,19 +15,19 @@
 <h2 id="section-1">Orac and LCM</h2>
 <p>每个质因子考虑一下即可。</p>
 <pre tabindex="0"><code class="language-cpp">namespace shai {
-    const int N = 1e6 + 7;
-    int p[N], v[N], phi[N], miu[N];
+	const int N = 1e6 + 7;
+	int p[N], v[N], phi[N], miu[N];
 
-    inline void init(int n) {
-        v[1] = phi[1] = miu[1] = 1;
-        for (int i = 2; i &lt;= n; i++) {
-            if (!v[i]) p[++p[0]] = v[i] = i, phi[i] = i - 1, miu[i] = -1;
-            for (int j = 1; j &lt;= p[0] &amp;&amp; i * p[j] &lt;= n &amp;&amp; p[j] &lt;= v[i]; j++)
-                v[i*p[j]] = p[j],
-                phi[i*p[j]] = phi[i] * (p[j] - 1 + (p[j] == v[i])),
-                miu[i*p[j]] = p[j] == v[i] ? 0 : -miu[i];
-        }
-    }
+	inline void init(int n) {
+		v[1] = phi[1] = miu[1] = 1;
+		for (int i = 2; i &lt;= n; i++) {
+			if (!v[i]) p[++p[0]] = v[i] = i, phi[i] = i - 1, miu[i] = -1;
+			for (int j = 1; j &lt;= p[0] &amp;&amp; i * p[j] &lt;= n &amp;&amp; p[j] &lt;= v[i]; j++)
+				v[i*p[j]] = p[j],
+				phi[i*p[j]] = phi[i] * (p[j] - 1 + (p[j] == v[i])),
+				miu[i*p[j]] = p[j] == v[i] ? 0 : -miu[i];
+		}
+	}
 }
 using shai::p;
 
@@ -36,42 +36,42 @@ int n, a[N], c[M];
 pq&lt;int&gt; q[M];
 
 inline vector&lt;pair&lt;ll, int&gt;&gt; divide(ll n) {
-    vector&lt;pair&lt;ll, int&gt;&gt; p;
-    for (ll i = 2; i * i &lt;= n; i++)
-        if (!(n % i)) {
-            p.pb(mp(i, 0));
-            while (!(n % i)) ++p.back().se, n /= i;
-        }
-    if (n &gt; 1) p.pb(mp(n, 1));
-    return p;
+	vector&lt;pair&lt;ll, int&gt;&gt; p;
+	for (ll i = 2; i * i &lt;= n; i++)
+		if (!(n % i)) {
+			p.pb(mp(i, 0));
+			while (!(n % i)) ++p.back().se, n /= i;
+		}
+	if (n &gt; 1) p.pb(mp(n, 1));
+	return p;
 }
 
 int main() {
-    rd(n), rda(a, n);
-    shai::init(2e5);
-    for (int i = 1; i &lt;= n; i++) {
-        auto p = divide(a[i]);
-        for (auto o : p) {
-            q[o.fi].push(o.se);
-            if (q[o.fi].size() &gt; 2u) q[o.fi].pop();
-            ++c[o.fi];
-        }
-    }
-    ll ans = 1;
-    for (int i = 1; i &lt;= p[0]; i++) {
-        int x = p[i];
-        if (c[x] == n) {
-            int y = q[x].top();
-            while (y--) ans *= x;
-        }
-        if (c[x] == n - 1) {
-            if (q[x].size() &gt; 1u) q[x].pop();
-            int y = q[x].top();
-            while (y--) ans *= x;
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n), rda(a, n);
+	shai::init(2e5);
+	for (int i = 1; i &lt;= n; i++) {
+		auto p = divide(a[i]);
+		for (auto o : p) {
+			q[o.fi].push(o.se);
+			if (q[o.fi].size() &gt; 2u) q[o.fi].pop();
+			++c[o.fi];
+		}
+	}
+	ll ans = 1;
+	for (int i = 1; i &lt;= p[0]; i++) {
+		int x = p[i];
+		if (c[x] == n) {
+			int y = q[x].top();
+			while (y--) ans *= x;
+		}
+		if (c[x] == n - 1) {
+			if (q[x].size() &gt; 1u) q[x].pop();
+			int y = q[x].top();
+			while (y--) ans *= x;
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Orac and Medians</h2>
@@ -81,25 +81,25 @@ int main() {
 int n, k, a[N];
 
 inline void solve() {
-    rd(n, k), rda(a, n);
-    vi p;
-    for (int i = 1; i &lt;= n; i++)
-        if (a[i] == k) p.pb(i);
-    if (!p.size()) return prints("no");
-    if (n == 1) return prints("yes");
-    if (n == 2) return prints(a[1] &gt;= k &amp;&amp; a[2] &gt;= k ? "yes" : "no");
-    for (int i = 1; i &lt;= n - 2; i++) {
-        int t = (a[i] &gt;= k) + (a[i+1] &gt;= k) + (a[i+2] &gt;= k);
-        if (t &gt;= 2) return prints("yes");
-    }
-    prints("no");
+	rd(n, k), rda(a, n);
+	vi p;
+	for (int i = 1; i &lt;= n; i++)
+		if (a[i] == k) p.pb(i);
+	if (!p.size()) return prints("no");
+	if (n == 1) return prints("yes");
+	if (n == 2) return prints(a[1] &gt;= k &amp;&amp; a[2] &gt;= k ? "yes" : "no");
+	for (int i = 1; i &lt;= n - 2; i++) {
+		int t = (a[i] &gt;= k) + (a[i+1] &gt;= k) + (a[i+2] &gt;= k);
+		if (t &gt;= 2) return prints("yes");
+	}
+	prints("no");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Orac and Game of Life</h2>
@@ -113,45 +113,45 @@ ll d[N][N];
 char s[N][N];
 
 int main() {
-    rd(n, m, t);
-    for (int i = 1; i &lt;= n; i++) rds(s[i], m);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            d[i][j] = inf;
-    queue&lt;pi&gt; q;
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++) {
-            bool ok = 0;
-            for (int o = 0; o &lt; 4; o++) {
-                int x = i + dx[o], y = j + dy[o];
-                if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
-                if (s[x][y] == s[i][j]) ok = 1;
-            }
-            if (ok) d[i][j] = 0, q.push(mp(i, j));
-        }
-    while (q.size()) {
-        int i = q.front().fi, j = q.front().se;
-        q.pop();
-        for (int o = 0; o &lt; 4; o++) {
-            int x = i + dx[o], y = j + dy[o];
-            if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
-            if (d[x][y] &gt; d[i][j] + 1) d[x][y] = d[i][j] + 1, q.push(mp(x, y));
-        }
-    }
-    while (t--) {
-        int x, y;
-        ll z;
-        rd(x, y);
-        rd(z);
-        if (z &lt;= d[x][y]) print(s[x][y] - '0');
-        else {
-            int k = s[x][y] - '0';
-            z -= d[x][y];
-            k ^= z &amp; 1;
-            print(k);
-        }
-    }
-    return 0;
+	rd(n, m, t);
+	for (int i = 1; i &lt;= n; i++) rds(s[i], m);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			d[i][j] = inf;
+	queue&lt;pi&gt; q;
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++) {
+			bool ok = 0;
+			for (int o = 0; o &lt; 4; o++) {
+				int x = i + dx[o], y = j + dy[o];
+				if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
+				if (s[x][y] == s[i][j]) ok = 1;
+			}
+			if (ok) d[i][j] = 0, q.push(mp(i, j));
+		}
+	while (q.size()) {
+		int i = q.front().fi, j = q.front().se;
+		q.pop();
+		for (int o = 0; o &lt; 4; o++) {
+			int x = i + dx[o], y = j + dy[o];
+			if (x &lt; 1 || x &gt; n || y &lt; 1 || y &gt; m) continue;
+			if (d[x][y] &gt; d[i][j] + 1) d[x][y] = d[i][j] + 1, q.push(mp(x, y));
+		}
+	}
+	while (t--) {
+		int x, y;
+		ll z;
+		rd(x, y);
+		rd(z);
+		if (z &lt;= d[x][y]) print(s[x][y] - '0');
+		else {
+			int k = s[x][y] - '0';
+			z -= d[x][y];
+			k ^= z &amp; 1;
+			print(k);
+		}
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Slime and Biscuits</h2>

@@ -29,33 +29,33 @@ int n;
 ll x[N], y[N], z[N];
 
 inline char work(ll x, ll y, ll &amp;X, ll &amp;Y, ll k) {
-    if (abs(x - X) &gt; abs(y - Y)) {
-        if (x &gt; X) return X += k, 'R';
-        return X -= k, 'L';
-    }
-    if (y &gt; Y) return Y += k, 'U';
-    return Y -= k, 'D';
+	if (abs(x - X) &gt; abs(y - Y)) {
+		if (x &gt; X) return X += k, 'R';
+		return X -= k, 'L';
+	}
+	if (y &gt; Y) return Y += k, 'U';
+	return Y -= k, 'D';
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++)
-        rd(x[i], y[i]), z[i] = abs(x[i] + y[i]) % 2;
-    for (int i = 1; i &lt;= n; i++)
-        if (z[i] != z[1]) return print(-1), 0;
-    vector&lt;ll&gt; d;
-    for (int i = 30; ~i; i--) d.pb(1ll &lt;&lt; i);
-    if (!z[1]) d.pb(1ll);
-    print(d.size());
-    for (ll k : d) print(k, ' ');
-    prints("");
-    for (int i = 1; i &lt;= n; i++) {
-        ll X = 0, Y = 0;
-        for (ll k : d)
-            printc(work(x[i], y[i], X, Y, k));
-        prints("");
-    }
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++)
+		rd(x[i], y[i]), z[i] = abs(x[i] + y[i]) % 2;
+	for (int i = 1; i &lt;= n; i++)
+		if (z[i] != z[1]) return print(-1), 0;
+	vector&lt;ll&gt; d;
+	for (int i = 30; ~i; i--) d.pb(1ll &lt;&lt; i);
+	if (!z[1]) d.pb(1ll);
+	print(d.size());
+	for (ll k : d) print(k, ' ');
+	prints("");
+	for (int i = 1; i &lt;= n; i++) {
+		ll X = 0, Y = 0;
+		for (ll k : d)
+			printc(work(x[i], y[i], X, Y, k));
+		prints("");
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="16" href="/blog/tags/16/">构造</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/847/"><span>较新一篇</span>ARC101F Robots and Exits 题解</a><a class="rel-next" rel="next" href="/blog/posts/845/"><span>较早一篇</span>ARC093E Bichrome Spanning Tree</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="846" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

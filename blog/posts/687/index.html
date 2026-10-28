@@ -18,20 +18,20 @@
 int n, a[N], b[N];
 
 inline void solve() {
-    rd(n), rda(a, n), rda(b, n);
-    sort(a + 1, a + n + 1);
-    sort(b + 1, b + n + 1);
-    for (int i = 1; i &lt;= n; i++)
-        print(a[i], " \n"[i==n]);
-    for (int i = 1; i &lt;= n; i++)
-        print(b[i], " \n"[i==n]);
+	rd(n), rda(a, n), rda(b, n);
+	sort(a + 1, a + n + 1);
+	sort(b + 1, b + n + 1);
+	for (int i = 1; i &lt;= n; i++)
+		print(a[i], " \n"[i==n]);
+	for (int i = 1; i &lt;= n; i++)
+		print(b[i], " \n"[i==n]);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Kuroni and Simple Strings</h2>
@@ -43,28 +43,28 @@ int n, a[N], b[N];
 char s[N];
 
 int main() {
-    rds(s, n);
-    vi ans;
-    for (int i = 1; i &lt;= n; i++)
-        a[i] = a[i-1] + (s[i] == '(');
-    for (int i = n; i; i--)
-        b[i] = b[i+1] + (s[i] == ')');
-    for (int i = 0; i &lt;= n; i++)
-        if (a[i] == b[i+1]) {
-            for (int j = 1; j &lt;= i; j++)
-                if (s[j] == '(') ans.pb(j);
-            for (int j = i + 1; j &lt;= n; j++)
-                if (s[j] == ')') ans.pb(j);
-            if (!ans.size()) {
-                print(0);
-                return 0;
-            }
-            print(1);
-            print(ans.size());
-            for (int x : ans) print(x, ' ');
-            return 0;
-        }
-    return 0;
+	rds(s, n);
+	vi ans;
+	for (int i = 1; i &lt;= n; i++)
+		a[i] = a[i-1] + (s[i] == '(');
+	for (int i = n; i; i--)
+		b[i] = b[i+1] + (s[i] == ')');
+	for (int i = 0; i &lt;= n; i++)
+		if (a[i] == b[i+1]) {
+			for (int j = 1; j &lt;= i; j++)
+				if (s[j] == '(') ans.pb(j);
+			for (int j = i + 1; j &lt;= n; j++)
+				if (s[j] == ')') ans.pb(j);
+			if (!ans.size()) {
+				print(0);
+				return 0;
+			}
+			print(1);
+			print(ans.size());
+			for (int x : ans) print(x, ' ');
+			return 0;
+		}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Kuroni and Impossible Calculation</h2>
@@ -80,17 +80,17 @@ ll f[M];
 modint ans = 1;
 
 int main() {
-    rd(n), rd(P), rda(a, n);
-    sort(a + 1, a + n + 1);
-    for (int i = 1; i &lt;= n; i++) {
-        a[i] %= P;
-        for (int j = 0; j &lt; P; j++)
-            f[(a[i]-j+P)%P] += c[j];
-        c[a[i]]++;
-    }
-    for (int i = 0; i &lt; P; i++) ans *= (modint)i ^ f[i];
-    print(ans);
-    return 0;
+	rd(n), rd(P), rda(a, n);
+	sort(a + 1, a + n + 1);
+	for (int i = 1; i &lt;= n; i++) {
+		a[i] %= P;
+		for (int j = 0; j &lt; P; j++)
+			f[(a[i]-j+P)%P] += c[j];
+		c[a[i]]++;
+	}
+	for (int i = 0; i &lt; P; i++) ans *= (modint)i ^ f[i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Kuroni and the Celebration</h2>
@@ -104,35 +104,35 @@ int n, d[N], v[N];
 vi e[N];
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin &gt;&gt; n;
-    for (int i = 1, x, y; i &lt; n; i++)
-        cin &gt;&gt; x &gt;&gt; y, e[x].pb(y), e[y].pb(x), d[x]++, d[y]++;
-    queue&lt;int&gt; q;
-    for (int i = 1; i &lt;= n; i++)
-        if (d[i] == 1) q.push(i);
-    for (int i = 1; i &lt;= n / 2; i++) {
-        int x = q.front();
-        q.pop();
-        int y = q.front();
-        q.pop();
-        cout &lt;&lt; "? " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
-        fflush(stdout);
-        int z;
-        cin &gt;&gt; z;
-        if (z == x || z == y) {
-            cout &lt;&lt; "! " &lt;&lt; z &lt;&lt; endl;
-            return 0;
-        }
-        for (int z : e[x])
-            if (!v[z] &amp;&amp; (--d[z] == 1)) q.push(z);
-        for (int z : e[y])
-            if (!v[z] &amp;&amp; (--d[z] == 1)) q.push(z);
-        v[x] = v[y] = 1;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) cout &lt;&lt; "! " &lt;&lt; i &lt;&lt; endl;
-    return 0;
+	ios::sync_with_stdio(0);
+	cin &gt;&gt; n;
+	for (int i = 1, x, y; i &lt; n; i++)
+		cin &gt;&gt; x &gt;&gt; y, e[x].pb(y), e[y].pb(x), d[x]++, d[y]++;
+	queue&lt;int&gt; q;
+	for (int i = 1; i &lt;= n; i++)
+		if (d[i] == 1) q.push(i);
+	for (int i = 1; i &lt;= n / 2; i++) {
+		int x = q.front();
+		q.pop();
+		int y = q.front();
+		q.pop();
+		cout &lt;&lt; "? " &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; endl;
+		fflush(stdout);
+		int z;
+		cin &gt;&gt; z;
+		if (z == x || z == y) {
+			cout &lt;&lt; "! " &lt;&lt; z &lt;&lt; endl;
+			return 0;
+		}
+		for (int z : e[x])
+			if (!v[z] &amp;&amp; (--d[z] == 1)) q.push(z);
+		for (int z : e[y])
+			if (!v[z] &amp;&amp; (--d[z] == 1)) q.push(z);
+		v[x] = v[y] = 1;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) cout &lt;&lt; "! " &lt;&lt; i &lt;&lt; endl;
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Kuroni and the Score Distribution</h2>
@@ -147,22 +147,22 @@ int main() {
 int n, m, a[N];
 
 int main() {
-    rd(n), rd(m);
-    int t = 0;
-    for (int i = 0; i &lt; n; i++) {
-        a[i] = i + 1;
-        t += i &gt;&gt; 1;
-        if (t &gt;= m) {
-            a[i] += (t - m) &lt;&lt; 1;
-            for (int j = n - 1, k = 1e9; j &gt; i; j--, k -= i + 2)
-                a[j] = k;
-            for (int j = 0; j &lt; n; j++)
-                print(a[j], " \n"[j==n]);
-            return 0;
-        }
-    }
-    print(-1);
-    return 0;
+	rd(n), rd(m);
+	int t = 0;
+	for (int i = 0; i &lt; n; i++) {
+		a[i] = i + 1;
+		t += i &gt;&gt; 1;
+		if (t &gt;= m) {
+			a[i] += (t - m) &lt;&lt; 1;
+			for (int j = n - 1, k = 1e9; j &gt; i; j--, k -= i + 2)
+				a[j] = k;
+			for (int j = 0; j &lt; n; j++)
+				print(a[j], " \n"[j==n]);
+			return 0;
+		}
+	}
+	print(-1);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">Kuroni and the Punishment</h2>
@@ -205,38 +205,38 @@ ll a[N];
 vector&lt;ll&gt; p, q;
 
 int main() {
-    for (ll i = 2; i &lt;= M; i++) {
-        if (v[i]) continue;
-        p.pb(i);
-        for (ll j = i * i; j &lt;= M; j += i) v[j] = 1;
-    }
-    q = p;
-    rd(n), rda(a, n);
-    sort(a + 1, a + n + 1);
-    ll d = a[1];
-    for (int i = 2; i &lt;= n; i++) d = __gcd(d, a[i]);
-    if (d != 1) return print(0), 0;
-    ll t = 0;
-    for (int i = 1; i &lt;= n; i++) t += a[i] &amp; 1;
-    ll l = max(M + 1, a[n] - t), r = a[n] + t;
-    map&lt;ll, ll&gt; w;
-    for (ll i = l; i &lt;= r; i++) w[i] = i; 
-    for (ll x : p) 
-        for (ll i = l / x * x; i &lt;= r; i += x)
-            if (i &gt;= l) while (!(w[i] % x)) w[i] /= x;
-    for (ll i = l; i &lt;= r; i++)
-        if (w[i] &gt; M) q.pb(w[i]);
-    for (ll x : q) {
-        if (x == 2) continue;
-        ll o = 0;
-        for (int i = 1; i &lt;= n; i++) {
-            o += min(a[i] &lt; x ? x : a[i] % x, x - a[i] % x);
-            if (o &gt;= t) break;
-        }
-        t = min(t, o);
-    }
-    print(t);
-    return 0;
+	for (ll i = 2; i &lt;= M; i++) {
+		if (v[i]) continue;
+		p.pb(i);
+		for (ll j = i * i; j &lt;= M; j += i) v[j] = 1;
+	}
+	q = p;
+	rd(n), rda(a, n);
+	sort(a + 1, a + n + 1);
+	ll d = a[1];
+	for (int i = 2; i &lt;= n; i++) d = __gcd(d, a[i]);
+	if (d != 1) return print(0), 0;
+	ll t = 0;
+	for (int i = 1; i &lt;= n; i++) t += a[i] &amp; 1;
+	ll l = max(M + 1, a[n] - t), r = a[n] + t;
+	map&lt;ll, ll&gt; w;
+	for (ll i = l; i &lt;= r; i++) w[i] = i; 
+	for (ll x : p) 
+		for (ll i = l / x * x; i &lt;= r; i += x)
+			if (i &gt;= l) while (!(w[i] % x)) w[i] /= x;
+	for (ll i = l; i &lt;= r; i++)
+		if (w[i] &gt; M) q.pb(w[i]);
+	for (ll x : q) {
+		if (x == 2) continue;
+		ll o = 0;
+		for (int i = 1; i &lt;= n; i++) {
+			o += min(a[i] &lt; x ? x : a[i] % x, x - a[i] % x);
+			if (o &gt;= t) break;
+		}
+		t = min(t, o);
+	}
+	print(t);
+	return 0;
 }
 </code></pre>
 <h2 id="section-7">Kuroni and Antihype</h2>

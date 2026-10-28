@@ -18,17 +18,17 @@
 int n;
 
 inline void solve() {
-    rd(n);
-    if (n &amp; 1) n -= 3, putchar('7');
-    while (n) n -= 2, putchar('1');
-    puts("");
+	rd(n);
+	if (n &amp; 1) n -= 3, putchar('7');
+	while (n) n -= 2, putchar('1');
+	puts("");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Infinite Prefixes</h2>
@@ -38,27 +38,27 @@ int n, m, a[N];
 char s[N];
 
 inline void solve() {
-    rd(n), rd(m), rds(s, n);
-    for (int i = 1; i &lt;= n; i++) a[i] = a[i-1] + (s[i] == '0' ? 1 : -1);
-    if (!a[n]) {
-        int l = 0, r = 0;
-        for (int i = 1; i &lt;= n; i++)
-            l = min(l, a[i]), r = max(r, a[i]);
-        if (l &lt;= m &amp;&amp; m &lt;= r) print(-1);
-        else print(0);
-        return;
-    }
-    int t = !m;
-    for (int i = 1; i &lt;= n; i++)
-        if ((m - a[i]) % a[n] == 0 &amp;&amp; (m - a[i]) / a[n] &gt;= 0) ++t;
-    print(t);
+	rd(n), rd(m), rds(s, n);
+	for (int i = 1; i &lt;= n; i++) a[i] = a[i-1] + (s[i] == '0' ? 1 : -1);
+	if (!a[n]) {
+		int l = 0, r = 0;
+		for (int i = 1; i &lt;= n; i++)
+			l = min(l, a[i]), r = max(r, a[i]);
+		if (l &lt;= m &amp;&amp; m &lt;= r) print(-1);
+		else print(0);
+		return;
+	}
+	int t = !m;
+	for (int i = 1; i &lt;= n; i++)
+		if ((m - a[i]) % a[n] == 0 &amp;&amp; (m - a[i]) / a[n] &gt;= 0) ++t;
+	print(t);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Obtain The String</h2>
@@ -68,55 +68,55 @@ int n, m, f[N][26], v[26];
 char s[N], t[N];
 
 inline void solve() {
-    rds(s, n), rds(t, m);
-    int ans = 1;
-    for (int i = 0; i &lt; 26; i++) v[i] = n + 1;
-    for (int i = n; i; i--) {
-        for (int j = 0; j &lt; 26; j++) f[i][j] = v[j];
-        v[s[i]-'a'] = i;
-    }
-    for (int i = 0; i &lt; 26; i++) f[0][i] = v[i];
-    for (int i = 1, j = 0; i &lt;= m; i++) {
-        int c = t[i] - 'a';
-        if (f[j][c] != n + 1) j = f[j][c];
-        else {
-            ++ans;
-            if (f[0][c] == n + 1) return print(-1);
-            j = f[0][c];
-        }
-    }
-    print(ans);
+	rds(s, n), rds(t, m);
+	int ans = 1;
+	for (int i = 0; i &lt; 26; i++) v[i] = n + 1;
+	for (int i = n; i; i--) {
+		for (int j = 0; j &lt; 26; j++) f[i][j] = v[j];
+		v[s[i]-'a'] = i;
+	}
+	for (int i = 0; i &lt; 26; i++) f[0][i] = v[i];
+	for (int i = 1, j = 0; i &lt;= m; i++) {
+		int c = t[i] - 'a';
+		if (f[j][c] != n + 1) j = f[j][c];
+		else {
+			++ans;
+			if (f[0][c] == n + 1) return print(-1);
+			j = f[0][c];
+		}
+	}
+	print(ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Same GCDs</h2>
 <p><span class="math-inline" data-original-math="$ans = \varphi(\frac{m}{\gcd(n, m)})$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>n</mi><mi>s</mi><mo>=</mo><mi>φ</mi><mo stretchy="false">(</mo><mfrac><mi>m</mi><mrow><mi>gcd</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo stretchy="false">)</mo></mrow></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">ans = \varphi(\frac{m}{\gcd(n, m)})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">an</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.27em;vertical-align:-0.52em;"></span><span class="mord mathnormal">φ</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight" style="margin-right:0.0139em;">g</span><span class="mtight">c</span><span class="mtight">d</span></span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">m</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">inline void solve() {
-    ll n, m;
-    rd(n), rd(m);
-    ll d = __gcd(n, m);
-    m /= d;
-    ll ans = n = m;
-    for (ll i = 2; i * i &lt;= n; i++)
-        if (n % i == 0) {
-            ans = ans / i * (i - 1);
-            while (n % i == 0) n /= i;
-        }
-    if (n &gt; 1) ans = ans / n * (n - 1);
-    print(ans);
+	ll n, m;
+	rd(n), rd(m);
+	ll d = __gcd(n, m);
+	m /= d;
+	ll ans = n = m;
+	for (ll i = 2; i * i &lt;= n; i++)
+		if (n % i == 0) {
+			ans = ans / i * (i - 1);
+			while (n % i == 0) n /= i;
+		}
+	if (n &gt; 1) ans = ans / n * (n - 1);
+	print(ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Permutation Separation</h2>
@@ -127,48 +127,48 @@ int main() {
 int n, a[N], b[N], p[N];
 ll s[N];
 struct T {
-    int l, r;
-    ll x, z;
+	int l, r;
+	ll x, z;
 } t[N*4];
 
 void build(int p, int l, int r) {
-    t[p].l = l, t[p].r = r;
-    if (l == r) return t[p].x = s[l], void();
-    build(ls, l, md), build(rs, md + 1, r);
-    t[p].x = min(t[ls].x, t[rs].x);
+	t[p].l = l, t[p].r = r;
+	if (l == r) return t[p].x = s[l], void();
+	build(ls, l, md), build(rs, md + 1, r);
+	t[p].x = min(t[ls].x, t[rs].x);
 }
 
 void spd(int p) {
-    if (t[p].z) {
-        t[ls].x += t[p].z;
-        t[ls].z += t[p].z;
-        t[rs].x += t[p].z;
-        t[rs].z += t[p].z;
-        t[p].z = 0;
-    }
+	if (t[p].z) {
+		t[ls].x += t[p].z;
+		t[ls].z += t[p].z;
+		t[rs].x += t[p].z;
+		t[rs].z += t[p].z;
+		t[p].z = 0;
+	}
 }
 
 void add(int p, int l, int r, int k) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
-    spd(p);
-    if (l &lt;= md) add(ls, l, r, k);
-    if (r &gt; md) add(rs, l, r, k);
-    t[p].x = min(t[ls].x, t[rs].x);
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
+	spd(p);
+	if (l &lt;= md) add(ls, l, r, k);
+	if (r &gt; md) add(rs, l, r, k);
+	t[p].x = min(t[ls].x, t[rs].x);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), p[a[i]] = i; 
-    for (int i = 1; i &lt;= n; i++) rd(b[i]), s[i] = s[i-1] + b[i];
-    build(1, 1, n - 1);
-    ll ans = t[1].x;
-    for (int i = 1; i &lt;= n; i++) {
-        if (p[i] &gt; 1) add(1, 1, p[i] - 1, b[p[i]]);
-        if (p[i] &lt; n) add(1, p[i], n - 1, -b[p[i]]);
-        ans = min(ans, t[1].x);
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), p[a[i]] = i; 
+	for (int i = 1; i &lt;= n; i++) rd(b[i]), s[i] = s[i-1] + b[i];
+	build(1, 1, n - 1);
+	ll ans = t[1].x;
+	for (int i = 1; i &lt;= n; i++) {
+		if (p[i] &gt; 1) add(1, 1, p[i] - 1, b[p[i]]);
+		if (p[i] &lt; n) add(1, p[i], n - 1, -b[p[i]]);
+		ans = min(ans, t[1].x);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">Good Contest</h2>
@@ -185,28 +185,28 @@ int n, a[N], b[N], c[N*2], t;
 modint f[N], g[N], ans;
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++)
-        rd(a[i]), rd(b[i]), c[++t] = a[i], c[++t] = ++b[i];
-    sort(c + 1, c + t + 1), t = unique(c + 1, c + t + 1) - (c + 1);
-    for (int i = 1; i &lt;= n; i++)
-        a[i] = lower_bound(c + 1, c + t + 1, a[i]) - c,
-        b[i] = lower_bound(c + 1, c + t + 1, b[i]) - c;
-    f[0] = 1;
-    for (int j = 1; j &lt; t; j++) {
-        int l = c[j+1] - c[j];
-        g[0] = 1;
-        for (int i = 1; i &lt;= n; i++) g[i] = g[i-1] * (l + i - 1) / i;
-        for (int i = n; i; i--)
-            if (a[i] &lt;= j &amp;&amp; j &lt; b[i])
-                for (int c = 1, k = i - 1; ~k; k--) {
-                    f[i] += g[c] * f[k];
-                    if (a[k] &lt;= j &amp;&amp; j &lt; b[k]) ++c;
-                }
-    }
-    for (int i = 1; i &lt;= n; i++) ans += f[i];
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++)
+		rd(a[i]), rd(b[i]), c[++t] = a[i], c[++t] = ++b[i];
+	sort(c + 1, c + t + 1), t = unique(c + 1, c + t + 1) - (c + 1);
+	for (int i = 1; i &lt;= n; i++)
+		a[i] = lower_bound(c + 1, c + t + 1, a[i]) - c,
+		b[i] = lower_bound(c + 1, c + t + 1, b[i]) - c;
+	f[0] = 1;
+	for (int j = 1; j &lt; t; j++) {
+		int l = c[j+1] - c[j];
+		g[0] = 1;
+		for (int i = 1; i &lt;= n; i++) g[i] = g[i-1] * (l + i - 1) / i;
+		for (int i = n; i; i--)
+			if (a[i] &lt;= j &amp;&amp; j &lt; b[i])
+				for (int c = 1, k = i - 1; ~k; k--) {
+					f[i] += g[c] * f[k];
+					if (a[k] &lt;= j &amp;&amp; j &lt; b[k]) ++c;
+				}
+	}
+	for (int i = 1; i &lt;= n; i++) ans += f[i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <p>再来看原题就很简单了，照着做即可。</p>
@@ -215,29 +215,29 @@ int n, a[N], b[N], c[N*2], t;
 modint f[N], g[N], ans;
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++)
-        rd(a[i]), rd(b[i]), c[++t] = a[i], c[++t] = ++b[i];
-    sort(c + 1, c + t + 1), t = unique(c + 1, c + t + 1) - (c + 1);
-    for (int i = 1; i &lt;= n; i++)
-        a[i] = lower_bound(c + 1, c + t + 1, a[i]) - c,
-        b[i] = lower_bound(c + 1, c + t + 1, b[i]) - c;
-    f[0] = 1;
-    for (int j = t - 1; j; j--) {
-        int l = c[j+1] - c[j];
-        g[0] = 1;
-        for (int i = 1; i &lt;= n; i++) g[i] = g[i-1] * (l + i - 1) / i;
-        for (int i = n; i; i--)
-            if (a[i] &lt;= j &amp;&amp; j &lt; b[i])
-                for (int c = 1, k = i - 1; ~k; k--, ++c) {
-                    f[i] += g[c] * f[k];
-                    if (a[k] &gt; j || j &gt;= b[k]) break;
-                }
-    }
-    ans = f[n];
-    for (int i = 1; i &lt;= n; i++) ans /= c[b[i]] - c[a[i]];
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++)
+		rd(a[i]), rd(b[i]), c[++t] = a[i], c[++t] = ++b[i];
+	sort(c + 1, c + t + 1), t = unique(c + 1, c + t + 1) - (c + 1);
+	for (int i = 1; i &lt;= n; i++)
+		a[i] = lower_bound(c + 1, c + t + 1, a[i]) - c,
+		b[i] = lower_bound(c + 1, c + t + 1, b[i]) - c;
+	f[0] = 1;
+	for (int j = t - 1; j; j--) {
+		int l = c[j+1] - c[j];
+		g[0] = 1;
+		for (int i = 1; i &lt;= n; i++) g[i] = g[i-1] * (l + i - 1) / i;
+		for (int i = n; i; i--)
+			if (a[i] &lt;= j &amp;&amp; j &lt; b[i])
+				for (int c = 1, k = i - 1; ~k; k--, ++c) {
+					f[i] += g[c] * f[k];
+					if (a[k] &gt; j || j &gt;= b[k]) break;
+				}
+	}
+	ans = f[n];
+	for (int i = 1; i &lt;= n; i++) ans /= c[b[i]] - c[a[i]];
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="68" href="/blog/tags/68/">概率期望</a>、<a data-source-tag="27" href="/blog/tags/27/">线段树</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/581/"><span>较新一篇</span>平衡树学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/584/"><span>较早一篇</span>【LGR-067】洛谷 1 月月赛 II &amp; CSGRound 3 Div.2 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="586" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

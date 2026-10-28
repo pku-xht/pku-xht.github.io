@@ -20,39 +20,39 @@ int n, o, x, y, ans;
 ll c[N], now;
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) {
-        now += c[i], rd(o), rd(x);
-        switch (o) {
-            case 1 : now += x; break;
-            case 2 :
-                if (now &lt; x) ++ans;
-                else now -= x;
-                break;
-            case 3 :
-                now -= x, rd(y), c[y] += x;
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) {
+		now += c[i], rd(o), rd(x);
+		switch (o) {
+			case 1 : now += x; break;
+			case 2 :
+				if (now &lt; x) ++ans;
+				else now -= x;
+				break;
+			case 3 :
+				now -= x, rd(y), c[y] += x;
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">斗牛</h2>
-<p>选 <span class="math-inline" data-original-math="$n-2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n-2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 张牌相当于选两张牌，同时如果有解，答案一定是 <span class="math-inline" data-original-math="$((\Sigma – 1) \bmod 10) + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi mathvariant="normal">Σ</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>10</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">((\Sigma - 1) \bmod 10) + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">((</span><span class="mord">Σ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">10</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>。</p>
+<p>选 <span class="math-inline" data-original-math="$n-2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n-2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 张牌相当于选两张牌，同时如果有解，答案一定是 <span class="math-inline" data-original-math="$((\Sigma - 1) \bmod 10) + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mi mathvariant="normal">Σ</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>10</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">((\Sigma - 1) \bmod 10) + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">((</span><span class="mord">Σ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">10</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>。</p>
 <p>开个大小为 <span class="math-inline" data-original-math="$10$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>10</mn></mrow><annotation encoding="application/x-tex">10</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">10</span></span></span></span></span> 的桶即可。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 1e6 + 7;
 int n, a[N], s, c[10];
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), a[i] %= 10, s += a[i];
-    for (int i = 1; i &lt;= n; i++) {
-        int x = (s % 10 - a[i] + 10) % 10;
-        if (c[x]) return print((s - 1) % 10 + 1), 0;
-        c[a[i]%10] = 1;
-    }
-    print(0);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), a[i] %= 10, s += a[i];
+	for (int i = 1; i &lt;= n; i++) {
+		int x = (s % 10 - a[i] + 10) % 10;
+		if (c[x]) return print((s - 1) % 10 + 1), 0;
+		c[a[i]%10] = 1;
+	}
+	print(0);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">游戏</h2>
@@ -63,20 +63,20 @@ int n, k, c[N];
 ll a[N];
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), a[i] += a[i-1];
-    a[++n] = 1e18, rd(k);
-    for (int i = 1, p = 2; i &lt; n; i++) {
-        while (a[p] &lt; 2 * a[i]) ++p;
-        if (a[i] &lt;= k) ++c[a[i]];
-        if (a[p] - a[i] &lt;= k) --c[a[p]-a[i]];
-    }
-    vi ans;
-    for (int i = 1; i &lt;= k; i++)
-        if ((c[i] += c[i-1])) ans.pb(i);
-    print(ans.size());
-    for (auto x : ans) print(x, ' ');
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), a[i] += a[i-1];
+	a[++n] = 1e18, rd(k);
+	for (int i = 1, p = 2; i &lt; n; i++) {
+		while (a[p] &lt; 2 * a[i]) ++p;
+		if (a[i] &lt;= k) ++c[a[i]];
+		if (a[p] - a[i] &lt;= k) --c[a[p]-a[i]];
+	}
+	vi ans;
+	for (int i = 1; i &lt;= k; i++)
+		if ((c[i] += c[i-1])) ans.pb(i);
+	print(ans.size());
+	for (auto x : ans) print(x, ' ');
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">出游</h2>
@@ -92,40 +92,40 @@ int n, m;
 modint p[N], ans;
 #define bt bitset&lt;N&gt;
 struct mt {
-    bt a[N];
-    inline friend mt operator * (mt x, mt y) {
-        mt z;
-        for (int i = 0; i &lt; n; i++)
-            for (int j = 0; j &lt; n; j++)
-                if (x.a[i][j]) z.a[i] |= y.a[j];
-        return z;
-    }
+	bt a[N];
+	inline friend mt operator * (mt x, mt y) {
+		mt z;
+		for (int i = 0; i &lt; n; i++)
+			for (int j = 0; j &lt; n; j++)
+				if (x.a[i][j]) z.a[i] |= y.a[j];
+		return z;
+	}
 } a, b;
 
 inline void ksm(mt x, int y, mt &amp;z) {
-    while (y) {
-        if (y &amp; 1) z = z * x;
-        x = x * x, y &gt;&gt;= 1;
-    }
+	while (y) {
+		if (y &amp; 1) z = z * x;
+		x = x * x, y &gt;&gt;= 1;
+	}
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 0, k; i &lt; n; i++) {
-        rd(p[i]), rd(k);
-        for (int j = 0, x; j &lt; k; j++)
-            rd(x), a.a[--x][i] = 1;
-        b.a[i][i] = 1;
-    }
-    ksm(a, m, b);
-    for (int i = 0; i &lt; n; i++) {
-        modint o = 1;
-        for (int j = 0; j &lt; n; j++)
-            if (b.a[j][i]) o *= 1 - p[j];
-        ans += 1 - o;
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(m);
+	for (int i = 0, k; i &lt; n; i++) {
+		rd(p[i]), rd(k);
+		for (int j = 0, x; j &lt; k; j++)
+			rd(x), a.a[--x][i] = 1;
+		b.a[i][i] = 1;
+	}
+	ksm(a, m, b);
+	for (int i = 0; i &lt; n; i++) {
+		modint o = 1;
+		for (int j = 0; j &lt; n; j++)
+			if (b.a[j][i]) o *= 1 - p[j];
+		ans += 1 - o;
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="38" href="/blog/tags/38/">bitset</a>、<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="68" href="/blog/tags/68/">概率期望</a>、<a data-source-tag="57" href="/blog/tags/57/">矩阵</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/586/"><span>较新一篇</span>Educational Codeforces Round 81 (Rated for Div. 2) 题解</a><a class="rel-next" rel="next" href="/blog/posts/579/"><span>较早一篇</span>CF590E Birthday 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="584" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -48,7 +48,7 @@
 <p>由于还原的方式唯一，因此一个「顺序」唯一的对应了一个「方案」。</p>
 <p>至此，我们算法的主体思路如下：</p>
 <p><strong>枚举「顺序」和怪物，通过还原「顺序」为「方案」的过程判断按照这个「顺序」能否击中怪物。</strong></p>
-<p>考虑时间复杂度，「顺序」的总个数是 <span class="math-inline" data-original-math="$\mathcal O(k!)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">!</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(k!)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">!)</span></span></span></span></span> 的……吗？</p>
+<p>考虑时间复杂度，「顺序」的总个数是 <span class="math-inline" data-original-math="$\mathcal O(k!)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>k</mi><mo stretchy="false">!</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(k!)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mclose">!)</span></span></span></span></span> 的......吗？</p>
 <p>好像不是，因为「顺序」的长度可能为 <span class="math-inline" data-original-math="$1 \sim k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>∼</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">1 \sim k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>。</p>
 <p>但是通过还原的过程可以发现，我们只用枚举所有长度为 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 的「顺序」，如果这个「顺序」的某个前缀就是一种「方案」，是可以直接被判断出来的。</p>
 <p>所以，重来一遍！</p>
@@ -61,46 +61,46 @@ pi a[K], b[N];
 vi p[K][N], e;
 
 inline bool pd(pi x, pi y, pi z) {
-    if (y == z) return 0;
-    if (z.fi &lt; min(x.fi, y.fi) || z.fi &gt; max(x.fi, y.fi)) return 0;
-    if (z.se &lt; min(x.se, y.se) || z.se &gt; max(x.se, y.se)) return 0;
-    return 1ll * (y.se - x.se) * (z.fi - x.fi) == 1ll * (z.se - x.se) * (y.fi - x.fi);
+	if (y == z) return 0;
+	if (z.fi &lt; min(x.fi, y.fi) || z.fi &gt; max(x.fi, y.fi)) return 0;
+	if (z.se &lt; min(x.se, y.se) || z.se &gt; max(x.se, y.se)) return 0;
+	return 1ll * (y.se - x.se) * (z.fi - x.fi) == 1ll * (z.se - x.se) * (y.fi - x.fi);
 }
 
 bool dfs(int x) {
-    if (t &gt; k) return 0;
-    for (int y : p[q[t]][x])
-        if (!v[y]) {
-            ++t;
-            if (!dfs(y)) return 0;
-        }
-    return e.pb(x), v[x] = 1;
+	if (t &gt; k) return 0;
+	for (int y : p[q[t]][x])
+		if (!v[y]) {
+			++t;
+			if (!dfs(y)) return 0;
+		}
+	return e.pb(x), v[x] = 1;
 }
 
 int main() {
-    rd(k), rd(n);
-    for (int i = 1; i &lt;= k; i++) rd(a[i].fi), rd(a[i].se); 
-    for (int i = 1; i &lt;= n; i++) rd(b[i].fi), rd(b[i].se);
-    for (int i = 1; i &lt;= k; i++)
-        for (int j = 1; j &lt;= n; j++)
-            for (int o = 1; o &lt;= n; o++)
-                if (pd(a[i], b[j], b[o])) {
-                    p[i][j].pb(o);
-                    if ((int)p[i][j].size() == k) break;
-                }
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 1; j &lt;= k; j++) q[j] = j;
-        do {
-            while (e.size()) v[e.back()] = 0, e.pop_back();
-            t = 1;
-            if (dfs(i)) {
-                ++ans;
-                break;
-            }
-        } while (next_permutation(q + 1, q + k + 1));
-    }
-    print(ans);
-    return 0;
+	rd(k), rd(n);
+	for (int i = 1; i &lt;= k; i++) rd(a[i].fi), rd(a[i].se); 
+	for (int i = 1; i &lt;= n; i++) rd(b[i].fi), rd(b[i].se);
+	for (int i = 1; i &lt;= k; i++)
+		for (int j = 1; j &lt;= n; j++)
+			for (int o = 1; o &lt;= n; o++)
+				if (pd(a[i], b[j], b[o])) {
+					p[i][j].pb(o);
+					if ((int)p[i][j].size() == k) break;
+				}
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 1; j &lt;= k; j++) q[j] = j;
+		do {
+			while (e.size()) v[e.back()] = 0, e.pop_back();
+			t = 1;
+			if (dfs(i)) {
+				++ans;
+				break;
+			}
+		} while (next_permutation(q + 1, q + k + 1));
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="89" href="/blog/tags/89/">计算几何</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/700/"><span>较新一篇</span>NOI Online 能力测试 题解</a><a class="rel-next" rel="next" href="/blog/posts/691/"><span>较早一篇</span>CF627E Orchestra 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="693" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

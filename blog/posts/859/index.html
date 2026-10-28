@@ -32,29 +32,29 @@ vi e[N];
 modint p[N], f[N][N], ans;
 
 void dfs(int x, int fa) {
-    f[x][1] = s[x] = 1;
-    for (int y : e[x])
-        if (y != fa) {
-            dfs(y, x);
-            for (int i = s[x]; i; i--) {
-                modint w = 0;
-                for (int j = s[y]; j; j--)
-                    f[x][i+j] += f[x][i] * f[y][j], w -= p[j] * f[y][j];
-                f[x][i] *= w;
-            }
-            s[x] += s[y];
-        }
+	f[x][1] = s[x] = 1;
+	for (int y : e[x])
+		if (y != fa) {
+			dfs(y, x);
+			for (int i = s[x]; i; i--) {
+				modint w = 0;
+				for (int j = s[y]; j; j--)
+					f[x][i+j] += f[x][i] * f[y][j], w -= p[j] * f[y][j];
+				f[x][i] *= w;
+			}
+			s[x] += s[y];
+		}
 }
 
 int main() {
-    rd(n);
-    p[2] = 1;
-    for (int i = 4; i &lt;= n; i += 2) p[i] = p[i-2] * (i - 1);
-    for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
-    dfs(1, 0);
-    for (int i = 1; i &lt;= n; i++) ans += p[i] * f[1][i];
-    print(ans);
-    return 0;
+	rd(n);
+	p[2] = 1;
+	for (int i = 4; i &lt;= n; i += 2) p[i] = p[i-2] * (i - 1);
+	for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
+	dfs(1, 0);
+	for (int i = 1; i &lt;= n; i++) ans += p[i] * f[1][i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="56" href="/blog/tags/56/">容斥</a>、<a data-source-tag="24" href="/blog/tags/24/">树形 DP</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="84" href="/blog/tags/84/">背包</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/860/"><span>较新一篇</span>ARC095F Permutation Tree 题解</a><a class="rel-next" rel="next" href="/blog/posts/857/"><span>较早一篇</span>Codeforces Round #637 (Div. 1) – Thanks, Ivan Belonogov! 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="859" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

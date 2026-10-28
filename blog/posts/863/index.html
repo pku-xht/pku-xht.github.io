@@ -33,7 +33,7 @@
 <li><code>(B)</code>，<code>(BR)</code>，<code>RB</code>，<code>RBR</code>（<code>()</code> 内的是不在这个例子中的情况）。</li>
 <li><code>(BRB)</code>，<code>(BRBR)</code>，<code>RBRB</code>，<code>(RBRBR)</code>。</li>
 <li><code>BRBRB</code>，<code>(BRBRBR)</code>，<code>(RBRBRB)</code>，<code>(RBRBRBR)</code>。</li>
-<li>…。</li>
+<li>...。</li>
 </ol>
 </li>
 <li>注意到每一组实际上是等价的。对于第 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 组，只要染色操作序列存在对应的子序列，就可以得到这一组内所有的小球颜色序列：
@@ -42,7 +42,7 @@
 <li><code>rb</code>。</li>
 <li><code>rb?</code>（<code>?</code> 是通配符）。</li>
 <li><code>rb??</code>。</li>
-<li>…</li>
+<li>...</li>
 </ol>
 </li>
 <li>因此，如果染色操作序列存在互不相交的五个子序列 <code>rb??</code>，<code>rb?</code>，<code>r</code>，<code>rb</code>，<code>rb</code>，则意味着合法，否则不合法。</li>
@@ -61,56 +61,56 @@ string s;
 modint ans;
 
 inline bool pd(vi p) {
-    vector&lt;bool&gt; v(k, 0);
-    vi t(p.size(), -1);
-    for (ui i = 0; i &lt; p.size(); i++) {
-        while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'b'));
-        if (t[i] == k) return 0;
-        v[t[i]] = 1;
-    }
-    while (p.size() &amp;&amp; p.back() == 1) p.pop_back();
-    for (ui i = 0; i &lt; p.size(); i++) {
-        while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'r'));
-        if (t[i] == k) return 0;
-        v[t[i]] = 1;
-    }
-    while (p.size() &amp;&amp; p.back() == 2) p.pop_back();
-    for (ui i = 0; i &lt; p.size(); i++)
-        for (int j = 2; j &lt; p[i]; j++) {
-            while (++t[i] &lt; k &amp;&amp; v[t[i]]);
-            if (t[i] == k) return 0;
-            v[t[i]] = 1;
-        }
-    return 1;
+	vector&lt;bool&gt; v(k, 0);
+	vi t(p.size(), -1);
+	for (ui i = 0; i &lt; p.size(); i++) {
+		while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'b'));
+		if (t[i] == k) return 0;
+		v[t[i]] = 1;
+	}
+	while (p.size() &amp;&amp; p.back() == 1) p.pop_back();
+	for (ui i = 0; i &lt; p.size(); i++) {
+		while (++t[i] &lt; k &amp;&amp; (v[t[i]] || s[t[i]] == 'r'));
+		if (t[i] == k) return 0;
+		v[t[i]] = 1;
+	}
+	while (p.size() &amp;&amp; p.back() == 2) p.pop_back();
+	for (ui i = 0; i &lt; p.size(); i++)
+		for (int j = 2; j &lt; p[i]; j++) {
+			while (++t[i] &lt; k &amp;&amp; v[t[i]]);
+			if (t[i] == k) return 0;
+			v[t[i]] = 1;
+		}
+	return 1;
 }
 
 void dfs(int o, int l, int r, vi p) {
-    if (!o) {
-        if (!pd(p)) return;
-        modint now = binom(n - l + r - 1, r - 1);
-        while (p.size()) {
-            int t = 0, x = p.back();
-            while (p.size() &amp;&amp; p.back() == x) ++t, p.pop_back();
-            now *= binom(p.size() + t, t); 
-        }
-        return ans += now, void();
-    }
-    while (1) {
-        dfs(o - 1, l, r, p);
-        l += (o == 1 ? 1 : 2 * o - 3) + (l != 0);
-        if (l &gt; n) return;
-        r += 2 * o;
-        p.pb(o);
-    }
+	if (!o) {
+		if (!pd(p)) return;
+		modint now = binom(n - l + r - 1, r - 1);
+		while (p.size()) {
+			int t = 0, x = p.back();
+			while (p.size() &amp;&amp; p.back() == x) ++t, p.pop_back();
+			now *= binom(p.size() + t, t); 
+		}
+		return ans += now, void();
+	}
+	while (1) {
+		dfs(o - 1, l, r, p);
+		l += (o == 1 ? 1 : 2 * o - 3) + (l != 0);
+		if (l &gt; n) return;
+		r += 2 * o;
+		p.pb(o);
+	}
 }
 
 int main() {
-    rd(n, k), rds(s);
-    init(1e6);
-    vi p;
-    dfs((n + 3) &gt;&gt; 1, 0, 1, p);
-    print(ans);
-    return 0;
+	rd(n, k), rds(s);
+	init(1e6);
+	vi p;
+	dfs((n + 3) &gt;&gt; 1, 0, 1, p);
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="55" href="/blog/tags/55/">组合计数</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/865/"><span>较新一篇</span>ARC099F Eating Symbols Hard 题解</a><a class="rel-next" rel="next" href="/blog/posts/862/"><span>较早一篇</span>ARC100F Colorful Sequences 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="863" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

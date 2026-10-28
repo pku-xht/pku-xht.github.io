@@ -15,7 +15,7 @@
 <h2 id="section-1">普通莫队</h2>
 <p>设定块大小 <span class="math-inline" data-original-math="$T$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span></span>，将 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 个询问 <span class="math-inline" data-original-math="$[l,r]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">]</span></span></span></span></span> 离线下来，以 <span class="math-inline" data-original-math="$(\lfloor \frac lT \rfloor, r)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">⌊</mo><mfrac><mi>l</mi><mi>T</mi></mfrac><mo stretchy="false">⌋</mo><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\lfloor \frac lT \rfloor, r)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2251em;vertical-align:-0.345em;"></span><span class="mopen">(⌊</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">⌋</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span></span></span></span></span> 为关键字排序后，依次处理每个询问。</p>
 <p><strong>时间复杂度：</strong></p>
-<p>若 <span class="math-inline" data-original-math="$|l – l^\prime| + |r – r^\prime| = 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>l</mi><mo>−</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>r</mi><mo>−</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|l - l^\prime| + |r - r^\prime| = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从 <span class="math-inline" data-original-math="$[l,r]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">]</span></span></span></span></span> 转移到 <span class="math-inline" data-original-math="$[l^\prime, r^\prime]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l^\prime, r^\prime]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span> 的复杂度是 <span class="math-inline" data-original-math="$\mathcal O(1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 的。</p>
+<p>若 <span class="math-inline" data-original-math="$|l - l^\prime| + |r - r^\prime| = 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>l</mi><mo>−</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>r</mi><mo>−</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|l - l^\prime| + |r - r^\prime| = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从 <span class="math-inline" data-original-math="$[l,r]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">]</span></span></span></span></span> 转移到 <span class="math-inline" data-original-math="$[l^\prime, r^\prime]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l^\prime, r^\prime]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span> 的复杂度是 <span class="math-inline" data-original-math="$\mathcal O(1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 的。</p>
 <p>整个过程中，<span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 移动的总次数为 <span class="math-inline" data-original-math="$\mathcal O(mT)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>T</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(mT)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">)</span></span></span></span></span>，<span class="math-inline" data-original-math="$r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 移动的总次数为 <span class="math-inline" data-original-math="$\mathcal O(\frac {n^2}T)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mfrac><msup><mi>n</mi><mn>2</mn></msup><mi>T</mi></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\frac {n^2}T)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3629em;vertical-align:-0.345em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0179em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <p>取 <span class="math-inline" data-original-math="$T = \frac {n}{\sqrt m}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><mfrac><mi>n</mi><msqrt><mi>m</mi></msqrt></mfrac></mrow><annotation encoding="application/x-tex">T = \frac {n}{\sqrt m}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.2334em;vertical-align:-0.538em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.6259em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord sqrt mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8059em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal mtight" style="padding-left:0.833em;">m</span></span><span style="top:-2.7659em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail mtight" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
 c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
@@ -89,46 +89,46 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 int n, m, T, a[N], c[N];
 ll ans[N], sum[N], now;
 struct Q {
-    int l, r, x, y, i;
-    inline Q() {}
-    inline Q(int l, int r, int i) : l(l), r(r), i(i) { x = l / T, y = r; }
-    inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
-        return a.x == b.x ? (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
-    }
+	int l, r, x, y, i;
+	inline Q() {}
+	inline Q(int l, int r, int i) : l(l), r(r), i(i) { x = l / T, y = r; }
+	inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
+		return a.x == b.x ? (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
+	}
 } q[N];
 
 inline void work(int x, int k) {
-    x = a[x], now += k &gt; 0 ? c[x] : 1 - c[x], c[x] += k;
+	x = a[x], now += k &gt; 0 ? c[x] : 1 - c[x], c[x] += k;
 }
 
 int main() {
-    rd(n, m), T = n / sqrt(m), rda(a, n);
-    for (int i = 1, l, r; i &lt;= m; i++) rd(l, r), q[i] = Q(l, r, i);
-    sort(q + 1, q + m + 1);
-    for (int i = 1, l = 1, r = 0; i &lt;= m; i++) {
-        while (l &gt; q[i].l) work(--l, 1);
-        while (r &lt; q[i].r) work(++r, 1);
-        while (l &lt; q[i].l) work(l++, -1);
-        while (r &gt; q[i].r) work(r--, -1);
-        ans[q[i].i] = now;
-        sum[q[i].i] = 1ll * (q[i].r - q[i].l + 1) * (q[i].r - q[i].l) / 2;
-    }
-    for (int i = 1; i &lt;= m; i++) {
-        if (!sum[i]) {
-            prints("0/1");
-            continue;
-        }
-        ll d = __gcd(ans[i], sum[i]);
-        print(ans[i] / d, '/'), print(sum[i] / d);
-    }
-    return 0;
+	rd(n, m), T = n / sqrt(m), rda(a, n);
+	for (int i = 1, l, r; i &lt;= m; i++) rd(l, r), q[i] = Q(l, r, i);
+	sort(q + 1, q + m + 1);
+	for (int i = 1, l = 1, r = 0; i &lt;= m; i++) {
+		while (l &gt; q[i].l) work(--l, 1);
+		while (r &lt; q[i].r) work(++r, 1);
+		while (l &lt; q[i].l) work(l++, -1);
+		while (r &gt; q[i].r) work(r--, -1);
+		ans[q[i].i] = now;
+		sum[q[i].i] = 1ll * (q[i].r - q[i].l + 1) * (q[i].r - q[i].l) / 2;
+	}
+	for (int i = 1; i &lt;= m; i++) {
+		if (!sum[i]) {
+			prints("0/1");
+			continue;
+		}
+		ll d = __gcd(ans[i], sum[i]);
+		print(ans[i] / d, '/'), print(sum[i] / d);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">带修莫队</h2>
 <p>增加一维时间轴，即每次询问变成 <span class="math-inline" data-original-math="$[l,r,t]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r,t]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span></span>。</p>
 <p>依然设定块大小 <span class="math-inline" data-original-math="$T$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi></mrow><annotation encoding="application/x-tex">T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span></span>，然后以 <span class="math-inline" data-original-math="$(\lfloor \frac lT \rfloor, \lfloor \frac rT \rfloor,t)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">⌊</mo><mfrac><mi>l</mi><mi>T</mi></mfrac><mo stretchy="false">⌋</mo><mo separator="true">,</mo><mo stretchy="false">⌊</mo><mfrac><mi>r</mi><mi>T</mi></mfrac><mo stretchy="false">⌋</mo><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(\lfloor \frac lT \rfloor, \lfloor \frac rT \rfloor,t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2251em;vertical-align:-0.345em;"></span><span class="mopen">(⌊</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">⌋</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">⌊</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">⌋</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span> 为关键字排序，依次处理每个询问。</p>
 <p><strong>时间复杂度：</strong></p>
-<p>若 <span class="math-inline" data-original-math="$|l – l^\prime| + |r – r^\prime| + |t – t^\prime| = 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>l</mi><mo>−</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>r</mi><mo>−</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>t</mi><mo>−</mo><msup><mi>t</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|l - l^\prime| + |r - r^\prime| + |t - t^\prime| = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从 <span class="math-inline" data-original-math="$[l,r,t]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r,t]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span></span> 转移到 <span class="math-inline" data-original-math="$[l^\prime, r^\prime, t^\prime]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>t</mi><mo mathvariant="normal">′</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l^\prime, r^\prime, t^\prime]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span> 的复杂度是 <span class="math-inline" data-original-math="$\mathcal O(1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 的。</p>
+<p>若 <span class="math-inline" data-original-math="$|l - l^\prime| + |r - r^\prime| + |t - t^\prime| = 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mi>l</mi><mo>−</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>r</mi><mo>−</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>t</mi><mo>−</mo><msup><mi>t</mi><mo mathvariant="normal">′</mo></msup><mi mathvariant="normal">∣</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|l - l^\prime| + |r - r^\prime| + |t - t^\prime| = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从 <span class="math-inline" data-original-math="$[l,r,t]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l,r,t]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span></span> 转移到 <span class="math-inline" data-original-math="$[l^\prime, r^\prime, t^\prime]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><msup><mi>l</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>r</mi><mo mathvariant="normal">′</mo></msup><mo separator="true">,</mo><msup><mi>t</mi><mo mathvariant="normal">′</mo></msup><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[l^\prime, r^\prime, t^\prime]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span></span> 的复杂度是 <span class="math-inline" data-original-math="$\mathcal O(1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 的。</p>
 <p>整个过程中，<span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 移动的总次数为 <span class="math-inline" data-original-math="$\mathcal O(mT)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>T</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(mT)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">)</span></span></span></span></span>，<span class="math-inline" data-original-math="$r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 移动的总次数为 <span class="math-inline" data-original-math="$\mathcal O(mT+ \frac {n^2}T)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>m</mi><mi>T</mi><mo>+</mo><mfrac><msup><mi>n</mi><mn>2</mn></msup><mi>T</mi></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(mT+ \frac {n^2}T)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">m</span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.3629em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0179em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>，<span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 移动的总次数为 <span class="math-inline" data-original-math="$\mathcal O(\frac{n^2m}{T^2})$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mfrac><mrow><msup><mi>n</mi><mn>2</mn></msup><mi>m</mi></mrow><msup><mi>T</mi><mn>2</mn></msup></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\frac{n^2m}{T^2})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3629em;vertical-align:-0.345em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0179em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal mtight">m</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <p>设 <span class="math-inline" data-original-math="$n,m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">n,m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 同阶，取 <span class="math-inline" data-original-math="$T = n^{\frac 23}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo>=</mo><msup><mi>n</mi><mfrac><mn>2</mn><mn>3</mn></mfrac></msup></mrow><annotation encoding="application/x-tex">T = n^{\frac 23}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.954em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter katex-sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter katex-sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span></span></span></span></span> 时得到最优复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^{\frac 53})$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mfrac><mn>5</mn><mn>3</mn></mfrac></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^{\frac 53})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.204em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mopen nulldelimiter katex-sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">5</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter katex-sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>，<span class="math-inline" data-original-math="$1\text{s}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mtext>s</mtext></mrow><annotation encoding="application/x-tex">1\text{s}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mord text"><span class="mord">s</span></span></span></span></span></span> 内最高可以通过 <span class="math-inline" data-original-math="$n \le 6 \times 10^4$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>6</mn><mo>×</mo><msup><mn>10</mn><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">n \le 6 \times 10^4</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">6</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span></span></span></span></span> 的题目。</p>
 <p>那如果 <span class="math-inline" data-original-math="$n,m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">n,m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 不同阶咋办？相信我，暴力能过。</p>
@@ -136,43 +136,43 @@ int main() {
 <pre tabindex="0"><code class="language-cpp">const int N = 133337, M = 1e6 + 7;
 int n, m, k, T, a[N], c[M], u[N], v[N], ans[N], now;
 struct Q {
-    int l, r, t, x, y, z, i;
-    inline Q() {}
-    inline Q(int l, int r, int t, int i) : l(l), r(r), t(t), i(i) { x = l / T, y = r / T, z = t; }
-    inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
-        return a.x == b.x ? a.y == b.y ? (a.y &amp; 1) ? a.z &lt; b.z : a.z &gt; b.z : (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
-    }
+	int l, r, t, x, y, z, i;
+	inline Q() {}
+	inline Q(int l, int r, int t, int i) : l(l), r(r), t(t), i(i) { x = l / T, y = r / T, z = t; }
+	inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
+		return a.x == b.x ? a.y == b.y ? (a.y &amp; 1) ? a.z &lt; b.z : a.z &gt; b.z : (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
+	}
 } q[N];
 
 inline void work(int x, int k) {
-    now += k &gt; 0 ? !c[x] : -!(c[x] - 1), c[x] += k;
+	now += k &gt; 0 ? !c[x] : -!(c[x] - 1), c[x] += k;
 }
 
 inline void update(int i, int x) {
-    if (q[i].l &lt;= u[x] &amp;&amp; u[x] &lt;= q[i].r) work(a[u[x]], -1), work(v[x], 1);
-    swap(a[u[x]], v[x]);
+	if (q[i].l &lt;= u[x] &amp;&amp; u[x] &lt;= q[i].r) work(a[u[x]], -1), work(v[x], 1);
+	swap(a[u[x]], v[x]);
 }
 
 int main() {
-    rd(n, m), T = pow(n, 2.0 / 3.0), rda(a, n);
-    for (int i = 1, l, r, t = 0; i &lt;= m; i++) {
-        char o;
-        rdc(o);
-        if (o == 'Q') rd(l, r), ++k, q[k] = Q(l, r, t, k);
-        else ++t, rd(u[t], v[t]);
-    }
-    sort(q + 1, q + k + 1);
-    for (int i = 1, l = 1, r = 0, t = 0; i &lt;= k; i++) {
-        while (l &gt; q[i].l) work(a[--l], 1);
-        while (r &lt; q[i].r) work(a[++r], 1);
-        while (l &lt; q[i].l) work(a[l++], -1);
-        while (r &gt; q[i].r) work(a[r--], -1);
-        while (t &lt; q[i].t) update(i, ++t);
-        while (t &gt; q[i].t) update(i, t--);
-        ans[q[i].i] = now;
-    }
-    for (int i = 1; i &lt;= k; i++) print(ans[i]);
-    return 0;
+	rd(n, m), T = pow(n, 2.0 / 3.0), rda(a, n);
+	for (int i = 1, l, r, t = 0; i &lt;= m; i++) {
+		char o;
+		rdc(o);
+		if (o == 'Q') rd(l, r), ++k, q[k] = Q(l, r, t, k);
+		else ++t, rd(u[t], v[t]);
+	}
+	sort(q + 1, q + k + 1);
+	for (int i = 1, l = 1, r = 0, t = 0; i &lt;= k; i++) {
+		while (l &gt; q[i].l) work(a[--l], 1);
+		while (r &lt; q[i].r) work(a[++r], 1);
+		while (l &lt; q[i].l) work(a[l++], -1);
+		while (r &gt; q[i].r) work(a[r--], -1);
+		while (t &lt; q[i].t) update(i, ++t);
+		while (t &gt; q[i].t) update(i, t--);
+		ans[q[i].i] = now;
+	}
+	for (int i = 1; i &lt;= k; i++) print(ans[i]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">回滚莫队</h2>
@@ -197,41 +197,41 @@ int n, m, T, a[N];
 unordered_map&lt;int, int&gt; c;
 ll ans[N], now;
 struct Q {
-    int l, r, x, y, i;
-    inline Q() {}
-    inline Q(int l, int r, int i) : l(l), r(r), i(i) { x = l / T, y = r; }
-    inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
-        return a.x == b.x ? a.y &lt; b.y : a.x &lt; b.x;
-    }
+	int l, r, x, y, i;
+	inline Q() {}
+	inline Q(int l, int r, int i) : l(l), r(r), i(i) { x = l / T, y = r; }
+	inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
+		return a.x == b.x ? a.y &lt; b.y : a.x &lt; b.x;
+	}
 } q[N];
 vi p;
 
 inline void work(int x) {
-    now = max(now, 1ll * x * (++c[x]));
+	now = max(now, 1ll * x * (++c[x]));
 }
 
 int main() {
-    rd(n, m), T = n / sqrt(m), rda(a, n);
-    for (int i = 1, l, r; i &lt;= m; i++) rd(l, r), q[i] = Q(l, r, i);
-    sort(q + 1, q + m + 1);
-    for (int i = 1, l, r; i &lt;= m; i++) {
-        if (i == 1 || q[i].x != q[i-1].x)
-            l = (q[i].x + 1) * T, r = l - 1, now = 0, c.clear();
-        if (q[i].x == q[i].r / T) {
-            for (int j = q[i].l; j &lt;= q[i].r; j++) work(a[j]);
-            ans[q[i].i] = now;
-            now = 0, c.clear();
-            continue;
-        }
-        while (r &lt; q[i].r) work(a[++r]);
-        ll cur = now;
-        while (l &gt; q[i].l) work(a[--l]), p.pb(a[l]);
-        ans[q[i].i] = now;
-        l = (q[i].x + 1) * T, now = cur;
-        while (p.size()) --c[p.back()], p.pop_back();
-    }
-    for (int i = 1; i &lt;= m; i++) print(ans[i]);
-    return 0;
+	rd(n, m), T = n / sqrt(m), rda(a, n);
+	for (int i = 1, l, r; i &lt;= m; i++) rd(l, r), q[i] = Q(l, r, i);
+	sort(q + 1, q + m + 1);
+	for (int i = 1, l, r; i &lt;= m; i++) {
+		if (i == 1 || q[i].x != q[i-1].x)
+			l = (q[i].x + 1) * T, r = l - 1, now = 0, c.clear();
+		if (q[i].x == q[i].r / T) {
+			for (int j = q[i].l; j &lt;= q[i].r; j++) work(a[j]);
+			ans[q[i].i] = now;
+			now = 0, c.clear();
+			continue;
+		}
+		while (r &lt; q[i].r) work(a[++r]);
+		ll cur = now;
+		while (l &gt; q[i].l) work(a[--l]), p.pb(a[l]);
+		ans[q[i].i] = now;
+		l = (q[i].x + 1) * T, now = cur;
+		while (p.size()) --c[p.back()], p.pop_back();
+	}
+	for (int i = 1; i &lt;= m; i++) print(ans[i]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-7">树上莫队</h2>
@@ -250,47 +250,47 @@ int n, m, cq, T, k, a[N], c[N], tx[N], ty[N];
 ll v[N], w[N], ans[N], now;
 vi e[N];
 struct Q {
-    int l, r, t, x, y, z, i, o;
-    inline Q() {}
-    inline Q(int l, int r, int t, int i, int o = 0) : l(l), r(r), t(t), i(i), o(o) { x = l / T, y = r / T, z = t; }
-    inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
-        return a.x == b.x ? a.y == b.y ? (a.y &amp; 1) ? a.z &lt; b.z : a.z &gt; b.z : (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
-    }
+	int l, r, t, x, y, z, i, o;
+	inline Q() {}
+	inline Q(int l, int r, int t, int i, int o = 0) : l(l), r(r), t(t), i(i), o(o) { x = l / T, y = r / T, z = t; }
+	inline friend bool operator &lt; (const Q &amp;a, const Q &amp;b) {
+		return a.x == b.x ? a.y == b.y ? (a.y &amp; 1) ? a.z &lt; b.z : a.z &gt; b.z : (a.x &amp; 1) ? a.y &lt; b.y : a.y &gt; b.y : a.x &lt; b.x;
+	}
 } q[N];
 
 namespace HLD {
-    int d[N], f[N], s[N], son[N], dfn[N], rnk[N], top[N], num;
-
-    void dfs(int x) {
-        s[x] = 1;
-        for (int y : e[x])
-            if (y != f[x]) {
-                f[y] = x, d[y] = d[x] + 1;
-                dfs(y), s[x] += s[y];
-                if (s[y] &gt; s[son[x]]) son[x] = y;
-            }
-    }
-
-    void dfs(int x, int p) {
-        dfn[x] = ++num, rnk[num] = x;
-        top[x] = p;
-        if (son[x]) dfs(son[x], p);
-        for (int y : e[x])
-            if (y != f[x] &amp;&amp; y != son[x])
-                dfs(y, y);
-    }
-
-    inline int lca(int x, int y) {
-        while (top[x] != top[y]) {
-            if (d[top[x]] &lt; d[top[y]]) swap(x, y);
-            x = f[top[x]];
-        }
-        return d[x] &lt; d[y] ? x : y;
-    }
-
-    inline void main() {
-        d[1] = 1, dfs(1), dfs(1, 1);
-    }
+	int d[N], f[N], s[N], son[N], dfn[N], rnk[N], top[N], num;
+	
+	void dfs(int x) {
+		s[x] = 1;
+		for (int y : e[x])
+			if (y != f[x]) {
+				f[y] = x, d[y] = d[x] + 1;
+				dfs(y), s[x] += s[y];
+				if (s[y] &gt; s[son[x]]) son[x] = y;
+			}
+	}
+	
+	void dfs(int x, int p) {
+		dfn[x] = ++num, rnk[num] = x;
+		top[x] = p;
+		if (son[x]) dfs(son[x], p);
+		for (int y : e[x])
+			if (y != f[x] &amp;&amp; y != son[x])
+				dfs(y, y);
+	}
+	
+	inline int lca(int x, int y) {
+		while (top[x] != top[y]) {
+			if (d[top[x]] &lt; d[top[y]]) swap(x, y);
+			x = f[top[x]];
+		}
+		return d[x] &lt; d[y] ? x : y;
+	}
+	
+	inline void main() {
+		d[1] = 1, dfs(1), dfs(1, 1);
+	}
 }
 using HLD::s;
 using HLD::dfn;
@@ -300,55 +300,55 @@ using HLD::son;
 int in[N], out[N], p[N&lt;&lt;1], r[N&lt;&lt;1], num;
 
 void dfs(int x, int f) {
-    in[x] = ++num, p[num] = x;
-    if (son[x]) dfs(son[x], x);
-    for (int y : e[x])
-        if (y != f &amp;&amp; y != son[x]) dfs(y, x);
-    out[x] = ++num, p[num] = x;
+	in[x] = ++num, p[num] = x;
+	if (son[x]) dfs(son[x], x);
+	for (int y : e[x])
+		if (y != f &amp;&amp; y != son[x]) dfs(y, x);
+	out[x] = ++num, p[num] = x;
 } 
 
 inline void work(int x) {
-    if (r[x]) now -= v[a[x]] * w[c[a[x]]--], r[x] = 0;
-    else now += v[a[x]] * w[++c[a[x]]], r[x] = 1;
+	if (r[x]) now -= v[a[x]] * w[c[a[x]]--], r[x] = 0;
+	else now += v[a[x]] * w[++c[a[x]]], r[x] = 1;
 }
 
 inline void update(int i, int x) {
-    if (q[i].l &lt;= in[tx[x]] &amp;&amp; in[tx[x]] &lt;= q[i].r) work(tx[x]);
-    if (q[i].l &lt;= out[tx[x]] &amp;&amp; out[tx[x]] &lt;= q[i].r) work(tx[x]);
-    swap(a[tx[x]], ty[x]);
-    if (q[i].l &lt;= in[tx[x]] &amp;&amp; in[tx[x]] &lt;= q[i].r) work(tx[x]);
-    if (q[i].l &lt;= out[tx[x]] &amp;&amp; out[tx[x]] &lt;= q[i].r) work(tx[x]);
+	if (q[i].l &lt;= in[tx[x]] &amp;&amp; in[tx[x]] &lt;= q[i].r) work(tx[x]);
+	if (q[i].l &lt;= out[tx[x]] &amp;&amp; out[tx[x]] &lt;= q[i].r) work(tx[x]);
+	swap(a[tx[x]], ty[x]);
+	if (q[i].l &lt;= in[tx[x]] &amp;&amp; in[tx[x]] &lt;= q[i].r) work(tx[x]);
+	if (q[i].l &lt;= out[tx[x]] &amp;&amp; out[tx[x]] &lt;= q[i].r) work(tx[x]);
 }
 
 int main() {
-    rd(n, m, cq), T = pow(n, 2.0 / 3.0), rda(v, m), rda(w, n);
-    for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
-    rda(a, n);
-    HLD::main();
-    dfs(1, 0);
-    for (int i = 1, o, x, y, t = 0; i &lt;= cq; i++) {
-        rd(o, x, y);
-        if (o) {
-            ++k;
-            if (dfn[x] &gt; dfn[y]) swap(x, y);
-            if (dfn[y] &lt; dfn[x] + s[x]) q[k] = Q(in[x], in[y], t, k);
-            else q[k] = Q(out[x], in[y], t, k, 1);
-        } else tx[++t] = x, ty[t] = y;
-    }
-    sort(q + 1, q + k + 1);
-    for (int i = 1, l = 1, r = 0, t = 0; i &lt;= k; i++) {
-        while (l &gt; q[i].l) work(p[--l]);
-        while (r &lt; q[i].r) work(p[++r]);
-        while (l &lt; q[i].l) work(p[l++]);
-        while (r &gt; q[i].r) work(p[r--]);
-        while (t &lt; q[i].t) update(i, ++t);
-        while (t &gt; q[i].t) update(i, t--);
-        if (q[i].o) work(lca(p[l], p[r]));
-        ans[q[i].i] = now;
-        if (q[i].o) work(lca(p[l], p[r]));
-    }
-    for (int i = 1; i &lt;= k; i++) print(ans[i]);
-    return 0;
+	rd(n, m, cq), T = pow(n, 2.0 / 3.0), rda(v, m), rda(w, n);
+	for (int i = 1, x, y; i &lt; n; i++) rd(x, y), e[x].pb(y), e[y].pb(x);
+	rda(a, n);
+	HLD::main();
+	dfs(1, 0);
+	for (int i = 1, o, x, y, t = 0; i &lt;= cq; i++) {
+		rd(o, x, y);
+		if (o) {
+			++k;
+			if (dfn[x] &gt; dfn[y]) swap(x, y);
+			if (dfn[y] &lt; dfn[x] + s[x]) q[k] = Q(in[x], in[y], t, k);
+			else q[k] = Q(out[x], in[y], t, k, 1);
+		} else tx[++t] = x, ty[t] = y;
+	}
+	sort(q + 1, q + k + 1);
+	for (int i = 1, l = 1, r = 0, t = 0; i &lt;= k; i++) {
+		while (l &gt; q[i].l) work(p[--l]);
+		while (r &lt; q[i].r) work(p[++r]);
+		while (l &lt; q[i].l) work(p[l++]);
+		while (r &gt; q[i].r) work(p[r--]);
+		while (t &lt; q[i].t) update(i, ++t);
+		while (t &gt; q[i].t) update(i, t--);
+		if (q[i].o) work(lca(p[l], p[r]));
+		ans[q[i].i] = now;
+		if (q[i].o) work(lca(p[l], p[r]));
+	}
+	for (int i = 1; i &lt;= k; i++) print(ans[i]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-9">参考资料</h2>

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
 <main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #637 (Div. 1) – Thanks, Ivan Belonogov! 题解</h1><p class="post-meta"><time datetime="2020-04-24T14:45:18+08:00">2020 年 4 月 24 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 4 月 25 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">Nastya and Strange Generator</a></li><li class="toc-level-2"><a href="#section-2">Nastya and Scoreboard</a></li><li class="toc-level-2"><a href="#section-3">Nastya and Unexpected Guest</a></li><li class="toc-level-2"><a href="#section-4">Nastya and Time Machine</a></li><li class="toc-level-2"><a href="#section-5">Nastya and Bees</a></li><li class="toc-level-2"><a href="#section-6">Nastya and CBS</a></li></ol></details><div class="prose"><blockquote>
-<p><a href="https://codeforces.com/contest/1340" target="_blank" rel="noopener noreferrer">Codeforces Round #637 (Div. 1) – Thanks, Ivan Belonogov!</a><br>
+<p><a href="https://codeforces.com/contest/1340" target="_blank" rel="noopener noreferrer">Codeforces Round #637 (Div. 1) - Thanks, Ivan Belonogov!</a><br>
 Update：哈哈哈它 Unrated 了，爷的青春回来了。</p>
 </blockquote>
 <h2 id="section-1">Nastya and Strange Generator</h2>
@@ -21,22 +21,22 @@ int n, p[N];
 bool v[N];
 
 inline void solve() {
-    rd(n), rda(p, n);
-    for (int i = 1; i &lt;= n; i++) v[i] = 0;
-    for (int i = 1, k = -1; i &lt;= n; i++) {
-        if (!~k || v[k+1] || k == n) k = p[i];
-        else if (p[i] != k + 1) return prints("No"), void();
-        else ++k;
-        v[p[i]] = 1;
-    }
-    prints("Yes");
+	rd(n), rda(p, n);
+	for (int i = 1; i &lt;= n; i++) v[i] = 0;
+	for (int i = 1, k = -1; i &lt;= n; i++) {
+		if (!~k || v[k+1] || k == n) k = p[i];
+		else if (p[i] != k + 1) return prints("No"), void();
+		else ++k;
+		v[p[i]] = 1;
+	}
+	prints("Yes");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Nastya and Scoreboard</h2>
@@ -48,36 +48,36 @@ int n, k, f[N][N], g[N][N];
 string s[N];
 
 inline int calc(string a, string b) {
-    int ret = 0;
-    for (int i = 0; i &lt; 7; i++)
-        if (a[i] == '1' &amp;&amp; b[i] == '0') return -1;
-        else ret += b[i] - a[i];
-    return ret;
+	int ret = 0;
+	for (int i = 0; i &lt; 7; i++)
+		if (a[i] == '1' &amp;&amp; b[i] == '0') return -1;
+		else ret += b[i] - a[i];
+	return ret;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0), cout.tie(0);
-    cin &gt;&gt; n &gt;&gt; k;
-    for (int i = 1; i &lt;= n; i++) cin &gt;&gt; s[i];
-    reverse(s + 1, s + n + 1);
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 0; j &lt;= k; j++)
-            f[i][j] = -1;
-    f[0][k] = 0;
-    for (int i = 0; i &lt; n; i++)
-        for (int t = 0; t &lt; 10; t++) {
-            int ret = calc(s[i+1], str[t]);
-            for (int j = k; ~j; j--)
-                if (~f[i][j] &amp;&amp; ~ret &amp;&amp; ret &lt;= j)
-                        f[i+1][j-ret] = t, g[i+1][j-ret] = ret;
-        }
-    if (!~f[n][0]) return cout &lt;&lt; -1 &lt;&lt; endl, 0;
-    string ans;
-    for (int i = n, j = 0; i; i--)
-        ans += f[i][j] + '0', j += g[i][j];
-    cout &lt;&lt; ans &lt;&lt; endl;
-    return 0;
+	ios::sync_with_stdio(0);
+	cin.tie(0), cout.tie(0);
+	cin &gt;&gt; n &gt;&gt; k;
+	for (int i = 1; i &lt;= n; i++) cin &gt;&gt; s[i];
+	reverse(s + 1, s + n + 1);
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 0; j &lt;= k; j++)
+			f[i][j] = -1;
+	f[0][k] = 0;
+	for (int i = 0; i &lt; n; i++)
+		for (int t = 0; t &lt; 10; t++) {
+			int ret = calc(s[i+1], str[t]);
+			for (int j = k; ~j; j--)
+				if (~f[i][j] &amp;&amp; ~ret &amp;&amp; ret &lt;= j)
+						f[i+1][j-ret] = t, g[i+1][j-ret] = ret;
+		}
+	if (!~f[n][0]) return cout &lt;&lt; -1 &lt;&lt; endl, 0;
+	string ans;
+	for (int i = n, j = 0; i; i--)
+		ans += f[i][j] + '0', j += g[i][j];
+	cout &lt;&lt; ans &lt;&lt; endl;
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Nastya and Unexpected Guest</h2>
@@ -89,36 +89,36 @@ int n, m, a[N], g, r, f[N][M];
 deque&lt;pi&gt; q;
 
 int main() {
-    rd(n, m), rda(a, m), rd(g, r);
-    sort(a + 1, a + m + 1);
-    for (int i = 1; i &lt;= m; i++)
-        for (int j = 0; j &lt; g; j++)
-            f[i][j] = inf;
-    f[1][0] = 0, q.pb(mp(1, 0));
-    while (q.size()) {
-        int x = q[0].fi, t = q[0].se;
-        q.pop_front();
-        if (x &gt; 1) {
-            int k = t + a[x] - a[x-1];
-            if (k &lt; g &amp;&amp; f[x-1][k] &gt; f[x][t])
-                f[x-1][k] = f[x][t], q.push_front(mp(x - 1, k));
-            if (k == g &amp;&amp; f[x-1][0] &gt; f[x][t] + 1)
-                f[x-1][0] = f[x][t] + 1, q.pb(mp(x - 1, 0));
-        }
-        if (x &lt; m) {
-            int k = t + a[x+1] - a[x];
-            if (k &lt; g &amp;&amp; f[x+1][k] &gt; f[x][t])
-                f[x+1][k] = f[x][t], q.push_front(mp(x + 1, k));
-            if (k == g &amp;&amp; f[x+1][0] &gt; f[x][t] + 1)
-                f[x+1][0] = f[x][t] + 1, q.pb(mp(x + 1, 0));
-        }
-    }
-    ll ans = infll;
-    for (int i = 1; i &lt;= m; i++)
-        if (a[i] + g &gt;= n &amp;&amp; f[i][0] != inf)
-            ans = min(ans, 1ll * f[i][0] * (g + r) + n - a[i]);
-    print(ans == infll ? -1 : ans);
-    return 0;
+	rd(n, m), rda(a, m), rd(g, r);
+	sort(a + 1, a + m + 1);
+	for (int i = 1; i &lt;= m; i++)
+		for (int j = 0; j &lt; g; j++)
+			f[i][j] = inf;
+	f[1][0] = 0, q.pb(mp(1, 0));
+	while (q.size()) {
+		int x = q[0].fi, t = q[0].se;
+		q.pop_front();
+		if (x &gt; 1) {
+			int k = t + a[x] - a[x-1];
+			if (k &lt; g &amp;&amp; f[x-1][k] &gt; f[x][t])
+				f[x-1][k] = f[x][t], q.push_front(mp(x - 1, k));
+			if (k == g &amp;&amp; f[x-1][0] &gt; f[x][t] + 1)
+				f[x-1][0] = f[x][t] + 1, q.pb(mp(x - 1, 0));
+		}
+		if (x &lt; m) {
+			int k = t + a[x+1] - a[x];
+			if (k &lt; g &amp;&amp; f[x+1][k] &gt; f[x][t])
+				f[x+1][k] = f[x][t], q.push_front(mp(x + 1, k));
+			if (k == g &amp;&amp; f[x+1][0] &gt; f[x][t] + 1)
+				f[x+1][0] = f[x][t] + 1, q.pb(mp(x + 1, 0));
+		}
+	}
+	ll ans = infll;
+	for (int i = 1; i &lt;= m; i++)
+		if (a[i] + g &gt;= n &amp;&amp; f[i][0] != inf)
+			ans = min(ans, 1ll * f[i][0] * (g + r) + n - a[i]);
+	print(ans == infll ? -1 : ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Nastya and Time Machine</h2>
@@ -130,26 +130,26 @@ vi e[N];
 vector&lt;pi&gt; ans;
 
 void dfs(int x, int f, int t) {
-    int k = t;
-    ans.pb(mp(x, t));
-    for (int y : e[x])
-        if (y != f) {
-            if (t == D) ans.pb(mp(x, t = D - d[x]));
-            dfs(y, x, ++t);
-            ans.pb(mp(x, t));
-        }
-    if (f &amp;&amp; t != k - 1) ans.pb(mp(x, t = k - 1));
+	int k = t;
+	ans.pb(mp(x, t));
+	for (int y : e[x])
+		if (y != f) {
+			if (t == D) ans.pb(mp(x, t = D - d[x]));
+			dfs(y, x, ++t);
+			ans.pb(mp(x, t));
+		}
+	if (f &amp;&amp; t != k - 1) ans.pb(mp(x, t = k - 1));
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x), ++d[x], ++d[y];
-    D = *max_element(d + 1, d + n + 1);
-    dfs(1, 0, 0);
-    print(ans.size());
-    for (pi o : ans) print(o.fi, o.se);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x), ++d[x], ++d[y];
+	D = *max_element(d + 1, d + n + 1);
+	dfs(1, 0, 0);
+	print(ans.size());
+	for (pi o : ans) print(o.fi, o.se);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Nastya and Bees</h2>

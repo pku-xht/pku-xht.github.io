@@ -19,20 +19,20 @@ int n, a[N], b[N], p[N], ans[N];
 multiset&lt;int&gt; s;
 
 int main() {
-    rd(n), rda(a, n + 1), rda(b, n);
-    for (int i = 1; i &lt;= n + 1; i++) p[i] = i;
-    sort(p + 1, p + n + 2, [&amp;](int i, int j) { return a[i] &lt; a[j]; });
-    sort(b + 1, b + n + 1);
-    for (int i = 1; i &lt;= n; i++) s.insert(max(a[p[i+1]] - b[i], 0));
-    ans[p[1]] = *--s.end();
-    for (int i = 1; i &lt;= n; i++) {
-        s.erase(s.find(max(a[p[i+1]] - b[i], 0)));
-        s.insert(max(a[p[i]] - b[i], 0));
-        ans[p[i+1]] = *--s.end();
-    }
-    for (int i = 1; i &lt;= n + 1; i++)
-        print(ans[i], " \n"[i==n+1]);
-    return 0;
+	rd(n), rda(a, n + 1), rda(b, n);
+	for (int i = 1; i &lt;= n + 1; i++) p[i] = i;
+	sort(p + 1, p + n + 2, [&amp;](int i, int j) { return a[i] &lt; a[j]; });
+	sort(b + 1, b + n + 1);
+	for (int i = 1; i &lt;= n; i++) s.insert(max(a[p[i+1]] - b[i], 0));
+	ans[p[1]] = *--s.end();
+	for (int i = 1; i &lt;= n; i++) {
+		s.erase(s.find(max(a[p[i+1]] - b[i], 0)));
+		s.insert(max(a[p[i]] - b[i], 0));
+		ans[p[i+1]] = *--s.end();
+	}
+	for (int i = 1; i &lt;= n + 1; i++)
+		print(ans[i], " \n"[i==n+1]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/joi2020ho/tasks/joi2020ho_b" target="_blank" rel="noopener noreferrer">JJOOII 2 (JJOOII 2)</a></h2>
@@ -43,24 +43,24 @@ int n, k, f[3][N], ans = inf;
 char s[N];
 
 int main() {
-    rd(n, k), rds(s, n);
-    map&lt;char, int&gt; p;
-    p['J'] = 0, p['O'] = 1, p['I'] = 2;
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 0; j &lt; 3; j++) f[j][i] = f[j][i-1];
-        ++f[p[s[i]]][i];
-    }
-    for (int i = 0; i &lt; n; i++) {
-        if (f[0][i] + k &gt; f[0][n]) break;
-        int x = lower_bound(f[0] + 1, f[0] + n + 1, f[0][i] + k) - f[0];
-        if (f[1][x] + k &gt; f[1][n]) break;
-        int y = lower_bound(f[1] + 1, f[1] + n + 1, f[1][x] + k) - f[1];
-        if (f[2][y] + k &gt; f[2][n]) break;
-        int z = lower_bound(f[2] + 1, f[2] + n + 1, f[2][y] + k) - f[2];
-        ans = min(ans, z - i - 3 * k);
-    }
-    print(ans == inf ? -1 : ans);
-    return 0;
+	rd(n, k), rds(s, n);
+	map&lt;char, int&gt; p;
+	p['J'] = 0, p['O'] = 1, p['I'] = 2;
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 0; j &lt; 3; j++) f[j][i] = f[j][i-1];
+		++f[p[s[i]]][i];
+	}
+	for (int i = 0; i &lt; n; i++) {
+		if (f[0][i] + k &gt; f[0][n]) break;
+		int x = lower_bound(f[0] + 1, f[0] + n + 1, f[0][i] + k) - f[0];
+		if (f[1][x] + k &gt; f[1][n]) break;
+		int y = lower_bound(f[1] + 1, f[1] + n + 1, f[1][x] + k) - f[1];
+		if (f[2][y] + k &gt; f[2][n]) break;
+		int z = lower_bound(f[2] + 1, f[2] + n + 1, f[2][y] + k) - f[2];
+		ans = min(ans, z - i - 3 * k);
+	}
+	print(ans == inf ? -1 : ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/joi2020ho/tasks/joi2020ho_c" target="_blank" rel="noopener noreferrer">スタンプラリー 3 (Collecting Stamps 3)</a></h2>
@@ -73,33 +73,33 @@ int n, m, p[N&lt;&lt;1|1], t[N&lt;&lt;1|1], ans;
 ll f[N&lt;&lt;1|1][N&lt;&lt;1|1][2][N];
 
 inline void upd(ll &amp;x, ll y) {
-    x = min(x, y);
+	x = min(x, y);
 }
 
 int main() {
-    rd(n, m), rda(p + n + 1, n), rda(t + n + 1, n);
-    for (int i = 1; i &lt;= n; i++) p[i] = p[i+n+1] - m, t[i] = t[i+n+1];
-    for (int l = 1; l &lt;= n + 1; l++)
-        for (int r = n + 1; r &lt;= (n &lt;&lt; 1 | 1); r++)
-            for (int k = 0; k &lt; 2; k++)
-                for (int i = 0; i &lt;= n; i++)
-                    f[l][r][k][i] = inf;
-    f[n+1][n+1][0][0] = f[n+1][n+1][1][0] = 0;
-    for (int len = 0; len &lt; n; len++)
-        for (int l = n + 1 - len, r = n + 1; l &lt;= n + 1; l++, r++)
-            for (int k = 0; k &lt; 2; k++)
-                for (int i = 0; i &lt; n; i++)
-                    upd(f[l-1][r][0][i+(f[l][r][k][i]+p[k?r:l]-p[l-1]&lt;=t[l-1])],
-                        f[l][r][k][i] + p[k?r:l] - p[l-1]),
-                    upd(f[l][r+1][1][i+(f[l][r][k][i]+p[r+1]-p[k?r:l]&lt;=t[r+1])],
-                        f[l][r][k][i] + p[r+1] - p[k?r:l]);
-    for (int l = 1; l &lt;= n + 1; l++)
-        for (int r = n + 1; r &lt;= (n &lt;&lt; 1 | 1); r++)
-            for (int k = 0; k &lt; 2; k++)
-                for (int i = 0; i &lt;= n; i++)
-                    if (f[l][r][k][i] != inf) ans = max(ans, i);
-    print(ans);
-    return 0;
+	rd(n, m), rda(p + n + 1, n), rda(t + n + 1, n);
+	for (int i = 1; i &lt;= n; i++) p[i] = p[i+n+1] - m, t[i] = t[i+n+1];
+	for (int l = 1; l &lt;= n + 1; l++)
+		for (int r = n + 1; r &lt;= (n &lt;&lt; 1 | 1); r++)
+			for (int k = 0; k &lt; 2; k++)
+				for (int i = 0; i &lt;= n; i++)
+					f[l][r][k][i] = inf;
+	f[n+1][n+1][0][0] = f[n+1][n+1][1][0] = 0;
+	for (int len = 0; len &lt; n; len++)
+		for (int l = n + 1 - len, r = n + 1; l &lt;= n + 1; l++, r++)
+			for (int k = 0; k &lt; 2; k++)
+				for (int i = 0; i &lt; n; i++)
+					upd(f[l-1][r][0][i+(f[l][r][k][i]+p[k?r:l]-p[l-1]&lt;=t[l-1])],
+						f[l][r][k][i] + p[k?r:l] - p[l-1]),
+					upd(f[l][r+1][1][i+(f[l][r][k][i]+p[r+1]-p[k?r:l]&lt;=t[r+1])],
+						f[l][r][k][i] + p[r+1] - p[k?r:l]);
+	for (int l = 1; l &lt;= n + 1; l++)
+		for (int r = n + 1; r &lt;= (n &lt;&lt; 1 | 1); r++)
+			for (int k = 0; k &lt; 2; k++)
+				for (int i = 0; i &lt;= n; i++)
+					if (f[l][r][k][i] != inf) ans = max(ans, i);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><a href="https://atcoder.jp/contests/joi2020ho/tasks/joi2020ho_d" target="_blank" rel="noopener noreferrer">オリンピックバス (Olympic Bus)</a></h2>
@@ -115,99 +115,99 @@ int h[N], e[M], t[M], tot = 1;
 ll c[M], d[M], now, ans = inf;
 bool u[M];
 struct Gragh {
-    ll f[N];
-    bool in[M];
+	ll f[N];
+	bool in[M];
 } G1, Gn, GT1, GTn;
 
 inline void add(int x, int y, int c, int d, int o = 1) {
-    e[++tot] = y, t[tot] = h[x], h[x] = tot;
-    ::c[tot] = c, ::d[tot] = d, u[tot] = o;
-    if (o) add(y, x, c, d, 0);
+	e[++tot] = y, t[tot] = h[x], h[x] = tot;
+	::c[tot] = c, ::d[tot] = d, u[tot] = o;
+	if (o) add(y, x, c, d, 0);
 }
 
 namespace Dij {
-    ll e[N][N], f[N];
-    int a[N][N], g[N];
-    bool v[N];
-
-    inline ll dij(int S, int T) {
-        for (int x = 1; x &lt;= n; x++) {
-            for (int y = 1; y &lt;= n; y++)
-                e[x][y] = inf;
-            for (int i = h[x]; i; i = t[i]) {
-                if (!u[i]) continue;
-                int y = ::e[i];
-                if (e[x][y] &gt; c[i])
-                    e[x][y] = c[i], a[x][y] = i;
-            }
-        }
-        for (int i = 0; i &lt;= n; i++)
-            f[i] = inf, g[i] = v[i] = 0;
-        f[S] = 0;
-        for (int i = 1; i &lt;= n; i++) {
-            int x = 0;
-            for (int j = 1; j &lt;= n; j++) {
-                if (v[j]) continue;
-                if (f[j] &lt; f[x]) x = j;
-            }
-            v[x] = 1;
-            for (int y = 1; y &lt;= n; y++) {
-                if (v[y]) continue;
-                if (f[y] &gt; f[x] + e[x][y])
-                    f[y] = f[x] + e[x][y], g[y] = a[x][y];
-            }
-        }
-        return f[T];
-    }
-
-    inline void get(Gragh &amp;G) {
-        for (int i = 1; i &lt;= n; i++) G.f[i] = f[i], G.in[g[i]] = 1;
-    }
+	ll e[N][N], f[N];
+	int a[N][N], g[N];
+	bool v[N];
+	
+	inline ll dij(int S, int T) {
+		for (int x = 1; x &lt;= n; x++) {
+			for (int y = 1; y &lt;= n; y++)
+				e[x][y] = inf;
+			for (int i = h[x]; i; i = t[i]) {
+				if (!u[i]) continue;
+				int y = ::e[i];
+				if (e[x][y] &gt; c[i])
+					e[x][y] = c[i], a[x][y] = i;
+			}
+		}
+		for (int i = 0; i &lt;= n; i++)
+			f[i] = inf, g[i] = v[i] = 0;
+		f[S] = 0;
+		for (int i = 1; i &lt;= n; i++) {
+			int x = 0;
+			for (int j = 1; j &lt;= n; j++) {
+				if (v[j]) continue;
+				if (f[j] &lt; f[x]) x = j;
+			}
+			v[x] = 1;
+			for (int y = 1; y &lt;= n; y++) {
+				if (v[y]) continue;
+				if (f[y] &gt; f[x] + e[x][y])
+					f[y] = f[x] + e[x][y], g[y] = a[x][y];
+			}
+		}
+		return f[T];
+	}
+	
+	inline void get(Gragh &amp;G) {
+		for (int i = 1; i &lt;= n; i++) G.f[i] = f[i], G.in[g[i]] = 1;
+	}
 }
 using Dij::dij;
 using Dij::get;
 
 inline ll work(int i) {
-    now = d[i];
-    u[i] = 0, u[i^1] = 1;
-    if (G1.in[i]) now += dij(1, n);
-    else {
-        ll cur = c[i] + G1.f[e[i]];
-        if (GTn.in[i]) cur += dij(e[i^1], n);
-        else cur += GTn.f[e[i^1]];
-        now += min(G1.f[n], cur);
-    }
-    if (Gn.in[i]) now += dij(n, 1);
-    else {
-        ll cur = c[i] + Gn.f[e[i]];
-        if (GT1.in[i]) cur += dij(e[i^1], 1);
-        else cur += GT1.f[e[i^1]];
-        now += min(Gn.f[1], cur);
-    }
-    u[i] = 1, u[i^1] = 0;
-    return now;
+	now = d[i];
+	u[i] = 0, u[i^1] = 1;
+	if (G1.in[i]) now += dij(1, n);
+	else {
+		ll cur = c[i] + G1.f[e[i]];
+		if (GTn.in[i]) cur += dij(e[i^1], n);
+		else cur += GTn.f[e[i^1]];
+		now += min(G1.f[n], cur);
+	}
+	if (Gn.in[i]) now += dij(n, 1);
+	else {
+		ll cur = c[i] + Gn.f[e[i]];
+		if (GT1.in[i]) cur += dij(e[i^1], 1);
+		else cur += GT1.f[e[i^1]];
+		now += min(Gn.f[1], cur);
+	}
+	u[i] = 1, u[i^1] = 0;
+	return now;
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1, x, y, c, d; i &lt;= m; i++)
-        rd(x, y), rd(c, d), add(x, y, c, d);
-    now += dij(1, n), get(G1);
-    now += dij(n, 1), get(Gn);
-    ans = min(ans, now);
-    for (int i = 2; i &lt;= tot; i++) u[i] ^= 1;
-    dij(1, n), get(GT1);
-    dij(n, 1), get(GTn);
-    for (int i = 2; i &lt;= tot; i++) u[i] ^= 1;
-    for (int i = 2; i &lt;= tot; i += 2) ans = min(ans, work(i));
-    print(ans == inf ? -1 : ans);
-    return 0;
+	rd(n, m);
+	for (int i = 1, x, y, c, d; i &lt;= m; i++)
+		rd(x, y), rd(c, d), add(x, y, c, d);
+	now += dij(1, n), get(G1);
+	now += dij(n, 1), get(Gn);
+	ans = min(ans, now);
+	for (int i = 2; i &lt;= tot; i++) u[i] ^= 1;
+	dij(1, n), get(GT1);
+	dij(n, 1), get(GTn);
+	for (int i = 2; i &lt;= tot; i++) u[i] ^= 1;
+	for (int i = 2; i &lt;= tot; i += 2) ans = min(ans, work(i));
+	print(ans == inf ? -1 : ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="https://atcoder.jp/contests/joi2020ho/tasks/joi2020ho_e" target="_blank" rel="noopener noreferrer">火事 (Fire)</a></h2>
 <p>考虑平面直角坐标系中 <span class="math-inline" data-original-math="$([1,n],[0,n])$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">[</mo><mn>1</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo><mo separator="true">,</mo><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">]</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">([1,n],[0,n])</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">([</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">])</span></span></span></span></span> 的部分，其中 <span class="math-inline" data-original-math="$(i,j)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mclose">)</span></span></span></span></span> 对应题目中的 <span class="math-inline" data-original-math="$S_i(j)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub><mo stretchy="false">(</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">S_i(j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mclose">)</span></span></span></span></span>。</p>
 <p>注意到每个 <span class="math-inline" data-original-math="$S_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">S_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 的覆盖范围都是一个平行四边形，而这样一个平行四边形可以拆成四个三角形，每个三角形 <span class="math-inline" data-original-math="$(a,b,c)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a,b,c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></span> 表示 <span class="math-inline" data-original-math="$([a,+\infty), [x-b,+\infty))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">[</mo><mi>a</mi><mo separator="true">,</mo><mo>+</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo><mo separator="true">,</mo><mo stretchy="false">[</mo><mi>x</mi><mo>−</mo><mi>b</mi><mo separator="true">,</mo><mo>+</mo><mi mathvariant="normal">∞</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">([a,+\infty), [x-b,+\infty))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">([</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">+</span><span class="mord">∞</span><span class="mclose">)</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">[</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">+</span><span class="mord">∞</span><span class="mclose">))</span></span></span></span></span> 的部分权值 <span class="math-inline" data-original-math="$+c$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mi>c</mi></mrow><annotation encoding="application/x-tex">+c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord mathnormal">c</span></span></span></span></span>。</p>
-<p>再看询问，一次询问 <span class="math-inline" data-original-math="$(t,l,r)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,l,r)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span></span></span></span></span> 可以差分为 <span class="math-inline" data-original-math="$(t,r) – (t,l-1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>l</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,r) - (t,l-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>，其中 <span class="math-inline" data-original-math="$(t,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 表示 <span class="math-inline" data-original-math="$((-\infty, p], t)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mo>−</mo><mi mathvariant="normal">∞</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">]</mo><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">((-\infty, p], t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">((</span><span class="mord">−</span><span class="mord">∞</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span> 的权值和。</p>
+<p>再看询问，一次询问 <span class="math-inline" data-original-math="$(t,l,r)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,l,r)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span></span></span></span></span> 可以差分为 <span class="math-inline" data-original-math="$(t,r) - (t,l-1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>l</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,r) - (t,l-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>，其中 <span class="math-inline" data-original-math="$(t,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 表示 <span class="math-inline" data-original-math="$((-\infty, p], t)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mo>−</mo><mi mathvariant="normal">∞</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">]</mo><mo separator="true">,</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">((-\infty, p], t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">((</span><span class="mord">−</span><span class="mord">∞</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span> 的权值和。</p>
 <p>于是问题变成 <span class="math-inline" data-original-math="$(a,b,c)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a,b,c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></span> 加 <span class="math-inline" data-original-math="$(t,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 求和，以 <span class="math-inline" data-original-math="$y$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> 轴正方向进行扫描线，考虑一个 <span class="math-inline" data-original-math="$(a,b,c)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo separator="true">,</mo><mi>c</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(a,b,c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mclose">)</span></span></span></span></span> 在满足 <span class="math-inline" data-original-math="$a-b \le t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>−</mo><mi>b</mi><mo>≤</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">a-b \le t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 的情况下对 <span class="math-inline" data-original-math="$(t,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 的贡献为 <span class="math-inline" data-original-math="$c\cdot (\min(t+b,p)-\min(a-1,p))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>⋅</mo><mo stretchy="false">(</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>t</mi><mo>+</mo><mi>b</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo><mo>−</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>a</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c\cdot (\min(t+b,p)-\min(a-1,p))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4445em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">))</span></span></span></span></span>。</p>
 <p>由于 <span class="math-inline" data-original-math="$(t,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 是 <span class="math-inline" data-original-math="$(t,l,r)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>l</mi><mo separator="true">,</mo><mi>r</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(t,l,r)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">)</span></span></span></span></span> 差分而来的，不妨将这个贡献差分前后都减去 <span class="math-inline" data-original-math="$ct$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">ct</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">c</span><span class="mord mathnormal">t</span></span></span></span></span>，则贡献为 <span class="math-inline" data-original-math="$c\cdot (\min(b,p-t)-\min(a-1,p))$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>⋅</mo><mo stretchy="false">(</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>p</mi><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>a</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c\cdot (\min(b,p-t)-\min(a-1,p))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4445em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">))</span></span></span></span></span>。</p>
 <p>考虑在 <span class="math-inline" data-original-math="$p-t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>−</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">p-t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 处维护 <span class="math-inline" data-original-math="$c\cdot \min(b,p-t)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>⋅</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>b</mi><mo separator="true">,</mo><mi>p</mi><mo>−</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c\cdot \min(b,p-t)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4445em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">b</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span> 的贡献，在 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span> 处维护 <span class="math-inline" data-original-math="$c \cdot \min(a-1,p)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>⋅</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>a</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c \cdot \min(a-1,p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4445em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span> 的贡献。于是问题变成维护一个序列，每次在 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 处加 <span class="math-inline" data-original-math="$c \cdot \min(k,x)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>⋅</mo><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>k</mi><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">c \cdot \min(k,x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4445em;"></span><span class="mord mathnormal">c</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span>，同时单点查询，用两个树状数组即可维护。</p>
@@ -217,76 +217,76 @@ int main() {
 int n, m, l[N], r[N];
 ll a[N], ans[N];
 struct P {
-    int a, b;
-    ll c;
-    inline P() {}
-    inline P(int a, int b, ll c) : a(a), b(b), c(c) {}
+	int a, b;
+	ll c;
+	inline P() {}
+	inline P(int a, int b, ll c) : a(a), b(b), c(c) {}
 };
 vector&lt;P&gt; p[N];
 struct Q {
-    int p, i, o;
-    inline Q() {}
-    inline Q(int p, int i, int o) : p(p), i(i), o(o) {}
+	int p, i, o;
+	inline Q() {}
+	inline Q(int p, int i, int o) : p(p), i(i), o(o) {}
 };
 vector&lt;Q&gt; q[N];
 struct BIT {
-    vector&lt;ll&gt; c;
-    inline BIT(int n = N) { c.resize(n); }
-    inline void add(ui x, ll k) {
-        while (x &lt; c.size()) c[x] += k, x += x &amp; -x;
-    }
-    inline ll ask(ui x) {
-        ll k = 0;
-        while (x) k += c[x], x -= x &amp; -x;
-        return k;
-    }
+	vector&lt;ll&gt; c;
+	inline BIT(int n = N) { c.resize(n); }
+	inline void add(ui x, ll k) {
+		while (x &lt; c.size()) c[x] += k, x += x &amp; -x;
+	}
+	inline ll ask(ui x) {
+		ll k = 0;
+		while (x) k += c[x], x -= x &amp; -x;
+		return k;
+	}
 };
 
 int main() {
-    rd(n, m), rda(a, n);
-    for (int i = 1, t, l, r; i &lt;= m; i++) {
-        rd(t, l, r);
-        q[t].pb(Q(r, i, 1));
-        q[t].pb(Q(l - 1, i, -1));
-    }
-    stack&lt;int&gt; st;
-    for (int i = 1; i &lt;= n; i++) {
-        while (st.size() &amp;&amp; a[st.top()] &lt;= a[i]) st.pop();
-        l[i] = st.size() ? st.top() : 0;
-        st.push(i);
-    }
-    while (st.size()) st.pop();
-    for (int i = n; i; i--) {
-        while (st.size() &amp;&amp; a[st.top()] &lt; a[i]) st.pop();
-        r[i] = st.size() ? st.top() : n + 1;
-        st.push(i);
-    }
-    for (int i = 1; i &lt;= n; i++) {
-        p[0].pb(P(i, i, a[i]));
-        if (l[i]) p[i-l[i]].pb(P(i, l[i], -a[i]));
-        if (r[i] != n + 1) p[r[i]-i].pb(P(r[i], i, -a[i]));
-        if (l[i] &amp;&amp; r[i] != n + 1) p[r[i]-l[i]].pb(P(r[i], l[i], a[i]));
-    }
-    BIT cx1 = BIT(N &lt;&lt; 1 | 1), ck1 = BIT(N &lt;&lt; 1 | 1), cx2, ck2;
-    for (int t = 0; t &lt;= n; t++) {
-        for (P p : ::p[t]) {
-            int a = p.a, b = p.b;
-            ll c = p.c;
-            cx1.add(1, c), cx1.add(b + n + 1, -c);
-            ck1.add(b + n + 1, c * b);
-            cx2.add(1, c), cx2.add(a, -c);
-            ck2.add(a, c * (a - 1));
-        }
-        for (Q o : ::q[t]) {
-            int p = o.p;
-            ans[o.i] += o.o * cx1.ask(p - t + n + 1) * (p - t);
-            ans[o.i] += o.o * ck1.ask(p - t + n + 1);
-            ans[o.i] -= o.o * cx2.ask(p + 1) * p;
-            ans[o.i] -= o.o * ck2.ask(p + 1);
-        }
-    }
-    for (int i = 1; i &lt;= m; i++) print(ans[i]);
-    return 0;
+	rd(n, m), rda(a, n);
+	for (int i = 1, t, l, r; i &lt;= m; i++) {
+		rd(t, l, r);
+		q[t].pb(Q(r, i, 1));
+		q[t].pb(Q(l - 1, i, -1));
+	}
+	stack&lt;int&gt; st;
+	for (int i = 1; i &lt;= n; i++) {
+		while (st.size() &amp;&amp; a[st.top()] &lt;= a[i]) st.pop();
+		l[i] = st.size() ? st.top() : 0;
+		st.push(i);
+	}
+	while (st.size()) st.pop();
+	for (int i = n; i; i--) {
+		while (st.size() &amp;&amp; a[st.top()] &lt; a[i]) st.pop();
+		r[i] = st.size() ? st.top() : n + 1;
+		st.push(i);
+	}
+	for (int i = 1; i &lt;= n; i++) {
+		p[0].pb(P(i, i, a[i]));
+		if (l[i]) p[i-l[i]].pb(P(i, l[i], -a[i]));
+		if (r[i] != n + 1) p[r[i]-i].pb(P(r[i], i, -a[i]));
+		if (l[i] &amp;&amp; r[i] != n + 1) p[r[i]-l[i]].pb(P(r[i], l[i], a[i]));
+	}
+	BIT cx1 = BIT(N &lt;&lt; 1 | 1), ck1 = BIT(N &lt;&lt; 1 | 1), cx2, ck2;
+	for (int t = 0; t &lt;= n; t++) {
+		for (P p : ::p[t]) {
+			int a = p.a, b = p.b;
+			ll c = p.c;
+			cx1.add(1, c), cx1.add(b + n + 1, -c);
+			ck1.add(b + n + 1, c * b);
+			cx2.add(1, c), cx2.add(a, -c);
+			ck2.add(a, c * (a - 1));
+		}
+		for (Q o : ::q[t]) {
+			int p = o.p;
+			ans[o.i] += o.o * cx1.ask(p - t + n + 1) * (p - t);
+			ans[o.i] += o.o * ck1.ask(p - t + n + 1);
+			ans[o.i] -= o.o * cx2.ask(p + 1) * p;
+			ans[o.i] -= o.o * ck2.ask(p + 1);
+		}
+	}
+	for (int i = 1; i &lt;= m; i++) print(ans[i]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="35" href="/blog/tags/35/">二分</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="66" href="/blog/tags/66/">区间 DP</a>、<a data-source-tag="58" href="/blog/tags/58/">单调栈</a>、<a data-source-tag="70" href="/blog/tags/70/">扫描线</a>、<a data-source-tag="85" href="/blog/tags/85/">最短路</a>、<a data-source-tag="34" href="/blog/tags/34/">树状数组</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/841/"><span>较新一篇</span>ARC103F Distance Sums 题解</a><a class="rel-next" rel="next" href="/blog/posts/755/"><span>较早一篇</span>AtCoder Grand Contest 043 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="837" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

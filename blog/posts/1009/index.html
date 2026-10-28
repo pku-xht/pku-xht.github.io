@@ -18,12 +18,12 @@
 int n, x, a[N], s;
 
 int main() {
-    rd(n, x), rda(a, n);
-    sort(a + 1, a + n + 1);
-    for (int i = 1; i &lt;= n; s += a[i++])
-        if (s + a[i] &gt; x) return print(i - 1), 0;
-    print(n - (s != x));
-    return 0;
+	rd(n, x), rda(a, n);
+	sort(a + 1, a + n + 1);
+	for (int i = 1; i &lt;= n; s += a[i++])
+		if (s + a[i] &gt; x) return print(i - 1), 0;
+	print(n - (s != x));
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc027/tasks/agc027_b" target="_blank" rel="noopener noreferrer">Garbage Collector</a></h2>
@@ -34,18 +34,18 @@ int n;
 __int128 x, p[N], s[N], d[N], ans = 1e36;
 
 int main() {
-    rd(n), rd(x), rda(p, n);
-    for (int i = 1; i &lt;= n; i++) s[i] = s[i-1] + p[i];
-    d[1] = d[2] = 5;
-    for (int i = 3; i &lt;= n; i++) d[i] = d[i-1] + 2;
-    for (int k = 1; k &lt;= n; k++) {
-        __int128 now = (k + n) * x;
-        for (int i = n, t = 1; i &gt; 0; i -= k, t++)
-            now += d[t] * (s[i] - (i - k &gt; 0 ? s[i-k] : 0));
-        ans = min(ans, now);
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(x), rda(p, n);
+	for (int i = 1; i &lt;= n; i++) s[i] = s[i-1] + p[i];
+	d[1] = d[2] = 5;
+	for (int i = 3; i &lt;= n; i++) d[i] = d[i-1] + 2;
+	for (int k = 1; k &lt;= n; k++) {
+		__int128 now = (k + n) * x;
+		for (int i = n, t = 1; i &gt; 0; i -= k, t++)
+			now += d[t] * (s[i] - (i - k &gt; 0 ? s[i-k] : 0));
+		ans = min(ans, now);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc027/tasks/agc027_c" target="_blank" rel="noopener noreferrer">ABland Yard</a></h2>
@@ -61,21 +61,21 @@ queue&lt;int&gt; q;
 bool v[N];
 
 int main() {
-    rd(n, m), rds(s, n);
-    for (int i = 1, x, y; i &lt;= m; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x), ++d[x][s[y]&amp;1], ++d[y][s[x]&amp;1];
-    for (int i = 1; i &lt;= n; i++)
-        if (!d[i][0] || !d[i][1]) q.push(i), v[i] = 1;
-    while (q.size()) {
-        int x = q.front();
-        q.pop();
-        for (int y : e[x])
-            if (!v[y] &amp;&amp; !--d[y][s[x]&amp;1]) q.push(y), v[y] = 1;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) return prints("Yes"), 0;
-    prints("No");
-    return 0;
+	rd(n, m), rds(s, n);
+	for (int i = 1, x, y; i &lt;= m; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x), ++d[x][s[y]&amp;1], ++d[y][s[x]&amp;1];
+	for (int i = 1; i &lt;= n; i++)
+		if (!d[i][0] || !d[i][1]) q.push(i), v[i] = 1;
+	while (q.size()) {
+		int x = q.front();
+		q.pop();
+		for (int y : e[x])
+			if (!v[y] &amp;&amp; !--d[y][s[x]&amp;1]) q.push(y), v[y] = 1;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) return prints("Yes"), 0;
+	prints("No");
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Modulo_Matrix" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc027/tasks/agc027_d" target="_blank" rel="noopener noreferrer">Modulo Matrix</a></h2>
@@ -96,19 +96,19 @@ int main() {
 <p>其中黄格子是两个质数的乘积，白格子为周围黄格子的 <span class="math-inline" data-original-math="$\text{lcm} + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>lcm</mtext><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{lcm} + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord">lcm</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>。</p>
 <h3 id="section-7">代码</h3>
 <pre tabindex="0"><code class="language-cpp">namespace shai {
-    const int n = 1e6 + 7;
-    int p[n], v[n], phi[n], miu[n];
+	const int n = 1e6 + 7;
+	int p[n], v[n], phi[n], miu[n];
 
-    inline void init(int n) {
-        v[1] = phi[1] = miu[1] = 1;
-        for (int i = 2; i &lt;= n; i++) {
-            if (!v[i]) p[++p[0]] = v[i] = i, phi[i] = i - 1, miu[i] = -1;
-            for (int j = 1; j &lt;= p[0] &amp;&amp; i * p[j] &lt;= n &amp;&amp; p[j] &lt;= v[i]; j++)
-                v[i*p[j]] = p[j],
-                phi[i*p[j]] = phi[i] * (p[j] - 1 + (p[j] == v[i])),
-                miu[i*p[j]] = p[j] == v[i] ? 0 : -miu[i];
-        }
-    }
+	inline void init(int n) {
+		v[1] = phi[1] = miu[1] = 1;
+		for (int i = 2; i &lt;= n; i++) {
+			if (!v[i]) p[++p[0]] = v[i] = i, phi[i] = i - 1, miu[i] = -1;
+			for (int j = 1; j &lt;= p[0] &amp;&amp; i * p[j] &lt;= n &amp;&amp; p[j] &lt;= v[i]; j++)
+				v[i*p[j]] = p[j],
+				phi[i*p[j]] = phi[i] * (p[j] - 1 + (p[j] == v[i])),
+				miu[i*p[j]] = p[j] == v[i] ? 0 : -miu[i];
+		}
+	}
 }
 using shai::p;
 
@@ -116,15 +116,15 @@ const int N = 507;
 int n, a[N], b[N];
 
 int main() {
-    shai::init(1e4);
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) a[i] = p[i&amp;1?i/2+1:n*2-i/2+1];
-    for (int i = 1; i &lt;= n; i++) b[i] = p[(i&amp;1?n-i/2:n+i/2)+(n&amp;1)];
-    a[0] = a[n+1] = b[0] = b[n+1] = 1;
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= n; j++)
-            print((i ^ j) &amp; 1 ? 1ll * a[(i+j)/2] * a[(i+j)/2+1] * b[(n+i-j+(n&amp;1))/2] * b[(n+i-j+(n&amp;1))/2+1] + 1 : 1ll * a[(i+j)/2] * b[(n+i-j+(n&amp;1))/2], " \n"[j==n]);
-    return 0;
+	shai::init(1e4);
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) a[i] = p[i&amp;1?i/2+1:n*2-i/2+1];
+	for (int i = 1; i &lt;= n; i++) b[i] = p[(i&amp;1?n-i/2:n+i/2)+(n&amp;1)];
+	a[0] = a[n+1] = b[0] = b[n+1] = 1;
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= n; j++)
+			print((i ^ j) &amp; 1 ? 1ll * a[(i+j)/2] * a[(i+j)/2+1] * b[(n+i-j+(n&amp;1))/2] * b[(n+i-j+(n&amp;1))/2+1] + 1 : 1ll * a[(i+j)/2] * b[(n+i-j+(n&amp;1))/2], " \n"[j==n]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="ABBreviate" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc027/tasks/agc027_e" target="_blank" rel="noopener noreferrer">ABBreviate</a></h2>
@@ -148,28 +148,28 @@ char s[N];
 modint f[N], ans;
 
 inline bool pd() {
-    for (int i = 1; i &lt; n; i++)
-        if (s[i] == s[i+1]) return 0;
-    return 1;
+	for (int i = 1; i &lt; n; i++)
+		if (s[i] == s[i+1]) return 0;
+	return 1;
 }
 
 int main() {
-    rds(s, n);
-    if (pd()) return print(1), 0;
-    for (int i = 1; i &lt;= n; i++) a[i] = (a[i-1] + (s[i] &amp; 1) + 1) % 3;
-    for (int i = 0; i &lt; 3; i++) p[n+1][i] = n + 1;
-    for (int i = n; i; i--) {
-        for (int j = 0; j &lt; 3; j++) p[i][j] = p[i+1][j];
-        p[i][a[i]] = i;
-    }
-    f[0] = 1;
-    for (int i = 0; i &lt;= n; i++) {
-        if (i &amp;&amp; a[i] == a[n]) ans += f[i];
-        for (int j = 1; j &lt; 3; j++)
-            f[p[i+1][(a[i]+j)%3]] += f[i];
-    }
-    print(ans);
-    return 0;
+	rds(s, n);
+	if (pd()) return print(1), 0;
+	for (int i = 1; i &lt;= n; i++) a[i] = (a[i-1] + (s[i] &amp; 1) + 1) % 3;
+	for (int i = 0; i &lt; 3; i++) p[n+1][i] = n + 1;
+	for (int i = n; i; i--) {
+		for (int j = 0; j &lt; 3; j++) p[i][j] = p[i+1][j];
+		p[i][a[i]] = i;
+	}
+	f[0] = 1;
+	for (int i = 0; i &lt;= n; i++) {
+		if (i &amp;&amp; a[i] == a[n]) ans += f[i];
+		for (int j = 1; j &lt; 3; j++)
+			f[p[i+1][(a[i]+j)%3]] += f[i];
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Grafting" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc027/tasks/agc027_f" target="_blank" rel="noopener noreferrer">Grafting</a></h2>
@@ -207,80 +207,80 @@ bool v[N];
 queue&lt;int&gt; q;
 
 inline bool pd0() {
-    for (int i = 1; i &lt;= n; i++)
-        if (e[0][i] != e[1][i]) return 0;
-    return 1;
+	for (int i = 1; i &lt;= n; i++)
+		if (e[0][i] != e[1][i]) return 0;
+	return 1;
 }
 
 inline void change(int x, int y, int z) {
-    e[0][x][0] = z;
-    for (int &amp;o : e[0][y])
-        if (o == x) {
-            swap(o, e[0][y].back());
-            break;
-        }
-    e[0][y].pop_back(), e[0][z].pb(x);
+	e[0][x][0] = z;
+	for (int &amp;o : e[0][y])
+		if (o == x) {
+			swap(o, e[0][y].back());
+			break;
+		}
+	e[0][y].pop_back(), e[0][z].pb(x);
 }
 
 void dfs(int o, int x, int fa) {
-    f[o][x] = fa;
-    for (int y : e[o][x])
-        if (y != fa) dfs(o, y, x);
+	f[o][x] = fa;
+	for (int y : e[o][x])
+		if (y != fa) dfs(o, y, x);
 }
 
 inline void add(int x, int y) {
-    g[x].pb(y), ++d[y];
+	g[x].pb(y), ++d[y];
 }
 
 inline int calc(int x, int y) {
-    int z = e[0][x][0], now = y != z;
-    change(x, z, y);
-    dfs(0, x, 0), dfs(1, x, 0);
-    change(x, y, z);
-    for (int i = 1; i &lt;= n; i++)
-        now += v[i] = f[0][i] != f[1][i], g[i].clear(), d[i] = 0;
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i] &amp;&amp; v[f[0][i]]) return inf;
-    for (int o = 0; o &lt; 2; o++)
-        for (int i = 1; i &lt;= n; i++)
-            if (v[i] &amp;&amp; v[f[o][i]])
-                add(o ? f[o][i] : i, o ? i : f[o][i]);
-    for (int i = 1; i &lt;= n; i++)
-        if (v[i] &amp;&amp; !d[i]) q.push(i);
-    while (q.size()) {
-        int x = q.front();
-        q.pop(), v[x] = 0;
-        for (int y : g[x])
-            if (!--d[y]) q.push(y);
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (v[i]) return inf;
-    return now;
+	int z = e[0][x][0], now = y != z;
+	change(x, z, y);
+	dfs(0, x, 0), dfs(1, x, 0);
+	change(x, y, z);
+	for (int i = 1; i &lt;= n; i++)
+		now += v[i] = f[0][i] != f[1][i], g[i].clear(), d[i] = 0;
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i] &amp;&amp; v[f[0][i]]) return inf;
+	for (int o = 0; o &lt; 2; o++)
+		for (int i = 1; i &lt;= n; i++)
+			if (v[i] &amp;&amp; v[f[o][i]])
+				add(o ? f[o][i] : i, o ? i : f[o][i]);
+	for (int i = 1; i &lt;= n; i++)
+		if (v[i] &amp;&amp; !d[i]) q.push(i);
+	while (q.size()) {
+		int x = q.front();
+		q.pop(), v[x] = 0;
+		for (int y : g[x])
+			if (!--d[y]) q.push(y);
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (v[i]) return inf;
+	return now;
 }
 
 inline void solve() {
-    rd(n);
-    for (int o = 0; o &lt; 2; o++) {
-        for (int i = 1; i &lt;= n; i++) e[o][i].clear();
-        for (int i = 1, x, y; i &lt; n; i++)
-            rd(x, y), e[o][x].pb(y), e[o][y].pb(x);
-        for (int i = 1; i &lt;= n; i++)
-            sort(e[o][i].begin(), e[o][i].end());
-    }
-    if (pd0()) return print(0);
-    int ans = inf;
-    for (int x = 1; x &lt;= n; x++)
-        if (e[0][x].size() == 1u)
-            for (int y = 1; y &lt;= n; y++)
-                ans = min(ans, calc(x, y));
-    print(ans == inf ? -1 : ans);
+	rd(n);
+	for (int o = 0; o &lt; 2; o++) {
+		for (int i = 1; i &lt;= n; i++) e[o][i].clear();
+		for (int i = 1, x, y; i &lt; n; i++)
+			rd(x, y), e[o][x].pb(y), e[o][y].pb(x);
+		for (int i = 1; i &lt;= n; i++)
+			sort(e[o][i].begin(), e[o][i].end());
+	}
+	if (pd0()) return print(0);
+	int ans = inf;
+	for (int x = 1; x &lt;= n; x++)
+		if (e[0][x].size() == 1u)
+			for (int y = 1; y &lt;= n; y++)
+				ans = min(ans, calc(x, y));
+	print(ans == inf ? -1 : ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="51" href="/blog/tags/51/">调和级数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/1010/"><span>较新一篇</span>AtCoder Grand Contest 026 题解</a><a class="rel-next" rel="next" href="/blog/posts/1007/"><span>较早一篇</span>AtCoder Grand Contest 028 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="1009" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

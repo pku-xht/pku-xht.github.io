@@ -15,13 +15,13 @@
 <h2 id="section-1">Suits</h2>
 <p>枚举。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    ll a, b, c, d, e, f, ans = 0;
-    cin &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d &gt;&gt; e &gt;&gt; f;
-    for (ll i = 0; i &lt;= d; i++) {
-        ans = max(ans, min(a, i) * e + min(min(b, c), d - i) * f);
-    }
-    cout &lt;&lt; ans &lt;&lt; endl;
-    return 0;
+	ll a, b, c, d, e, f, ans = 0;
+	cin &gt;&gt; a &gt;&gt; b &gt;&gt; c &gt;&gt; d &gt;&gt; e &gt;&gt; f;
+	for (ll i = 0; i &lt;= d; i++) {
+		ans = max(ans, min(a, i) * e + min(min(b, c), d - i) * f);
+	}
+	cout &lt;&lt; ans &lt;&lt; endl;
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Blocks</h2>
@@ -31,19 +31,19 @@ int n;
 char s[N];
 
 int main() {
-    rd(n), rds(s, n);
-    vi p;
-    for (int i = 2; i &lt; n; i++)
-        if (s[i] != s[1]) p.pb(i), s[i] = s[i] == 'B' ? 'W' : 'B', s[i+1] = s[i+1] == 'B' ? 'W' : 'B';
-    if (s[1] != s[n]) {
-        if (n &amp; 1) {
-            for (int i = 1; i &lt; n; i += 2) p.pb(i);
-        } else return print(-1), 0;
-    }
-    print(p.size());
-    for (ui i = 0; i &lt; p.size(); i++)
-        print(p[i], ' ');
-    return 0;
+	rd(n), rds(s, n);
+	vi p;
+	for (int i = 2; i &lt; n; i++)
+		if (s[i] != s[1]) p.pb(i), s[i] = s[i] == 'B' ? 'W' : 'B', s[i+1] = s[i+1] == 'B' ? 'W' : 'B';
+	if (s[1] != s[n]) {
+		if (n &amp; 1) {
+			for (int i = 1; i &lt; n; i += 2) p.pb(i);
+		} else return print(-1), 0;
+	}
+	print(p.size());
+	for (ui i = 0; i &lt; p.size(); i++)
+		print(p[i], ' ');
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Shawarma Tent</h2>
@@ -52,23 +52,23 @@ int main() {
 int n, a, b, c[4];
 
 int main() {
-    rd(n), rd(a), rd(b);
-    for (int i = 1, x, y; i &lt;= n; i++) {
-        rd(x), rd(y);
-        if (x &lt; a) c[2]++;
-        if (x &gt; a) c[3]++;
-        if (y &lt; b) c[1]++;
-        if (y &gt; b) c[0]++; 
-    }
-    int o = 0;
-    for (int i = 1; i &lt;= 3; i++)
-        if (c[i] &gt; c[o]) o = i;
-    print(c[o]);
-    if (o == 0) print(a, ' '), print(b + 1);
-    if (o == 1) print(a, ' '), print(b - 1);
-    if (o == 2) print(a - 1, ' '), print(b);
-    if (o == 3) print(a + 1, ' '), print(b);
-    return 0;
+	rd(n), rd(a), rd(b);
+	for (int i = 1, x, y; i &lt;= n; i++) {
+		rd(x), rd(y);
+		if (x &lt; a) c[2]++;
+		if (x &gt; a) c[3]++;
+		if (y &lt; b) c[1]++;
+		if (y &gt; b) c[0]++; 
+	}
+	int o = 0;
+	for (int i = 1; i &lt;= 3; i++)
+		if (c[i] &gt; c[o]) o = i;
+	print(c[o]);
+	if (o == 0) print(a, ' '), print(b + 1);
+	if (o == 1) print(a, ' '), print(b - 1);
+	if (o == 2) print(a - 1, ' '), print(b);
+	if (o == 3) print(a + 1, ' '), print(b);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Portals</h2>
@@ -78,23 +78,23 @@ int n, m, a[N], b[N], p[N], ans;
 pq&lt; pi &gt; q;
 
 int main() {
-    rd(n), rd(m), rd(b[0]);
-    for (int i = 1, x; i &lt;= n; i++)
-        rd(a[i-1]), rd(b[i]), b[i] += b[i-1], rd(x), q.push(mp(x, i)), p[i] = i;
-    for (int i = n - 1; ~i; i--) b[i] = min(b[i+1], b[i] - a[i]);
-    if (b[0] &lt; 0) return print(-1), 0;
-    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), p[y] = max(p[y], x);
-    while (q.size()) {
-        int x = p[q.top().se], o = q.top().fi;
-        q.pop();
-        if (b[x]) {
-            ans += o;
-            for (int i = x; i &lt;= n; i++) --b[i];
-            for (int i = x - 1; ~i; i--) b[i] = min(b[i], b[i+1]);
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(m), rd(b[0]);
+	for (int i = 1, x; i &lt;= n; i++)
+		rd(a[i-1]), rd(b[i]), b[i] += b[i-1], rd(x), q.push(mp(x, i)), p[i] = i;
+	for (int i = n - 1; ~i; i--) b[i] = min(b[i+1], b[i] - a[i]);
+	if (b[0] &lt; 0) return print(-1), 0;
+	for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), p[y] = max(p[y], x);
+	while (q.size()) {
+		int x = p[q.top().se], o = q.top().fi;
+		q.pop();
+		if (b[x]) {
+			ans += o;
+			for (int i = x; i &lt;= n; i++) --b[i];
+			for (int i = x - 1; ~i; i--) b[i] = min(b[i], b[i+1]);
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Common Number</h2>

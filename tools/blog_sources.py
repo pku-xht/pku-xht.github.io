@@ -50,7 +50,7 @@ def _dependencies():
             return mapping
 
     UniqueSafeLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, UniqueSafeLoader.construct_mapping)
-    _MARKDOWN = MarkdownIt("commonmark", {"html": True, "linkify": False, "typographer": False, "breaks": False}).enable("table")
+    _MARKDOWN = MarkdownIt("commonmark", {"html": True, "linkify": False, "typographer": False, "breaks": True}).enable(["table", "strikethrough"])
     _YAML = yaml
     _YAML_LOADER = UniqueSafeLoader
     return _MARKDOWN, _YAML, _YAML_LOADER
@@ -144,6 +144,28 @@ def _mask_math(source, markdown):
     return "".join(pieces), protected
 
 
+def _normalize_editor_lists(source, markdown):
+    """Match Editor.md's one-space nested bullets without changing code blocks."""
+    protected = set()
+    for token in _tokens(markdown.parse(source)):
+        if token.type in {"fence", "code_block", "html_block"} and token.map:
+            protected.update(range(*token.map))
+    lines = source.splitlines(keepends=True)
+    in_list = False
+    for index, line in enumerate(lines):
+        if index in protected:
+            in_list = False
+            continue
+        match = re.match(r"^( ?)[*+-][ \t]+", line)
+        if match:
+            if match.group(1) and in_list:
+                lines[index] = " " + line
+            in_list = in_list or not match.group(1)
+        else:
+            in_list = False
+    return "".join(lines)
+
+
 def render_markdown(text):
     """Render CommonMark + tables + real HTML without interpreting TeX syntax.
 
@@ -155,9 +177,12 @@ def render_markdown(text):
         raise TypeError("Markdown body must be text")
     markdown, _, _ = _dependencies()
     masked, protected = _mask_math(text, markdown)
+    masked = _normalize_editor_lists(masked, markdown)
     tokens = markdown.parse(masked)
     raw_html = set()
     for token in _tokens(tokens):
+        if token.type in {"s_open", "s_close"}:
+            token.tag = "del"
         if token.type in {"html_block", "html_inline"}:
             raw_html.update(marker for marker in protected if marker in token.content)
     rendered = markdown.renderer.render(tokens, markdown.options, {})

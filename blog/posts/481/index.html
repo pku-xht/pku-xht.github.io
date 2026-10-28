@@ -30,23 +30,23 @@ vector&lt; pi &gt; e[N];
 pq&lt; pair&lt; ll, int &gt; &gt; q; 
 
 int main() {
-    rd(h), --h, rd(x), rd(y), rd(z);
-    for (int i = 0; i &lt; x; i++) e[i].pb(mp((i + y) % x, y)), e[i].pb(mp((i + z) % x, z)), d[i] = inf;
-    d[0] = 0, q.push(mp(0, 0));
-    while (q.size()) {
-        int x = q.top().se;
-        q.pop();
-        if (v[x]) continue;
-        v[x] = 1;
-        for (ui i = 0; i &lt; e[x].size(); i++) {
-            int y = e[x][i].fi, z = e[x][i].se;
-            if (d[y] &gt; d[x] + z) d[y] = d[x] + z, q.push(mp(-d[y], y));
-        }
-    }
-    for (int i = 0; i &lt; x; i++)
-        if (h &gt;= d[i]) ans += (h - d[i]) / x + 1;
-    print(ans);
-    return 0;
+	rd(h), --h, rd(x), rd(y), rd(z);
+	for (int i = 0; i &lt; x; i++) e[i].pb(mp((i + y) % x, y)), e[i].pb(mp((i + z) % x, z)), d[i] = inf;
+	d[0] = 0, q.push(mp(0, 0));
+	while (q.size()) {
+		int x = q.top().se;
+		q.pop();
+		if (v[x]) continue;
+		v[x] = 1;
+		for (ui i = 0; i &lt; e[x].size(); i++) {
+			int y = e[x][i].fi, z = e[x][i].se;
+			if (d[y] &gt; d[x] + z) d[y] = d[x] + z, q.push(mp(-d[y], y));
+		}
+	}
+	for (int i = 0; i &lt; x; i++)
+		if (h &gt;= d[i]) ans += (h - d[i]) / x + 1;
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h4 id="section-3">【例题】<a href="https://www.luogu.com.cn/problem/P2371" target="_blank" rel="noopener noreferrer">P2371 [国家集训队]墨墨的等式</a></h4>
@@ -59,30 +59,30 @@ vector&lt; pi &gt; e[N];
 pq&lt; pair&lt; ll, int &gt; &gt; q; 
 
 int main() {
-    rd(n), rd(l), --l, rd(r), rd(x);
-    for (int i = 1; i &lt; x; i++) d[i] = inf;
-    for (int i = 1, y; i &lt; n; i++) {
-        rd(y);
-        for (int i = 0; i &lt; x; i++)
-            e[i].pb(mp((i + y) % x, y));
-    }
-    q.push(mp(0, 0));
-    while (q.size()) {
-        int x = q.top().se;
-        q.pop();
-        if (v[x]) continue;
-        v[x] = 1;
-        for (ui i = 0; i &lt; e[x].size(); i++) {
-            int y = e[x][i].fi, z = e[x][i].se;
-            if (d[y] &gt; d[x] + z) d[y] = d[x] + z, q.push(mp(-d[y], y));
-        }
-    }
-    for (int i = 0; i &lt; x; i++) {
-        if (r &gt;= d[i]) ans += (r - d[i]) / x + 1;
-        if (l &gt;= d[i]) ans -= (l - d[i]) / x + 1;
-    }
-    print(ans);
-    return 0;
+	rd(n), rd(l), --l, rd(r), rd(x);
+	for (int i = 1; i &lt; x; i++) d[i] = inf;
+	for (int i = 1, y; i &lt; n; i++) {
+		rd(y);
+		for (int i = 0; i &lt; x; i++)
+			e[i].pb(mp((i + y) % x, y));
+	}
+	q.push(mp(0, 0));
+	while (q.size()) {
+		int x = q.top().se;
+		q.pop();
+		if (v[x]) continue;
+		v[x] = 1;
+		for (ui i = 0; i &lt; e[x].size(); i++) {
+			int y = e[x][i].fi, z = e[x][i].se;
+			if (d[y] &gt; d[x] + z) d[y] = d[x] + z, q.push(mp(-d[y], y));
+		}
+	}
+	for (int i = 0; i &lt; x; i++) {
+		if (r &gt;= d[i]) ans += (r - d[i]) / x + 1;
+		if (l &gt;= d[i]) ans -= (l - d[i]) / x + 1;
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">参考资料</h2>

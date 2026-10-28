@@ -19,18 +19,18 @@ int n, f[N][2];
 char s[N];
 
 int main() {
-    rds(s, n), f[0][1] = -inf;
-    for (int i = 1; i &lt;= n; i++) {
-        f[i][0] = f[i][1] = -inf;
-        if (i == 1 || s[i] != s[i-1])
-            f[i][0] = max(f[i][0], f[i-1][0] + 1);
-        f[i][0] = max(f[i][0], f[i-1][1] + 1);
-        if (i &gt; 1) f[i][1] = max(f[i][1], f[i-2][0] + 1);
-        if (i &gt; 3 &amp;&amp; s[i] != s[i-2] &amp;&amp; s[i-1] != s[i-3])
-            f[i][1] = max(f[i][1], f[i-2][1] + 1);
-    }
-    print(max(f[n][0], f[n][1]));
-    return 0;
+	rds(s, n), f[0][1] = -inf;
+	for (int i = 1; i &lt;= n; i++) {
+		f[i][0] = f[i][1] = -inf;
+		if (i == 1 || s[i] != s[i-1])
+			f[i][0] = max(f[i][0], f[i-1][0] + 1);
+		f[i][0] = max(f[i][0], f[i-1][1] + 1);
+		if (i &gt; 1) f[i][1] = max(f[i][1], f[i-2][0] + 1);
+		if (i &gt; 3 &amp;&amp; s[i] != s[i-2] &amp;&amp; s[i-1] != s[i-3])
+			f[i][1] = max(f[i][1], f[i-2][1] + 1);
+	}
+	print(max(f[n][0], f[n][1]));
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc037/tasks/agc037_b" target="_blank" rel="noopener noreferrer">RGB Balls</a></h2>
@@ -41,36 +41,36 @@ char c;
 modint ans = 1;
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) ans *= i;
-    for (int i = 0; i &lt; 3 * n; i++) {
-        rdc(c);
-        switch (c) {
-            case 'R' : {
-                if (gb) ans *= gb--;
-                else if (g) ans *= g--, ++rg;
-                else if (b) ans *= b--, ++br;
-                else ++r;
-                break;
-            }
-            case 'G' : {
-                if (br) ans *= br--;
-                else if (b) ans *= b--, ++gb;
-                else if (r) ans *= r--, ++rg;
-                else ++g;
-                break;
-            }
-            case 'B' : {
-                if (rg) ans *= rg--;
-                else if (r) ans *= r--, ++br;
-                else if (g) ans *= g--, ++gb;
-                else ++b;
-                break;
-            }
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) ans *= i;
+	for (int i = 0; i &lt; 3 * n; i++) {
+		rdc(c);
+		switch (c) {
+			case 'R' : {
+				if (gb) ans *= gb--;
+				else if (g) ans *= g--, ++rg;
+				else if (b) ans *= b--, ++br;
+				else ++r;
+				break;
+			}
+			case 'G' : {
+				if (br) ans *= br--;
+				else if (b) ans *= b--, ++gb;
+				else if (r) ans *= r--, ++rg;
+				else ++g;
+				break;
+			}
+			case 'B' : {
+				if (rg) ans *= rg--;
+				else if (r) ans *= r--, ++br;
+				else if (g) ans *= g--, ++gb;
+				else ++b;
+				break;
+			}
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc037/tasks/agc037_c" target="_blank" rel="noopener noreferrer">Numbers on a Circle</a></h2>
@@ -82,21 +82,21 @@ int n, a[N], b[N];
 ll ans;
 
 int main() {
-    rd(n), rda(a, n), rda(b, n);
-    pq&lt;pi&gt; q;
-    for (int i = 1; i &lt;= n; i++)
-        if (a[i] != b[i]) q.push(mp(b[i], i));
-    while (q.size()) {
-        int x = q.top().se, l = x == 1 ? n : x - 1, r = x == n ? 1 : x + 1;
-        q.pop();
-        int t = (b[x] - max(max(b[l], b[r]), a[x])) / (b[l] + b[r]);
-        ans += t, b[x] -= t * (b[l] + b[r]);
-        while (b[x] &gt; max(max(b[l], b[r]), a[x])) ++ans, b[x] -= b[l] + b[r];
-        if (b[x] &lt; a[x]) Fail;
-        if (b[x] != a[x]) q.push(mp(b[x], x));
-    }
-    print(ans);
-    return 0;
+	rd(n), rda(a, n), rda(b, n);
+	pq&lt;pi&gt; q;
+	for (int i = 1; i &lt;= n; i++)
+		if (a[i] != b[i]) q.push(mp(b[i], i));
+	while (q.size()) {
+		int x = q.top().se, l = x == 1 ? n : x - 1, r = x == n ? 1 : x + 1;
+		q.pop();
+		int t = (b[x] - max(max(b[l], b[r]), a[x])) / (b[l] + b[r]);
+		ans += t, b[x] -= t * (b[l] + b[r]);
+		while (b[x] &gt; max(max(b[l], b[r]), a[x])) ++ans, b[x] -= b[l] + b[r];
+		if (b[x] &lt; a[x]) Fail;
+		if (b[x] != a[x]) q.push(mp(b[x], x));
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Sorting_a_Grid" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc037/tasks/agc037_d" target="_blank" rel="noopener noreferrer">Sorting a Grid</a></h2>
@@ -125,41 +125,41 @@ int main() {
 int n, m, a[N][N], b[N][N], f[N], g[N], v[N], p[N];
 
 bool dfs(int i, int k) {
-    for (int j = 1; j &lt;= m; j++)
-        if (a[i][j]) {
-            int x = (a[i][j] - 1) / m + 1;
-            if (v[x] != k) {
-                v[x] = k;
-                if (!f[x] || dfs(f[x], k))
-                    return f[x] = i, g[i] = j, 1;
-            }
-        }
-    return 0;
+	for (int j = 1; j &lt;= m; j++)
+		if (a[i][j]) {
+			int x = (a[i][j] - 1) / m + 1;
+			if (v[x] != k) {
+				v[x] = k;
+				if (!f[x] || dfs(f[x], k))
+					return f[x] = i, g[i] = j, 1;
+			}
+		}
+	return 0;
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++)
-        rda(a[i], m);
-    for (int j = 1; j &lt;= m; j++) {
-        for (int i = 1; i &lt;= n; i++)
-            dfs(i, (i - 1) * m + (j - 1) + 1);
-        for (int i = 1; i &lt;= n; i++)
-            b[i][j] = a[i][g[i]], a[i][g[i]] = f[i] = 0;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            print(b[i][j], " \n"[j==m]);
-    for (int j = 1; j &lt;= m; j++) {
-        for (int i = 1; i &lt;= n; i++)
-            p[(b[i][j]-1)/m+1] = b[i][j];
-        for (int i = 1; i &lt;= n; i++)
-            b[i][j] = p[i];
-    }
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= m; j++)
-            print(b[i][j], " \n"[j==m]);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++)
+		rda(a[i], m);
+	for (int j = 1; j &lt;= m; j++) {
+		for (int i = 1; i &lt;= n; i++)
+			dfs(i, (i - 1) * m + (j - 1) + 1);
+		for (int i = 1; i &lt;= n; i++)
+			b[i][j] = a[i][g[i]], a[i][g[i]] = f[i] = 0;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			print(b[i][j], " \n"[j==m]);
+	for (int j = 1; j &lt;= m; j++) {
+		for (int i = 1; i &lt;= n; i++)
+			p[(b[i][j]-1)/m+1] = b[i][j];
+		for (int i = 1; i &lt;= n; i++)
+			b[i][j] = p[i];
+	}
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= m; j++)
+			print(b[i][j], " \n"[j==m]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Reversing_and_Concatenating" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc037/tasks/agc037_e" target="_blank" rel="noopener noreferrer">Reversing and Concatenating</a></h2>
@@ -183,38 +183,38 @@ int n, k, a[N], l, w;
 char s[N], c, ans[N];
 
 inline void upd(int p) {
-    bool ok = 1;
-    for (int i = 1; i &lt;= w; i++) {
-        if (ans[i] &gt; s[p - i + 1]) break;
-        if (ans[i] &lt; s[p - i + 1]) {
-            ok = 0;
-            break;
-        }
-    }
-    if (!ok) return;
-    for (int i = 1; i &lt;= w; i++)
-        ans[i] = s[p - i + 1];
+	bool ok = 1;
+	for (int i = 1; i &lt;= w; i++) {
+		if (ans[i] &gt; s[p - i + 1]) break;
+		if (ans[i] &lt; s[p - i + 1]) {
+			ok = 0;
+			break;
+		}
+	}
+	if (!ok) return;
+	for (int i = 1; i &lt;= w; i++)
+		ans[i] = s[p - i + 1];
 }
 
 int main() {
-    rd(n, k), rds(s, n);
-    for (int i = 1; i &lt;= n; i++)
-        s[n + n + 1 - i] = s[i];
-    c = *min_element(s + 1, s + n + n + 1);
-    for (int i = 1; i &lt;= n + n; i++)
-        a[i] = s[i] == c ? a[i - 1] + 1 : 0;
-    l = *max_element(a + 1, a + n + n + 1);
-    if (k &gt;= 14 || ((n - 1) &gt;&gt; (k - 1)) + 1 &lt;= l) {
-        for (int i = 1; i &lt;= n; i++) printc(c);
-        return 0;
-    }
-    w = n - (l &lt;&lt; (k - 1));
-    ans[1] = 'z' + 1;
-    for (int i = 1; i &lt;= n; i++)
-        if (a[n + i] == l) upd(n + i - l);
-    for (int i = 1; i &lt;= (l &lt;&lt; (k - 1)); i++) printc(c);
-    prints(ans, w);
-    return 0;
+	rd(n, k), rds(s, n);
+	for (int i = 1; i &lt;= n; i++)
+		s[n + n + 1 - i] = s[i];
+	c = *min_element(s + 1, s + n + n + 1);
+	for (int i = 1; i &lt;= n + n; i++)
+		a[i] = s[i] == c ? a[i - 1] + 1 : 0;
+	l = *max_element(a + 1, a + n + n + 1);
+	if (k &gt;= 14 || ((n - 1) &gt;&gt; (k - 1)) + 1 &lt;= l) {
+		for (int i = 1; i &lt;= n; i++) printc(c);
+		return 0;
+	}
+	w = n - (l &lt;&lt; (k - 1));
+	ans[1] = 'z' + 1;
+	for (int i = 1; i &lt;= n; i++)
+		if (a[n + i] == l) upd(n + i - l);
+	for (int i = 1; i &lt;= (l &lt;&lt; (k - 1)); i++) printc(c);
+	prints(ans, w);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Counting_of_Subarrays" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc037/tasks/agc037_f" target="_blank" rel="noopener noreferrer">Counting of Subarrays</a></h2>
@@ -259,37 +259,37 @@ int n, l, s[N], t, f[N], g[N], sf[N], sg[N];
 ll ans;
 
 inline void pop() {
-    int k = 1, x = s[t];
-    while (s[t-1] == x) --t, ++k;
-    --t;
-    if (k &lt; l) {
-        while (t) pop();
-        return;
-    }
-    int w = k / l;
-    for (int i = 1; i &lt;= k; i++)
-        sf[i] = sf[i-1] + f[i+t], sg[i] = sg[i-1] + g[i+t];
-    for (int i = l; i &lt;= k; i++)
-        ans += 1ll * sf[i-l+1] * g[i+t];
-    for (int i = 1; i &lt;= w; i++)
-        f[t+i] = sf[k-l*(w-i+1)+1] - sf[max(k-l*(w-i+2)+1,0)],
-        g[t+i] = sg[min(l*(i+1)-1,k)] - sg[l*i-1];
-    for (int i = l, s = 0; i &lt;= w; i++)
-        ans -= 1ll * (s += f[t+i-l+1]) * g[t+i];
-    for (int i = 1; i &lt;= w; i++)
-        s[++t] = x + 1;
+	int k = 1, x = s[t];
+	while (s[t-1] == x) --t, ++k;
+	--t;
+	if (k &lt; l) {
+		while (t) pop();
+		return;
+	}
+	int w = k / l;
+	for (int i = 1; i &lt;= k; i++)
+		sf[i] = sf[i-1] + f[i+t], sg[i] = sg[i-1] + g[i+t];
+	for (int i = l; i &lt;= k; i++)
+		ans += 1ll * sf[i-l+1] * g[i+t];
+	for (int i = 1; i &lt;= w; i++)
+		f[t+i] = sf[k-l*(w-i+1)+1] - sf[max(k-l*(w-i+2)+1,0)],
+		g[t+i] = sg[min(l*(i+1)-1,k)] - sg[l*i-1];
+	for (int i = l, s = 0; i &lt;= w; i++)
+		ans -= 1ll * (s += f[t+i-l+1]) * g[t+i];
+	for (int i = 1; i &lt;= w; i++)
+		s[++t] = x + 1;
 }
 
 int main() {
-    rd(n, l), ans = n;
-    for (int i = 1, x; i &lt;= n; i++) {
-        rd(x);
-        while (t &amp;&amp; s[t] &lt; x) pop();
-        s[++t] = x, f[t] = g[t] = 1;
-    }
-    while (t) pop();
-    print(ans);
-    return 0;
+	rd(n, l), ans = n;
+	for (int i = 1, x; i &lt;= n; i++) {
+		rd(x);
+		while (t &amp;&amp; s[t] &lt; x) pop();
+		s[++t] = x, f[t] = g[t] = 1;
+	}
+	while (t) pop();
+	print(ans);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="58" href="/blog/tags/58/">单调栈</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/945/"><span>较新一篇</span>Codeforces Round #647 (Div. 1) – Thanks, Algo Muse! 题解</a><a class="rel-next" rel="next" href="/blog/posts/927/"><span>较早一篇</span>JOISC 2018 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="936" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

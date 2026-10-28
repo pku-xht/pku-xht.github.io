@@ -23,7 +23,7 @@
 <h2 id="section-2">题解</h2>
 <p>我们将<strong>叶子节点</strong>定义为<strong>度数为 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span></strong> 的节点，<strong>非叶节点</strong>定义为<strong>度数 <span class="math-inline" data-original-math="$&gt;1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">&gt;1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span></strong> 的节点。</p>
 <p>首先我们来考虑大部分情况，即<strong>至少有三个非叶节点</strong>的情况。</p>
-<p>在这种情况下，<strong>两个非叶节点 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span> 之间存在边，当且仅当存在两个集合的交为 <span class="math-inline" data-original-math="$\{x,y\}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{x,y\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">}</span></span></span></span></span></strong>。</p>
+<p>在这种情况下，<strong>两个非叶节点 <span class="math-inline" data-original-math="$(x,y)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span></span></span> 之间存在边，当且仅当存在两个集合的交为 <span class="math-inline" data-original-math="$\\{x,y\\}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mspace linebreak="newline"></mspace><mrow><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mspace linebreak="newline"></mspace></mrow></mrow><annotation encoding="application/x-tex">\\{x,y\\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="mspace katex-newline"></span><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace katex-newline"></span></span></span></span></span></span></strong>。</p>
 <p>于是可以得到所有非叶节点之间的连边，bitset 优化即可做到 <span class="math-inline" data-original-math="$\mathcal O(\frac{n^3}w)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mfrac><msup><mi>n</mi><mn>3</mn></msup><mi>w</mi></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\frac{n^3}w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3629em;vertical-align:-0.345em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0179em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <p><strong>值得一提的是，如果当存在两个集合的交集大小为 <span class="math-inline" data-original-math="$2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 时，对 bitset 暴力 <code>for</code> 循环找值为 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的位置，复杂度并不会除以那个 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span>，是错的，可以被卡掉，但不知道为什么 CF 没有卡，也许是因为 CF 评测机太快了。正确的写法是借用 <code>_Find_first()</code> 和 <code>_Find_next()</code> 函数，前者是找到 bitset 中从低位到高位第一个 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的位置，后者是找到当前位置的下一个为 <span class="math-inline" data-original-math="$1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的位置，这样复杂度才会除以那个 <span class="math-inline" data-original-math="$w$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span>。</strong></p>
 <p>现在，我们知道每个点是否为叶子节点，接下来考虑如何找到叶子节点在树中的父亲。</p>
@@ -31,7 +31,7 @@
 <p>如果我们把<strong>连边集合</strong>定义为<strong>一个非叶节点与和它相连的非叶节点</strong>构成的集合，可以发现，<strong>一个叶子节点的集合中去掉所有叶子节点</strong>等于<strong>其父亲的连边集合</strong>，而所有非叶节点的连边集合一定互不相同，那么我们就可以确定所有叶子节点的父亲了，这里同样可以 bitset 优化。</p>
 <p>最后来考虑非叶节点数量少于三个的情况。</p>
 <p>如果不存在非叶节点，则 <span class="math-inline" data-original-math="$n=2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">n=2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span>，可以直接判掉。</p>
-<p>如果只有一个非叶节点，那就意味着所有集合都是 <span class="math-inline" data-original-math="${1,2,\cdots n}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>⋯</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">{1,2,\cdots n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span></span></span></span></span></span>，也可以直接判掉。</p>
+<p>如果只有一个非叶节点，那就意味着所有集合都是 <span class="math-inline" data-original-math="$\{1,2,\cdots n\}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mn>1</mn><mo separator="true">,</mo><mn>2</mn><mo separator="true">,</mo><mo>⋯</mo><mi>n</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{1,2,\cdots n\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">}</span></span></span></span></span>，也可以直接判掉。</p>
 <p>如果有两个非叶节点，我们先采用至少三个非叶节点的方法找到这两个非叶节点，然后会发现这两个非叶节点的连边集合是一样的。但是，这个时候叶子的集合就只有两种，选其中一种里的叶子挂在一个非叶节点下，另一种里的叶子挂在另外一个非叶节点下就好了。</p>
 <p>总时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(\frac{n^3}w)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mfrac><msup><mi>n</mi><mn>3</mn></msup><mi>w</mi></mfrac><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\frac{n^3}w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.3629em;vertical-align:-0.345em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0179em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="katex-sizing reset-size3 size1 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <h2 id="section-3">代码</h2>
@@ -40,66 +40,66 @@ int n, v[N], w[N], cnt;
 bitset&lt;N&gt; a[N], b[N], e[N];
 
 int main() {
-    rd(n);
-    if (n == 2) return prints("1 2"), 0;
-    bool ok = 1;
-    for (int i = 1, j, k; i &lt;= n; i++) {
-        rd(k);
-        if (k != n) ok = 0;
-        while (k--) rd(j), a[i][j] = 1;
-    }
-    if (ok) {
-        for (int i = 1; i &lt; n; i++) print(n, ' '), print(i);
-        return 0;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = i + 1; j &lt;= n; j++) {
-            bitset&lt;N&gt; o = a[i] &amp; a[j];
-            if (o.count() != 2) continue;
-            int x = o._Find_first(), y = o._Find_next(x);
-            if (e[x][y]) continue;
-            print(x, ' '), print(y);
-            e[x][y] = e[y][x] = 1, v[x] = v[y] = 1;
-        }
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) {
-            int s = n + 1, o = 0;
-            for (int j = 1; j &lt;= n; j++)
-                if (!w[j] &amp;&amp; a[j][i]) {
-                    int c = a[j].count();
-                    if (c &lt; s) s = c, o = j;
-                }
-            b[i] = a[o], w[o] = 1;
-        } else e[i][i] = 1, ++cnt;
-    if (cnt == 2) {
-        int x, y;
-        for (int i = 1; i &lt;= n; i++)
-            if (v[i]) x = i;
-        for (int i = n; i; i--)
-            if (v[i]) y = i;
-        for (int i = 1; i &lt;= n; i++)
-            if ((int)a[i].count() != n) {
-                for (int j = 1; j &lt;= n; j++) {
-                    if (v[j]) continue;
-                    if (a[i][j]) print(x, ' ');
-                    else print(y, ' ');
-                    print(j);
-                }
-                break;
-            }
-        return 0;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (!v[i]) {
-            for (int j = 1; j &lt;= n; j++)
-                if (!v[j]) b[i][j] = 0;
-            for (int j = 1; j &lt;= n; j++)
-                if (v[j] &amp;&amp; b[i] == e[j]) {
-                    print(i, ' '), print(j);
-                    break;
-                }
-        }
-    return 0;
+	rd(n);
+	if (n == 2) return prints("1 2"), 0;
+	bool ok = 1;
+	for (int i = 1, j, k; i &lt;= n; i++) {
+		rd(k);
+		if (k != n) ok = 0;
+		while (k--) rd(j), a[i][j] = 1;
+	}
+	if (ok) {
+		for (int i = 1; i &lt; n; i++) print(n, ' '), print(i);
+		return 0;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = i + 1; j &lt;= n; j++) {
+			bitset&lt;N&gt; o = a[i] &amp; a[j];
+			if (o.count() != 2) continue;
+			int x = o._Find_first(), y = o._Find_next(x);
+			if (e[x][y]) continue;
+			print(x, ' '), print(y);
+			e[x][y] = e[y][x] = 1, v[x] = v[y] = 1;
+		}
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) {
+			int s = n + 1, o = 0;
+			for (int j = 1; j &lt;= n; j++)
+				if (!w[j] &amp;&amp; a[j][i]) {
+					int c = a[j].count();
+					if (c &lt; s) s = c, o = j;
+				}
+			b[i] = a[o], w[o] = 1;
+		} else e[i][i] = 1, ++cnt;
+	if (cnt == 2) {
+		int x, y;
+		for (int i = 1; i &lt;= n; i++)
+			if (v[i]) x = i;
+		for (int i = n; i; i--)
+			if (v[i]) y = i;
+		for (int i = 1; i &lt;= n; i++)
+			if ((int)a[i].count() != n) {
+				for (int j = 1; j &lt;= n; j++) {
+					if (v[j]) continue;
+					if (a[i][j]) print(x, ' ');
+					else print(y, ' ');
+					print(j);
+				}
+				break;
+			}
+		return 0;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (!v[i]) {
+			for (int j = 1; j &lt;= n; j++)
+				if (!v[j]) b[i][j] = 0;
+			for (int j = 1; j &lt;= n; j++)
+				if (v[j] &amp;&amp; b[i] == e[j]) {
+					print(i, ' '), print(j);
+					break;
+				}
+		}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="38" href="/blog/tags/38/">bitset</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/627/"><span>较新一篇</span>CF573E Bear and Bowling 题解</a><a class="rel-next" rel="next" href="/blog/posts/622/"><span>较早一篇</span>CF613E Puzzle Lover 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="624" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -45,87 +45,87 @@ int n, m, tot, l, r;
 int dfn[M], low[M], num, stk[M], top, ins[M], scc[M], cnt;
 vi v[N], s, e[M], ans;
 struct P {
-    int u, v, c, t;
-    inline void in() {  rd(u), rd(v), rd(c), rd(t), r = max(r, t); }
+	int u, v, c, t;
+	inline void in() { 	rd(u), rd(v), rd(c), rd(t), r = max(r, t); }
 } p[N];
 
 inline void work1() {
-    int S, T;
-    for (ui i = 0; i &lt; s.size(); i++) {
-        int x = ::s[i], y = ::s[i] + m, s = ++tot, t = ++tot;
-        e[x].pb(s), e[t].pb(y);
-        if (i) e[S].pb(s), e[t].pb(T), e[S].pb(y), e[x].pb(T);
-        S = s, T = t;
-    }
-    s.clear();
+	int S, T;
+	for (ui i = 0; i &lt; s.size(); i++) {
+		int x = ::s[i], y = ::s[i] + m, s = ++tot, t = ++tot;
+		e[x].pb(s), e[t].pb(y);
+		if (i) e[S].pb(s), e[t].pb(T), e[S].pb(y), e[x].pb(T);
+		S = s, T = t;
+	}
+	s.clear();
 }
 
 inline void work2() {
-    int S, T;
-    for (ui i = 0; i &lt; s.size(); i++) {
-        int x = ::s[i], y = ::s[i] + m, s = ++tot, t = ++tot;
-        e[s].pb(x), e[y].pb(t);
-        if (i) e[s].pb(S), e[T].pb(t), e[y].pb(S), e[T].pb(x);
-        S = s, T = t;
-    }
-    s.clear();
+	int S, T;
+	for (ui i = 0; i &lt; s.size(); i++) {
+		int x = ::s[i], y = ::s[i] + m, s = ++tot, t = ++tot;
+		e[s].pb(x), e[y].pb(t);
+		if (i) e[s].pb(S), e[T].pb(t), e[y].pb(S), e[T].pb(x);
+		S = s, T = t;
+	}
+	s.clear();
 }
 
 void tarjan(int x) {
-    dfn[x] = low[x] = ++num, stk[++top] = x, ins[x] = 1;
-    for (auto y : e[x])
-        if (!dfn[y]) tarjan(y), low[x] = min(low[x], low[y]);
-        else if (ins[y]) low[x] = min(low[x], dfn[y]);
-    if (dfn[x] == low[x]) {
-        ins[x] = 0, scc[x] = ++cnt;
-        while (x != stk[top--]) {
-            int y = stk[top+1];
-            ins[y] = 0, scc[y] = cnt;
-        }
-    }
+	dfn[x] = low[x] = ++num, stk[++top] = x, ins[x] = 1;
+	for (auto y : e[x])
+		if (!dfn[y]) tarjan(y), low[x] = min(low[x], low[y]);
+		else if (ins[y]) low[x] = min(low[x], dfn[y]);
+	if (dfn[x] == low[x]) {
+		ins[x] = 0, scc[x] = ++cnt;
+		while (x != stk[top--]) {
+			int y = stk[top+1];
+			ins[y] = 0, scc[y] = cnt;
+		}
+	}
 }
 
 inline void init(int o) {
-    for (int i = 1; i &lt;= m; i++) if (p[i].t &gt; o) e[i].pop_back();
+	for (int i = 1; i &lt;= m; i++) if (p[i].t &gt; o) e[i].pop_back();
 }
 
 inline bool pd(int o) {
-    for (int i = 1; i &lt;= m; i++) if (p[i].t &gt; o) e[i].pb(i + m);
-    for (int i = 1; i &lt;= tot; i++) dfn[i] = 0;
-    cnt = num = 0;
-    for (int i = 1; i &lt;= tot; i++) if (!dfn[i]) tarjan(i);
-    for (int i = 1; i &lt;= m; i++)
-        if (scc[i] == scc[i+m]) return init(o), 0;
-    return init(o), 1;
+	for (int i = 1; i &lt;= m; i++) if (p[i].t &gt; o) e[i].pb(i + m);
+	for (int i = 1; i &lt;= tot; i++) dfn[i] = 0;
+	cnt = num = 0;
+	for (int i = 1; i &lt;= tot; i++) if (!dfn[i]) tarjan(i);
+	for (int i = 1; i &lt;= m; i++)
+		if (scc[i] == scc[i+m]) return init(o), 0;
+	return init(o), 1;
 }
 
 int main() {
-    rd(n), rd(m), tot = m &lt;&lt; 1;
-    for (int i = 1; i &lt;= m; i++)
-        p[i].in(), v[p[i].u].pb(i), v[p[i].v].pb(i);
-    for (int i = 1; i &lt;= n; i++) {
-        sort(v[i].begin(), v[i].end(),
-            [&amp;](int i, int j) { return p[i].c &lt; p[j].c; });
-        s = v[i], work1();
-        for (ui l = 0, r = 0; l &lt; v[i].size(); l = ++r) {
-            s.pb(v[i][l]);
-            while (r + 1 &lt; v[i].size()
-                &amp;&amp; p[v[i][r+1]].c == p[v[i][r]].c) s.pb(v[i][++r]);
-            work2();
-        }
-    }
-    if (!pd(r)) return prints("No"), 0;
-    prints("Yes");
-    while (l &lt; r) {
-        int mid = (l + r) &gt;&gt; 1;
-        if (pd(mid)) r = mid;
-        else l = mid + 1;
-    }
-    pd(l);
-    for (int i = 1; i &lt;= m; i++) if (scc[i] &lt; scc[i+m]) ans.pb(i);
-    print(l, ' '), print(ans.size());
-    for (auto x : ans) print(x, ' ');
-    return 0;
+	rd(n), rd(m), tot = m &lt;&lt; 1;
+	for (int i = 1; i &lt;= m; i++)
+		p[i].in(), v[p[i].u].pb(i), v[p[i].v].pb(i);
+	for (int i = 1; i &lt;= n; i++) {
+		sort(v[i].begin(), v[i].end(),
+			[&amp;](int i, int j) { return p[i].c &lt; p[j].c; });
+		s = v[i], work1();
+		for (ui l = 0, r = 0; l &lt; v[i].size(); l = ++r) {
+			s.pb(v[i][l]);
+			while (r + 1 &lt; v[i].size()
+				&amp;&amp; p[v[i][r+1]].c == p[v[i][r]].c) s.pb(v[i][++r]);
+			work2();
+		}
+	}
+	if (!pd(r)) return prints("No"), 0;
+	prints("Yes");
+	while (l &lt; r) {
+		int mid = (l + r) &gt;&gt; 1;
+		if (pd(mid)) r = mid;
+		else l = mid + 1;
+	}
+	pd(l);
+	for (int i = 1; i &lt;= m; i++) if (scc[i] &lt; scc[i+m]) ans.pb(i);
+	print(l, ' '), print(ans.size());
+	for (auto x : ans) print(x, ' ');
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="104" href="/blog/tags/104/">2-SAT</a>、<a data-source-tag="107" href="/blog/tags/107/">Tarjan</a>、<a data-source-tag="35" href="/blog/tags/35/">二分</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/570/"><span>较新一篇</span>Codeforces Round #614 (Div. 1) 题解</a><a class="rel-next" rel="next" href="/blog/posts/561/"><span>较早一篇</span>CF575I Robots protection 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="564" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

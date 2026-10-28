@@ -15,16 +15,16 @@
 <h2 id="section-1"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_a" target="_blank" rel="noopener noreferrer">Takahashikun, The Strider</a></h2>
 <p>相当于要找到最小的正整数 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 满足 <span class="math-inline" data-original-math="$tx \equiv 0 \pmod {360}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>x</mi><mo>≡</mo><mn>0</mn><mspace></mspace><mspace width="0.4444em"/><mo stretchy="false">(</mo><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow><mspace width="0.3333em"/><mn>360</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">tx \equiv 0 \pmod {360}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≡</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span><span class="mspace allowbreak"></span><span class="mspace" style="margin-right:0.4444em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.3333em;"></span><span class="mord">360</span><span class="mclose">)</span></span></span></span></span>，暴力即可。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int x;
-    rd(x);
-    int t = 1;
-    while (1) {
-        if (t * x % 360 == 0) {
-            return print(t), 0;
-        }
-        ++t;
-    }
-    return 0;
+	int x;
+	rd(x);
+	int t = 1;
+	while (1) {
+		if (t * x % 360 == 0) {
+			return print(t), 0;
+		}
+		++t;
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_b" target="_blank" rel="noopener noreferrer">Extension</a></h2>
@@ -34,15 +34,15 @@ int a, b, c, d;
 modint f[N][N];
 
 int main() {
-    rd(a, b), rd(c, d);
-    f[a][b] = 1;
-    for (int i = a; i &lt;= c; i++)
-        for (int j = b; j &lt;= d; j++) {
-            if (i == a &amp;&amp; j == b) continue;
-            f[i][j] = f[i-1][j] * j + f[i][j-1] * i - f[i-1][j-1] * (i - 1) * (j - 1);
-        }
-    print(f[c][d]);
-    return 0;
+	rd(a, b), rd(c, d);
+	f[a][b] = 1;
+	for (int i = a; i &lt;= c; i++)
+		for (int j = b; j &lt;= d; j++) {
+			if (i == a &amp;&amp; j == b) continue;
+			f[i][j] = f[i-1][j] * j + f[i][j-1] * i - f[i-1][j-1] * (i - 1) * (j - 1);
+		}
+	print(f[c][d]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_c" target="_blank" rel="noopener noreferrer">Shift</a></h2>
@@ -55,31 +55,31 @@ char s[N];
 modint f[N][N][N], ans;
 
 int main() {
-    rds(s, n), rd(k);
-    for (int i = 1; i &lt;= n; i++) c += s[i] == '1';
-    if (c == n) return print(1), 0;
-    for (int i = 1; i &lt;= n; i++)
-        if (s[i] == '0') {
-            ++t;
-            int j = i;
-            while (s[j-1] == '1') --j, ++p[t];
-            x = i;
-        }
-    p[++t] = n - x;
-    k = min(k, c - p[1]);
-    for (int j = p[1]; j &lt;= min(c, k + p[1]); j++)
-        f[1][j-p[1]][j-p[1]] = 1;
-    for (int i = 1; i &lt; t - 1; i++)
-        for (int j = 0; j &lt;= k; j++)
-            for (int l = 0; l &lt;= j; l++)
-                if (f[i][j][l].x)
-                    for (int w = -min(p[i+1], l); w &lt;= k - j; w++)
-                        f[i+1][j+max(0,w)][l+w] += f[i][j][l];
-    for (int j = 0; j &lt;= k; j++)
-        for (int l = 0; l &lt;= min(j, p[t]); l++)
-            ans += f[t-1][j][l];
-    print(ans);
-    return 0;
+	rds(s, n), rd(k);
+	for (int i = 1; i &lt;= n; i++) c += s[i] == '1';
+	if (c == n) return print(1), 0;
+	for (int i = 1; i &lt;= n; i++)
+		if (s[i] == '0') {
+			++t;
+			int j = i;
+			while (s[j-1] == '1') --j, ++p[t];
+			x = i;
+		}
+	p[++t] = n - x;
+	k = min(k, c - p[1]);
+	for (int j = p[1]; j &lt;= min(c, k + p[1]); j++)
+		f[1][j-p[1]][j-p[1]] = 1;
+	for (int i = 1; i &lt; t - 1; i++)
+		for (int j = 0; j &lt;= k; j++)
+			for (int l = 0; l &lt;= j; l++)
+				if (f[i][j][l].x)
+					for (int w = -min(p[i+1], l); w &lt;= k - j; w++)
+						f[i+1][j+max(0,w)][l+w] += f[i][j][l];
+	for (int j = 0; j &lt;= k; j++)
+		for (int l = 0; l &lt;= min(j, p[t]); l++)
+			ans += f[t-1][j][l];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_d" target="_blank" rel="noopener noreferrer">Secret Passage</a></h2>
@@ -101,52 +101,52 @@ int g[N][N][N];
 bool v[N][N][N];
 
 inline void upd(int &amp;x, int y) {
-    x = max(x, y);
+	x = max(x, y);
 }
 
 int main() {
-    rds(s, n);
-    f[n][0][0] = 1;
-    for (int i = n; i; i--)
-        for (int j = 0; j &lt; i; j++)
-            for (int k = 0; j + k &lt; i; k++) {
-                f[i-1][j][k] += f[i][j][k];
-                if (s[i] == '0') f[i][j][k+1] += f[i][j][k];
-                else f[i][j+1][k] += f[i][j][k];
-            }
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 0; j &lt;= n; j++)
-            for (int k = 0; k &lt;= n; k++)
-                g[i][j][k] = -1;
-    g[0][0][0] = 0;
-    for (int i = 0; i &lt; n; i++)
-        for (int j = 0; j &lt;= (i &gt;&gt; 1); j++)
-            for (int k = 0; j + k &lt;= (i &gt;&gt; 1); k++)
-                if (~g[i][j][k]) {
-                    if (s[i+1] == '0') upd(g[i+1][j+1][k], g[i][j][k] - 1);
-                    else upd(g[i+1][j][k+1], g[i][j][k] - 1);
-                    if (i + 2 &lt;= n) {
-                        upd(g[i+2][j][k], g[i][j][k] + 1);
-                        if (s[i+1] == '0' || s[i+2] == '0')
-                            upd(g[i+2][j+1][k], g[i][j][k]);
-                        if (s[i+1] == '1' || s[i+2] == '1')
-                            upd(g[i+2][j][k+1], g[i][j][k]);
-                    }
-                }
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = n; ~j; j--)
-            for (int k = n; ~k; k--) {
-                v[i][j][k] = ~g[i][j][k];
-                if (i) v[i][j][k] |= v[i-1][j][k];
-                v[i][j][k] |= v[i][j+1][k];
-                v[i][j][k] |= v[i][j][k+1];
-            }
-    for (int i = 0; i &lt;= n; i++)
-        for (int j = 0; j &lt;= i; j++)
-            for (int k = 0; j + k &lt;= i; k++)
-                if (v[i][j][k]) ans += f[i][j][k];
-    print(ans - 1);
-    return 0;
+	rds(s, n);
+	f[n][0][0] = 1;
+	for (int i = n; i; i--)
+		for (int j = 0; j &lt; i; j++)
+			for (int k = 0; j + k &lt; i; k++) {
+				f[i-1][j][k] += f[i][j][k];
+				if (s[i] == '0') f[i][j][k+1] += f[i][j][k];
+				else f[i][j+1][k] += f[i][j][k];
+			}
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 0; j &lt;= n; j++)
+			for (int k = 0; k &lt;= n; k++)
+				g[i][j][k] = -1;
+	g[0][0][0] = 0;
+	for (int i = 0; i &lt; n; i++)
+		for (int j = 0; j &lt;= (i &gt;&gt; 1); j++)
+			for (int k = 0; j + k &lt;= (i &gt;&gt; 1); k++)
+				if (~g[i][j][k]) {
+					if (s[i+1] == '0') upd(g[i+1][j+1][k], g[i][j][k] - 1);
+					else upd(g[i+1][j][k+1], g[i][j][k] - 1);
+					if (i + 2 &lt;= n) {
+						upd(g[i+2][j][k], g[i][j][k] + 1);
+						if (s[i+1] == '0' || s[i+2] == '0')
+							upd(g[i+2][j+1][k], g[i][j][k]);
+						if (s[i+1] == '1' || s[i+2] == '1')
+							upd(g[i+2][j][k+1], g[i][j][k]);
+					}
+				}
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = n; ~j; j--)
+			for (int k = n; ~k; k--) {
+				v[i][j][k] = ~g[i][j][k];
+				if (i) v[i][j][k] |= v[i-1][j][k];
+				v[i][j][k] |= v[i][j+1][k];
+				v[i][j][k] |= v[i][j][k+1];
+			}
+	for (int i = 0; i &lt;= n; i++)
+		for (int j = 0; j &lt;= i; j++)
+			for (int k = 0; j + k &lt;= i; k++)
+				if (v[i][j][k]) ans += f[i][j][k];
+	print(ans - 1);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_e" target="_blank" rel="noopener noreferrer">Permutation Cover</a></h2>
@@ -159,67 +159,67 @@ int main() {
 int n, m, s, a[N], p[N], q[N], ans[N];
 
 void work(int k) {
-    bool ok1 = 1, ok2 = 0;
-    for (int i = 1; i &lt;= k; i++) --a[p[i]];
-    int mn = *min_element(a + 1, a + n + 1);
-    int mx = *max_element(a + 1, a + n + 1);
-    if (mn * 2 &gt;= mx) {
-        ok2 = 1;
-        copy(p + 1, p + k + 1, q + 1);
-        sort(q + 1, q + k + 1);
-    } else if (mn * 2 + 1 == mx) {
-        int k1 = 0, k2 = 0;
-        static int f1[N], f2[N];
-        for (int i = 1; i &lt;= k; i++)
-            ((a[p[i]] == mn || a[p[i]] == mx) ? f1[++k1] : f2[++k2]) = p[i];
-        sort(f1 + 1, f1 + k1 + 1, [&amp;](int i, int j) {
-            if ((a[i] == mn) == (a[j] == mn)) return i &lt; j;
-            return (a[i] == mn) &lt; (a[j] == mn);
-        });
-        sort(f2 + 1, f2 + k2 + 1);
-        int x1 = 1, x2 = 1;
-        for (int i = 1; i &lt;= k; i++)
-            if (x1 &lt;= k1 &amp;&amp; x2 &lt;= k2)
-                q[i] = f1[x1] &lt; f2[x2] ? f1[x1++] : f2[x2++];
-            else q[i] = x1 &lt;= k1 ? f1[x1++] : f2[x2++];
-        ok2 = 1;
-        for (int i = k + 1; i &lt;= n; i++)
-            if (a[p[i]] == mn) ok2 = 0;
-        ok2 |= !x1 || (a[f1[1]] == mx);
-    }
-    for (int i = 1; i &lt;= k; i++) ++a[p[i]];
-    if (!ok1 || !ok2) q[1] = 0;
+	bool ok1 = 1, ok2 = 0;
+	for (int i = 1; i &lt;= k; i++) --a[p[i]];
+	int mn = *min_element(a + 1, a + n + 1);
+	int mx = *max_element(a + 1, a + n + 1);
+	if (mn * 2 &gt;= mx) {
+		ok2 = 1;
+		copy(p + 1, p + k + 1, q + 1);
+		sort(q + 1, q + k + 1);
+	} else if (mn * 2 + 1 == mx) {
+		int k1 = 0, k2 = 0;
+		static int f1[N], f2[N];
+		for (int i = 1; i &lt;= k; i++)
+			((a[p[i]] == mn || a[p[i]] == mx) ? f1[++k1] : f2[++k2]) = p[i];
+		sort(f1 + 1, f1 + k1 + 1, [&amp;](int i, int j) {
+			if ((a[i] == mn) == (a[j] == mn)) return i &lt; j;
+			return (a[i] == mn) &lt; (a[j] == mn);
+		});
+		sort(f2 + 1, f2 + k2 + 1);
+		int x1 = 1, x2 = 1;
+		for (int i = 1; i &lt;= k; i++)
+			if (x1 &lt;= k1 &amp;&amp; x2 &lt;= k2)
+				q[i] = f1[x1] &lt; f2[x2] ? f1[x1++] : f2[x2++];
+			else q[i] = x1 &lt;= k1 ? f1[x1++] : f2[x2++];
+		ok2 = 1;
+		for (int i = k + 1; i &lt;= n; i++)
+			if (a[p[i]] == mn) ok2 = 0;
+		ok2 |= !x1 || (a[f1[1]] == mx);
+	}
+	for (int i = 1; i &lt;= k; i++) ++a[p[i]];
+	if (!ok1 || !ok2) q[1] = 0;
 }
 
 inline bool pd(int *a, int *b) {
-    int p = 1;
-    while (a[p] == b[p]) ++p;
-    return a[p] &lt; b[p];
+	int p = 1;
+	while (a[p] == b[p]) ++p;
+	return a[p] &lt; b[p];
 }
 
 int main() {
-    rd(n), rda(a, n);
-    for (int i = 1; i &lt;= n; i++) s += a[i];
-    int mn = *min_element(a + 1, a + n + 1);
-    int mx = *max_element(a + 1, a + n + 1);
-    if (mn * 2 &lt; mx) return print(-1), 0;
-    iota(p + 1, p + n + 1, 1), work(n);
-    for (int i = 1; i &lt;= n; i++) --a[q[i]], ans[++m] = p[i] = q[i];
-    while (m != s) {
-        static int t[N];
-        memset(t, 0, sizeof(t)), t[1] = n + 1;
-        int k = 0;
-        for (int i = 1; i &lt;= n; i++) {
-            work(i);
-            if (q[1] &amp;&amp; pd(q, t))
-                k = i, copy(q + 1, q + i + 1, t + 1);
-        }
-        for (int i = 1; i + k &lt;= n; i++) p[i] = p[i+k];
-        for (int i = 1; i &lt;= k; i++)
-            ans[++m] = p[n-k+i] = t[i], --a[t[i]];
-    }
-    printa(ans, m);
-    return 0;
+	rd(n), rda(a, n);
+	for (int i = 1; i &lt;= n; i++) s += a[i];
+	int mn = *min_element(a + 1, a + n + 1);
+	int mx = *max_element(a + 1, a + n + 1);
+	if (mn * 2 &lt; mx) return print(-1), 0;
+	iota(p + 1, p + n + 1, 1), work(n);
+	for (int i = 1; i &lt;= n; i++) --a[q[i]], ans[++m] = p[i] = q[i];
+	while (m != s) {
+		static int t[N];
+		memset(t, 0, sizeof(t)), t[1] = n + 1;
+		int k = 0;
+		for (int i = 1; i &lt;= n; i++) {
+			work(i);
+			if (q[1] &amp;&amp; pd(q, t))
+				k = i, copy(q + 1, q + i + 1, t + 1);
+		}
+		for (int i = 1; i + k &lt;= n; i++) p[i] = p[i+k];
+		for (int i = 1; i &lt;= k; i++)
+			ans[++m] = p[n-k+i] = t[i], --a[t[i]];
+	}
+	printa(ans, m);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6"><a href="https://atcoder.jp/contests/agc046/tasks/agc046_f" target="_blank" rel="noopener noreferrer">Forbidden Tournament</a></h2>

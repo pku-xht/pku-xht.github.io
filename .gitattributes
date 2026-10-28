@@ -13,7 +13,9 @@
 /services/blog-api/src/article*.mjs text eol=lf
 /tools/render_comment_admin.mjs text eol=lf
 /tools/render_article_editor.mjs text eol=lf
-/content/blog/**/*.md whitespace=-blank-at-eol
+/content/blog/**/*.md text eol=lf whitespace=-blank-at-eol,-blank-at-eof
+# Native capture file hashes refer to its exact bytes, including line endings.
+/migration/sources/native-public-2026-10-29.json -text whitespace=cr-at-eol
 /assets/vendor/** linguist-vendored=true
 /tools/vendor/** linguist-vendored=true
 # Preserve upstream PyYAML source bytes, including its original whitespace.

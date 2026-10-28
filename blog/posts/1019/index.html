@@ -15,26 +15,26 @@
 <h2 id="section-1"><a href="https://atcoder.jp/contests/agc022/tasks/agc022_a" target="_blank" rel="noopener noreferrer">Diverse Word</a></h2>
 <p>分类讨论一下即可。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    string s;
-    cin &gt;&gt; s;
-    if ((int)s.size() == 26) {
-        string t = s;
-        if (next_permutation(t.begin(), t.end())) {
-            int i = 0;
-            while (s[i] == t[i]) ++i;
-            while ((int)t.size() &gt; i + 1) t.pop_back();
-            cout &lt;&lt; t &lt;&lt; endl;
-        } else print(-1);
-    } else {
-        map&lt;char, bool&gt; v;
-        for (char c : s) v[c] = 1;
-        for (char i = 'a'; i &lt;= 'z'; i++)
-            if (!v[i]) {
-                cout &lt;&lt; s + i &lt;&lt; endl;
-                break;
-            }
-    }
-    return 0;
+	string s;
+	cin &gt;&gt; s;
+	if ((int)s.size() == 26) {
+		string t = s;
+		if (next_permutation(t.begin(), t.end())) {
+			int i = 0;
+			while (s[i] == t[i]) ++i;
+			while ((int)t.size() &gt; i + 1) t.pop_back();
+			cout &lt;&lt; t &lt;&lt; endl;
+		} else print(-1);
+	} else {
+		map&lt;char, bool&gt; v;
+		for (char c : s) v[c] = 1;
+		for (char i = 'a'; i &lt;= 'z'; i++)
+			if (!v[i]) {
+				cout &lt;&lt; s + i &lt;&lt; endl;
+				break;
+			}
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc022/tasks/agc022_b" target="_blank" rel="noopener noreferrer">GCD Sequence</a></h2>
@@ -42,28 +42,28 @@
 <p>否则，注意到 <span class="math-inline" data-original-math="$\le 30000$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo><mn>30000</mn></mrow><annotation encoding="application/x-tex">\le 30000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">30000</span></span></span></span></span> 且是 <span class="math-inline" data-original-math="$2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 的倍数或 <span class="math-inline" data-original-math="$3$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn></mrow><annotation encoding="application/x-tex">3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span></span> 的倍数的数恰好有 <span class="math-inline" data-original-math="$20000$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>20000</mn></mrow><annotation encoding="application/x-tex">20000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">20000</span></span></span></span></span> 个，我们只使用这些数。</p>
 <p>先选择 <span class="math-inline" data-original-math="$2,3,4,9$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo separator="true">,</mo><mn>3</mn><mo separator="true">,</mo><mn>4</mn><mo separator="true">,</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">2,3,4,9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">4</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">9</span></span></span></span></span>，然后将其它数按 <span class="math-inline" data-original-math="$\bmod 6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext><mo lspace="0.22em" rspace="0.22em"><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi></mrow></mo><mtext> </mtext><mn>6</mn></mrow><annotation encoding="application/x-tex">\bmod 6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mord"><span class="mord"><span class="mord mathrm">mod</span></span></span><span class="mspace" style="margin-right:0.0556em;"></span><span class="mord">6</span></span></span></span></span> 分类，在保证和为 <span class="math-inline" data-original-math="$6$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>6</mn></mrow><annotation encoding="application/x-tex">6</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">6</span></span></span></span></span> 的倍数的情况下选剩下的数就能满足条件。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    int n;
-    rd(n);
-    if (n == 3) return prints("2 5 63"), 0;
-    vi ans = {2, 3, 4, 9};
-    set&lt;int&gt; s[6];
-    for (int i = 6; i &lt;= 30000; i++)
-        if (!(i % 2) || !(i % 3)) s[i%6].insert(i);
-    s[3].erase(9);
-    n -= 4;
-    while (n &gt; 1 &amp;&amp; s[2].size() &amp;&amp; s[4].size())
-        n -= 2,
-        ans.pb(*s[2].begin()), s[2].erase(s[2].begin()),
-        ans.pb(*s[4].begin()), s[4].erase(s[4].begin());
-    while (n &gt; 1 &amp;&amp; s[3].size() &gt; 1u)
-        n -= 2,
-        ans.pb(*s[3].begin()), s[3].erase(s[3].begin()),
-        ans.pb(*s[3].begin()), s[3].erase(s[3].begin());
-    while (n &amp;&amp; s[0].size())
-        n--,
-        ans.pb(*s[0].begin()), s[0].erase(s[0].begin());
-    for (int x : ans) print(x, ' ');
-    return 0;
+	int n;
+	rd(n);
+	if (n == 3) return prints("2 5 63"), 0;
+	vi ans = {2, 3, 4, 9};
+	set&lt;int&gt; s[6];
+	for (int i = 6; i &lt;= 30000; i++)
+		if (!(i % 2) || !(i % 3)) s[i%6].insert(i);
+	s[3].erase(9);
+	n -= 4;
+	while (n &gt; 1 &amp;&amp; s[2].size() &amp;&amp; s[4].size())
+		n -= 2,
+		ans.pb(*s[2].begin()), s[2].erase(s[2].begin()),
+		ans.pb(*s[4].begin()), s[4].erase(s[4].begin());
+	while (n &gt; 1 &amp;&amp; s[3].size() &gt; 1u)
+		n -= 2,
+		ans.pb(*s[3].begin()), s[3].erase(s[3].begin()),
+		ans.pb(*s[3].begin()), s[3].erase(s[3].begin());
+	while (n &amp;&amp; s[0].size())
+		n--,
+		ans.pb(*s[0].begin()), s[0].erase(s[0].begin());
+	for (int x : ans) print(x, ' ');
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc022/tasks/agc022_c" target="_blank" rel="noopener noreferrer">Remainder Game</a></h2>
@@ -75,30 +75,30 @@ bool v[N];
 ll ans;
 
 bool dfs(int x, int t, ll o) {
-    if (x == t) return 1;
-    if (v[x]) return 0;
-    v[x] = 1;
-    for (int i = 1; i &lt; N; i++)
-        if ((o &gt;&gt; i &amp; 1) &amp;&amp; dfs(x % i, t, o)) return 1;
-    return 0;
+	if (x == t) return 1;
+	if (v[x]) return 0;
+	v[x] = 1;
+	for (int i = 1; i &lt; N; i++)
+		if ((o &gt;&gt; i &amp; 1) &amp;&amp; dfs(x % i, t, o)) return 1;
+	return 0;
 }
 
 inline bool pd(ll o) {
-    for (int i = 1; i &lt;= n; i++) {
-        for (int j = 0; j &lt; N; j++) v[j] = 0;
-        if (!dfs(a[i], b[i], o)) return 0;
-    }
-    return 1;
+	for (int i = 1; i &lt;= n; i++) {
+		for (int j = 0; j &lt; N; j++) v[j] = 0;
+		if (!dfs(a[i], b[i], o)) return 0;
+	}
+	return 1;
 }
 
 int main() {
-    rd(n), rda(a, n), rda(b, n);
-    for (int i = 1; i &lt; N; i++) ans |= 1ll &lt;&lt; i;
-    if (!pd(ans)) return print(-1), 0;
-    for (int i = N - 1; i; i--)
-        if (pd(ans ^ 1ll &lt;&lt; i)) ans ^= 1ll &lt;&lt; i;
-    print(ans);
-    return 0;
+	rd(n), rda(a, n), rda(b, n);
+	for (int i = 1; i &lt; N; i++) ans |= 1ll &lt;&lt; i;
+	if (!pd(ans)) return print(-1), 0;
+	for (int i = N - 1; i; i--)
+		if (pd(ans ^ 1ll &lt;&lt; i)) ans ^= 1ll &lt;&lt; i;
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Shopping" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc022/tasks/agc022_d" target="_blank" rel="noopener noreferrer">Shopping</a></h2>
@@ -132,30 +132,30 @@ bool l[N], r[N], v[N];
 vi p;
 
 int main() {
-    rd(n, L), rda(x, n), rda(t, n), ans = n + 1;
-    for (int i = 1; i &lt;= n; i++) {
-        ans += t[i] / (2 * L), t[i] %= 2 * L;
-        l[i] = 2 * (L - x[i]) &gt;= t[i], r[i] = 2 * x[i] &gt;= t[i];
-        if (!t[i]) --ans, v[i] = 1;
-        else if (!l[i] &amp;&amp; !r[i]) v[i] = 1;
-        else if (i == n &amp;&amp; l[i]) --ans;
-    }
-    for (int i = 1; i &lt; n; i++)
-        if (!v[i]) {
-            if (l[i] &amp;&amp; r[i]) p.pb(i);
-            else if (l[i] &amp;&amp; !r[i] &amp;&amp; p.size())
-                --ans, v[i] = 1, v[p.back()] = 1, p.pop_back();
-        }
-    p.clear();
-    for (int i = n - 1; i; i--)
-        if (!v[i]) {
-            if (l[i] &amp;&amp; r[i]) p.pb(i);
-            else if (!l[i] &amp;&amp; r[i] &amp;&amp; p.size())
-                --ans, v[i] = 1, v[p.back()] = 1, p.pop_back();
-        }
-    ans -= p.size() / 2;
-    print(ans * 2 * L);
-    return 0;
+	rd(n, L), rda(x, n), rda(t, n), ans = n + 1;
+	for (int i = 1; i &lt;= n; i++) {
+		ans += t[i] / (2 * L), t[i] %= 2 * L;
+		l[i] = 2 * (L - x[i]) &gt;= t[i], r[i] = 2 * x[i] &gt;= t[i];
+		if (!t[i]) --ans, v[i] = 1;
+		else if (!l[i] &amp;&amp; !r[i]) v[i] = 1;
+		else if (i == n &amp;&amp; l[i]) --ans;
+	}
+	for (int i = 1; i &lt; n; i++)
+		if (!v[i]) {
+			if (l[i] &amp;&amp; r[i]) p.pb(i);
+			else if (l[i] &amp;&amp; !r[i] &amp;&amp; p.size())
+				--ans, v[i] = 1, v[p.back()] = 1, p.pop_back();
+		}
+	p.clear();
+	for (int i = n - 1; i; i--)
+		if (!v[i]) {
+			if (l[i] &amp;&amp; r[i]) p.pb(i);
+			else if (!l[i] &amp;&amp; r[i] &amp;&amp; p.size())
+				--ans, v[i] = 1, v[p.back()] = 1, p.pop_back();
+		}
+	ans -= p.size() / 2;
+	print(ans * 2 * L);
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Median_Replace" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc022/tasks/agc022_e" target="_blank" rel="noopener noreferrer">Median Replace</a></h2>
@@ -186,25 +186,25 @@ char s[N];
 modint f[N][3][3], ans;
 
 int main() {
-    rds(s, n), f[0][0][0] = 1;
-    for (int i = 0; i &lt; n; i++)
-        for (int j = 0; j &lt; 3; j++)
-            for (int k = 0; k &lt; 3; k++)
-                if (!!f[i][j][k]) {
-                    if (s[i+1] != '0') {
-                        if (k) f[i+1][j][k-1] += f[i][j][k];
-                        else f[i+1][min(j+1,2)][k] += f[i][j][k];
-                    }
-                    if (s[i+1] != '1') {
-                        if (k == 2) f[i+1][j][1] += f[i][j][k];
-                        else f[i+1][j][k+1] += f[i][j][k];
-                    }
-                }
-    for (int i = 0; i &lt; 3; i++)
-        for (int j = 0; j &lt;= i; j++)
-            ans += f[n][i][j];
-    print(ans);
-    return 0;
+	rds(s, n), f[0][0][0] = 1;
+	for (int i = 0; i &lt; n; i++)
+		for (int j = 0; j &lt; 3; j++)
+			for (int k = 0; k &lt; 3; k++)
+				if (!!f[i][j][k]) {
+					if (s[i+1] != '0') {
+						if (k) f[i+1][j][k-1] += f[i][j][k];
+						else f[i+1][min(j+1,2)][k] += f[i][j][k];
+					}
+					if (s[i+1] != '1') {
+						if (k == 2) f[i+1][j][1] += f[i][j][k];
+						else f[i+1][j][k+1] += f[i][j][k];
+					}
+				}
+	for (int i = 0; i &lt; 3; i++)
+		for (int j = 0; j &lt;= i; j++)
+			ans += f[n][i][j];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Checkers" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc022/tasks/agc022_f" target="_blank" rel="noopener noreferrer">Checkers</a></h2>
@@ -225,7 +225,7 @@ int main() {
 <p>由于 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 很大，只用考虑每个数的贡献，贡献不同的方案对应的坐标也不同，显然每个数的贡献形如 <span class="math-inline" data-original-math="$\pm 2^k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>±</mo><msup><mn>2</mn><mi>k</mi></msup></mrow><annotation encoding="application/x-tex">\pm 2^k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9324em;vertical-align:-0.0833em;"></span><span class="mord">±</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span></span></span></span></span></span></span></span>。</p>
 <p>对于每次操作选择的 <span class="math-inline" data-original-math="$a,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span>，将 <span class="math-inline" data-original-math="$b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 的父亲设为 <span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span>，这样会得到一颗有根树，点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 贡献中的 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 就是它的深度（根的深度为 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>）。</p>
 <p>考虑正负号，设点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 有 <span class="math-inline" data-original-math="$c$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span></span> 个儿子，则会有 <span class="math-inline" data-original-math="$\lfloor \frac c2 \rfloor$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">⌊</mo><mfrac><mi>c</mi><mn>2</mn></mfrac><mo stretchy="false">⌋</mo></mrow><annotation encoding="application/x-tex">\lfloor \frac c2 \rfloor</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.095em;vertical-align:-0.345em;"></span><span class="mopen">⌊</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose">⌋</span></span></span></span></span> 个儿子和 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 异号，剩下的同号。</p>
-<p>考虑 DP，设 <span class="math-inline" data-original-math="$f_{i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示已经有 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个点，其中有 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 个奇数个儿子的点的方案数，枚举这一层的点数 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>，那么不考虑这一层的点的儿子的影响，有 <span class="math-inline" data-original-math="$\frac {k-j}{2}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>k</mi><mo>−</mo><mi>j</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac {k-j}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2772em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 个点和父亲不同，再枚举实际有 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 个点和父亲不同，则意味着有 <span class="math-inline" data-original-math="$|\frac {k-j}2 – x|$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mfrac><mrow><mi>k</mi><mo>−</mo><mi>j</mi></mrow><mn>2</mn></mfrac><mo>−</mo><mi>x</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\frac {k-j}2 - x|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2772em;vertical-align:-0.345em;"></span><span class="mord">∣</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">x</span><span class="mord">∣</span></span></span></span></span> 个点有奇数个儿子。</p>
+<p>考虑 DP，设 <span class="math-inline" data-original-math="$f_{i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示已经有 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 个点，其中有 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 个奇数个儿子的点的方案数，枚举这一层的点数 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span>，那么不考虑这一层的点的儿子的影响，有 <span class="math-inline" data-original-math="$\frac {k-j}{2}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>k</mi><mo>−</mo><mi>j</mi></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac {k-j}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2772em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 个点和父亲不同，再枚举实际有 <span class="math-inline" data-original-math="$x$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 个点和父亲不同，则意味着有 <span class="math-inline" data-original-math="$|\frac {k-j}2 - x|$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∣</mi><mfrac><mrow><mi>k</mi><mo>−</mo><mi>j</mi></mrow><mn>2</mn></mfrac><mo>−</mo><mi>x</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">|\frac {k-j}2 - x|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.2772em;vertical-align:-0.345em;"></span><span class="mord">∣</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">x</span><span class="mord">∣</span></span></span></span></span> 个点有奇数个儿子。</p>
 <p>时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^4)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>4</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^4)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <h3 id="section-15">代码</h3>
 <pre tabindex="0"><code class="language-cpp">const int N = 57;
@@ -233,17 +233,17 @@ int n;
 modint f[N][N];
 
 int main() {
-    rd(n), init(n), f[1][0] = f[1][1] = n;
-    for (int i = 1; i &lt; n; i++)
-        for (int j = 0; j &lt;= i; j++)
-            for (int k = max(j, 1); k &lt;= n - i; k++) {
-                if ((k - j) &amp; 1) continue;
-                int y = (k - j) / 2;
-                for (int x = 0; x &lt;= k; x++)
-                    f[i+k][abs(y-x)] += f[i][j] * binom(n - i, k) * binom(k, x);
-            }
-    print(f[n][0]);
-    return 0;
+	rd(n), init(n), f[1][0] = f[1][1] = n;
+	for (int i = 1; i &lt; n; i++)
+		for (int j = 0; j &lt;= i; j++)
+			for (int k = max(j, 1); k &lt;= n - i; k++) {
+				if ((k - j) &amp; 1) continue;
+				int y = (k - j) / 2;
+				for (int x = 0; x &lt;= k; x++)
+					f[i+k][abs(y-x)] += f[i][j] * binom(n - i, k) * binom(k, x);
+			}
+	print(f[n][0]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="16" href="/blog/tags/16/">构造</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/1020/"><span>较新一篇</span>AtCoder Grand Contest 021 题解</a><a class="rel-next" rel="next" href="/blog/posts/1017/"><span>较早一篇</span>AtCoder Grand Contest 023 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="1019" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

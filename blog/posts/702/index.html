@@ -20,24 +20,24 @@ int n, c[2], a[N], ans;
 char s[N];
 
 int main() {
-    rd(n), rds(s, n);
-    for (int i = 1; i &lt;= n; i++)
-        if (s[i] == '(') c[0]++;
-        else c[1]++;
-    if (c[0] != c[1]) return print(-1), 0;
-    for (int i = 1, p = 0; i &lt;= n; i++) {
-        if (s[i] == '(') a[i] = a[i-1] + 1;
-        else a[i] = a[i-1] - 1;
-        if (!a[i]) {
-            bool ok = 0;
-            for (int j = p + 1; j &lt;= i; j++)
-                if (a[j] &lt; 0) ok = 1;
-            if (ok) ans += i - p;
-            p = i;
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n), rds(s, n);
+	for (int i = 1; i &lt;= n; i++)
+		if (s[i] == '(') c[0]++;
+		else c[1]++;
+	if (c[0] != c[1]) return print(-1), 0;
+	for (int i = 1, p = 0; i &lt;= n; i++) {
+		if (s[i] == '(') a[i] = a[i-1] + 1;
+		else a[i] = a[i-1] - 1;
+		if (!a[i]) {
+			bool ok = 0;
+			for (int j = p + 1; j &lt;= i; j++)
+				if (a[j] &lt; 0) ok = 1;
+			if (ok) ans += i - p;
+			p = i;
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Present</h2>
@@ -49,27 +49,27 @@ int main() {
 int n, a[N], b[N], ans;
 
 inline bool calc(int L, int R) {
-    if (L &gt; R) return 0;
-    ll ret = 0;
-    for (int i = n, l = 1, r = 1; i; i--) {
-        while (l &lt;= n &amp;&amp; b[i] + b[l] &lt; L) ++l;
-        while (r &lt;= n &amp;&amp; b[i] + b[r] &lt;= R) ++r;
-        ret += r - l - (l &lt;= i &amp;&amp; i &lt; r);
-    }
-    return (ret &gt;&gt; 1) &amp; 1;
+	if (L &gt; R) return 0;
+	ll ret = 0;
+	for (int i = n, l = 1, r = 1; i; i--) {
+		while (l &lt;= n &amp;&amp; b[i] + b[l] &lt; L) ++l;
+		while (r &lt;= n &amp;&amp; b[i] + b[r] &lt;= R) ++r;
+		ret += r - l - (l &lt;= i &amp;&amp; i &lt; r);
+	}
+	return (ret &gt;&gt; 1) &amp; 1;
 }
 
 inline bool solve(int k) {
-    for (int i = 1; i &lt;= n; i++) b[i] = a[i] &amp; ((1 &lt;&lt; (k + 1)) - 1);
-    sort(b + 1, b + n + 1);
-    return calc(1 &lt;&lt; k, (1 &lt;&lt; (k + 1)) - 1) ^ calc(3 &lt;&lt; k, (1 &lt;&lt; (k + 2)) - 2);
+	for (int i = 1; i &lt;= n; i++) b[i] = a[i] &amp; ((1 &lt;&lt; (k + 1)) - 1);
+	sort(b + 1, b + n + 1);
+	return calc(1 &lt;&lt; k, (1 &lt;&lt; (k + 1)) - 1) ^ calc(3 &lt;&lt; k, (1 &lt;&lt; (k + 2)) - 2);
 }
 
 int main() {
-    rd(n), rda(a, n);
-    for (int i = 0; i &lt; 26; i++) ans |= solve(i) &lt;&lt; i;
-    print(ans);
-    return 0;
+	rd(n), rda(a, n);
+	for (int i = 0; i &lt; 26; i++) ans |= solve(i) &lt;&lt; i;
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Instant Noodles</h2>
@@ -84,32 +84,32 @@ ll a[N];
 vi e[N];
 
 inline int h(vi p) {
-    sort(p.begin(), p.end());
-    int ret = 0;
-    for (int x : p) ret = (1ll * ret * B + x) % P;
-    return ret;
+	sort(p.begin(), p.end());
+	int ret = 0;
+	for (int x : p) ret = (1ll * ret * B + x) % P;
+	return ret;
 }
 
 inline void solve() {
-    rd(n), rd(m), rda(a, n);
-    for (int i = 1; i &lt;= n; i++) e[i].clear();
-    for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[y].pb(x);
-    map&lt;int, ll&gt; p;
-    for (int i = 1; i &lt;= n; i++)
-        if (e[i].size()) p[h(e[i])] += a[i];
-    ll d = 0;
-    for (auto o : p) d = d ? __gcd(d, o.se) : o.se;
-    print(d);
+	rd(n), rd(m), rda(a, n);
+	for (int i = 1; i &lt;= n; i++) e[i].clear();
+	for (int i = 1, x, y; i &lt;= m; i++) rd(x), rd(y), e[y].pb(x);
+	map&lt;int, ll&gt; p;
+	for (int i = 1; i &lt;= n; i++)
+		if (e[i].size()) p[h(e[i])] += a[i];
+	ll d = 0;
+	for (auto o : p) d = d ? __gcd(d, o.se) : o.se;
+	print(d);
 }
 
 int main() {
-    srand(time(0));
-    P = rdm((int)1e8, (int)1e9);
-    B = rdm((int)1e7, (int)1e8);
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	srand(time(0));
+	P = rdm((int)1e8, (int)1e9);
+	B = rdm((int)1e7, (int)1e8);
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Reality Show</h2>

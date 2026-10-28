@@ -9,63 +9,63 @@
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
-<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #614 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-01-23T02:02:40+08:00">2020 年 1 月 23 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 5 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">NEKO’s Maze Game</a></li><li class="toc-level-2"><a href="#section-2">Aroma’s Search</a></li><li class="toc-level-2"><a href="#section-3">Xenon’s Attack on the Gangs</a></li><li class="toc-level-2"><a href="#section-4">Chaotic V.</a></li><li class="toc-level-2"><a href="#section-5">Rin and The Unknown Flower</a></li><li class="toc-level-2"><a href="#section-6">Nora’s Toy Boxes</a></li></ol></details><div class="prose"><blockquote>
+<main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>Codeforces Round #614 (Div. 1) 题解</h1><p class="post-meta"><time datetime="2020-01-23T02:02:40+08:00">2020 年 1 月 23 日</time><a href="/blog/categories/15/">题解</a><span>更新于 2020 年 6 月 5 日</span></p></header><details class="article-toc" open><summary>本文目录（6 节）</summary><ol><li class="toc-level-2"><a href="#section-1">NEKO's Maze Game</a></li><li class="toc-level-2"><a href="#section-2">Aroma's Search</a></li><li class="toc-level-2"><a href="#section-3">Xenon's Attack on the Gangs</a></li><li class="toc-level-2"><a href="#section-4">Chaotic V.</a></li><li class="toc-level-2"><a href="#section-5">Rin and The Unknown Flower</a></li><li class="toc-level-2"><a href="#section-6">Nora's Toy Boxes</a></li></ol></details><div class="prose"><blockquote>
 <p><a href="https://codeforces.com/contest/1292" target="_blank" rel="noopener noreferrer">Codeforces Round #614 (Div. 1)</a></p>
 </blockquote>
-<h2 id="section-1">NEKO’s Maze Game</h2>
+<h2 id="section-1">NEKO's Maze Game</h2>
 <p>动态维护有多少对格子可以阻碍 <span class="math-inline" data-original-math="$(1,1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1,1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span> 和 <span class="math-inline" data-original-math="$(2,n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>2</mn><mo separator="true">,</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(2,n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 相连，如果存在则意味着 <code>No</code>，否则为 <code>Yes</code>，模拟即可。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
 int n, q, a[2][N], ans;
 
 inline int pd(int x, int y) {
-    if (!a[x][y]) return 0;
-    return a[x^1][y-1] + a[x^1][y] + a[x^1][y+1];
+	if (!a[x][y]) return 0;
+	return a[x^1][y-1] + a[x^1][y] + a[x^1][y+1];
 }
 
 int main() {
-    rd(n), rd(q);
-    for (int i = 1; i &lt;= q; i++) {
-        int x, y;
-        rd(x), rd(y);
-        --x;
-        ans -= pd(x, y);
-        a[x][y] ^= 1;
-        ans += pd(x, y);
-        prints(ans ? "No" : "Yes");
-    } 
-    return 0;
+	rd(n), rd(q);
+	for (int i = 1; i &lt;= q; i++) {
+		int x, y;
+		rd(x), rd(y);
+		--x;
+		ans -= pd(x, y);
+		a[x][y] ^= 1;
+		ans += pd(x, y);
+		prints(ans ? "No" : "Yes");
+	} 
+	return 0;
 }
 </code></pre>
-<h2 id="section-2">Aroma’s Search</h2>
+<h2 id="section-2">Aroma's Search</h2>
 <p>由于 <span class="math-inline" data-original-math="$a &gt; 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">a &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，因此范围内的点只有 <span class="math-inline" data-original-math="$\mathcal O(\log w)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>log</mi><mo>⁡</mo><mi>w</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(\log w)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mclose">)</span></span></span></span></span> 个，那么枚举选的第一个点和之后的方向即可。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 107;
 int n, ans;
 ll ax, ay, bx, by, xs, ys, t, mx, my, x[N], y[N];
 
 int main() {
-    rd(x[0]), rd(y[0]), rd(ax), rd(ay), rd(bx), rd(by);
-    rd(xs), rd(ys), rd(t), mx = xs + t, my = ys + t;
-    while (x[n] &lt;= mx &amp;&amp; y[n] &lt;= my)
-        ++n, x[n] = x[n-1] * ax + bx, y[n] = y[n-1] * ay + by;
-    for (int i = 0; i &lt; n; i++)
-        for (int j = -1; j &lt;= 1; j += 2) {
-            int cnt = 0, now = i;
-            ll T = t;
-            t -= abs(xs - x[i]) + abs(ys - y[i]);
-            while (t &gt;= 0) {
-                ++cnt;
-                now += j;
-                if (now &lt; 0 || now &gt;= n) break;
-                t -= abs(x[now-j] - x[now]) + abs(y[now-j] - y[now]);
-            }
-            ans = max(ans, cnt);
-            t = T;
-        }
-    print(ans);
-    return 0;
+	rd(x[0]), rd(y[0]), rd(ax), rd(ay), rd(bx), rd(by);
+	rd(xs), rd(ys), rd(t), mx = xs + t, my = ys + t;
+	while (x[n] &lt;= mx &amp;&amp; y[n] &lt;= my)
+		++n, x[n] = x[n-1] * ax + bx, y[n] = y[n-1] * ay + by;
+	for (int i = 0; i &lt; n; i++)
+		for (int j = -1; j &lt;= 1; j += 2) {
+			int cnt = 0, now = i;
+			ll T = t;
+			t -= abs(xs - x[i]) + abs(ys - y[i]);
+			while (t &gt;= 0) {
+				++cnt;
+				now += j;
+				if (now &lt; 0 || now &gt;= n) break;
+				t -= abs(x[now-j] - x[now]) + abs(y[now-j] - y[now]);
+			}
+			ans = max(ans, cnt);
+			t = T;
+		}
+	print(ans);
+	return 0;
 }
 </code></pre>
-<h2 id="section-3">Xenon’s Attack on the Gangs</h2>
+<h2 id="section-3">Xenon's Attack on the Gangs</h2>
 <p>考虑 dp，设 <span class="math-inline" data-original-math="$f_{i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示路径 <span class="math-inline" data-original-math="$(i,j)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span><span class="mclose">)</span></span></span></span></span> 上的最大贡献，转移就是向两端各延伸一个点，类似于树上区间 dp，时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 3e3 + 7;
 int n, fa[N], s[N], l[N], r[N], k, p[N];
@@ -73,42 +73,42 @@ vi e[N];
 ll f[N][N], ans;
 
 void dfs2(int x, int fa, int X, int Y) {
-    for (auto y : e[x])
-        if (y != fa) {
-            f[y][X] = f[X][y] = max(f[X][x], f[Y][y]) + s[y] * (n - s[Y]);
-            dfs2(y, x, X, Y);
-        }
+	for (auto y : e[x])
+		if (y != fa) {
+			f[y][X] = f[X][y] = max(f[X][x], f[Y][y]) + s[y] * (n - s[Y]);
+			dfs2(y, x, X, Y);
+		}
 }
 
 void dfs1(int x, int fa) {
-    s[x] = 1, l[x] = ++k, p[k] = x;
-    for (auto y : e[x])
-        if (y != fa) {
-            ::fa[y] = x;
-            dfs1(y, x), s[x] += s[y];
-            f[y][x] = f[x][y] = s[y] * (n - s[y]);
-            dfs2(y, x, x, y);
-        }
-    r[x] = k;
-    for (auto y : e[x])
-        if (y != fa)
-            for (auto z : e[x])
-                if (z != fa &amp;&amp; z != y)
-                    for (int i = l[y]; i &lt;= r[y]; i++)
-                        for (int j = l[z]; j &lt;= r[z]; j++)
-                            f[p[i]][p[j]] = f[p[j]][p[i]] = max(f[p[i]][::fa[p[j]]], f[::fa[p[i]]][p[j]]) + s[p[i]] * s[p[j]];
+	s[x] = 1, l[x] = ++k, p[k] = x;
+	for (auto y : e[x])
+		if (y != fa) {
+			::fa[y] = x;
+			dfs1(y, x), s[x] += s[y];
+			f[y][x] = f[x][y] = s[y] * (n - s[y]);
+			dfs2(y, x, x, y);
+		}
+	r[x] = k;
+	for (auto y : e[x])
+		if (y != fa)
+			for (auto z : e[x])
+				if (z != fa &amp;&amp; z != y)
+					for (int i = l[y]; i &lt;= r[y]; i++)
+						for (int j = l[z]; j &lt;= r[z]; j++)
+							f[p[i]][p[j]] = f[p[j]][p[i]] = max(f[p[i]][::fa[p[j]]], f[::fa[p[i]]][p[j]]) + s[p[i]] * s[p[j]];
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    dfs1(1, 0);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= n; j++)
-            ans = max(ans, f[i][j]);
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	dfs1(1, 0);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= n; j++)
+			ans = max(ans, f[i][j]);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Chaotic V.</h2>
@@ -129,38 +129,38 @@ int n, c[N], f[N][N], p[N], s[N];
 ll ans, now;
 
 int main() {
-    rd(n);
-    for (int i = 1, x; i &lt;= n; i++) rd(x), ++c[x];
-    for (int i = 2; i &lt; N; i++) {
-        memcpy(f[i], f[i-1], sizeof(f[i]));
-        for (int j = 2, k = i; j &lt;= k; j++)
-            while (k % j == 0) ++f[i][j], k /= j;
-    }
-    for (int i = 1; i &lt; N; i++)
-        if (!c[i]) p[i] = 1;
-        else for (int j = 1; j &lt;= i; j++)
-            if (f[i][j]) p[i] = j, now += 1ll * f[i][j] * c[i];
-    ans = now;
-    while (*max_element(p + 1, p + N) &gt; 1) {
-        memset(s, 0, sizeof(s));
-        for (int i = 0; i &lt; N; i++) s[p[i]] += c[i];
-        int o = max_element(s + 1, s + N) - s, w = s[o];
-        if (w * 2 &lt;= n || o == 1) break;
-        ans = min(ans, now -= w * 2 - n);
-        for (int i = 0; i &lt; N; i++) {
-            if (p[i] != o) p[i] = 1;
-            if (p[i] == 1) continue;
-            --f[i][p[i]];
-            while (p[i] &gt; 1 &amp;&amp; !f[i][p[i]]) --p[i];
-        }
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1, x; i &lt;= n; i++) rd(x), ++c[x];
+	for (int i = 2; i &lt; N; i++) {
+		memcpy(f[i], f[i-1], sizeof(f[i]));
+		for (int j = 2, k = i; j &lt;= k; j++)
+			while (k % j == 0) ++f[i][j], k /= j;
+	}
+	for (int i = 1; i &lt; N; i++)
+		if (!c[i]) p[i] = 1;
+		else for (int j = 1; j &lt;= i; j++)
+			if (f[i][j]) p[i] = j, now += 1ll * f[i][j] * c[i];
+	ans = now;
+	while (*max_element(p + 1, p + N) &gt; 1) {
+		memset(s, 0, sizeof(s));
+		for (int i = 0; i &lt; N; i++) s[p[i]] += c[i];
+		int o = max_element(s + 1, s + N) - s, w = s[o];
+		if (w * 2 &lt;= n || o == 1) break;
+		ans = min(ans, now -= w * 2 - n);
+		for (int i = 0; i &lt; N; i++) {
+			if (p[i] != o) p[i] = 1;
+			if (p[i] == 1) continue;
+			--f[i][p[i]];
+			while (p[i] &gt; 1 &amp;&amp; !f[i][p[i]]) --p[i];
+		}
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Rin and The Unknown Flower</h2>
 <p>题目太神仙了，先咕咕咕着。</p>
-<h2 id="section-6">Nora’s Toy Boxes</h2>
+<h2 id="section-6">Nora's Toy Boxes</h2>
 <p>题目太神仙了，先咕咕咕着。</p>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="66" href="/blog/tags/66/">区间 DP</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/575/"><span>较新一篇</span>CF587F Duff is Mad 题解</a><a class="rel-next" rel="next" href="/blog/posts/564/"><span>较早一篇</span>CF587D Duff in Mafia 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="570" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>
 <p class="comments-note">填写昵称即可留言。评论经站主审核后公开，请勿提交私人信息。</p>

@@ -19,18 +19,18 @@ int n, m;
 string s[N], t[N];
 
 int main() {
-    cin &gt;&gt; n &gt;&gt; m;
-    for (int i = 0; i &lt; n; i++) cin &gt;&gt; s[i];
-    for (int i = 0; i &lt; m; i++) cin &gt;&gt; t[i];
-    int q;
-    cin &gt;&gt; q;
-    while (q--) {
-        int x;
-        cin &gt;&gt; x;
-        --x;
-        cout &lt;&lt; s[x%n] &lt;&lt; t[x%m] &lt;&lt; endl;
-    }
-    return 0;
+	cin &gt;&gt; n &gt;&gt; m;
+	for (int i = 0; i &lt; n; i++) cin &gt;&gt; s[i];
+	for (int i = 0; i &lt; m; i++) cin &gt;&gt; t[i];
+	int q;
+	cin &gt;&gt; q;
+	while (q--) {
+		int x;
+		cin &gt;&gt; x;
+		--x;
+		cout &lt;&lt; s[x%n] &lt;&lt; t[x%m] &lt;&lt; endl;
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">New Year and Ascent Sequence</h2>
@@ -41,30 +41,30 @@ vi e[N];
 bool ok[N];
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) {
-        int m;
-        rd(m);
-        while (m--) {
-            int x;
-            rd(x);
-            e[i].pb(x);
-        }
-        for (ui j = 1; j &lt; e[i].size(); j++)
-            if (e[i][j-1] &lt; e[i][j]) ok[i] = 1;
-    }
-    for (int i = 1; i &lt;= n; i++)
-        if (ok[i]) ++cnt;
-        else {
-            c[e[i][0]]++, d[e[i].back()]++;
-        }
-    for (int i = M - 2; ~i; i--) c[i] += c[i+1];
-    ll ans = 1ll * n * n - 1ll * (n - cnt) * (n - cnt);
-    for (int i = 0; i &lt; M - 1; i++) {
-        ans += 1ll * d[i] * c[i+1];
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) {
+		int m;
+		rd(m);
+		while (m--) {
+			int x;
+			rd(x);
+			e[i].pb(x);
+		}
+		for (ui j = 1; j &lt; e[i].size(); j++)
+			if (e[i][j-1] &lt; e[i][j]) ok[i] = 1;
+	}
+	for (int i = 1; i &lt;= n; i++)
+		if (ok[i]) ++cnt;
+		else {
+			c[e[i][0]]++, d[e[i].back()]++;
+		}
+	for (int i = M - 2; ~i; i--) c[i] += c[i+1];
+	ll ans = 1ll * n * n - 1ll * (n - cnt) * (n - cnt);
+	for (int i = 0; i &lt; M - 1; i++) {
+		ans += 1ll * d[i] * c[i+1];
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">New Year and Permutation</h2>
@@ -74,12 +74,12 @@ int n;
 modint p[N], ans;
 
 int main() {
-    rd(n), rd(P);
-    p[0] = 1;
-    for (int i = 1; i &lt;= n; i++) p[i] = p[i-1] * i;
-    for (int i = 1; i &lt;= n; i++) ans += p[i] * p[n+1-i] * i;
-    print(ans);
-    return 0;
+	rd(n), rd(P);
+	p[0] = 1;
+	for (int i = 1; i &lt;= n; i++) p[i] = p[i-1] * i;
+	for (int i = 1; i &lt;= n; i++) ans += p[i] * p[n+1-i] * i;
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">New Year and Conference</h2>
@@ -91,79 +91,79 @@ int n, m, sa[N], ea[N], sb[N], eb[N], a[N*4];
 vi l[N*4], r[N*4];
 
 inline bool solve() {
-    for (int i = 1; i &lt;= m; ++i) l[i].clear(), r[i].clear();
-    for (int i = 1; i &lt;= n; ++i) l[sa[i]].pb(i), r[ea[i]].pb(i);
-    multiset &lt;int, greater &lt;int&gt; &gt; lmax;
-    multiset &lt;int&gt; rmin;
-    for (int i = 1; i &lt;= m; ++i) {
-        for (int id : l[i]) lmax.insert(sb[id]), rmin.insert(eb[id]);
-        if (lmax.size() &amp;&amp; *lmax.begin() &gt; *rmin.begin()) return 1;
-        for (int id : r[i]) lmax.erase(lmax.find(sb[id])), rmin.erase(rmin.find(eb[id]));
-    }
-    return 0;
+	for (int i = 1; i &lt;= m; ++i) l[i].clear(), r[i].clear();
+	for (int i = 1; i &lt;= n; ++i) l[sa[i]].pb(i), r[ea[i]].pb(i);
+	multiset &lt;int, greater &lt;int&gt; &gt; lmax;
+	multiset &lt;int&gt; rmin;
+	for (int i = 1; i &lt;= m; ++i) {
+		for (int id : l[i]) lmax.insert(sb[id]), rmin.insert(eb[id]);
+		if (lmax.size() &amp;&amp; *lmax.begin() &gt; *rmin.begin()) return 1;
+		for (int id : r[i]) lmax.erase(lmax.find(sb[id])), rmin.erase(rmin.find(eb[id]));
+	}
+	return 0;
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(sa[i]), rd(ea[i]), rd(sb[i]), rd(eb[i]);
-    copy(sa + 1, sa + n + 1, a + 1);
-    copy(ea + 1, ea + n + 1, a + n + 1);
-    copy(sb + 1, sb + n + 1, a + n * 2 + 1);
-    copy(eb + 1, eb + n + 1, a + n * 3 + 1);
-    sort(a + 1, a + n * 4 + 1);
-    m = unique(a + 1, a + n * 4 + 1) - a - 1;
-    for (int i = 1; i &lt;= n; ++i)
-        sa[i] = lower_bound(a + 1, a + m + 1, sa[i]) - a,
-        ea[i] = lower_bound(a + 1, a + m + 1, ea[i]) - a,
-        sb[i] = lower_bound(a + 1, a + m + 1, sb[i]) - a,
-        eb[i] = lower_bound(a + 1, a + m + 1, eb[i]) - a;
-    bool ans = solve();
-    swap(sa, sb), swap(ea, eb);
-    puts((ans | solve()) ? "NO" : "YES");
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(sa[i]), rd(ea[i]), rd(sb[i]), rd(eb[i]);
+	copy(sa + 1, sa + n + 1, a + 1);
+	copy(ea + 1, ea + n + 1, a + n + 1);
+	copy(sb + 1, sb + n + 1, a + n * 2 + 1);
+	copy(eb + 1, eb + n + 1, a + n * 3 + 1);
+	sort(a + 1, a + n * 4 + 1);
+	m = unique(a + 1, a + n * 4 + 1) - a - 1;
+	for (int i = 1; i &lt;= n; ++i)
+		sa[i] = lower_bound(a + 1, a + m + 1, sa[i]) - a,
+		ea[i] = lower_bound(a + 1, a + m + 1, ea[i]) - a,
+		sb[i] = lower_bound(a + 1, a + m + 1, sb[i]) - a,
+		eb[i] = lower_bound(a + 1, a + m + 1, eb[i]) - a;
+	bool ans = solve();
+	swap(sa, sb), swap(ea, eb);
+	puts((ans | solve()) ? "NO" : "YES");
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">New Year and Castle Construction</h2>
-<p>以每个点为原点做一次 <a href="https://www.luogu.com.cn/problem/P2992" target="_blank" rel="noopener noreferrer">P2992 [USACO10OPEN]三角形计数Triangle Counting</a>，最后将答案 <span class="math-inline" data-original-math="$\times \frac {n – 4}2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo><mfrac><mrow><mi>n</mi><mo>−</mo><mn>4</mn></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\times \frac {n - 4}2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord">×</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">4</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 即可。</p>
+<p>以每个点为原点做一次 <a href="https://www.luogu.com.cn/problem/P2992" target="_blank" rel="noopener noreferrer">P2992 [USACO10OPEN]三角形计数Triangle Counting</a>，最后将答案 <span class="math-inline" data-original-math="$\times \frac {n - 4}2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>×</mo><mfrac><mrow><mi>n</mi><mo>−</mo><mn>4</mn></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\times \frac {n - 4}2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord">×</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">4</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span> 即可。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 2.5e3 + 7;
 int n;
 P a[N];
 
 inline int f(P o) {
-    int x = o.x, y = o.y;
-    if (x &lt;= 0 &amp;&amp; y &lt; 0) return 0;
-    if (x &gt; 0 &amp;&amp; y &lt;= 0) return 1;
-    if (x &gt;= 0 &amp;&amp; y &gt; 0) return 2;
-    return 3;
+	int x = o.x, y = o.y;
+	if (x &lt;= 0 &amp;&amp; y &lt; 0) return 0;
+	if (x &gt; 0 &amp;&amp; y &lt;= 0) return 1;
+	if (x &gt;= 0 &amp;&amp; y &gt; 0) return 2;
+	return 3;
 }
 
 inline bool cmpa(P x, P y) { return f(x) == f(y) ? x % y &gt; 0 : f(x) &lt; f(y); }
 
 inline ll solve(int o) {
-    if (n &lt;= 3) return 0;
-    ll ans = 1ll * (n - 1) * (n - 2) * (n - 3) / 6;
-    vector &lt;P&gt; p;
-    for (int i = 1; i &lt;= n; i++)
-        if (i != o) p.pb(a[i] - a[o]);
-    sort(p.begin(), p.end(), cmpa);
-    int w = p.size();
-    for (int i = 0; i &lt; w; i++) p.pb(p[i]);
-    for (int i = 0, j = 1; i &lt; w; i++) {
-        if (j == i) j = i + 1;
-        while (j &lt; 2 * w &amp;&amp; j != i + w &amp;&amp; p[i] % p[j] &gt; 0) ++j;
-        int w = j - i - 1;
-        ans -= 1ll * w * (w - 1) / 2;
-    }
-    return ans;
+	if (n &lt;= 3) return 0;
+	ll ans = 1ll * (n - 1) * (n - 2) * (n - 3) / 6;
+	vector &lt;P&gt; p;
+	for (int i = 1; i &lt;= n; i++)
+		if (i != o) p.pb(a[i] - a[o]);
+	sort(p.begin(), p.end(), cmpa);
+	int w = p.size();
+	for (int i = 0; i &lt; w; i++) p.pb(p[i]);
+	for (int i = 0, j = 1; i &lt; w; i++) {
+		if (j == i) j = i + 1;
+		while (j &lt; 2 * w &amp;&amp; j != i + w &amp;&amp; p[i] % p[j] &gt; 0) ++j;
+		int w = j - i - 1;
+		ans -= 1ll * w * (w - 1) / 2;
+	}
+	return ans;
 }
 
 int main() {
-    scanf("%d", &amp;n);
-    for (int i = 1; i &lt;= n; i++) scanf("%lf %lf", &amp;a[i].x, &amp;a[i].y);
-    ll ans = 0;
-    for (int i = 1; i &lt;= n; i++) ans += solve(i);
-    print(ans * (n - 4) / 2);
-    return 0;
+	scanf("%d", &amp;n);
+	for (int i = 1; i &lt;= n; i++) scanf("%lf %lf", &amp;a[i].x, &amp;a[i].y);
+	ll ans = 0;
+	for (int i = 1; i &lt;= n; i++) ans += solve(i);
+	print(ans * (n - 4) / 2);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">New Year and Social Network</h2>

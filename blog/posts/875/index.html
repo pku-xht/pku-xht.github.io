@@ -41,35 +41,35 @@ vi g[N], e[N];
 bool v[N];
 
 int get(int x) {
-    return x == f[x] ? x : (f[x] = get(f[x]));
+	return x == f[x] ? x : (f[x] = get(f[x]));
 }
 
 void dfs(int x) {
-    s[x] = b[x], ans[x] = inf;
-    for (int y : e[x])
-        dfs(y), s[x] += s[y];
-    for (int y : e[x])
-        ans[x] = min(ans[x], s[x] - s[y] + max(c[x], ans[y]));
-    if (ans[x] == inf) ans[x] = b[x] + c[x];
+	s[x] = b[x], ans[x] = inf;
+	for (int y : e[x])
+		dfs(y), s[x] += s[y];
+	for (int y : e[x])
+		ans[x] = min(ans[x], s[x] - s[y] + max(c[x], ans[y]));
+	if (ans[x] == inf) ans[x] = b[x] + c[x];
 }
 
 int main() {
-    rd(n, m);
-    for (int i = 1; i &lt;= n; i++)
-        rd(a[i], b[i]), c[i] = max(0ll, a[i] - b[i]), p[i] = f[i] = i;
-    sort(p + 1, p + n + 1, [&amp;](int i, int j) { return c[i] &lt; c[j]; });
-    for (int i = 1, x, y; i &lt;= m; i++)
-        rd(x, y), g[x].pb(y), g[y].pb(x);
-    for (int i = 1; i &lt;= n; i++) {
-        int x = p[i];
-        for (int y : g[x])
-            if (v[y] &amp;&amp; get(y) != x)
-                e[x].pb(get(y)), f[get(y)] = x;
-        v[x] = 1;
-    }
-    dfs(p[n]);
-    print(ans[p[n]]);
-    return 0;
+	rd(n, m);
+	for (int i = 1; i &lt;= n; i++)
+		rd(a[i], b[i]), c[i] = max(0ll, a[i] - b[i]), p[i] = f[i] = i;
+	sort(p + 1, p + n + 1, [&amp;](int i, int j) { return c[i] &lt; c[j]; });
+	for (int i = 1, x, y; i &lt;= m; i++)
+		rd(x, y), g[x].pb(y), g[y].pb(x);
+	for (int i = 1; i &lt;= n; i++) {
+		int x = p[i];
+		for (int y : g[x])
+			if (v[y] &amp;&amp; get(y) != x)
+				e[x].pb(get(y)), f[get(y)] = x;
+		v[x] = 1;
+	}
+	dfs(p[n]);
+	print(ans[p[n]]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="64" href="/blog/tags/64/">并查集</a>、<a data-source-tag="24" href="/blog/tags/24/">树形 DP</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/880/"><span>较新一篇</span>Codeforces Round #638 (Div. 2) 题解</a><a class="rel-next" rel="next" href="/blog/posts/874/"><span>较早一篇</span>ARC097F Monochrome Cat 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="875" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

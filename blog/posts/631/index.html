@@ -20,14 +20,14 @@ char s[N];
 __int128 l, m, x;
 
 int main() {
-    rds(s, n), rd(l), m = n;
-    map&lt;char, int&gt; c;
-    for (int i = 1; i &lt;= n; i++) ++c[s[i]];
-    for (auto o : c) k = max(k, o.se);
-    x = k;
-    while (m &lt; l) m += x, x *= 2, ++ans;
-    print(ans); 
-    return 0;
+	rds(s, n), rd(l), m = n;
+	map&lt;char, int&gt; c;
+	for (int i = 1; i &lt;= n; i++) ++c[s[i]];
+	for (auto o : c) k = max(k, o.se);
+	x = k;
+	while (m &lt; l) m += x, x *= 2, ++ans;
+	print(ans); 
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">谔运算</h2>
@@ -36,15 +36,15 @@ int main() {
 ui n, a[N], ans;
 
 int main() {
-    rd(n);
-    for (ui i = 1; i &lt;= n; i++) rd(a[i]);
-    for (ui i = 0; i &lt; M; i++) {
-        ui c = 0;
-        for (ui j = 1; j &lt;= n; j++) c += (a[j] &gt;&gt; i) &amp; 1;
-        ans += ((n * n - (n - c) * (n - c)) * (n * n - c * c) + (n - c) * (n - c) * c * c) * (1u &lt;&lt; i);
-    }
-    print(ans);
-    return 0;
+	rd(n);
+	for (ui i = 1; i &lt;= n; i++) rd(a[i]);
+	for (ui i = 0; i &lt; M; i++) {
+		ui c = 0;
+		for (ui j = 1; j &lt;= n; j++) c += (a[j] &gt;&gt; i) &amp; 1;
+		ans += ((n * n - (n - c) * (n - c)) * (n * n - c * c) + (n - c) * (n - c) * c * c) * (1u &lt;&lt; i);
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">直接自然溢出啥事没有</h2>
@@ -77,18 +77,18 @@ int n;
 ul f[N];
 
 int main() {
-    rd(n), f[0] = 1;
-    for (int i = 1; i &lt;= n; i++) {
-        f[i] = f[i-1];
-        for (int j = 0; i - j - 2 &gt;= 0; j++) {
-            ul o = f[i-j-2];
-            for (int k = 1; i - j - k - 4 &gt;= 0; k += 2)
-                o += f[i-j-k-4] * k;
-            f[i] += o * f[j];
-        }
-    }
-    print(f[n]);
-    return 0;
+	rd(n), f[0] = 1;
+	for (int i = 1; i &lt;= n; i++) {
+		f[i] = f[i-1];
+		for (int j = 0; i - j - 2 &gt;= 0; j++) {
+			ul o = f[i-j-2];
+			for (int k = 1; i - j - k - 4 &gt;= 0; k += 2)
+				o += f[i-j-k-4] * k;
+			f[i] += o * f[j];
+		}
+	}
+	print(f[n]);
+	return 0;
 }
 </code></pre>
 <p>然而，数据范围要求我们在 <span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span> 的时间复杂度内解决。</p>
@@ -99,18 +99,18 @@ int n;
 ul f[N], g[N];
 
 int main() {
-    rd(n), f[0] = g[1] = 1;
-    for (int i = 1; i &lt;= n; i++) {
-        f[i] = f[i-1];
-        for (int j = 0; i - j - 2 &gt;= 0; j++)
-            f[i] += f[i-j-2] * f[j];
-        for (int j = 0; i - j - 4 &gt;= 0; j++)
-            f[i] += g[i-j-4] * f[j]; 
-        for (int j = 1; i + 1 - j &gt;= 0; j += 2)
-            g[i+1] += f[i+1-j] * j;
-    }
-    print(f[n]);
-    return 0;
+	rd(n), f[0] = g[1] = 1;
+	for (int i = 1; i &lt;= n; i++) {
+		f[i] = f[i-1];
+		for (int j = 0; i - j - 2 &gt;= 0; j++)
+			f[i] += f[i-j-2] * f[j];
+		for (int j = 0; i - j - 4 &gt;= 0; j++)
+			f[i] += g[i-j-4] * f[j]; 
+		for (int j = 1; i + 1 - j &gt;= 0; j += 2)
+			g[i+1] += f[i+1-j] * j;
+	}
+	print(f[n]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">相同的数字</h2>
@@ -125,55 +125,55 @@ vector&lt;ll&gt; c[2], e[2];
 ll g[2], ans;
 
 inline void add(int o, int x, int k) {
-    if (!x) return;
-    if ((int)c[o].size() &lt; x + 1) c[o].resize(x + 1);
-    c[o][x] += k;
+	if (!x) return;
+	if ((int)c[o].size() &lt; x + 1) c[o].resize(x + 1);
+	c[o][x] += k;
 }
 
 inline void prework(int o, int m) {
-    vi d(p.size());
-    for (int i = 1; i &lt;= n; i++) {
-        int x = a[i];
-        if (v[x] == v[m]) add(o, m - x, 1);
-        else {
-            add(o, v[x] - x, 1);
-            if (m == v[m]) add(o, m - p[f[v[m]]-1], 1);
-            else g[o] += m - p[f[v[m]]-1];
-            ++d[f[v[x]]];
-        }
-    }
-    for (ui i = 0; p[i+1] &lt; v[m]; i++) {
-        if (i) d[i] += d[i-1];
-        add(o, p[i+1] - p[i], d[i]);
-    }
-    e[o].resize(c[o].size());
-    for (ui i = 0; i &lt; c[o].size(); i++) {
-        e[o][i] = c[o][i] * i;
-        if (i) e[o][i] += e[o][i-1], c[o][i] += c[o][i-1];
-    }
+	vi d(p.size());
+	for (int i = 1; i &lt;= n; i++) {
+		int x = a[i];
+		if (v[x] == v[m]) add(o, m - x, 1);
+		else {
+			add(o, v[x] - x, 1);
+			if (m == v[m]) add(o, m - p[f[v[m]]-1], 1);
+			else g[o] += m - p[f[v[m]]-1];
+			++d[f[v[x]]];
+		}
+	}
+	for (ui i = 0; p[i+1] &lt; v[m]; i++) {
+		if (i) d[i] += d[i-1];
+		add(o, p[i+1] - p[i], d[i]);
+	}
+	e[o].resize(c[o].size());
+	for (ui i = 0; i &lt; c[o].size(); i++) {
+		e[o][i] = c[o][i] * i;
+		if (i) e[o][i] += e[o][i-1], c[o][i] += c[o][i-1];
+	}
 }
 
 inline ll solve(int o) {
-    int k = min((int)1.0 * c2 / c1, (int)c[o].size() - 1);
-    return (e[o][k] + g[o]) * c1 + (c[o].back() - c[o][k]) * c2;
+	int k = min((int)1.0 * c2 / c1, (int)c[o].size() - 1);
+	return (e[o][k] + g[o]) * c1 + (c[o].back() - c[o][k]) * c2;
 }
 
 int main() {
-    for (int i = 2; i &lt; P; i++) {
-        if (!v[i]) p.pb(v[i] = i), f[i] = p.size() - 1;
-        for (ui j = 0; j &lt; p.size() &amp;&amp; i * p[j] &lt; P &amp;&amp; p[j] &lt;= v[i]; j++)
-            v[i*p[j]] = p[j];
-    }
-    for (int i = P - 1; i; i--) if (v[i] != i) v[i] = v[i+1];
-    rd(n), rd(q), rd(o);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), m = max(m, a[i]);
-    prework(0, m), prework(1, v[m]);
-    for (int i = 1; i &lt;= q; i++) {
-        rd(c1), rd(c2), c1 ^= o * ans, c2 ^= o * ans;
-        print(ans = min(solve(0), solve(1)));
-        ans &amp;= M - 2;
-    }
-    return 0;
+	for (int i = 2; i &lt; P; i++) {
+		if (!v[i]) p.pb(v[i] = i), f[i] = p.size() - 1;
+		for (ui j = 0; j &lt; p.size() &amp;&amp; i * p[j] &lt; P &amp;&amp; p[j] &lt;= v[i]; j++)
+			v[i*p[j]] = p[j];
+	}
+	for (int i = P - 1; i; i--) if (v[i] != i) v[i] = v[i+1];
+	rd(n), rd(q), rd(o);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), m = max(m, a[i]);
+	prework(0, m), prework(1, v[m]);
+	for (int i = 1; i &lt;= q; i++) {
+		rd(c1), rd(c2), c1 ^= o * ans, c2 ^= o * ans;
+		print(ans = min(solve(0), solve(1)));
+		ans &amp;= M - 2;
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="43" href="/blog/tags/43/">前缀和/差分</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/633/"><span>较新一篇</span>CF627F Island Puzzle 题解</a><a class="rel-next" rel="next" href="/blog/posts/629/"><span>较早一篇</span>CF538G Berserk Robot 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="631" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -16,11 +16,11 @@
 <p>如果 <span class="math-inline" data-original-math="$a,b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo separator="true">,</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a,b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 奇偶性相同，那么一起往中间走即可。</p>
 <p>否则，走到某一端，浪费一次步数之后再一起往中间走。</p>
 <pre tabindex="0"><code class="language-cpp">int main() {
-    ll n, a, b;
-    rd(n, a, b);
-    if ((a ^ b) &amp; 1) print(min((a + b - 1) &gt;&gt; 1, (n - a + n - b + 1) &gt;&gt; 1));
-    else print((b - a) &gt;&gt; 1); 
-    return 0;
+	ll n, a, b;
+	rd(n, a, b);
+	if ((a ^ b) &amp; 1) print(min((a + b - 1) &gt;&gt; 1, (n - a + n - b + 1) &gt;&gt; 1));
+	else print((b - a) &gt;&gt; 1); 
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc041/tasks/agc041_b" target="_blank" rel="noopener noreferrer">Voting Judges</a></h2>
@@ -28,22 +28,22 @@
 <pre tabindex="0"><code class="language-cpp">const int N = 1e5 + 7;
 int n, m, v, p, a[N];
 ll s[N];
-
+ 
 int main() {
-    rd(n, m), rd(v, p), rda(a, n);
-    sort(a + 1, a + n + 1);
-    for (int i = 1; i &lt;= n; i++) s[i] = a[i] + s[i-1];
-    for (int i = 1; i &lt;= n; i++) {
-        int c = n + 1 - (upper_bound(a + 1, a + n + 1, a[i] + m) - a);
-        if (c + 1 &gt; p) continue;
-        int d = (upper_bound(a + 1, a + n + 1, a[i]) - a) - 2;
-        ll o = 1ll * m * (v - 1 - c - d) - (1ll * (a[i] + m) * (n - 1 - c - d) - (s[n-c] - s[d+1]));
-        if (o &lt;= (s[n-c] - s[n-p+1]) - 1ll * (p - 1 - c) * a[i]) {
-            print(n - i + 1);
-            break;
-        }
-    }
-    return 0;
+	rd(n, m), rd(v, p), rda(a, n);
+	sort(a + 1, a + n + 1);
+	for (int i = 1; i &lt;= n; i++) s[i] = a[i] + s[i-1];
+	for (int i = 1; i &lt;= n; i++) {
+		int c = n + 1 - (upper_bound(a + 1, a + n + 1, a[i] + m) - a);
+		if (c + 1 &gt; p) continue;
+		int d = (upper_bound(a + 1, a + n + 1, a[i]) - a) - 2;
+		ll o = 1ll * m * (v - 1 - c - d) - (1ll * (a[i] + m) * (n - 1 - c - d) - (s[n-c] - s[d+1]));
+		if (o &lt;= (s[n-c] - s[n-p+1]) - 1ll * (p - 1 - c) * a[i]) {
+			print(n - i + 1);
+			break;
+		}
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc041/tasks/agc041_c" target="_blank" rel="noopener noreferrer">Domino Quality</a></h2>
@@ -58,37 +58,37 @@ int n;
 char s[N][N];
 
 inline void solve(int &amp;n, int x) {
-    if (x == 4)
-        for (int i = 0; i &lt; x; i++)
-            for (int j = 0; j &lt; x; j++)
-                s[n+i][n+j] = S4[i][j];
-    if (x == 5)
-        for (int i = 0; i &lt; x; i++)
-            for (int j = 0; j &lt; x; j++)
-                s[n+i][n+j] = S5[i][j];
-    if (x == 6)
-        for (int i = 0; i &lt; x; i++)
-            for (int j = 0; j &lt; x; j++)
-                s[n+i][n+j] = S6[i][j];
-    if (x == 7)
-        for (int i = 0; i &lt; x; i++)
-            for (int j = 0; j &lt; x; j++)
-                s[n+i][n+j] = S7[i][j];
-    n += x;
+	if (x == 4)
+		for (int i = 0; i &lt; x; i++)
+			for (int j = 0; j &lt; x; j++)
+				s[n+i][n+j] = S4[i][j];
+	if (x == 5)
+		for (int i = 0; i &lt; x; i++)
+			for (int j = 0; j &lt; x; j++)
+				s[n+i][n+j] = S5[i][j];
+	if (x == 6)
+		for (int i = 0; i &lt; x; i++)
+			for (int j = 0; j &lt; x; j++)
+				s[n+i][n+j] = S6[i][j];
+	if (x == 7)
+		for (int i = 0; i &lt; x; i++)
+			for (int j = 0; j &lt; x; j++)
+				s[n+i][n+j] = S7[i][j];
+	n += x;
 }
 
 int main() {
-    rd(n);
-    if (n &lt;= 2) return print(-1), 0;
-    if (n == 3) return prints("a.."), prints("a.."), prints(".bb"), 0;
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= n; j++)
-            s[i][j] = '.';
-    int m = 1;
-    solve(m, n % 4 + 4);
-    while (m &lt;= n) solve(m, 4);
-    for (int i = 1; i &lt;= n; i++) prints(s[i], n);
-    return 0;
+	rd(n);
+	if (n &lt;= 2) return print(-1), 0;
+	if (n == 3) return prints("a.."), prints("a.."), prints(".bb"), 0;
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= n; j++)
+			s[i][j] = '.';
+	int m = 1;
+	solve(m, n % 4 + 4);
+	while (m &lt;= n) solve(m, 4);
+	for (int i = 1; i &lt;= n; i++) prints(s[i], n);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><a href="https://atcoder.jp/contests/agc041/tasks/agc041_d" target="_blank" rel="noopener noreferrer">Problem Scores</a></h2>
@@ -107,13 +107,9 @@ int main() {
 <p>设 <span class="math-inline" data-original-math="$f_{j,l}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>j</mi><mo separator="true">,</mo><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{j,l}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示前 <span class="math-inline" data-original-math="$k+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 个数进行了 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 次 <span class="math-inline" data-original-math="$-1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span></span>，共减掉 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 的方案数，<span class="math-inline" data-original-math="$g_{j,l}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>g</mi><mrow><mi>j</mi><mo separator="true">,</mo><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">g_{j,l}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示后 <span class="math-inline" data-original-math="$k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 个数进行了 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 次 <span class="math-inline" data-original-math="$+1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">+1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">1</span></span></span></span></span>，共加上 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 的方案数。</p>
 <p>则答案为：<br>
 <span class="math-block" data-original-math="$$
-
 \sum_{x=1}^n \sum_{p=0}^{x-1} \sum_{q=0}^{n-x} \sum_{i=0}^{x-1} \sum_{j=0}^{x-1-i} f_{p,i} g_{q,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><munderover><mo>∑</mo><mrow><mi>p</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn></mrow></munderover><munderover><mo>∑</mo><mrow><mi>q</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mi>x</mi></mrow></munderover><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn></mrow></munderover><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>x</mi><mo>−</mo><mn>1</mn><mo>−</mo><mi>i</mi></mrow></munderover><msub><mi>f</mi><mrow><mi>p</mi><mo separator="true">,</mo><mi>i</mi></mrow></msub><msub><mi>g</mi><mrow><mi>q</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 \sum_{x=1}^n \sum_{p=0}^{x-1} \sum_{q=0}^{n-x} \sum_{i=0}^{x-1} \sum_{j=0}^{x-1-i} f_{p,i} g_{q,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:3.2254em;vertical-align:-1.4138em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6514em;"><span style="top:-1.8829em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2671em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8011em;"><span style="top:-1.8829em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4032em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.7583em;"><span style="top:-1.8829em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4032em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8011em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8117em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.4138em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 这玩意儿在求出 <span class="math-inline" data-original-math="$f,g$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo separator="true">,</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">f,g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span></span></span></span></span> 之后借助前缀和可以做到 <span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>。</p>
 <p>由于 <span class="math-inline" data-original-math="$f,g$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo separator="true">,</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">f,g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span></span></span></span></span> 定义类似，这里只考虑如何求 <span class="math-inline" data-original-math="$f$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span></span></span></span></span>。</p>
@@ -126,25 +122,25 @@ int n, k;
 modint f[N][N], g[N][N], ans;
 
 int main() {
-    rd(n, P), k = (n - 1) &gt;&gt; 1;
-    f[0][0] = g[0][0] = 1;
-    for (int i = k + !(n &amp; 1); i; i--)
-        for (int j = 0; i * (j + 1) &lt; n; j++)
-            for (int l = i * j; l + i &lt; n; l++)
-                f[j+1][l+i] += f[j][l];
-    for (int i = k; i; i--)
-        for (int j = 0; i * (j + 1) &lt; n; j++)
-            for (int l = i * j; l + i &lt; n; l++)
-                g[j+1][l+i] += g[j][l];
-    for (int i = 0; i &lt; n; i++)
-        for (int j = 0; j &lt; n; j++)
-            f[i][j] += (i ? f[i-1][j] : 0),
-            g[i][j] += (i ? g[i-1][j] : 0) + (j ? g[i][j-1] : 0) - ((i &amp;&amp; j) ? g[i-1][j-1] : 0);
-    for (int x = 1; x &lt;= n; x++)
-        for (int i = 0; i &lt; x; i++)
-            ans += f[x-1][i] * g[n-x][x-1-i];
-    print(ans);
-    return 0;
+	rd(n, P), k = (n - 1) &gt;&gt; 1;
+	f[0][0] = g[0][0] = 1;
+	for (int i = k + !(n &amp; 1); i; i--)
+		for (int j = 0; i * (j + 1) &lt; n; j++)
+			for (int l = i * j; l + i &lt; n; l++)
+				f[j+1][l+i] += f[j][l];
+	for (int i = k; i; i--)
+		for (int j = 0; i * (j + 1) &lt; n; j++)
+			for (int l = i * j; l + i &lt; n; l++)
+				g[j+1][l+i] += g[j][l];
+	for (int i = 0; i &lt; n; i++)
+		for (int j = 0; j &lt; n; j++)
+			f[i][j] += (i ? f[i-1][j] : 0),
+			g[i][j] += (i ? g[i-1][j] : 0) + (j ? g[i][j-1] : 0) - ((i &amp;&amp; j) ? g[i-1][j-1] : 0);
+	for (int x = 1; x &lt;= n; x++)
+		for (int i = 0; i &lt; x; i++)
+			ans += f[x-1][i] * g[n-x][x-1-i];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-5"><a href="https://atcoder.jp/contests/agc041/tasks/agc041_e" target="_blank" rel="noopener noreferrer">Balancing Network</a></h2>
@@ -158,36 +154,36 @@ int b[N], c[N];
 char s[M];
 
 int main() {
-    rd(n, m, t);
-    if (t == 1) {
-        for (int i = 1; i &lt;= n; i++) a[i][i] = 1;
-        for (int i = 1; i &lt;= m; i++)
-            rd(x[i], y[i]), a[x[i]] = a[y[i]] |= a[x[i]];
-        for (int i = 1; i &lt;= n; i++)
-            if ((int)a[i].count() == n) {
-                v[i] = 1;
-                for (int i = m; i; i--)
-                    if (v[x[i]]) s[i] = '^', v[y[i]] = 1;
-                    else if (v[y[i]]) s[i] = 'v', v[x[i]] = 1;
-                    else s[i] = '^';
-                prints(s, m);
-                return 0;
-            }
-        print(-1);
-    } else {
-        if (n == 2) return print(-1), 0;
-        for (int i = 1; i &lt;= n; i++) b[i] = i, c[i] = 1;
-        for (int i = 1; i &lt;= m; i++) rd(x[i], y[i]);
-        for (int i = m; i; i--)
-            if (b[x[i]] == b[y[i]]) s[i] = '^';
-            else {
-                if (c[b[x[i]]] &lt;= 1) swap(x[i], y[i]), s[i] = '^';
-                else s[i] = 'v';
-                --c[b[x[i]]], b[x[i]] = b[y[i]], ++c[b[x[i]]];
-            }
-        prints(s, m);
-    }
-    return 0;
+	rd(n, m, t);
+	if (t == 1) {
+		for (int i = 1; i &lt;= n; i++) a[i][i] = 1;
+		for (int i = 1; i &lt;= m; i++)
+			rd(x[i], y[i]), a[x[i]] = a[y[i]] |= a[x[i]];
+		for (int i = 1; i &lt;= n; i++)
+			if ((int)a[i].count() == n) {
+				v[i] = 1;
+				for (int i = m; i; i--)
+					if (v[x[i]]) s[i] = '^', v[y[i]] = 1;
+					else if (v[y[i]]) s[i] = 'v', v[x[i]] = 1;
+					else s[i] = '^';
+				prints(s, m);
+				return 0;
+			}
+		print(-1);
+	} else {
+		if (n == 2) return print(-1), 0;
+		for (int i = 1; i &lt;= n; i++) b[i] = i, c[i] = 1;
+		for (int i = 1; i &lt;= m; i++) rd(x[i], y[i]);
+		for (int i = m; i; i--)
+			if (b[x[i]] == b[y[i]]) s[i] = '^';
+			else {
+				if (c[b[x[i]]] &lt;= 1) swap(x[i], y[i]), s[i] = '^';
+				else s[i] = 'v';
+				--c[b[x[i]]], b[x[i]] = b[y[i]], ++c[b[x[i]]];
+			}
+		prints(s, m);
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-6"><a href="https://atcoder.jp/contests/agc041/tasks/agc041_f" target="_blank" rel="noopener noreferrer">Histogram Rooks</a></h2>

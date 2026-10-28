@@ -42,54 +42,54 @@ pq&lt;ll&gt; q;
 ll L[N], R[N], D[N], U[N];
 
 inline void upd(int x) {
-    L[x] = R[x] = p[x].fi, D[x] = U[x] = p[x].se;
-    if (lc[x])
-        L[x] = min(L[x], L[lc[x]]), R[x] = max(R[x], R[lc[x]]),
-        D[x] = min(D[x], D[lc[x]]), U[x] = max(U[x], U[lc[x]]);
-    if (rc[x])
-        L[x] = min(L[x], L[rc[x]]), R[x] = max(R[x], R[rc[x]]),
-        D[x] = min(D[x], D[rc[x]]), U[x] = max(U[x], U[rc[x]]);
+	L[x] = R[x] = p[x].fi, D[x] = U[x] = p[x].se;
+	if (lc[x])
+		L[x] = min(L[x], L[lc[x]]), R[x] = max(R[x], R[lc[x]]),
+		D[x] = min(D[x], D[lc[x]]), U[x] = max(U[x], U[lc[x]]);
+	if (rc[x])
+		L[x] = min(L[x], L[rc[x]]), R[x] = max(R[x], R[rc[x]]),
+		D[x] = min(D[x], D[rc[x]]), U[x] = max(U[x], U[rc[x]]);
 }
 
 #define f(x) ((x) * (x))
 #define mid ((l + r) &gt;&gt; 1)
 
 int build(int l, int r) {
-    if (l &gt; r) return 0;
-    ld px = 0, py = 0, sx = 0, sy = 0;
-    for (int i = l; i &lt;= r; i++) px += p[i].fi, py += p[i].se;
-    px /= r - l + 1, py /= r - l + 1;
-    for (int i = l; i &lt;= r; i++) sx += f(px - p[i].fi), sy += f(py - p[i].se);
-    nth_element(p + l, p + mid, p + r + 1, [&amp;](pl x, pl y) { return sx &gt; sy ? x.fi &lt; y.fi : x.se &lt; y.se; });
-    return lc[mid] = build(l, mid - 1), rc[mid] = build(mid + 1, r), upd(mid), mid;
+	if (l &gt; r) return 0;
+	ld px = 0, py = 0, sx = 0, sy = 0;
+	for (int i = l; i &lt;= r; i++) px += p[i].fi, py += p[i].se;
+	px /= r - l + 1, py /= r - l + 1;
+	for (int i = l; i &lt;= r; i++) sx += f(px - p[i].fi), sy += f(py - p[i].se);
+	nth_element(p + l, p + mid, p + r + 1, [&amp;](pl x, pl y) { return sx &gt; sy ? x.fi &lt; y.fi : x.se &lt; y.se; });
+	return lc[mid] = build(l, mid - 1), rc[mid] = build(mid + 1, r), upd(mid), mid;
 }
 
 inline ll s(int x, int y) {
-    return max(f(p[x].fi - L[y]), f(p[x].fi - R[y])) + max(f(p[x].se - D[y]), f(p[x].se - U[y]));
+	return max(f(p[x].fi - L[y]), f(p[x].fi - R[y])) + max(f(p[x].se - D[y]), f(p[x].se - U[y]));
 }
 
 void ask(int l, int r, int x) {
-    if (l &gt; r) return;
-    ll o = f(p[x].fi - p[mid].fi) + f(p[x].se - p[mid].se);
-    if (o &gt; -q.top()) q.pop(), q.push(-o);
-    ll sl = lc[mid] ? s(x, lc[mid]) : 0, sr = rc[mid] ? s(x, rc[mid]) : 0;
-    if (sl &gt; sr) {
-        if (sl &gt; -q.top()) ask(l, mid - 1, x);
-        if (sr &gt; -q.top()) ask(mid + 1, r, x);
-    } else {
-        if (sr &gt; -q.top()) ask(mid + 1, r, x);
-        if (sl &gt; -q.top()) ask(l, mid - 1, x);
-    }
+	if (l &gt; r) return;
+	ll o = f(p[x].fi - p[mid].fi) + f(p[x].se - p[mid].se);
+	if (o &gt; -q.top()) q.pop(), q.push(-o);
+	ll sl = lc[mid] ? s(x, lc[mid]) : 0, sr = rc[mid] ? s(x, rc[mid]) : 0;
+	if (sl &gt; sr) {
+		if (sl &gt; -q.top()) ask(l, mid - 1, x);
+		if (sr &gt; -q.top()) ask(mid + 1, r, x);
+	} else {
+		if (sr &gt; -q.top()) ask(mid + 1, r, x);
+		if (sl &gt; -q.top()) ask(l, mid - 1, x);
+	}
 }
 
 int main() {
-    rd(n, k), k &lt;&lt;= 1;
-    for (int i = 1; i &lt;= k; i++) q.push(0);
-    for (int i = 1; i &lt;= n; i++) rd(p[i].fi, p[i].se);
-    build(1, n);
-    for (int i = 1; i &lt;= n; i++) ask(1, n, i);
-    print(-q.top());
-    return 0;
+	rd(n, k), k &lt;&lt;= 1;
+	for (int i = 1; i &lt;= k; i++) q.push(0);
+	for (int i = 1; i &lt;= n; i++) rd(p[i].fi, p[i].se);
+	build(1, n);
+	for (int i = 1; i &lt;= n; i++) ask(1, n, i);
+	print(-q.top());
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">高维空间上的操作</h2>
@@ -112,22 +112,22 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
 int n, rt, lc[N], rc[N], d[N], s[N], sum[N], L[N], R[N], D[N], U[N], ans;
 struct P {
-    int x, y, z;
-    inline void in() {
-        rd(x, y, z), x ^= ans, y ^= ans, z ^= ans;
-    } 
+	int x, y, z;
+	inline void in() {
+		rd(x, y, z), x ^= ans, y ^= ans, z ^= ans;
+	} 
 } p[N];
 
 inline void upd(int x) {
-    L[x] = R[x] = p[x].x, D[x] = U[x] = p[x].y;
-    if (lc[x])
-        L[x] = min(L[x], L[lc[x]]), R[x] = max(R[x], R[lc[x]]),
-        D[x] = min(D[x], D[lc[x]]), U[x] = max(U[x], U[lc[x]]);
-    if (rc[x])
-        L[x] = min(L[x], L[rc[x]]), R[x] = max(R[x], R[rc[x]]),
-        D[x] = min(D[x], D[rc[x]]), U[x] = max(U[x], U[rc[x]]);
-    s[x] = s[lc[x]] + s[rc[x]] + 1;
-    sum[x] = sum[lc[x]] + sum[rc[x]] + p[x].z;
+	L[x] = R[x] = p[x].x, D[x] = U[x] = p[x].y;
+	if (lc[x])
+		L[x] = min(L[x], L[lc[x]]), R[x] = max(R[x], R[lc[x]]),
+		D[x] = min(D[x], D[lc[x]]), U[x] = max(U[x], U[lc[x]]);
+	if (rc[x])
+		L[x] = min(L[x], L[rc[x]]), R[x] = max(R[x], R[rc[x]]),
+		D[x] = min(D[x], D[rc[x]]), U[x] = max(U[x], U[rc[x]]);
+	s[x] = s[lc[x]] + s[rc[x]] + 1;
+	sum[x] = sum[lc[x]] + sum[rc[x]] + p[x].z;
 }
 
 #define f(x) ((x) * (x))
@@ -136,58 +136,58 @@ inline void upd(int x) {
 int g[N], t;
 
 int build(int l, int r) {
-    if (l &gt; r) return 0;
-    ld px = 0, py = 0, sx = 0, sy = 0;
-    for (int i = l; i &lt;= r; i++) px += p[g[i]].x, py += p[g[i]].y;
-    px /= r - l + 1, py /= r - l + 1;
-    for (int i = l; i &lt;= r; i++) sx += f(px - p[g[i]].x), sy += f(py - p[g[i]].y);
-    d[g[mid]] = sx &gt; sy ? 1 : 2;
-    nth_element(g + l, g + mid, g + r + 1, [&amp;](int i, int j) { return sx &gt; sy ? p[i].x &lt; p[j].x : p[i].y &lt; p[j].y; });
-    return lc[g[mid]] = build(l, mid - 1), rc[g[mid]] = build(mid + 1, r), upd(g[mid]), g[mid];
+	if (l &gt; r) return 0;
+	ld px = 0, py = 0, sx = 0, sy = 0;
+	for (int i = l; i &lt;= r; i++) px += p[g[i]].x, py += p[g[i]].y;
+	px /= r - l + 1, py /= r - l + 1;
+	for (int i = l; i &lt;= r; i++) sx += f(px - p[g[i]].x), sy += f(py - p[g[i]].y);
+	d[g[mid]] = sx &gt; sy ? 1 : 2;
+	nth_element(g + l, g + mid, g + r + 1, [&amp;](int i, int j) { return sx &gt; sy ? p[i].x &lt; p[j].x : p[i].y &lt; p[j].y; });
+	return lc[g[mid]] = build(l, mid - 1), rc[g[mid]] = build(mid + 1, r), upd(g[mid]), g[mid];
 }
 
 const ld alpha = 0.75;
 
 inline bool bad(int x) {
-    return max(s[lc[x]], s[rc[x]]) &gt; alpha * s[x];
+	return max(s[lc[x]], s[rc[x]]) &gt; alpha * s[x];
 }
 
 void dfs(int x) {
-    if (x) dfs(lc[x]), g[++t] = x, dfs(rc[x]);
+	if (x) dfs(lc[x]), g[++t] = x, dfs(rc[x]);
 }
 
 inline int rebuild(int x) {
-    return t = 0, dfs(x), build(1, t);
+	return t = 0, dfs(x), build(1, t);
 }
 
 void ins(int &amp;x, int o) {
-    if (!x) return upd(x = o);
-    if (d[x] == 1) ins(p[o].x &lt;= p[x].x ? lc[x] : rc[x], o);
-    else ins(p[o].y &lt;= p[x].y ? lc[x] : rc[x], o);
-    upd(x);
-    if (bad(x)) x = rebuild(x);
+	if (!x) return upd(x = o);
+	if (d[x] == 1) ins(p[o].x &lt;= p[x].x ? lc[x] : rc[x], o);
+	else ins(p[o].y &lt;= p[x].y ? lc[x] : rc[x], o);
+	upd(x);
+	if (bad(x)) x = rebuild(x);
 }
 
 int lx, ly, rx, ry;
 
 int ask(int x) {
-    if (!x || lx &gt; R[x] || rx &lt; L[x] || ly &gt; U[x] || ry &lt; D[x]) return 0;
-    if (lx &lt;= L[x] &amp;&amp; rx &gt;= R[x] &amp;&amp; ly &lt;= D[x] &amp;&amp; ry &gt;= U[x]) return sum[x];
-    return (lx &lt;= p[x].x &amp;&amp; rx &gt;= p[x].x &amp;&amp; ly &lt;= p[x].y &amp;&amp; ry &gt;= p[x].y ? p[x].z : 0) + ask(lc[x]) + ask(rc[x]);
+	if (!x || lx &gt; R[x] || rx &lt; L[x] || ly &gt; U[x] || ry &lt; D[x]) return 0;
+	if (lx &lt;= L[x] &amp;&amp; rx &gt;= R[x] &amp;&amp; ly &lt;= D[x] &amp;&amp; ry &gt;= U[x]) return sum[x];
+	return (lx &lt;= p[x].x &amp;&amp; rx &gt;= p[x].x &amp;&amp; ly &lt;= p[x].y &amp;&amp; ry &gt;= p[x].y ? p[x].z : 0) + ask(lc[x]) + ask(rc[x]);
 }
 
 int main() {
-    rd(n), n = 0;
-    while (1) {
-        int o;
-        rd(o);
-        if (o == 1) {
-            p[++n].in(), ins(rt, n);
-        } else if (o == 2) {
-            rd(lx, ly), rd(rx, ry), lx ^= ans, ly ^= ans, rx ^= ans, ry ^= ans, print(ans = ask(rt));
-        } else break;
-    } 
-    return 0;
+	rd(n), n = 0;
+	while (1) {
+		int o;
+		rd(o);
+		if (o == 1) {
+			p[++n].in(), ins(rt, n);
+		} else if (o == 2) {
+			rd(lx, ly), rd(rx, ry), lx ^= ans, ly ^= ans, rx ^= ans, ry ^= ans, print(ans = ask(rt));
+		} else break;
+	} 
+	return 0;
 }
 </code></pre>
 <h2 id="section-8">参考资料</h2>

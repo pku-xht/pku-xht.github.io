@@ -31,85 +31,85 @@ int n, m, op[M], dir[M], x[M], y[M], c[M], ans[M];
 int X, Y, bit[N][N], stx[M], sty[M], stz[M], top;
 
 inline void add(int x, int y, int z) {
-    stx[++top] = x, sty[top] = y, stz[top] = z;
-    for (int i = x; i &lt;= X; i += i &amp; -i)
-        for (int j = y; j &lt;= Y; j += j &amp; -j)
-            bit[i][j] += z;
+	stx[++top] = x, sty[top] = y, stz[top] = z;
+	for (int i = x; i &lt;= X; i += i &amp; -i)
+		for (int j = y; j &lt;= Y; j += j &amp; -j)
+			bit[i][j] += z;
 }
 
 inline int ask(int x, int y) {
-    int z = 0;
-    for (int i = x; i; i -= i &amp; -i)
-        for (int j = y; j; j -= j &amp; -j)
-            z += bit[i][j];
-    return z;
+	int z = 0;
+	for (int i = x; i; i -= i &amp; -i)
+		for (int j = y; j; j -= j &amp; -j)
+			z += bit[i][j];
+	return z;
 }
 
 inline void clear() {
-    while (top) add(stx[top], sty[top], -stz[top]), top -= 2;
+	while (top) add(stx[top], sty[top], -stz[top]), top -= 2;
 }
 
 int main() {
-    rd(n), rd(m);
-    for (int i = 1; i &lt;= m; i++) {
-        rd(op[i]);
-        if (op[i] == 1) rd(dir[i]), rd(x[i]), rd(y[i]), rd(c[i]);
-        else rd(x[i]), rd(y[i]);
-    }
+	rd(n), rd(m);
+	for (int i = 1; i &lt;= m; i++) {
+		rd(op[i]);
+		if (op[i] == 1) rd(dir[i]), rd(x[i]), rd(y[i]), rd(c[i]);
+		else rd(x[i]), rd(y[i]);
+	}
 
-    X = n, Y = n;
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 1) {
-            if (dir[i] == 1) add(x[i], y[i], 1);
-            if (dir[i] == 2) add(x[i], y[i] + 1, -1);
-            if (dir[i] == 3) add(x[i] + 1, y[i], -1);
-            if (dir[i] == 4) add(x[i] + 1, y[i] + 1, 1);
-        } else ans[i] += ask(x[i], y[i]);
-    clear();
+	X = n, Y = n;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 1) {
+			if (dir[i] == 1) add(x[i], y[i], 1);
+			if (dir[i] == 2) add(x[i], y[i] + 1, -1);
+			if (dir[i] == 3) add(x[i] + 1, y[i], -1);
+			if (dir[i] == 4) add(x[i] + 1, y[i] + 1, 1);
+		} else ans[i] += ask(x[i], y[i]);
+	clear();
 
-    X = n + n, Y = n;
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 1) {
-            if (dir[i] == 1)
-                add(x[i] + y[i] + c[i] + 1, y[i], -1);
-            if (dir[i] == 4)
-                add(x[i] + y[i] - c[i], y[i] + 1, -1);
-        } else ans[i] += ask(x[i] + y[i], y[i]);
-    clear();
+	X = n + n, Y = n;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 1) {
+			if (dir[i] == 1)
+				add(x[i] + y[i] + c[i] + 1, y[i], -1);
+			if (dir[i] == 4)
+				add(x[i] + y[i] - c[i], y[i] + 1, -1);
+		} else ans[i] += ask(x[i] + y[i], y[i]);
+	clear();
+	
+	X = n, Y = n + n;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 1) {
+			if (dir[i] == 1)
+				add(n - x[i] + 2, x[i] + y[i] + c[i] + 1, 1);
+			if (dir[i] == 4)
+				add(n - x[i] + 1, x[i] + y[i] - c[i], 1);
+		} else ans[i] += ask(n - x[i] + 1, x[i] + y[i]);
+	clear();
 
-    X = n, Y = n + n;
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 1) {
-            if (dir[i] == 1)
-                add(n - x[i] + 2, x[i] + y[i] + c[i] + 1, 1);
-            if (dir[i] == 4)
-                add(n - x[i] + 1, x[i] + y[i] - c[i], 1);
-        } else ans[i] += ask(n - x[i] + 1, x[i] + y[i]);
-    clear();
+	X = n + n, Y = n;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 1) {
+			if (dir[i] == 2)
+				add(n + x[i] - y[i] + c[i] + 2, y[i] + 1, 1);
+			if (dir[i] == 3)
+				add(n + x[i] - y[i] - c[i] + 1, y[i], 1);
+		} else ans[i] += ask(n + x[i] - y[i] + 1, y[i]);
+	clear();
 
-    X = n + n, Y = n;
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 1) {
-            if (dir[i] == 2)
-                add(n + x[i] - y[i] + c[i] + 2, y[i] + 1, 1);
-            if (dir[i] == 3)
-                add(n + x[i] - y[i] - c[i] + 1, y[i], 1);
-        } else ans[i] += ask(n + x[i] - y[i] + 1, y[i]);
-    clear();
+	X = n, Y = n + n;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 1) {
+			if (dir[i] == 2)
+				add(x[i], n - x[i] + y[i] - c[i] + 1, 1);
+			if (dir[i] == 3)
+				add(x[i] + 1, n - x[i] + y[i] + c[i] + 2, 1);
+		} else ans[i] += ask(x[i], n - x[i] + y[i] + 1);
+	clear();
 
-    X = n, Y = n + n;
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 1) {
-            if (dir[i] == 2)
-                add(x[i], n - x[i] + y[i] - c[i] + 1, 1);
-            if (dir[i] == 3)
-                add(x[i] + 1, n - x[i] + y[i] + c[i] + 2, 1);
-        } else ans[i] += ask(x[i], n - x[i] + y[i] + 1);
-    clear();
-
-    for (int i = 1; i &lt;= m; i++)
-        if (op[i] == 2) printf("%d\n", ans[i]);
-    return 0;
+	for (int i = 1; i &lt;= m; i++)
+		if (op[i] == 2) printf("%d\n", ans[i]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="34" href="/blog/tags/34/">树状数组</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/564/"><span>较新一篇</span>CF587D Duff in Mafia 题解</a><a class="rel-next" rel="next" href="/blog/posts/559/"><span>较早一篇</span>CF504E Misha and LCP on Tree 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="561" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

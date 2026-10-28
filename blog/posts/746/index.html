@@ -15,19 +15,19 @@
 <h2 id="section-1">Bad Ugly Numbers</h2>
 <p>特判掉 <span class="math-inline" data-original-math="$n=1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">n=1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 的情况，然后 <span class="math-inline" data-original-math="$8999\cdots 9$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>8999</mn><mo>⋯</mo><mn>9</mn></mrow><annotation encoding="application/x-tex">8999\cdots 9</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">8999</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">⋯</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">9</span></span></span></span></span> 就符合要求。</p>
 <pre tabindex="0"><code class="language-cpp">inline void solve() {
-    int n;
-    rd(n);
-    if (n == 1) return puts("-1"), void();
-    putchar('8');
-    while (--n) putchar('9');
-    puts("");
+	int n;
+	rd(n);
+	if (n == 1) return puts("-1"), void();
+	putchar('8');
+	while (--n) putchar('9');
+	puts("");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Maximums</h2>
@@ -37,10 +37,10 @@ int n;
 ll a[N], x;
 
 int main() {
-    rd(n), rda(a, n);
-    for (int i = 1; i &lt;= n; i++)
-        print(x + a[i], " \n"[i==n]), x = max(x, x + a[i]); 
-    return 0;
+	rd(n), rda(a, n);
+	for (int i = 1; i &lt;= n; i++)
+		print(x + a[i], " \n"[i==n]), x = max(x, x + a[i]); 
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Permutation Partitions</h2>
@@ -53,16 +53,16 @@ ll a[N], ans;
 modint Ans = 1;
 
 int main() {
-    rd(n), rd(k), rda(a, n);
-    for (int i = 1; i &lt;= k; i++) ans += n + 1 - i;
-    print(ans, ' ');
-    vi p;
-    for (int i = 1; i &lt;= n; i++)
-        if (a[i] &gt; n - k) p.pb(i);
-    for (ui i = 1; i &lt; p.size(); i++)
-        Ans *= p[i] - p[i-1];
-    print(Ans);
-    return 0;
+	rd(n), rd(k), rda(a, n);
+	for (int i = 1; i &lt;= k; i++) ans += n + 1 - i;
+	print(ans, ' ');
+	vi p;
+	for (int i = 1; i &lt;= n; i++)
+		if (a[i] &gt; n - k) p.pb(i);
+	for (ui i = 1; i &lt; p.size(); i++)
+		Ans *= p[i] - p[i-1];
+	print(Ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Prefix-Suffix Palindrome</h2>
@@ -74,46 +74,46 @@ int n, m;
 char s[N], t[N];
 
 inline int work(char *s, int n) {
-    string ss = "$#";
-    vi p;
-    for (int i = 1; i &lt;= n; i++) ss += s[i], ss += "#";
-    p.pb(1);
-    int mx = 0, id = 0, ans = 1;
-    for (int i = 1; i &lt; (int)ss.length(); i++) {
-        p.pb(mx &gt; i ? min(p[2*id-i], mx - i) : 1);
-        while (i + p[i] &lt; (int)ss.length() &amp;&amp; ss[i+p[i]] == ss[i-p[i]]) ++p[i];
-        if (i == p[i]) ans = max(ans, p[i]);
-        if (i + p[i] &gt; mx) mx = i + p[i], id = i;
-    }
-    return ans - 1;
+	string ss = "$#";
+	vi p;
+	for (int i = 1; i &lt;= n; i++) ss += s[i], ss += "#";
+	p.pb(1);
+	int mx = 0, id = 0, ans = 1;
+	for (int i = 1; i &lt; (int)ss.length(); i++) {
+		p.pb(mx &gt; i ? min(p[2*id-i], mx - i) : 1);
+		while (i + p[i] &lt; (int)ss.length() &amp;&amp; ss[i+p[i]] == ss[i-p[i]]) ++p[i];
+		if (i == p[i]) ans = max(ans, p[i]);
+		if (i + p[i] &gt; mx) mx = i + p[i], id = i;
+	}
+	return ans - 1;
 }
 
 inline void solve() {
-    rds(s, n);
-    int p = 1;
-    while (p &lt;= n &amp;&amp; s[p] == s[n+1-p]) ++p;
-    if (p == n + 1) {
-        for (int i = 1; i &lt;= n; i++) putchar(s[i]);
-        return puts(""), void();
-    }
-    m = 0;
-    for (int i = p; i &lt;= n + 1 - p; i++) t[++m] = s[i];
-    int l = work(t, m);
-    reverse(t + 1, t + m + 1);
-    int r = work(t, m);
-    reverse(t + 1, t + m + 1);
-    if (l &lt; r) reverse(t + 1, t + m + 1), swap(l, r);
-    for (int i = 1; i &lt; p; i++) putchar(s[i]);
-    for (int i = 1; i &lt;= l; i++) putchar(t[i]);
-    for (int i = p - 1; i; i--) putchar(s[i]);
-    puts("");
+	rds(s, n);
+	int p = 1;
+	while (p &lt;= n &amp;&amp; s[p] == s[n+1-p]) ++p;
+	if (p == n + 1) {
+		for (int i = 1; i &lt;= n; i++) putchar(s[i]);
+		return puts(""), void();
+	}
+	m = 0;
+	for (int i = p; i &lt;= n + 1 - p; i++) t[++m] = s[i];
+	int l = work(t, m);
+	reverse(t + 1, t + m + 1);
+	int r = work(t, m);
+	reverse(t + 1, t + m + 1);
+	if (l &lt; r) reverse(t + 1, t + m + 1), swap(l, r);
+	for (int i = 1; i &lt; p; i++) putchar(s[i]);
+	for (int i = 1; i &lt;= l; i++) putchar(t[i]);
+	for (int i = p - 1; i; i--) putchar(s[i]);
+	puts("");
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-5">Bombs</h2>
@@ -124,46 +124,46 @@ int main() {
 <pre tabindex="0"><code class="language-cpp">const int N = 3e5 + 7;
 int n, a[N], b[N], p[N], ans;
 struct T {
-    int l, r, x, z;
+	int l, r, x, z;
 } t[N&lt;&lt;2];
 
 void build(int p, int l, int r) {
-    t[p].l = l, t[p].r = r;
-    if (l == r) return;
-    build(ls, l, md), build(rs, md + 1, r);
-    t[p].x = max(t[ls].x, t[rs].x);
+	t[p].l = l, t[p].r = r;
+	if (l == r) return;
+	build(ls, l, md), build(rs, md + 1, r);
+	t[p].x = max(t[ls].x, t[rs].x);
 }
 
 void spd(int p) {
-    if (t[p].z) {
-        t[ls].x += t[p].z;
-        t[ls].z += t[p].z;
-        t[rs].x += t[p].z;
-        t[rs].z += t[p].z;
-        t[p].z = 0;
-    }
+	if (t[p].z) {
+		t[ls].x += t[p].z;
+		t[ls].z += t[p].z;
+		t[rs].x += t[p].z;
+		t[rs].z += t[p].z;
+		t[p].z = 0;
+	}
 }
 
 void add(int p, int l, int r, int k) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
-    spd(p);
-    if (l &lt;= md) add(ls, l, r, k);
-    if (r &gt; md) add(rs, l, r, k);
-    t[p].x = max(t[ls].x, t[rs].x);
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r) return t[p].x += k, t[p].z += k, void();
+	spd(p);
+	if (l &lt;= md) add(ls, l, r, k);
+	if (r &gt; md) add(rs, l, r, k);
+	t[p].x = max(t[ls].x, t[rs].x);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1; i &lt;= n; i++) rd(a[i]), p[a[i]] = i; 
-    for (int i = 1; i &lt;= n; i++) rd(b[i]);
-    build(1, 1, n), ans = n, print(n, ' ');
-    add(1, 1, p[n], 1);
-    for (int i = 1; i &lt; n; i++) {
-        add(1, 1, b[i], -1);
-        while (t[1].x &lt;= 0) add(1, 1, p[--ans], 1);
-        print(ans, ' ');
-    }
-    return 0;
+	rd(n);
+	for (int i = 1; i &lt;= n; i++) rd(a[i]), p[a[i]] = i; 
+	for (int i = 1; i &lt;= n; i++) rd(b[i]);
+	build(1, 1, n), ans = n, print(n, ' ');
+	add(1, 1, p[n], 1);
+	for (int i = 1; i &lt; n; i++) {
+		add(1, 1, b[i], -1);
+		while (t[1].x &lt;= 0) add(1, 1, p[--ans], 1);
+		print(ans, ' ');
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">Wise Men</h2>

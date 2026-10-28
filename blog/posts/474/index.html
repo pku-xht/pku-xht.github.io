@@ -29,24 +29,24 @@
 int n, v[N&lt;&lt;1], d[N&lt;&lt;1], h[N&lt;&lt;1], e[N&lt;&lt;2], t[N&lt;&lt;2], c = 1;
 
 inline void add(int x, int y, int z = 1) {
-    e[++c] = y, t[c] = h[x], h[x] = c;
-    if (z) add(y, x, 0);
+	e[++c] = y, t[c] = h[x], h[x] = c;
+	if (z) add(y, x, 0);
 }
 
 void dfs(int x) {
-    for (int &amp;i = h[x]; i; i = t[i])
-        if (!v[i&gt;&gt;1]) v[i&gt;&gt;1] = 1 + (x &lt; N), dfs(e[i]);
+	for (int &amp;i = h[x]; i; i = t[i])
+		if (!v[i&gt;&gt;1]) v[i&gt;&gt;1] = 1 + (x &lt; N), dfs(e[i]);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt;= n; i++)
-        rd(x), rd(y), add(x, y + N), ++d[x], ++d[y+N];
-    for (int i = 1; i &lt; N &lt;&lt; 1; i++)
-        if (d[i] &amp; 1) add(0, i);
-    for (int i = 1; i &lt; N; i++) dfs(i);
-    for (int i = 1; i &lt;= n; i++) putchar("br"[v[i]-1]);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt;= n; i++)
+		rd(x), rd(y), add(x, y + N), ++d[x], ++d[y+N];
+	for (int i = 1; i &lt; N &lt;&lt; 1; i++)
+		if (d[i] &amp; 1) add(0, i);
+	for (int i = 1; i &lt; N; i++) dfs(i);
+	for (int i = 1; i &lt;= n; i++) putchar("br"[v[i]-1]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="114" href="/blog/tags/114/">欧拉回路</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/476/"><span>较新一篇</span>CF547E Mike and Friends 题解</a><a class="rel-next" rel="next" href="/blog/posts/472/"><span>较早一篇</span>CF575A Fibonotci 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="474" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

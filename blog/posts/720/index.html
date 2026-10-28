@@ -36,111 +36,111 @@ int p[4], x[4], y[4], ax[4], ay[4], bx[4], by[4], cx, cy, ans;
 int lx[4], xy[4][5], ly[4], yx[4][5];
 
 inline void check() {
-    int d01 = abs(bx[0] == bx[1] ? by[0] - by[1] : bx[0] - bx[1]);
-    int d02 = abs(bx[0] == bx[2] ? by[0] - by[2] : bx[0] - bx[2]);
-    int d31 = abs(bx[3] == bx[1] ? by[3] - by[1] : bx[3] - bx[1]);
-    int d32 = abs(bx[3] == bx[2] ? by[3] - by[2] : bx[3] - bx[2]);
-    if (d01 != d02 || d02 != d31 || d31 != d32) return;
-    do {
-        int mx = 0;
-        for (int i = 0; i &lt; 4; i++) {
-            if (x[i] != bx[p[i]] &amp;&amp; y[i] != by[p[i]]) {
-                mx = inf;
-                break;
-            }
-            if (x[i] == bx[p[i]]) mx = max(mx, abs(y[i] - by[p[i]]));
-            else mx = max(mx, abs(x[i] - bx[p[i]]));
-        }
-        if (mx &lt; ans) {
-            ans = mx;
-            for (int i = 0; i &lt; 4; i++) ax[i] = bx[p[i]], ay[i] = by[p[i]];
-        }
-    } while (next_permutation(p, p + 4));
+	int d01 = abs(bx[0] == bx[1] ? by[0] - by[1] : bx[0] - bx[1]);
+	int d02 = abs(bx[0] == bx[2] ? by[0] - by[2] : bx[0] - bx[2]);
+	int d31 = abs(bx[3] == bx[1] ? by[3] - by[1] : bx[3] - bx[1]);
+	int d32 = abs(bx[3] == bx[2] ? by[3] - by[2] : bx[3] - bx[2]);
+	if (d01 != d02 || d02 != d31 || d31 != d32) return;
+	do {
+		int mx = 0;
+		for (int i = 0; i &lt; 4; i++) {
+			if (x[i] != bx[p[i]] &amp;&amp; y[i] != by[p[i]]) {
+				mx = inf;
+				break;
+			}
+			if (x[i] == bx[p[i]]) mx = max(mx, abs(y[i] - by[p[i]]));
+			else mx = max(mx, abs(x[i] - bx[p[i]]));
+		}
+		if (mx &lt; ans) {
+			ans = mx;
+			for (int i = 0; i &lt; 4; i++) ax[i] = bx[p[i]], ay[i] = by[p[i]];
+		}
+	} while (next_permutation(p, p + 4));
 }
 
 inline void pd() {
-    if (cx == 2 &amp;&amp; cy == 2) {
-        bx[0] = lx[0], by[0] = ly[0];
-        bx[1] = lx[0], by[1] = ly[1];
-        bx[2] = lx[1], by[2] = ly[0];
-        bx[3] = lx[1], by[3] = ly[1];
-        check();
-    } else if (cy == 1) {
-        bx[0] = lx[0], by[0] = ly[0];
-        bx[1] = lx[1], by[1] = ly[0];
-        bx[2] = lx[0], by[2] = ly[0] + (lx[0] - lx[1]);
-        bx[3] = lx[1], by[3] = ly[0] + (lx[0] - lx[1]);
-        check();
-        bx[2] = lx[0], by[2] = ly[0] - (lx[0] - lx[1]);
-        bx[3] = lx[1], by[3] = ly[0] - (lx[0] - lx[1]);
-        check();
-    } else if (cx == 1) {
-        bx[0] = lx[0], by[0] = ly[0];
-        bx[1] = lx[0], by[1] = ly[1];
-        bx[2] = lx[0] + (ly[0] - ly[1]), by[2] = ly[0];
-        bx[3] = lx[0] + (ly[0] - ly[1]), by[3] = ly[1];
-        check();
-        bx[2] = lx[0] - (ly[0] - ly[1]), by[2] = ly[0];
-        bx[3] = lx[0] - (ly[0] - ly[1]), by[3] = ly[1];
-        check();
-    } else if (cy == 0) {
-        int d = abs(lx[0] - lx[1]);
-        sort(xy[0] + 1, xy[0] + 3);
-        sort(xy[1] + 1, xy[1] + 3);
-        int a[4] = {xy[0][1], xy[0][2] - d, xy[1][1], xy[1][2] - d};
-        sort(a, a + 4);
-        int z = (a[0] + a[3]) &gt;&gt; 1;
-        bx[0] = lx[0], by[0] = z;
-        bx[1] = lx[0], by[1] = z + d;
-        bx[2] = lx[1], by[2] = z;
-        bx[3] = lx[1], by[3] = z + d;
-        check();
-    } else {
-        int d = abs(ly[0] - ly[1]);
-        sort(yx[0] + 1, yx[0] + 3);
-        sort(yx[1] + 1, yx[1] + 3);
-        int a[4] = {yx[0][1], yx[0][2] - d, yx[1][1], yx[1][2] - d};
-        sort(a, a + 4);
-        int z = (a[0] + a[3]) &gt;&gt; 1;
-        bx[0] = z, by[0] = ly[0];
-        bx[1] = z + d, by[1] = ly[0];
-        bx[2] = z, by[2] = ly[1];
-        bx[3] = z + d, by[3] = ly[1];
-        check();
-    }
+	if (cx == 2 &amp;&amp; cy == 2) {
+		bx[0] = lx[0], by[0] = ly[0];
+		bx[1] = lx[0], by[1] = ly[1];
+		bx[2] = lx[1], by[2] = ly[0];
+		bx[3] = lx[1], by[3] = ly[1];
+		check();
+	} else if (cy == 1) {
+		bx[0] = lx[0], by[0] = ly[0];
+		bx[1] = lx[1], by[1] = ly[0];
+		bx[2] = lx[0], by[2] = ly[0] + (lx[0] - lx[1]);
+		bx[3] = lx[1], by[3] = ly[0] + (lx[0] - lx[1]);
+		check();
+		bx[2] = lx[0], by[2] = ly[0] - (lx[0] - lx[1]);
+		bx[3] = lx[1], by[3] = ly[0] - (lx[0] - lx[1]);
+		check();
+	} else if (cx == 1) {
+		bx[0] = lx[0], by[0] = ly[0];
+		bx[1] = lx[0], by[1] = ly[1];
+		bx[2] = lx[0] + (ly[0] - ly[1]), by[2] = ly[0];
+		bx[3] = lx[0] + (ly[0] - ly[1]), by[3] = ly[1];
+		check();
+		bx[2] = lx[0] - (ly[0] - ly[1]), by[2] = ly[0];
+		bx[3] = lx[0] - (ly[0] - ly[1]), by[3] = ly[1];
+		check();
+	} else if (cy == 0) {
+		int d = abs(lx[0] - lx[1]);
+		sort(xy[0] + 1, xy[0] + 3);
+		sort(xy[1] + 1, xy[1] + 3);
+		int a[4] = {xy[0][1], xy[0][2] - d, xy[1][1], xy[1][2] - d};
+		sort(a, a + 4);
+		int z = (a[0] + a[3]) &gt;&gt; 1;
+		bx[0] = lx[0], by[0] = z;
+		bx[1] = lx[0], by[1] = z + d;
+		bx[2] = lx[1], by[2] = z;
+		bx[3] = lx[1], by[3] = z + d;
+		check();
+	} else {
+		int d = abs(ly[0] - ly[1]);
+		sort(yx[0] + 1, yx[0] + 3);
+		sort(yx[1] + 1, yx[1] + 3);
+		int a[4] = {yx[0][1], yx[0][2] - d, yx[1][1], yx[1][2] - d};
+		sort(a, a + 4);
+		int z = (a[0] + a[3]) &gt;&gt; 1;
+		bx[0] = z, by[0] = ly[0];
+		bx[1] = z + d, by[1] = ly[0];
+		bx[2] = z, by[2] = ly[1];
+		bx[3] = z + d, by[3] = ly[1];
+		check();
+	}
 }
 
 inline void solve() {
-    ans = inf;
-    for (int i = 0; i &lt; 4; i++) rd(x[i]), rd(y[i]);
-    for (int k = 0; k &lt; 16; k++) {
-        cx = cy = 0;
-        for (int i = 0; i &lt; 4; i++)
-            if (k &gt;&gt; i &amp; 1) {
-                int o = -1;
-                for (int j = 0; j &lt; cx; j++) if (lx[j] == x[i]) o = j;
-                if (~o) xy[o][++*xy[o]] = y[i];
-                else xy[cx][*xy[cx] = 1] = y[i], lx[cx++] = x[i];
-            } else {
-                int o = -1;
-                for (int j = 0; j &lt; cy; j++) if (ly[j] == y[i]) o = j;
-                if (~o) yx[o][++*yx[o]] = x[i];
-                else yx[cy][*yx[cy] = 1] = x[i], ly[cy++] = y[i];
-            }
-        if (max(cx, cy) != 2 || (!cy &amp;&amp; *xy[0] != 2) || (!cx &amp;&amp; *yx[0] != 2)) continue;
-        pd();
-    }
-    if (ans == inf) return print(-1), void();
-    print(ans);
-    for (int i = 0; i &lt; 4; i++) print(ax[i], ' '), print(ay[i]);
+	ans = inf;
+	for (int i = 0; i &lt; 4; i++) rd(x[i]), rd(y[i]);
+	for (int k = 0; k &lt; 16; k++) {
+		cx = cy = 0;
+		for (int i = 0; i &lt; 4; i++)
+			if (k &gt;&gt; i &amp; 1) {
+				int o = -1;
+				for (int j = 0; j &lt; cx; j++) if (lx[j] == x[i]) o = j;
+				if (~o) xy[o][++*xy[o]] = y[i];
+				else xy[cx][*xy[cx] = 1] = y[i], lx[cx++] = x[i];
+			} else {
+				int o = -1;
+				for (int j = 0; j &lt; cy; j++) if (ly[j] == y[i]) o = j;
+				if (~o) yx[o][++*yx[o]] = x[i];
+				else yx[cy][*yx[cy] = 1] = x[i], ly[cy++] = y[i];
+			}
+		if (max(cx, cy) != 2 || (!cy &amp;&amp; *xy[0] != 2) || (!cx &amp;&amp; *yx[0] != 2)) continue;
+		pd();
+	}
+	if (ans == inf) return print(-1), void();
+	print(ans);
+	for (int i = 0; i &lt; 4; i++) print(ax[i], ' '), print(ay[i]);
 }
 
 int main() {
-    for (int i = 0; i &lt; 4; i++) p[i] = i;
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	for (int i = 0; i &lt; 4; i++) p[i] = i;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="89" href="/blog/tags/89/">计算几何</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/722/"><span>较新一篇</span>CF643D Bearish Fanpages 题解</a><a class="rel-next" rel="next" href="/blog/posts/718/"><span>较早一篇</span>CF708E Student’s Camp 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="720" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

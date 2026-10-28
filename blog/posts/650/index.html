@@ -17,18 +17,18 @@
 <p>暴力求显然是 <span class="math-inline" data-original-math="$\mathcal O(n^2)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span> 的，通常这个时间复杂度都无法被接受。</p>
 <h2 id="section-2"><span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 求 <span class="math-inline" data-original-math="$z$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span></span> 函数。</h2>
 <p>维护 <span class="math-inline" data-original-math="$r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi></mrow><annotation encoding="application/x-tex">r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 最大的匹配子串 <span class="math-inline" data-original-math="$s[l:r]$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mo stretchy="false">[</mo><mi>l</mi><mo>:</mo><mi>r</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">s[l:r]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">s</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mclose">]</span></span></span></span></span>。</p>
-<p>当 <span class="math-inline" data-original-math="$i \le r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>≤</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">i \le r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7955em;vertical-align:-0.136em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 时，我们充分利用已经算出来的 <span class="math-inline" data-original-math="$z$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span></span>，直接把 <span class="math-inline" data-original-math="$z_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 初始化为 <span class="math-inline" data-original-math="$\min(z_{i-l+1}, r – i + 1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>z</mi><mrow><mi>i</mi><mo>−</mo><mi>l</mi><mo>+</mo><mn>1</mn></mrow></msub><mo separator="true">,</mo><mi>r</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\min(z_{i-l+1}, r - i + 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>；否则初始化为 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>。</p>
+<p>当 <span class="math-inline" data-original-math="$i \le r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>≤</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">i \le r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7955em;vertical-align:-0.136em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span> 时，我们充分利用已经算出来的 <span class="math-inline" data-original-math="$z$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>z</mi></mrow><annotation encoding="application/x-tex">z</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.044em;">z</span></span></span></span></span>，直接把 <span class="math-inline" data-original-math="$z_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 初始化为 <span class="math-inline" data-original-math="$\min(z_{i-l+1}, r - i + 1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>min</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>z</mi><mrow><mi>i</mi><mo>−</mo><mi>l</mi><mo>+</mo><mn>1</mn></mrow></msub><mo separator="true">,</mo><mi>r</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\min(z_{i-l+1}, r - i + 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>；否则初始化为 <span class="math-inline" data-original-math="$0$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span>。</p>
 <p>然后暴力往后匹配得到 <span class="math-inline" data-original-math="$z_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">z_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 的最终值，若 <span class="math-inline" data-original-math="$i+z_i-1 &gt; r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>+</mo><msub><mi>z</mi><mi>i</mi></msub><mo>−</mo><mn>1</mn><mo>&gt;</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">i+z_i-1 &gt; r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7429em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6835em;vertical-align:-0.0391em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span>，还要更新 <span class="math-inline" data-original-math="$l,r$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo separator="true">,</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">l,r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span></span>。</p>
 <p>这样做时间复杂度是 <span class="math-inline" data-original-math="$\mathcal O(n)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">)</span></span></span></span></span> 的，因为每个字符最多被暴力匹配一次。</p>
 <p>注意 <span class="math-inline" data-original-math="$z_1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">z_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 必须单独处理。</p>
 <pre tabindex="0"><code class="language-cpp">inline void Z(char *s, int n) {
-    for (int i = 1; i &lt;= n; i++) z[i] = 0;
-    z[1] = n;
-    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
-        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
-        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
-    }
+	for (int i = 1; i &lt;= n; i++) z[i] = 0;
+	z[1] = n;
+	for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+		while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+		if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+	}
 }
 </code></pre>
 <h4 id="section-3">【模板】<a href="https://www.luogu.com.cn/problem/P5410" target="_blank" rel="noopener noreferrer">P5410 【模板】扩展 KMP（Z 函数）</a></h4>
@@ -37,35 +37,35 @@ int n, m, z[N], p[N];
 char a[N], b[N];
 
 inline void Z(char *s, int n) {
-    for (int i = 1; i &lt;= n; i++) z[i] = 0;
-    z[1] = n;
-    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
-        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
-        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
-    }
+	for (int i = 1; i &lt;= n; i++) z[i] = 0;
+	z[1] = n;
+	for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+		while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+		if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+	}
 }
 
 inline void exkmp(char *s, int n, char *t, int m) {
-    Z(t, m);
-    for (int i = 1; i &lt;= n; i++) p[i] = 0;
-    for (int i = 1, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) p[i] = min(z[i-l+1], r - i + 1);
-        while (i + p[i] &lt;= n &amp;&amp; s[i+p[i]] == t[p[i]+1]) ++p[i];
-        if (i + p[i] - 1 &gt; r) l = i, r = i + p[i] - 1;
-    }
+	Z(t, m);
+	for (int i = 1; i &lt;= n; i++) p[i] = 0;
+	for (int i = 1, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) p[i] = min(z[i-l+1], r - i + 1);
+		while (i + p[i] &lt;= n &amp;&amp; s[i+p[i]] == t[p[i]+1]) ++p[i];
+		if (i + p[i] - 1 &gt; r) l = i, r = i + p[i] - 1;
+	}
 }
 
 int main() {
-    rds(a, n), rds(b, m);
-    exkmp(a, n, b, m);
-    ll ans = 0;
-    for (int i = 1; i &lt;= m; i++) ans ^= 1ll * i * (z[i] + 1);
-    print(ans);
-    ans = 0;
-    for (int i = 1; i &lt;= n; i++) ans ^= 1ll * i * (p[i] + 1);
-    print(ans);
-    return 0;
+	rds(a, n), rds(b, m);
+	exkmp(a, n, b, m);
+	ll ans = 0;
+	for (int i = 1; i &lt;= m; i++) ans ^= 1ll * i * (z[i] + 1);
+	print(ans);
+	ans = 0;
+	for (int i = 1; i &lt;= n; i++) ans ^= 1ll * i * (p[i] + 1);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h4 id="section-4">【练习】<a href="https://www.luogu.com.cn/problem/CF126B" target="_blank" rel="noopener noreferrer">CF126B Password</a></h4>
@@ -74,27 +74,27 @@ int n, z[N], v[N];
 char a[N];
 
 inline void Z(char *s, int n) {
-    for (int i = 1; i &lt;= n; i++) z[i] = 0;
-    z[1] = n;
-    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
-        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
-        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
-    }
+	for (int i = 1; i &lt;= n; i++) z[i] = 0;
+	z[1] = n;
+	for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+		while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+		if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+	}
 }
 
 int main() {
-    rds(a, n);
-    Z(a, n);
-    for (int i = 2; i &lt;= n; i++)
-        if (!v[z[i]]) {
-            while (!v[z[i]]) v[z[i]--] = 1;
-        } else if (i + z[i] - 1 == n) {
-            while (i &lt;= n) putchar(a[i++]);
-            return 0;
-        }
-    prints("Just a legend");
-    return 0;
+	rds(a, n);
+	Z(a, n);
+	for (int i = 2; i &lt;= n; i++)
+		if (!v[z[i]]) {
+			while (!v[z[i]]) v[z[i]--] = 1;
+		} else if (i + z[i] - 1 == n) {
+			while (i &lt;= n) putchar(a[i++]);
+			return 0;
+		}
+	prints("Just a legend");
+	return 0;
 }
 </code></pre>
 <h4 id="section-5">【练习】<a href="https://www.luogu.com.cn/problem/CF432D" target="_blank" rel="noopener noreferrer">CF432D Prefixes and Suffixes</a></h4>
@@ -103,36 +103,36 @@ int n, z[N], c[N], ans[N];
 char a[N];
 
 inline void add(int x, int k) {
-    while (x &lt;= n) c[x] += k, x += x &amp; -x;
+	while (x &lt;= n) c[x] += k, x += x &amp; -x;
 }
 
 inline int ask(int x) {
-    int k = 0;
-    while (x) k += c[x], x -= x &amp; -x;
-    return k;
+	int k = 0;
+	while (x) k += c[x], x -= x &amp; -x;
+	return k;
 }
 
 inline void Z(char *s, int n) {
-    for (int i = 1; i &lt;= n; i++) z[i] = 0;
-    z[1] = n;
-    for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
-        if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
-        while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
-        if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
-    }
+	for (int i = 1; i &lt;= n; i++) z[i] = 0;
+	z[1] = n;
+	for (int i = 2, l = 0, r = 0; i &lt;= n; i++) {
+		if (i &lt;= r) z[i] = min(z[i-l+1], r - i + 1);
+		while (i + z[i] &lt;= n &amp;&amp; s[i+z[i]] == s[z[i]+1]) ++z[i];
+		if (i + z[i] - 1 &gt; r) l = i, r = i + z[i] - 1;
+	}
 }
 
 int main() {
-    rds(a, n);
-    Z(a, n);
-    for (int i = 1; i &lt;= n; i++) {
-        add(1, 1), add(z[i] + 1, -1);
-        if (i + z[i] - 1 == n) ans[z[i]] = ask(z[i]), ++ans[0];
-    }
-    print(ans[0]);
-    for (int i = 1; i &lt;= n; i++)
-        if (ans[i]) print(i, ' '), print(ans[i]);
-    return 0;
+	rds(a, n);
+	Z(a, n);
+	for (int i = 1; i &lt;= n; i++) {
+		add(1, 1), add(z[i] + 1, -1);
+		if (i + z[i] - 1 == n) ans[z[i]] = ask(z[i]), ++ans[0];
+	}
+	print(ans[0]);
+	for (int i = 1; i &lt;= n; i++)
+		if (ans[i]) print(i, ' '), print(ans[i]);
+	return 0;
 }
 </code></pre>
 <h2 id="section-6">参考资料</h2>

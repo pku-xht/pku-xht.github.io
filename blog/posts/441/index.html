@@ -14,7 +14,7 @@
 </blockquote>
 <h2 id="section-1">题意</h2>
 <ul>
-<li>将 <span class="math-inline" data-original-math="$\texttt{a} \sim \texttt{a} + l – 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">a</mtext><mo>∼</mo><mtext mathvariant="monospace">a</mtext><mo>+</mo><mi>l</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\texttt{a} \sim \texttt{a} + l - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord text"><span class="mord texttt">a</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord texttt">a</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 这 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 个字符分成 <span class="math-inline" data-original-math="$\texttt{V,C}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">V,C</mtext></mrow><annotation encoding="application/x-tex">\texttt{V,C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.75em;vertical-align:-0.1389em;"></span><span class="mord text"><span class="mord texttt">V,C</span></span></span></span></span></span> 两个集合。</li>
+<li>将 <span class="math-inline" data-original-math="$\texttt{a} \sim \texttt{a} + l - 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">a</mtext><mo>∼</mo><mtext mathvariant="monospace">a</mtext><mo>+</mo><mi>l</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\texttt{a} \sim \texttt{a} + l - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord text"><span class="mord texttt">a</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord text"><span class="mord texttt">a</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 这 <span class="math-inline" data-original-math="$l$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span></span></span></span></span> 个字符分成 <span class="math-inline" data-original-math="$\texttt{V,C}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="monospace">V,C</mtext></mrow><annotation encoding="application/x-tex">\texttt{V,C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.75em;vertical-align:-0.1389em;"></span><span class="mord text"><span class="mord texttt">V,C</span></span></span></span></span></span> 两个集合。</li>
 <li>你需要构造一个<strong>长度为 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span></strong> 且<strong>满足 <span class="math-inline" data-original-math="$m$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span></span></span></span></span> 个限制</strong>且<strong>不小于另一个长度为 <span class="math-inline" data-original-math="$n$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span></span> 的字符串 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span></strong> 的<strong>最小</strong>字符串。</li>
 <li>每一个限制为<strong>若字符串的第 <span class="math-inline" data-original-math="$p_1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">p_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 个位置上的字符 <span class="math-inline" data-original-math="$\in t_1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∈</mo><msub><mi>t</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">\in t_1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，则第 <span class="math-inline" data-original-math="$p_2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">p_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 个位置上的字符 <span class="math-inline" data-original-math="$\in t_2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∈</mo><msub><mi>t</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\in t_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></strong>。</li>
 <li><span class="math-inline" data-original-math="$l \le 26$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mo>≤</mo><mn>26</mn></mrow><annotation encoding="application/x-tex">l \le 26</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8304em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">26</span></span></span></span></span>，<span class="math-inline" data-original-math="$n \le 200$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>≤</mo><mn>200</mn></mrow><annotation encoding="application/x-tex">n \le 200</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">200</span></span></span></span></span>，<span class="math-inline" data-original-math="$m \le 4n(n-1)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>≤</mo><mn>4</mn><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">m \le 4n(n-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mord mathnormal">n</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span>。</li>
@@ -28,61 +28,61 @@ char s[N];
 vi e[N&lt;&lt;1];
 
 bool dfs(int x) {
-    if (v[x&gt;n?x-n:x+n]) return 0;
-    v[x] = 1;
-    for (ui i = 0; i &lt; e[x].size(); i++) {
-        int y = e[x][i];
-        if (!v[y] &amp;&amp; !dfs(y)) return 0;
-    }
-    return 1;
+	if (v[x&gt;n?x-n:x+n]) return 0;
+	v[x] = 1;
+	for (ui i = 0; i &lt; e[x].size(); i++) {
+		int y = e[x][i];
+		if (!v[y] &amp;&amp; !dfs(y)) return 0;
+	}
+	return 1;
 }
 
 inline bool pd(int o) {
-    for (int i = 1; i &lt;= n &lt;&lt; 1; i++) v[i] = 0;
-    for (int i = 1; i &lt;= o; i++)
-        if (!dfs(i + a[s[i]-'a'+1] * n)) return 0;
-    for (int i = o + 1; i &lt;= n; i++) {
-        if (v[i]) s[i] = b[1][0] + 'a' - 1;
-        else if (v[i+n]) s[i] = b[1][1] + 'a' - 1;
-        else {
-            int x = min(b[1][0], b[1][1]), y = max(b[1][0], b[1][1]);
-            if (dfs(i + a[x] * n)) s[i] = x + 'a' - 1;
-            else if (dfs(i + a[y] * n)) s[i] = y + 'a' - 1;
-            else return 0;
-        }
-    } 
-    return 1;
+	for (int i = 1; i &lt;= n &lt;&lt; 1; i++) v[i] = 0;
+	for (int i = 1; i &lt;= o; i++)
+		if (!dfs(i + a[s[i]-'a'+1] * n)) return 0;
+	for (int i = o + 1; i &lt;= n; i++) {
+		if (v[i]) s[i] = b[1][0] + 'a' - 1;
+		else if (v[i+n]) s[i] = b[1][1] + 'a' - 1;
+		else {
+			int x = min(b[1][0], b[1][1]), y = max(b[1][0], b[1][1]);
+			if (dfs(i + a[x] * n)) s[i] = x + 'a' - 1;
+			else if (dfs(i + a[y] * n)) s[i] = y + 'a' - 1;
+			else return 0;
+		}
+	} 
+	return 1;
 }
 
 int main() {
-    rds(s, k);
-    map&lt; char, int &gt; p;
-    p['V'] = 0, p['C'] = 1;
-    b[k+1][0] = b[k+1][1] = k + 1;
-    for (int i = k, t[2] = {k + 1, k + 1}; i; i--)
-        t[a[i]=p[s[i]]] = i, b[i][0] = t[0], b[i][1] = t[1];
-    rd(n), rd(m);
-    for (int i = 1, x, y, s1, t1, s2, t2; i &lt;= m; i++) {
-        rd(x), rds(s, y), s1 = x + p[s[y]] * n, s2 = s1 &gt; n ? s1 - n : s1 + n;
-        rd(x), rds(s, y), t1 = x + p[s[y]] * n, t2 = t1 &gt; n ? t1 - n : t1 + n;
-        e[s1].pb(t1), e[t2].pb(s2);
-    }
-    rds(s, n);
-    if (pd(n)) return prints(s, n), 0;
-    else if (b[1][0] == k + 1 || b[1][1] == k + 1) return print(-1), 0;
-    for (int i = n; i; i--) {
-        int c = s[i] - 'a' + 2, x = min(b[c][0], b[c][1]), y = max(b[c][0], b[c][1]);
-        if (x != k + 1) {
-            s[i] = x + 'a' - 1;
-            if (pd(i)) return prints(s, n), 0;
-        }
-        if (y != k + 1) {
-            s[i] = y + 'a' - 1;
-            if (pd(i)) return prints(s, n), 0;
-        }
-    }
-    print(-1);
-    return 0;
+	rds(s, k);
+	map&lt; char, int &gt; p;
+	p['V'] = 0, p['C'] = 1;
+	b[k+1][0] = b[k+1][1] = k + 1;
+	for (int i = k, t[2] = {k + 1, k + 1}; i; i--)
+		t[a[i]=p[s[i]]] = i, b[i][0] = t[0], b[i][1] = t[1];
+	rd(n), rd(m);
+	for (int i = 1, x, y, s1, t1, s2, t2; i &lt;= m; i++) {
+		rd(x), rds(s, y), s1 = x + p[s[y]] * n, s2 = s1 &gt; n ? s1 - n : s1 + n;
+		rd(x), rds(s, y), t1 = x + p[s[y]] * n, t2 = t1 &gt; n ? t1 - n : t1 + n;
+		e[s1].pb(t1), e[t2].pb(s2);
+	}
+	rds(s, n);
+	if (pd(n)) return prints(s, n), 0;
+	else if (b[1][0] == k + 1 || b[1][1] == k + 1) return print(-1), 0;
+	for (int i = n; i; i--) {
+		int c = s[i] - 'a' + 2, x = min(b[c][0], b[c][1]), y = max(b[c][0], b[c][1]);
+		if (x != k + 1) {
+			s[i] = x + 'a' - 1;
+			if (pd(i)) return prints(s, n), 0;
+		}
+		if (y != k + 1) {
+			s[i] = y + 'a' - 1;
+			if (pd(i)) return prints(s, n), 0;
+		}
+	}
+	print(-1);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="104" href="/blog/tags/104/">2-SAT</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/443/"><span>较新一篇</span>CF578E Walking! 题解</a><a class="rel-next" rel="next" href="/blog/posts/437/"><span>较早一篇</span>Educational Codeforces Round 77 (Rated for Div. 2) 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="441" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

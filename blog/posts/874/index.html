@@ -27,7 +27,7 @@
 <h2 id="section-2">题解</h2>
 <p>首先肯定先把纯黑的子树剪掉。</p>
 <p>假设我们要求必须回到起点，则我们一定会走一条欧拉回路。</p>
-<p><span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 为 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的度数，在只进行第一个操作的情况下，花费的时间为 <span class="math-inline" data-original-math="$2n – 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2n - 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 秒，同时点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的颜色会反转 <span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 次，因此总花费时间还要加上反转后颜色为白色的点数。</p>
+<p><span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 为 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的度数，在只进行第一个操作的情况下，花费的时间为 <span class="math-inline" data-original-math="$2n - 2$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>n</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">2n - 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">2</span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span></span> 秒，同时点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 的颜色会反转 <span class="math-inline" data-original-math="$d_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">d_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 次，因此总花费时间还要加上反转后颜色为白色的点数。</p>
 <p>考虑不要求回到起点有什么变化，此时实际去掉的路径就是从终点到起点的这一条链，除了终点都少被反转了一次。</p>
 <p>考虑只走一遍欧拉回路后两种颜色的点的贡献变化：</p>
 <ul>
@@ -44,45 +44,45 @@ char s[N];
 bool a[N], c[N], b[N];
 
 void dfs1(int x, int fa) {
-    b[x] = c[x];
-    for (int y : e[x])
-        if (y != fa)
-            dfs1(y, x), b[x] |= b[y];
-    ans += b[x];
-    if (!b[x]) a[fa] ^= 1;
+	b[x] = c[x];
+	for (int y : e[x])
+		if (y != fa)
+			dfs1(y, x), b[x] |= b[y];
+	ans += b[x];
+	if (!b[x]) a[fa] ^= 1;
 }
 
 void dfs2(int x, int fa) {
-    d[x] = d[fa] + c[x];
-    for (int y : e[x])
-        if (b[y] &amp;&amp; y != fa)
-            dfs2(y, x);
+	d[x] = d[fa] + c[x];
+	for (int y : e[x])
+		if (b[y] &amp;&amp; y != fa)
+			dfs2(y, x);
 }
 
 int main() {
-    rd(n);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x), a[x] ^= 1, a[y] ^= 1;
-    rds(s, n);
-    int rt = 0;
-    for (int i = 1; i &lt;= n; i++) {
-        c[i] = s[i] == 'W';
-        if (s[i] == 'W') rt = i;
-    }
-    if (!rt) return prints("0"), 0;
-    dfs1(rt, 0);
-    ans = ans * 2 - 2;
-    if (!ans) return prints("1"), 0;
-    for (int i = 1; i &lt;= n; i++)
-        if (b[i]) ans += c[i] ^= a[i];
-    dfs2(rt, 0);
-    for (int i = 1; i &lt;= n; i++)
-        if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
-    d[rt] = 0, dfs2(rt, 0);
-    for (int i = 1; i &lt;= n; i++)
-        if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
-    print(ans - d[rt] * 2);
-    return 0;
+	rd(n);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x), a[x] ^= 1, a[y] ^= 1;
+	rds(s, n);
+	int rt = 0;
+	for (int i = 1; i &lt;= n; i++) {
+		c[i] = s[i] == 'W';
+		if (s[i] == 'W') rt = i;
+	}
+	if (!rt) return prints("0"), 0;
+	dfs1(rt, 0);
+	ans = ans * 2 - 2;
+	if (!ans) return prints("1"), 0;
+	for (int i = 1; i &lt;= n; i++)
+		if (b[i]) ans += c[i] ^= a[i];
+	dfs2(rt, 0);
+	for (int i = 1; i &lt;= n; i++)
+		if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
+	d[rt] = 0, dfs2(rt, 0);
+	for (int i = 1; i &lt;= n; i++)
+		if (b[i] &amp;&amp; d[i] &gt; d[rt]) rt = i;
+	print(ans - d[rt] * 2);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="114" href="/blog/tags/114/">欧拉回路</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/875/"><span>较新一篇</span>ARC098F Donation 题解</a><a class="rel-next" rel="next" href="/blog/posts/872/"><span>较早一篇</span>ARC096F Sweet Alchemy 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="874" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/blog/blog.css?v=3"><link rel="stylesheet" href="/assets/vendor/katex/katex.min.css"><script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script><script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>
 </head><body class="blog-page"><a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航"><a href="/">主页</a><a href="/blog/" aria-current="page">博客</a><a href="/blog/archive/">归档</a><a href="/blog/tags/">标签</a><a href="/blog/friends/">友链</a><a href="https://www.xht37.com/" target="_blank" rel="noopener noreferrer">旧站 ↗</a></nav></div></header>
 <main class="site-width" id="main"><article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>CF696F …Dary! 题解</h1><p class="post-meta"><time datetime="2020-03-10T21:45:29+08:00">2020 年 3 月 10 日</time><a href="/blog/categories/15/">题解</a></p></header><details class="article-toc" open><summary>本文目录（3 节）</summary><ol><li class="toc-level-2"><a href="#section-1">题意</a></li><li class="toc-level-2"><a href="#section-2">题解</a></li><li class="toc-level-2"><a href="#section-3">代码</a></li></ol></details><div class="prose"><blockquote>
-<p><a href="https://codeforces.com/contest/696/problem/F" target="_blank" rel="noopener noreferrer">CF696F …Dary!</a></p>
+<p><a href="https://codeforces.com/contest/696/problem/F" target="_blank" rel="noopener noreferrer">CF696F ...Dary!</a></p>
 </blockquote>
 <h2 id="section-1">题意</h2>
 <ul>
@@ -31,60 +31,60 @@
 <pre tabindex="0"><code class="language-cpp">const double eps = 1e-10, PI = acos(-1);
 
 struct P {
-    double x, y;
-    inline P() {}
-    inline P(double x, double y) : x(x), y(y) {}
-    inline P &amp;operator += (P o) { return x += o.x, y += o.y, *this; }
-    inline P &amp;operator -= (P o) { return x -= o.x, y -= o.y, *this; }
-    inline P &amp;operator *= (double o) { return x *= o, y *= o, *this; }
-    inline P &amp;operator /= (double o) { return x /= o, y /= o, *this; }
-    inline friend P operator + (P a, P b) { return a += b; }
-    inline friend P operator - (P a, P b) { return a -= b; }
-    inline friend P operator * (P a, double b) { return a *= b; }
-    inline friend P operator / (P a, double b) { return a /= b; }
-    inline friend bool operator &lt; (P a, P b) { return fabs(a.x - b.x) &lt; eps ? a.y &lt; b.y : a.x &lt; b.x; }
-    inline friend bool operator == (P a, P b) { return !(a &lt; b) &amp;&amp; !(b &lt; a); }
-    inline friend double operator * (P a, P b) { return a.x * b.x + a.y * b.y; }
-    inline friend double operator % (P a, P b) { return a.x * b.y - a.y * b.x; }
-    inline friend double operator ^ (P a, P b) { return a * b / a.l() / b.l(); }
-    inline double a() { return atan2(y, x); }
-    inline double l() { return sqrt(*this * *this); }
-    inline void r(double o) { double s = sin(o), c = cos(o), X = x * c - y * s, Y = x * s + y * c; x = X, y = Y; }
+	double x, y;
+	inline P() {}
+	inline P(double x, double y) : x(x), y(y) {}
+	inline P &amp;operator += (P o) { return x += o.x, y += o.y, *this; }
+	inline P &amp;operator -= (P o) { return x -= o.x, y -= o.y, *this; }
+	inline P &amp;operator *= (double o) { return x *= o, y *= o, *this; }
+	inline P &amp;operator /= (double o) { return x /= o, y /= o, *this; }
+	inline friend P operator + (P a, P b) { return a += b; }
+	inline friend P operator - (P a, P b) { return a -= b; }
+	inline friend P operator * (P a, double b) { return a *= b; }
+	inline friend P operator / (P a, double b) { return a /= b; }
+	inline friend bool operator &lt; (P a, P b) { return fabs(a.x - b.x) &lt; eps ? a.y &lt; b.y : a.x &lt; b.x; }
+	inline friend bool operator == (P a, P b) { return !(a &lt; b) &amp;&amp; !(b &lt; a); }
+	inline friend double operator * (P a, P b) { return a.x * b.x + a.y * b.y; }
+	inline friend double operator % (P a, P b) { return a.x * b.y - a.y * b.x; }
+	inline friend double operator ^ (P a, P b) { return a * b / a.l() / b.l(); }
+	inline double a() { return atan2(y, x); }
+	inline double l() { return sqrt(*this * *this); }
+	inline void r(double o) { double s = sin(o), c = cos(o), X = x * c - y * s, Y = x * s + y * c; x = X, y = Y; }
 };
 
 struct L {
-    P a, b;
-    double c;
-    inline L() {}
-    inline L(P a, P b) : a(a), b(b) { c = b.a(); }
-    inline friend P operator * (L a, L b) { return a.a + a.b * (b.b % (a.a - b.a) / (a.b % b.b)); }
-    inline friend double operator / (L a, P b) { return fabs(a.b % (b - a.a)) / a.b.l(); }
-    inline friend bool operator &lt; (L a, L b) { return fabs(a.c - b.c) &lt; eps ? (b.a - a.a) % a.b &lt; 0 : a.c &lt; b.c; }
+	P a, b;
+	double c;
+	inline L() {}
+	inline L(P a, P b) : a(a), b(b) { c = b.a(); }
+	inline friend P operator * (L a, L b) { return a.a + a.b * (b.b % (a.a - b.a) / (a.b % b.b)); }
+	inline friend double operator / (L a, P b) { return fabs(a.b % (b - a.a)) / a.b.l(); }
+	inline friend bool operator &lt; (L a, L b) { return fabs(a.c - b.c) &lt; eps ? (b.a - a.a) % a.b &lt; 0 : a.c &lt; b.c; }
 };
 
 inline deque&lt;P&gt; half_plane(vector&lt;L&gt; l) {
-    sort(l.begin(), l.end());
-    deque&lt;P&gt; r;
-    deque&lt;L&gt; q;
-    for (L o : l) {
-        while (r.size() &amp;&amp; (r.back() - o.a) % o.b &gt; 0)
-            q.pop_back(), r.pop_back();
-        while (r.size() &amp;&amp; (r.front() - o.a) % o.b &gt; 0)
-            q.pop_front(), r.pop_front();
-        if (q.size() &amp;&amp; fabs(o.b % q.back().b) &lt; eps) {
-            if (fabs(o.b.a() - q.back().b.a()) &gt; eps)
-                return r.clear(), r;
-            q.pop_back();
-            if (r.size()) r.pop_back();
-        }
-        if (q.size()) r.pb(q.back() * o);
-        q.pb(o);
-    }
-    while (r.size() &amp;&amp; (r.back() - q.front().a) % q.front().b &gt; 0)
-        q.pop_back(), r.pop_back();
-    if (q.size() &lt; 3u) r.clear();
-    else r.pb(q.front() * q.back());
-    return r;
+	sort(l.begin(), l.end());
+	deque&lt;P&gt; r;
+	deque&lt;L&gt; q;
+	for (L o : l) {
+		while (r.size() &amp;&amp; (r.back() - o.a) % o.b &gt; 0)
+			q.pop_back(), r.pop_back();
+		while (r.size() &amp;&amp; (r.front() - o.a) % o.b &gt; 0)
+			q.pop_front(), r.pop_front();
+		if (q.size() &amp;&amp; fabs(o.b % q.back().b) &lt; eps) {
+			if (fabs(o.b.a() - q.back().b.a()) &gt; eps)
+				return r.clear(), r;
+			q.pop_back();
+			if (r.size()) r.pop_back();
+		}
+		if (q.size()) r.pb(q.back() * o);
+		q.pb(o);
+	}
+	while (r.size() &amp;&amp; (r.back() - q.front().a) % q.front().b &gt; 0)
+		q.pop_back(), r.pop_back();
+	if (q.size() &lt; 3u) r.clear();
+	else r.pb(q.front() * q.back());
+	return r;
 }
 
 int n;
@@ -92,46 +92,46 @@ vector&lt;L&gt; l, q;
 P p1, p2, ans1, ans2;
 
 inline bool pd(int i, int j, double r, P&amp; t) {
-    vector&lt;L&gt; s = q;
-    for (int k = i; k &lt;= j; k++) {
-        L o = l[k];
-        P p = o.b;
-        p.r(PI / 2);
-        p *= r / p.l();
-        o.a += p, o.b *= -1, o.c = o.b.a();
-        s.pb(o);
-    }
-    deque&lt;P&gt; p = half_plane(s);
-    if (!p.size()) return 0;
-    return t = p.back(), 1;
+	vector&lt;L&gt; s = q;
+	for (int k = i; k &lt;= j; k++) {
+		L o = l[k];
+		P p = o.b;
+		p.r(PI / 2);
+		p *= r / p.l();
+		o.a += p, o.b *= -1, o.c = o.b.a();
+		s.pb(o);
+	}
+	deque&lt;P&gt; p = half_plane(s);
+	if (!p.size()) return 0;
+	return t = p.back(), 1;
 }
 
 inline bool pd(double r) {
-    for (int i = 0, j = 0; i &lt; n; i++) {
-        while (j &lt; i + n - 2 &amp;&amp; pd(i, j, r, p1)) ++j;
-        if (pd(j, i + n - 1, r, p2)) return 1;
-    }
-    return 0;
+	for (int i = 0, j = 0; i &lt; n; i++) {
+		while (j &lt; i + n - 2 &amp;&amp; pd(i, j, r, p1)) ++j;
+		if (pd(j, i + n - 1, r, p2)) return 1;
+	}
+	return 0;
 }
 
 int main() {
-    rd(n);
-    vector&lt;P&gt; p;
-    for (int i = 1, x, y; i &lt;= n; i++) rd(x), rd(y), p.pb(P(x, y));
-    p.pb(p[0]);
-    for (int i = 0; i &lt; n; i++) l.pb(L(p[i], p[i+1] - p[i]));
-    p.pop_back(), q = l;
-    for (int i = 0; i &lt; n; i++) l.pb(l[i]);
-    double l = 0, r = 1e5;
-    while (r - l &gt; eps) {
-        double mid = (l + r) / 2;
-        if (pd(mid)) r = mid, ans1 = p1, ans2 = p2;
-        else l = mid;
-    }
-    printf("%.10f\n", r);
-    printf("%.10f %.10f\n", ans1.x, ans1.y);
-    printf("%.10f %.10f\n", ans2.x, ans2.y);
-    return 0;
+	rd(n);
+	vector&lt;P&gt; p;
+	for (int i = 1, x, y; i &lt;= n; i++) rd(x), rd(y), p.pb(P(x, y));
+	p.pb(p[0]);
+	for (int i = 0; i &lt; n; i++) l.pb(L(p[i], p[i+1] - p[i]));
+	p.pop_back(), q = l;
+	for (int i = 0; i &lt; n; i++) l.pb(l[i]);
+	double l = 0, r = 1e5;
+	while (r - l &gt; eps) {
+		double mid = (l + r) / 2;
+		if (pd(mid)) r = mid, ans1 = p1, ans2 = p2;
+		else l = mid;
+	}
+	printf("%.10f\n", r);
+	printf("%.10f %.10f\n", ans1.x, ans1.y);
+	printf("%.10f %.10f\n", ans2.x, ans2.y);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="110" href="/blog/tags/110/">Two Pointers</a>、<a data-source-tag="35" href="/blog/tags/35/">二分</a>、<a data-source-tag="124" href="/blog/tags/124/">半平面交</a>、<a data-source-tag="89" href="/blog/tags/89/">计算几何</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/718/"><span>较新一篇</span>CF708E Student’s Camp 题解</a><a class="rel-next" rel="next" href="/blog/posts/714/"><span>较早一篇</span>CF685C Optimal Point 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="716" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

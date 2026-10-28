@@ -118,6 +118,9 @@ def split_math(value, post_id):
         tex = value[i + len(delimiter):end].replace("\ue000", "\n")
         # WordPress smart punctuation changes TeX minus signs into en dashes.
         tex = tex.replace("–", "-")
+        # Editor.md sources escape Markdown punctuation even inside TeX. KaTeX
+        # expects these characters literally, while the original stays in the page.
+        tex = re.sub(r"(?<!\\)((?:\\\\)*)\\([*\[\]])", r"\1\2", tex)
         # The old notes use a literal caret in text mode for the XOR operator.
         tex = tex.replace(r"\text{^}", r"\text{\textasciicircum}")
         result.append(Math(original.replace("\ue000", "\n"), tex, delimiter == "$$"))

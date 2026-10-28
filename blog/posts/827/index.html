@@ -13,7 +13,7 @@
 <p><a href="https://codeforces.com/contest/1336" target="_blank" rel="noopener noreferrer">Codeforces Round #635 (Div. 1)</a></p>
 </blockquote>
 <h2 id="section-1">Linova and Kingdom</h2>
-<p>设深度为 <span class="math-inline" data-original-math="$d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span>，子树大小为 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>，点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 对答案的贡献为 <span class="math-inline" data-original-math="$d_i – s_i + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">d_i - s_i + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从大到小贪心就好了。</p>
+<p>设深度为 <span class="math-inline" data-original-math="$d$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></span>，子树大小为 <span class="math-inline" data-original-math="$s$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span>，点 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 对答案的贡献为 <span class="math-inline" data-original-math="$d_i - s_i + 1$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mi>i</mi></msub><mo>−</mo><msub><mi>s</mi><mi>i</mi></msub><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">d_i - s_i + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">s</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，从大到小贪心就好了。</p>
 <pre tabindex="0"><code class="language-cpp">const int N = 2e5 + 7;
 int n, k, d[N], s[N];
 vi e[N];
@@ -21,27 +21,27 @@ ll ans;
 pq&lt;pi&gt; q;
 
 void dfs(int x, int f) {
-    s[x] = 1;
-    for (int y : e[x])
-        if (y != f) {
-            d[y] = d[x] + 1;
-            dfs(y, x);
-            s[x] += s[y];
-            q.push(mp(d[y] - s[y] + 1, y));
-        }
+	s[x] = 1;
+	for (int y : e[x])
+		if (y != f) {
+			d[y] = d[x] + 1;
+			dfs(y, x);
+			s[x] += s[y];
+			q.push(mp(d[y] - s[y] + 1, y));
+		}
 }
 
 int main() {
-    rd(n, k);
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x, y), e[x].pb(y), e[y].pb(x);
-    dfs(1, 0);
-    while (k--) {
-        ans += q.top().fi;
-        q.pop();
-    }
-    print(ans);
-    return 0;
+	rd(n, k);
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x, y), e[x].pb(y), e[y].pb(x);
+	dfs(1, 0);
+	while (k--) {
+		ans += q.top().fi;
+		q.pop();
+	}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-2">Xenia and Colorful Gems</h2>
@@ -51,42 +51,42 @@ int x, y, z;
 ll a[N], b[N], c[N], ans;
 
 inline void upd(ll x, ll y, ll z) {
-    ans = min(ans, (x - y) * (x - y) + (y - z) * (y - z) + (z - x) * (z - x));
+	ans = min(ans, (x - y) * (x - y) + (y - z) * (y - z) + (z - x) * (z - x));
 }
 
 inline void work(ll *a, int x, ll *b, int y, ll *c, int z) {
-    for (int i = 1, j, k; i &lt;= x; i++) {
-        j = lower_bound(b + 1, b + y + 1, a[i]) - b;
-        if (j &lt;= y) {
-            k = lower_bound(c + 1, c + z + 1, (a[i] + b[j]) &gt;&gt; 1) - c;
-            if (k &lt;= z) upd(a[i], b[j], c[k]);
-            if (k &gt; 1) upd(a[i], b[j], c[k-1]);
-        }
-        if (j &gt; 1) {
-            k = lower_bound(c + 1, c + z + 1, (a[i] + b[j-1]) &gt;&gt; 1) - c;
-            if (k &lt;= z) upd(a[i], b[j-1], c[k]);
-            if (k &gt; 1) upd(a[i], b[j-1], c[k-1]);
-        }
-    }
+	for (int i = 1, j, k; i &lt;= x; i++) {
+		j = lower_bound(b + 1, b + y + 1, a[i]) - b;
+		if (j &lt;= y) {
+			k = lower_bound(c + 1, c + z + 1, (a[i] + b[j]) &gt;&gt; 1) - c;
+			if (k &lt;= z) upd(a[i], b[j], c[k]);
+			if (k &gt; 1) upd(a[i], b[j], c[k-1]);
+		}
+		if (j &gt; 1) {
+			k = lower_bound(c + 1, c + z + 1, (a[i] + b[j-1]) &gt;&gt; 1) - c;
+			if (k &lt;= z) upd(a[i], b[j-1], c[k]);
+			if (k &gt; 1) upd(a[i], b[j-1], c[k-1]);
+		}
+	}
 }
 
 inline void solve() {
-    rd(x, y, z), rda(a, x), rda(b, y), rda(c, z);
-    sort(a + 1, a + x + 1);
-    sort(b + 1, b + y + 1);
-    sort(c + 1, c + z + 1);
-    ans = 4e18;
-    work(a, x, b, y, c, z);
-    work(b, y, c, z, a, x);
-    work(c, z, a, x, b, y);
-    print(ans);
+	rd(x, y, z), rda(a, x), rda(b, y), rda(c, z);
+	sort(a + 1, a + x + 1);
+	sort(b + 1, b + y + 1);
+	sort(c + 1, c + z + 1);
+	ans = 4e18;
+	work(a, x, b, y, c, z);
+	work(b, y, c, z, a, x);
+	work(c, z, a, x, b, y);
+	print(ans);
 }
 
 int main() {
-    int T;
-    rd(T);
-    while (T--) solve();
-    return 0;
+	int T;
+	rd(T);
+	while (T--) solve();
+	return 0;
 }
 </code></pre>
 <h2 id="section-3">Kaavi and Magic Spell</h2>
@@ -99,18 +99,18 @@ char s[N], t[N];
 modint f[N][N], ans;
 
 int main() {
-    rds(s, n), rds(t, m);
-    reverse(s + 1, s + n + 1);
-    for (int i = 1; i &lt;= n; i++) {
-        if (n - i + 1 &gt;= m) f[i-1][0] += 1;
-        for (int j = 0; j &lt; i; j++) {
-            if (s[i] == t[j+1] || !t[j+1]) f[i][j+1] += f[i-1][j];
-            if (s[i] == t[n-i+1+j] || !t[n-i+1+j]) f[i][j] += f[i-1][j];
-        }
-    }
-    for (int j = 0; j &lt;= n; j++) ans += f[n][j];
-    print(ans);
-    return 0;
+	rds(s, n), rds(t, m);
+	reverse(s + 1, s + n + 1);
+	for (int i = 1; i &lt;= n; i++) {
+		if (n - i + 1 &gt;= m) f[i-1][0] += 1;
+		for (int j = 0; j &lt; i; j++) {
+			if (s[i] == t[j+1] || !t[j+1]) f[i][j+1] += f[i-1][j];
+			if (s[i] == t[n-i+1+j] || !t[n-i+1+j]) f[i][j] += f[i-1][j];
+		}
+	}
+	for (int j = 0; j &lt;= n; j++) ans += f[n][j];
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4">Yui and Mahjong Set</h2>

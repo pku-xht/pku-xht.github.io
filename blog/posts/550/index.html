@@ -41,43 +41,43 @@ int t, T, n, m, l[N], r[N], n1 = 1e9 + 1, n2 = -1, c[N];
 vi e[N];
 
 inline bool pd(int x, int i) {
-    return l[i] &lt;= x &amp;&amp; x &lt;= r[i];
+	return l[i] &lt;= x &amp;&amp; x &lt;= r[i];
 }
 
 bool dfs(int x) {
-    for (auto y : e[x])
-        if (!c[y]) {
-            c[y] = 3 - c[x];
-            if (!dfs(y)) return 0;
-        } else if (c[x] == c[y]) return 0;
-    return 1;
+	for (auto y : e[x])
+		if (!c[y]) {
+			c[y] = 3 - c[x];
+			if (!dfs(y)) return 0;
+		} else if (c[x] == c[y]) return 0;
+	return 1;
 }
 
 int main() {
-    rd(t), rd(T), rd(n), rd(m);
-    for (int i = 1; i &lt;= n; i++)
-        rd(l[i]), rd(r[i]), n1 = min(n1, r[i]), n2 = max(n2, l[i]);
-    if (n1 + n2 &lt; t) n2 = t - n1;
-    if (n1 + n2 &gt; T) n1 = T - n2;
-    if (n1 &lt; 0 || n2 &lt; 0) Fail;
-    for (int i = 1; i &lt;= n; i++) {
-        bool o1 = pd(n1, i), o2 = pd(n2, i);
-        if (!o1 &amp;&amp; !o2) Fail;
-        if (o1 &amp;&amp; !o2) c[i] = 1;
-        if (!o1 &amp;&amp; o2) c[i] = 2;
-    }
-    for (int i = 1, x, y; i &lt;= m; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x);
-    for (int i = 1; i &lt;= n; i++) if (c[i] &amp;&amp; !dfs(i)) Fail;
-    for (int i = 1; i &lt;= n; i++)
-        if (!c[i]) {
-            c[i] = 1;
-            if (!dfs(i)) Fail;
-        }
-    string ans = "";
-    for (int i = 1; i &lt;= n; i++) ans += c[i] + '0';
-    prints("POSSIBLE"), print(n1, ' '), print(n2), prints(ans); 
-    return 0;
+	rd(t), rd(T), rd(n), rd(m);
+	for (int i = 1; i &lt;= n; i++)
+		rd(l[i]), rd(r[i]), n1 = min(n1, r[i]), n2 = max(n2, l[i]);
+	if (n1 + n2 &lt; t) n2 = t - n1;
+	if (n1 + n2 &gt; T) n1 = T - n2;
+	if (n1 &lt; 0 || n2 &lt; 0) Fail;
+	for (int i = 1; i &lt;= n; i++) {
+		bool o1 = pd(n1, i), o2 = pd(n2, i);
+		if (!o1 &amp;&amp; !o2) Fail;
+		if (o1 &amp;&amp; !o2) c[i] = 1;
+		if (!o1 &amp;&amp; o2) c[i] = 2;
+	}
+	for (int i = 1, x, y; i &lt;= m; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x);
+	for (int i = 1; i &lt;= n; i++) if (c[i] &amp;&amp; !dfs(i)) Fail;
+	for (int i = 1; i &lt;= n; i++)
+		if (!c[i]) {
+			c[i] = 1;
+			if (!dfs(i)) Fail;
+		}
+	string ans = "";
+	for (int i = 1; i &lt;= n; i++) ans += c[i] + '0';
+	prints("POSSIBLE"), print(n1, ' '), print(n2), prints(ans); 
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/552/"><span>较新一篇</span>CF568E Longest Increasing Subsequence 题解</a><a class="rel-next" rel="next" href="/blog/posts/547/"><span>较早一篇</span>多项式 学习笔记</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="550" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

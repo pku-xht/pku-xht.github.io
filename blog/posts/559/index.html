@@ -35,101 +35,101 @@ char c[N];
 vi e[N];
 
 inline Hash operator + (Hash a, Hash b) {
-    return mp(a.fi + b.fi, a.se + b.se);
+	return mp(a.fi + b.fi, a.se + b.se);
 }
 
 inline Hash operator - (Hash a, Hash b) {
-    return mp(a.fi - b.fi, a.se - b.se);
+	return mp(a.fi - b.fi, a.se - b.se);
 }
 
 inline Hash operator * (Hash a, Hash b) {
-    return mp(a.fi * b.fi, a.se * b.se);
+	return mp(a.fi * b.fi, a.se * b.se);
 }
 
 inline Hash H(bool o, int x, int k) {
-    if (o) return h2[x-k+1] - h2[x+1] * p[k];
-    return h1[x+k-1] - h1[x-1] * p[k];
+	if (o) return h2[x-k+1] - h2[x+1] * p[k];
+	return h1[x+k-1] - h1[x-1] * p[k];
 }
 
 void dfs(int x) {
-    s[x] = 1;
-    for (auto y : e[x])
-        if (y != f[x]) {
-            f[y] = x, d[y] = d[x] + 1, dfs(y), s[x] += s[y];
-            if (s[y] &gt; s[son[x]]) son[x] = y;
-        }
+	s[x] = 1;
+	for (auto y : e[x])
+		if (y != f[x]) {
+			f[y] = x, d[y] = d[x] + 1, dfs(y), s[x] += s[y];
+			if (s[y] &gt; s[son[x]]) son[x] = y;
+		}
 }
 
 void dfs(int x, int p) {
-    top[x] = p, dfn[x] = ++num, rnk[num] = x;
-    if (son[x]) dfs(son[x], p);
-    for (auto y : e[x]) if (y != f[x] &amp;&amp; y != son[x]) dfs(y, y);
+	top[x] = p, dfn[x] = ++num, rnk[num] = x;
+	if (son[x]) dfs(son[x], p);
+	for (auto y : e[x]) if (y != f[x] &amp;&amp; y != son[x]) dfs(y, y);
 }
 
 inline int lca(int x, int y) {
-    while (top[x] != top[y]) {
-        if (d[top[x]] &gt; d[top[y]]) swap(x, y);
-        y = f[top[y]];
-    }
-    if (d[x] &gt; d[y]) swap(x, y);
-    return x;
+	while (top[x] != top[y]) {
+		if (d[top[x]] &gt; d[top[y]]) swap(x, y);
+		y = f[top[y]];
+	}
+	if (d[x] &gt; d[y]) swap(x, y);
+	return x;
 }
 
 inline vector &lt;pi&gt; get(int x, int y) {
-    int z = lca(x, y);
-    vector &lt;pi&gt; o, w;
-    while (d[top[x]] &gt; d[z]) o.pb(mp(x, top[x])), x = f[top[x]];
-    o.pb(mp(x, z));
-    while (d[top[y]] &gt; d[z]) w.pb(mp(top[y], y)), y = f[top[y]];
-    if (y != z) w.pb(mp(son[z], y));
-    while (w.size()) o.pb(w.back()), w.pop_back();
-    return o;
+	int z = lca(x, y);
+	vector &lt;pi&gt; o, w;
+	while (d[top[x]] &gt; d[z]) o.pb(mp(x, top[x])), x = f[top[x]];
+	o.pb(mp(x, z));
+	while (d[top[y]] &gt; d[z]) w.pb(mp(top[y], y)), y = f[top[y]];
+	if (y != z) w.pb(mp(son[z], y));
+	while (w.size()) o.pb(w.back()), w.pop_back();
+	return o;
 }
 
 int main() {
-    rd(n), rds(c, n), p[0] = mp(1, 1), p[1] = B;
-    for (int i = 1, x, y; i &lt; n; i++)
-        rd(x), rd(y), e[x].pb(y), e[y].pb(x), p[i+1] = p[i] * B;
-    d[1] = 1, dfs(1), dfs(1, 1);
-    for (int i = 1; i &lt;= n; i++)
-        h1[i] = h1[i-1] * B + mp(c[rnk[i]], c[rnk[i]]),
-        h2[n+1-i] = h2[n+2-i] * B + mp(c[rnk[n+1-i]], c[rnk[n+1-i]]);
-    rd(m);
-    while (m--) {
-        int a, b, c, d, ans = 0;
-        ui s = 0, t = 0;
-        rd(a), rd(b), rd(c), rd(d);
-        vector &lt;pi&gt; f = get(a, b), g = get(c, d);
-        while (s &lt; f.size() &amp;&amp; t &lt; g.size()) {
-            int df1 = dfn[f[s].fi], df2 = dfn[f[s].se];
-            int dg1 = dfn[g[t].fi], dg2 = dfn[g[t].se];
-            bool of = df1 &gt; df2, og = dg1 &gt; dg2;
-            int lf = (of ? df1 - df2 : df2 - df1) + 1;
-            int lg = (og ? dg1 - dg2 : dg2 - dg1) + 1;
-            int len = min(lf, lg);
-            Hash hf = H(of, df1, len);
-            Hash hg = H(og, dg1, len);
-            if (hf == hg) {
-                if (len == lf) ++s;
-                else f[s].fi = rnk[df1+(of?-1:1)*len];
-                if (len == lg) ++t;
-                else g[t].fi = rnk[dg1+(og?-1:1)*len];
-                ans += len;
-            } else {
-                int l = 1, r = len;
-                while (l &lt; r) {
-                    int mid = (l + r) &gt;&gt; 1;
-                    hf = H(of, df1, mid);
-                    hg = H(og, dg1, mid);
-                    if (hf == hg) l = mid + 1;
-                    else r = mid;
-                }
-                ans += l - 1; break;
-            }
-        }
-        print(ans);
-    }
-    return 0;
+	rd(n), rds(c, n), p[0] = mp(1, 1), p[1] = B;
+	for (int i = 1, x, y; i &lt; n; i++)
+		rd(x), rd(y), e[x].pb(y), e[y].pb(x), p[i+1] = p[i] * B;
+	d[1] = 1, dfs(1), dfs(1, 1);
+	for (int i = 1; i &lt;= n; i++)
+		h1[i] = h1[i-1] * B + mp(c[rnk[i]], c[rnk[i]]),
+		h2[n+1-i] = h2[n+2-i] * B + mp(c[rnk[n+1-i]], c[rnk[n+1-i]]);
+	rd(m);
+	while (m--) {
+		int a, b, c, d, ans = 0;
+		ui s = 0, t = 0;
+		rd(a), rd(b), rd(c), rd(d);
+		vector &lt;pi&gt; f = get(a, b), g = get(c, d);
+		while (s &lt; f.size() &amp;&amp; t &lt; g.size()) {
+			int df1 = dfn[f[s].fi], df2 = dfn[f[s].se];
+			int dg1 = dfn[g[t].fi], dg2 = dfn[g[t].se];
+			bool of = df1 &gt; df2, og = dg1 &gt; dg2;
+			int lf = (of ? df1 - df2 : df2 - df1) + 1;
+			int lg = (og ? dg1 - dg2 : dg2 - dg1) + 1;
+			int len = min(lf, lg);
+			Hash hf = H(of, df1, len);
+			Hash hg = H(og, dg1, len);
+			if (hf == hg) {
+				if (len == lf) ++s;
+				else f[s].fi = rnk[df1+(of?-1:1)*len];
+				if (len == lg) ++t;
+				else g[t].fi = rnk[dg1+(og?-1:1)*len];
+				ans += len;
+			} else {
+				int l = 1, r = len;
+				while (l &lt; r) {
+					int mid = (l + r) &gt;&gt; 1;
+					hf = H(of, df1, mid);
+					hg = H(og, dg1, mid);
+					if (hf == hg) l = mid + 1;
+					else r = mid;
+				}
+				ans += l - 1; break;
+			}
+		}
+		print(ans);
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="29" href="/blog/tags/29/">Hash</a>、<a data-source-tag="35" href="/blog/tags/35/">二分</a>、<a data-source-tag="103" href="/blog/tags/103/">树链剖分</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/561/"><span>较新一篇</span>CF575I Robots protection 题解</a><a class="rel-next" rel="next" href="/blog/posts/557/"><span>较早一篇</span>CF521D Shop 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="559" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

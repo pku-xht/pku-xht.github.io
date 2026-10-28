@@ -19,21 +19,21 @@ int n, c, k, t, a, b;
 char s[N];
 
 int main() {
-    rds(s, n), rd(k);
-    for (int l = 1, r = 1; l &lt;= n; l = ++r) {
-        while (s[r+1] == s[l]) ++r;
-        t += (r - l + 1) &gt;&gt; 1, ++c;
-        if (!a) a = r - l + 1;
-        b = r - l + 1;
-    }
-    if (s[1] != s[n]) print(1ll * k * t);
-    else if (c == 1) print((1ll * n * k) &gt;&gt; 1);
-    else {
-        t -= (a &gt;&gt; 1) + (b &gt;&gt; 1);
-        t += (a + b) &gt;&gt; 1;
-        print(1ll * k * t - ((a &amp; 1) &amp;&amp; (b &amp; 1)));
-    }
-    return 0;
+	rds(s, n), rd(k);
+	for (int l = 1, r = 1; l &lt;= n; l = ++r) {
+		while (s[r+1] == s[l]) ++r;
+		t += (r - l + 1) &gt;&gt; 1, ++c;
+		if (!a) a = r - l + 1;
+		b = r - l + 1;
+	}
+	if (s[1] != s[n]) print(1ll * k * t);
+	else if (c == 1) print((1ll * n * k) &gt;&gt; 1);
+	else {
+		t -= (a &gt;&gt; 1) + (b &gt;&gt; 1);
+		t += (a + b) &gt;&gt; 1;
+		print(1ll * k * t - ((a &amp; 1) &amp;&amp; (b &amp; 1)));
+	}
+	return 0;
 }
 </code></pre>
 <h2 id="section-2"><a href="https://atcoder.jp/contests/agc039/tasks/agc039_b" target="_blank" rel="noopener noreferrer">Graph Partition</a></h2>
@@ -45,39 +45,39 @@ int n, c[N], d[N], ans;
 vi e[N];
 
 void dfs(int x, int o) {
-    c[x] = o;
-    for (int y : e[x])
-        if (!c[y]) dfs(y, 3 - o);
-        else if (c[x] == c[y]) print(-1), exit(0);
+	c[x] = o;
+	for (int y : e[x])
+		if (!c[y]) dfs(y, 3 - o);
+		else if (c[x] == c[y]) print(-1), exit(0);
 }
 
 inline int calc(int s) {
-    for (int i = 1; i &lt;= n; i++) d[i] = 0;
-    d[s] = 1;
-    queue&lt;int&gt; q;
-    q.push(s);
-    while (q.size()) {
-        int x = q.front();
-        q.pop();
-        for (int y : e[x])
-            if (!d[y]) d[y] = d[x] + 1, q.push(y);
-            else if (d[y] != d[x] - 1 &amp;&amp; d[y] != d[x] + 1) return 0;
-    }
-    return *max_element(d + 1, d + n + 1);
+	for (int i = 1; i &lt;= n; i++) d[i] = 0;
+	d[s] = 1;
+	queue&lt;int&gt; q;
+	q.push(s);
+	while (q.size()) {
+		int x = q.front();
+		q.pop();
+		for (int y : e[x])
+			if (!d[y]) d[y] = d[x] + 1, q.push(y);
+			else if (d[y] != d[x] - 1 &amp;&amp; d[y] != d[x] + 1) return 0;
+	}
+	return *max_element(d + 1, d + n + 1);
 }
 
 int main() {
-    rd(n);
-    for (int x = 1; x &lt;= n; x++)
-        for (int y = 1; y &lt;= n; y++) {
-            char c;
-            rdc(c);
-            if (c == '1') e[x].pb(y);
-        }
-    dfs(1, 1);
-    for (int i = 1; i &lt;= n; i++) ans = max(ans, calc(i));
-    print(ans);
-    return 0;
+	rd(n);
+	for (int x = 1; x &lt;= n; x++)
+		for (int y = 1; y &lt;= n; y++) {
+			char c;
+			rdc(c);
+			if (c == '1') e[x].pb(y);
+		}
+	dfs(1, 1);
+	for (int i = 1; i &lt;= n; i++) ans = max(ans, calc(i));
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-3"><a href="https://atcoder.jp/contests/agc039/tasks/agc039_c" target="_blank" rel="noopener noreferrer">Division by Two with Something</a></h2>
@@ -121,29 +121,29 @@ bool a[N], b[N];
 modint c[N], ans;
 
 inline bool pd(int i) {
-    for (int j = 1; j &lt;= i; j++) b[j] = a[j];
-    for (int j = i + 1; j &lt;= n; j++) {
-        b[j] = b[j-i] ^ 1;
-        if (b[j] &lt; a[j]) return 1;
-        if (b[j] &gt; a[j]) return 0;
-    }
-    return 1;
+	for (int j = 1; j &lt;= i; j++) b[j] = a[j];
+	for (int j = i + 1; j &lt;= n; j++) {
+		b[j] = b[j-i] ^ 1;
+		if (b[j] &lt; a[j]) return 1;
+		if (b[j] &gt; a[j]) return 0;
+	}
+	return 1;
 }
 
 int main() {
-    rd(n), rds(s, n);
-    for (int i = 1; i &lt;= n; i++) a[i] = s[i] &amp; 15;
-    for (int i = 1; i &lt;= n; i++)
-        if (!(n % i) &amp;&amp; ((n / i) &amp; 1)) {
-            for (int j = 1; j &lt;= i; j++)
-                c[i] = c[i] * 2 + a[j];
-            for (int j = 1; j &lt; i; j++)
-                if (!(i % j)) c[i] -= c[j];
-            c[i] += pd(i);
-            ans += c[i] * i * 2;
-        }
-    print(ans);
-    return 0;
+	rd(n), rds(s, n);
+	for (int i = 1; i &lt;= n; i++) a[i] = s[i] &amp; 15;
+	for (int i = 1; i &lt;= n; i++)
+		if (!(n % i) &amp;&amp; ((n / i) &amp; 1)) {
+			for (int j = 1; j &lt;= i; j++)
+				c[i] = c[i] * 2 + a[j];
+			for (int j = 1; j &lt; i; j++)
+				if (!(i % j)) c[i] -= c[j];
+			c[i] += pd(i);
+			ans += c[i] * i * 2;
+		}
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-4"><span id="Incenters" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc039/tasks/agc039_d" target="_blank" rel="noopener noreferrer">Incenters</a></h2>
@@ -164,14 +164,14 @@ int n, L, a[N];
 ld x, y;
 
 int main() {
-    rd(n, L), rda(a, n);
-    for (int i = 1; i &lt; n; i++)
-        for (int j = i + 1; j &lt;= n; j++)
-            x += (n - 2 * (j - i)) * cos(PI * (a[i] + a[j]) / L),
-            y += (n - 2 * (j - i)) * sin(PI * (a[i] + a[j]) / L);
-    ll k = 1ll * n * (n - 1) * (n - 2) / 6;
-    printf("%.20Lf %.20Lf\n", x / k, y / k);
-    return 0;
+	rd(n, L), rda(a, n);
+	for (int i = 1; i &lt; n; i++)
+		for (int j = i + 1; j &lt;= n; j++)
+			x += (n - 2 * (j - i)) * cos(PI * (a[i] + a[j]) / L),
+			y += (n - 2 * (j - i)) * sin(PI * (a[i] + a[j]) / L);
+	ll k = 1ll * n * (n - 1) * (n - 2) / 6;
+	printf("%.20Lf %.20Lf\n", x / k, y / k);
+	return 0;
 }
 </code></pre>
 <h2 id="section-8"><span id="Pairing_Points" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc039/tasks/agc039_e" target="_blank" rel="noopener noreferrer">Pairing Points</a></h2>
@@ -205,30 +205,30 @@ ll f[N][N][N], ans;
 bool v[N][N][N];
 
 ll DP(int l, int m, int r) {
-    if ((l ^ r) &amp; 1) return 0;
-    if (l == m &amp;&amp; m == r) return 1;
-    if (l == m || m == r) return 0;
-    if (v[l][m][r]) return f[l][m][r];
-    v[l][m][r] = 1;
-    for (int p = l; p &lt; m; p++)
-        for (int q = r; q &gt; m; q--)
-            if (a[p][q])
-                for (int x = p; x &lt; m; x++)
-                    for (int y = q; y &gt; m; y--)
-                        f[l][m][r] += DP(l, p, x) * DP(y, q, r) * DP(x + 1, m, y - 1);
-    return f[l][m][r];
+	if ((l ^ r) &amp; 1) return 0;
+	if (l == m &amp;&amp; m == r) return 1;
+	if (l == m || m == r) return 0;
+	if (v[l][m][r]) return f[l][m][r];
+	v[l][m][r] = 1;
+	for (int p = l; p &lt; m; p++)
+		for (int q = r; q &gt; m; q--)
+			if (a[p][q])
+				for (int x = p; x &lt; m; x++)
+					for (int y = q; y &gt; m; y--)
+						f[l][m][r] += DP(l, p, x) * DP(y, q, r) * DP(x + 1, m, y - 1);
+	return f[l][m][r];
 }
 
 int main() {
-    rd(n), n &lt;&lt;= 1;
-    for (int i = 1; i &lt;= n; i++) rds(s[i], n);
-    for (int i = 1; i &lt;= n; i++)
-        for (int j = 1; j &lt;= n; j++)
-            a[i][j] = s[i][j] &amp; 1;
-    for (int i = 2; i &lt;= n; i++)
-        if (a[1][i]) ans += DP(2, i, n);
-    print(ans);
-    return 0;
+	rd(n), n &lt;&lt;= 1;
+	for (int i = 1; i &lt;= n; i++) rds(s[i], n);
+	for (int i = 1; i &lt;= n; i++)
+		for (int j = 1; j &lt;= n; j++)
+			a[i][j] = s[i][j] &amp; 1;
+	for (int i = 2; i &lt;= n; i++)
+		if (a[1][i]) ans += DP(2, i, n);
+	print(ans);
+	return 0;
 }
 </code></pre>
 <h2 id="section-12"><span id="Min_Product_Sum" class="legacy-anchor" aria-hidden="true"></span><a href="https://atcoder.jp/contests/agc039/tasks/agc039_f" target="_blank" rel="noopener noreferrer">Min Product Sum</a></h2>
@@ -253,56 +253,36 @@ int main() {
 <p>考虑 DP，从小到大填 <span class="math-inline" data-original-math="$x_i,y_i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>i</mi></msub><mo separator="true">,</mo><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x_i,y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>，设 <span class="math-inline" data-original-math="$f_{t,i,j}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{t,i,j}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span> 表示已经填了 <span class="math-inline" data-original-math="$1 \sim t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>∼</mo><mi>t</mi></mrow><annotation encoding="application/x-tex">1 \sim t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span>，用了 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 行 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 列，<span class="math-inline" data-original-math="$a$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi></mrow><annotation encoding="application/x-tex">a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span></span> 已经填了这 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 行 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 列的交的位置，<span class="math-inline" data-original-math="$b$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span> 已经填了这 <span class="math-inline" data-original-math="$i$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span></span> 行 <span class="math-inline" data-original-math="$j$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span></span> 列的并的位置，的方案数。</p>
 <p>转移时枚举填 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span> 的不被容斥的行列数 <span class="math-inline" data-original-math="$p,q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo separator="true">,</mo><mi>q</mi></mrow><annotation encoding="application/x-tex">p,q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span>，被容斥的行列数 <span class="math-inline" data-original-math="$u,v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo separator="true">,</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">u,v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，则有：<br>
 <span class="math-block" data-original-math="$$
-
 f_{t,i+p+u,j+q+v} \leftarrow (-1)^{u+v} \binom {n-i}{p,u} \binom {m-j}{q,v} \cdot (k-t+1)^{iq+pj+pq}(k-t)^{iv+pv+uj+uq+uv}t^{(p+u)(m-j)+(n-i)(q+v)-(p+u)(q+v)} \cdot f_{t-1,i,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo>+</mo><mi>p</mi><mo>+</mo><mi>u</mi><mo separator="true">,</mo><mi>j</mi><mo>+</mo><mi>q</mi><mo>+</mo><mi>v</mi></mrow></msub><mo>←</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>u</mi><mo>+</mo><mi>v</mi></mrow></msup><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>n</mi><mo>−</mo><mi>i</mi></mrow><mrow><mi>p</mi><mo separator="true">,</mo><mi>u</mi></mrow></mfrac><mo fence="true">)</mo></mrow><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>m</mi><mo>−</mo><mi>j</mi></mrow><mrow><mi>q</mi><mo separator="true">,</mo><mi>v</mi></mrow></mfrac><mo fence="true">)</mo></mrow><mo>⋅</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mi>q</mi><mo>+</mo><mi>p</mi><mi>j</mi><mo>+</mo><mi>p</mi><mi>q</mi></mrow></msup><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mi>v</mi><mo>+</mo><mi>p</mi><mi>v</mi><mo>+</mo><mi>u</mi><mi>j</mi><mo>+</mo><mi>u</mi><mi>q</mi><mo>+</mo><mi>u</mi><mi>v</mi></mrow></msup><msup><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>p</mi><mo>+</mo><mi>u</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>m</mi><mo>−</mo><mi>j</mi><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>q</mi><mo>+</mo><mi>v</mi><mo stretchy="false">)</mo><mo>−</mo><mo stretchy="false">(</mo><mi>p</mi><mo>+</mo><mi>u</mi><mo stretchy="false">)</mo><mo stretchy="false">(</mo><mi>q</mi><mo>+</mo><mi>v</mi><mo stretchy="false">)</mo></mrow></msup><mo>⋅</mo><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 f_{t,i+p+u,j+q+v} \leftarrow (-1)^{u+v} \binom {n-i}{p,u} \binom {m-j}{q,v} \cdot (k-t+1)^{iq+pj+pq}(k-t)^{iv+pv+uj+uq+uv}t^{(p+u)(m-j)+(n-i)(q+v)-(p+u)(q+v)} \cdot f_{t-1,i,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">p</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8213em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.1247em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">pq</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">uv</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathnormal mtight">p</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mclose mtight">)</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mclose mtight">)</span><span class="mbin mtight">+</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">i</span><span class="mclose mtight">)</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="mclose mtight">)</span><span class="mbin mtight">−</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">p</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mclose mtight">)</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 然而设 <span class="math-inline" data-original-math="$n,m,k$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo separator="true">,</mo><mi>m</mi><mo separator="true">,</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">n,m,k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">m</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span></span> 同阶，这个 DP 复杂度是 <span class="math-inline" data-original-math="$\mathcal O(n^7)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>7</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^7)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">7</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>，显然要优化。</p>
 <p>依然从小到大枚举 <span class="math-inline" data-original-math="$t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></span>，在这一层转移时，可以发现我们不必同时枚举 <span class="math-inline" data-original-math="$p,q,u,v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo separator="true">,</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">p,q,u,v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，而只需要依次枚举，每次把贡献计算清楚即可。</p>
 <p>具体而言，先让 <span class="math-inline" data-original-math="$f_t$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">f_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 继承 <span class="math-inline" data-original-math="$f_{t-1}$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">f_{t-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9028em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span></span>。</p>
 <p>再枚举 <span class="math-inline" data-original-math="$p$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span></span>，转移为：<br>
 <span class="math-block" data-original-math="$$
-
 f_{t,i+p,j} \leftarrow \binom {n-i}{p} \cdot (k-t+1)^{pj}t^{p(m-j)} \cdot f_{t,i,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo>+</mo><mi>p</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo>←</mo><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>n</mi><mo>−</mo><mi>i</mi></mrow><mi>p</mi></mfrac><mo fence="true">)</mo></mrow><mo>⋅</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>p</mi><mi>j</mi></mrow></msup><msup><mi>t</mi><mrow><mi>p</mi><mo stretchy="false">(</mo><mi>m</mi><mo>−</mo><mi>j</mi><mo stretchy="false">)</mo></mrow></msup><mo>⋅</mo><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 f_{t,i+p,j} \leftarrow \binom {n-i}{p} \cdot (k-t+1)^{pj}t^{p(m-j)} \cdot f_{t,i,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">p</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">p</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 再枚举 <span class="math-inline" data-original-math="$q$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi></mrow><annotation encoding="application/x-tex">q</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span></span></span>，转移为：<br>
 <span class="math-block" data-original-math="$$
-
 f_{t,i,j+q} \leftarrow \binom {m-j}{q} \cdot (k-t+1)^{iq}t^{q(n-i)} \cdot f_{t,i,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>+</mo><mi>q</mi></mrow></msub><mo>←</mo><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>m</mi><mo>−</mo><mi>j</mi></mrow><mi>q</mi></mfrac><mo fence="true">)</mo></mrow><mo>⋅</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><mo>+</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mi>q</mi></mrow></msup><msup><mi>t</mi><mrow><mi>q</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false">)</mo></mrow></msup><mo>⋅</mo><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 f_{t,i,j+q} \leftarrow \binom {m-j}{q} \cdot (k-t+1)^{iq}t^{q(n-i)} \cdot f_{t,i,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">q</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6984em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">i</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 再枚举 <span class="math-inline" data-original-math="$u$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span></span>，转移为：<br>
 <span class="math-block" data-original-math="$$
-
 f_{t,i+u,j} \leftarrow (-1)^u\binom {n-i}{u} \cdot (k-t)^{uj}t^{u(m-j)} \cdot f_{t,i,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo>+</mo><mi>u</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo>←</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>u</mi></msup><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>n</mi><mo>−</mo><mi>i</mi></mrow><mi>u</mi></mfrac><mo fence="true">)</mo></mrow><mo>⋅</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><msup><mo stretchy="false">)</mo><mrow><mi>u</mi><mi>j</mi></mrow></msup><msup><mi>t</mi><mrow><mi>u</mi><mo stretchy="false">(</mo><mi>m</mi><mo>−</mo><mi>j</mi><mo stretchy="false">)</mo></mrow></msup><mo>⋅</mo><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 f_{t,i+u,j} \leftarrow (-1)^u\binom {n-i}{u} \cdot (k-t)^{uj}t^{u(m-j)} \cdot f_{t,i,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight">u</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span></span></span></span></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">u</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">m</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 再枚举 <span class="math-inline" data-original-math="$v$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span></span></span>，转移为：<br>
 <span class="math-block" data-original-math="$$
-
 f_{t,i,j+v} \leftarrow (-1)^v\binom {m-j}{v} \cdot (k-t)^{iv}t^{v(n-i)} \cdot f_{t,i,j}
-
 $$"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo>+</mo><mi>v</mi></mrow></msub><mo>←</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><msup><mo stretchy="false">)</mo><mi>v</mi></msup><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mrow><mi>m</mi><mo>−</mo><mi>j</mi></mrow><mi>v</mi></mfrac><mo fence="true">)</mo></mrow><mo>⋅</mo><mo stretchy="false">(</mo><mi>k</mi><mo>−</mo><mi>t</mi><msup><mo stretchy="false">)</mo><mrow><mi>i</mi><mi>v</mi></mrow></msup><msup><mi>t</mi><mrow><mi>v</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mi>i</mi><mo stretchy="false">)</mo></mrow></msup><mo>⋅</mo><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-
 f_{t,i,j+v} \leftarrow (-1)^v\binom {m-j}{v} \cdot (k-t)^{iv}t^{v(n-i)} \cdot f_{t,i,j}
-
 </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span><span class="mbin mtight">+</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">1</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span></span></span></span><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3365em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.188em;vertical-align:-0.25em;"></span><span class="mord mathnormal">t</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8747em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.938em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">i</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></span><br>
 时间复杂度 <span class="math-inline" data-original-math="$\mathcal O(n^4)$"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>4</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal O(n^4)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathcal" style="margin-right:0.0278em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>，很卡常，要进行一定程度的预处理，尽可能减少取模次数。</p>
 <h3 id="section-15">代码</h3>
@@ -311,51 +291,51 @@ int n, m, k;
 int f[N&lt;&lt;2][N][N], g[N][N*N], c[N][N];
 
 inline void upd(int &amp;x, int y, int z) {
-    x = (x + 1ll * y * z) % P;
+	x = (x + 1ll * y * z) % P;
 }
 
 int main() {
-    rd(n, m, k), rd(P);
-    init(max(n, m));
-    for (int i = 0; i &lt;= k; i++) {
-        g[i][0] = 1;
-        for (int j = 1; j &lt;= n * m; j++) g[i][j] = 1ll * g[i][j-1] * i % P;
-    }
-    for (int i = 0; i &lt;= max(n, m); i++)
-        for (int j = 0; j &lt;= i; j++) c[i][j] = binom(i, j).x;
-    f[0][0][0] = 1;
-    for (int t = 1, o = 0; t &lt;= k; t++) {
-        for (int i = 0; i &lt;= n; i++)
-            for (int j = 0; j &lt;= m; j++)
-                if (!!f[o][i][j]) {
-                    ll x = f[o][i][j], y = 1ll * g[k-t+1][j] * g[t][m-j] % P;
-                    for (int p = 0; i + p &lt;= n; p++, (x *= y) %= P) upd(f[o+1][i+p][j], c[n-i][p], x);
-                }
-        ++o;
-        for (int i = 0; i &lt;= n; i++)
-            for (int j = 0; j &lt;= m; j++)
-                if (!!f[o][i][j]) {
-                    ll x = f[o][i][j], y = 1ll * g[k-t+1][i] * g[t][n-i] % P;
-                    for (int q = 0; j + q &lt;= m; q++, (x *= y) %= P) upd(f[o+1][i][j+q], c[m-j][q], x);
-                }
-        ++o;
-        for (int i = 0; i &lt;= n; i++)
-            for (int j = 0; j &lt;= m; j++)
-                if (!!f[o][i][j]) {
-                    ll x = f[o][i][j], y = P - 1ll * g[k-t][j] * g[t][m-j] % P;
-                    for (int u = 0; i + u &lt;= n; u++, (x *= y) %= P) upd(f[o+1][i+u][j], c[n-i][u], x);
-                }
-        ++o;
-        for (int i = 0; i &lt;= n; i++)
-            for (int j = 0; j &lt;= m; j++)
-                if (!!f[o][i][j]) {
-                    ll x = f[o][i][j], y = P - 1ll * g[k-t][i] * g[t][n-i] % P;
-                    for (int v = 0; j + v &lt;= m; v++, (x *= y) %= P) upd(f[o+1][i][j+v], c[m-j][v], x);
-                }
-        ++o;
-    }
-    print(f[k&lt;&lt;2][n][m]);
-    return 0;
+	rd(n, m, k), rd(P);
+	init(max(n, m));
+	for (int i = 0; i &lt;= k; i++) {
+		g[i][0] = 1;
+		for (int j = 1; j &lt;= n * m; j++) g[i][j] = 1ll * g[i][j-1] * i % P;
+	}
+	for (int i = 0; i &lt;= max(n, m); i++)
+		for (int j = 0; j &lt;= i; j++) c[i][j] = binom(i, j).x;
+	f[0][0][0] = 1;
+	for (int t = 1, o = 0; t &lt;= k; t++) {
+		for (int i = 0; i &lt;= n; i++)
+			for (int j = 0; j &lt;= m; j++)
+				if (!!f[o][i][j]) {
+					ll x = f[o][i][j], y = 1ll * g[k-t+1][j] * g[t][m-j] % P;
+					for (int p = 0; i + p &lt;= n; p++, (x *= y) %= P) upd(f[o+1][i+p][j], c[n-i][p], x);
+				}
+		++o;
+		for (int i = 0; i &lt;= n; i++)
+			for (int j = 0; j &lt;= m; j++)
+				if (!!f[o][i][j]) {
+					ll x = f[o][i][j], y = 1ll * g[k-t+1][i] * g[t][n-i] % P;
+					for (int q = 0; j + q &lt;= m; q++, (x *= y) %= P) upd(f[o+1][i][j+q], c[m-j][q], x);
+				}
+		++o;
+		for (int i = 0; i &lt;= n; i++)
+			for (int j = 0; j &lt;= m; j++)
+				if (!!f[o][i][j]) {
+					ll x = f[o][i][j], y = P - 1ll * g[k-t][j] * g[t][m-j] % P;
+					for (int u = 0; i + u &lt;= n; u++, (x *= y) %= P) upd(f[o+1][i+u][j], c[n-i][u], x);
+				}
+		++o;
+		for (int i = 0; i &lt;= n; i++)
+			for (int j = 0; j &lt;= m; j++)
+				if (!!f[o][i][j]) {
+					ll x = f[o][i][j], y = P - 1ll * g[k-t][i] * g[t][n-i] % P;
+					for (int v = 0; j + v &lt;= m; v++, (x *= y) %= P) upd(f[o+1][i][j+v], c[m-j][v], x);
+				}
+		++o;
+	}
+	print(f[k&lt;&lt;2][n][m]);
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="40" href="/blog/tags/40/">DP</a>、<a data-source-tag="82" href="/blog/tags/82/">二分图</a>、<a data-source-tag="56" href="/blog/tags/56/">容斥</a>、<a data-source-tag="71" href="/blog/tags/71/">数论</a>、<a data-source-tag="55" href="/blog/tags/55/">组合计数</a>、<a data-source-tag="89" href="/blog/tags/89/">计算几何</a>、<a data-source-tag="67" href="/blog/tags/67/">记忆化搜索</a>、<a data-source-tag="32" href="/blog/tags/32/">贪心</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/904/"><span>较新一篇</span>JOI Open 2019 题解</a><a class="rel-next" rel="next" href="/blog/posts/876/"><span>较早一篇</span>AtCoder Grand Contest 038 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="900" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>

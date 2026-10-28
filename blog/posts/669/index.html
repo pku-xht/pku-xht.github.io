@@ -37,97 +37,97 @@ int n, q;
 ll p[12] = {1}, a[N];
 set&lt;int&gt; s;
 struct T {
-    int l, r, o;
-    ll z;
-    pair&lt;ll, int&gt; x;
+	int l, r, o;
+	ll z;
+	pair&lt;ll, int&gt; x;
 } t[N&lt;&lt;2];
 
 inline int f(ll x) {
-    return lower_bound(p, p + 12, x) - p; 
+	return lower_bound(p, p + 12, x) - p; 
 }
 
 inline void upd(int p) {
-    t[p].x = min(t[ls].x, t[rs].x);
+	t[p].x = min(t[ls].x, t[rs].x);
 }
 
 inline void build(int p, int l, int r) {
-    t[p].l = l, t[p].r = r;
-    if (l == r) return t[p].x = mp(::p[t[p].o=f(a[l])] - a[l], l), void();
-    build(ls, l, md), build(rs, md + 1, r), upd(p);
+	t[p].l = l, t[p].r = r;
+	if (l == r) return t[p].x = mp(::p[t[p].o=f(a[l])] - a[l], l), void();
+	build(ls, l, md), build(rs, md + 1, r), upd(p);
 }
 
 inline void spd(int p) {
-    t[ls].z = max(-inf, t[ls].z + t[p].z);
-    t[rs].z = max(-inf, t[rs].z + t[p].z);
-    t[ls].x.fi = min(inf, t[ls].x.fi - t[p].z);
-    t[rs].x.fi = min(inf, t[rs].x.fi - t[p].z);
-    t[p].z = 0;
+	t[ls].z = max(-inf, t[ls].z + t[p].z);
+	t[rs].z = max(-inf, t[rs].z + t[p].z);
+	t[ls].x.fi = min(inf, t[ls].x.fi - t[p].z);
+	t[rs].x.fi = min(inf, t[rs].x.fi - t[p].z);
+	t[p].z = 0;
 }
 
 inline ll ask(int p, int x) {
-    if (t[p].l == t[p].r) return ::p[t[p].o] - t[p].x.fi;
-    spd(p);
-    return ask(x &lt;= md ? ls : rs, x);
+	if (t[p].l == t[p].r) return ::p[t[p].o] - t[p].x.fi;
+	spd(p);
+	return ask(x &lt;= md ? ls : rs, x);
 }
 
 inline void setx(int p, int o, ll x) {
-    if (t[p].l == t[p].r)
-        return t[p].x = mp(::p[t[p].o=f(x)] - x, t[p].l), void();
-    spd(p);
-    setx(o &lt;= md ? ls : rs, o, x);
-    upd(p);
+	if (t[p].l == t[p].r)
+		return t[p].x = mp(::p[t[p].o=f(x)] - x, t[p].l), void();
+	spd(p);
+	setx(o &lt;= md ? ls : rs, o, x);
+	upd(p);
 }
 
 inline void add(int p, int l, int r, ll x) {
-    if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r)
-        return t[p].z += x, t[p].x.fi -= x, void();
-    spd(p);
-    if (l &lt;= md) add(ls, l, r, x);
-    if (r &gt; md) add(rs, l, r, x);
-    upd(p);
+	if (t[p].l &gt;= l &amp;&amp; t[p].r &lt;= r)
+		return t[p].z += x, t[p].x.fi -= x, void();
+	spd(p);
+	if (l &lt;= md) add(ls, l, r, x);
+	if (r &gt; md) add(rs, l, r, x);
+	upd(p);
 }
 
 inline void work2(int l, int r, ll x) {
-    if (l != 1) setx(1, l - 1, ask(1, *s.lower_bound(l - 1))), s.insert(l - 1);
-    s.erase(s.lower_bound(l), s.upper_bound(r));
-    setx(1, r, x), s.insert(r);
-    if (l &lt; r) add(1, l, r - 1, -inf); 
+	if (l != 1) setx(1, l - 1, ask(1, *s.lower_bound(l - 1))), s.insert(l - 1);
+	s.erase(s.lower_bound(l), s.upper_bound(r));
+	setx(1, r, x), s.insert(r);
+	if (l &lt; r) add(1, l, r - 1, -inf); 
 }
 
 inline void upd(int p, int x) {
-    if (t[p].l == t[p].r) {
-        ll k = ::p[t[p].o] - t[p].x.fi;
-        t[p].x = mp(::p[t[p].o=f(k)] - k, t[p].l);
-        return;
-    }
-    spd(p);
-    upd(x &lt;= md ? ls : rs, x);
-    upd(p);
+	if (t[p].l == t[p].r) {
+		ll k = ::p[t[p].o] - t[p].x.fi;
+		t[p].x = mp(::p[t[p].o=f(k)] - k, t[p].l);
+		return;
+	}
+	spd(p);
+	upd(x &lt;= md ? ls : rs, x);
+	upd(p);
 }
 
 inline void work3(int l, int r, ll x) {
-    if (l != 1) setx(1, l - 1, ask(1, *s.lower_bound(l - 1))), s.insert(l - 1);
-    setx(1, r, ask(1, *s.lower_bound(r))), s.insert(r);
-    do {
-        add(1, l, r, x);
-        while (t[1].x.fi &lt; 0) upd(1, t[1].x.se);
-    } while (!t[1].x.fi);
+	if (l != 1) setx(1, l - 1, ask(1, *s.lower_bound(l - 1))), s.insert(l - 1);
+	setx(1, r, ask(1, *s.lower_bound(r))), s.insert(r);
+	do {
+		add(1, l, r, x);
+		while (t[1].x.fi &lt; 0) upd(1, t[1].x.se);
+	} while (!t[1].x.fi);
 }
 
 int main() {
-    for (int i = 1; i &lt; 12; i++) p[i] = p[i-1] * 42;
-    rd(n), rd(q), rda(a, n);
-    for (int i = 1; i &lt;= n; i++) s.insert(i);
-    build(1, 1, n);
-    for (int i = 1, o, x, l, r; i &lt;= q; i++) {
-        rd(o);
-        switch (o) {
-            case 1 : rd(x), print(ask(1, *s.lower_bound(x))); break;
-            case 2 : rd(l), rd(r), rd(x), work2(l, r, x); break;
-            case 3 : rd(l), rd(r), rd(x), work3(l, r, x); break;
-        }
-    }
-    return 0;
+	for (int i = 1; i &lt; 12; i++) p[i] = p[i-1] * 42;
+	rd(n), rd(q), rda(a, n);
+	for (int i = 1; i &lt;= n; i++) s.insert(i);
+	build(1, 1, n);
+	for (int i = 1, o, x, l, r; i &lt;= q; i++) {
+		rd(o);
+		switch (o) {
+			case 1 : rd(x), print(ask(1, *s.lower_bound(x))); break;
+			case 2 : rd(l), rd(r), rd(x), work2(l, r, x); break;
+			case 3 : rd(l), rd(r), rd(x), work3(l, r, x); break;
+		}
+	}
+	return 0;
 }
 </code></pre>
 </div><p class="source-tags">标签：<a data-source-tag="27" href="/blog/tags/27/">线段树</a></p><nav class="post-navigation" aria-label="相邻文章"><a class="rel-prev" rel="prev" href="/blog/posts/671/"><span>较新一篇</span>虚树 学习笔记</a><a class="rel-next" rel="next" href="/blog/posts/648/"><span>较早一篇</span>CF594E Cutting the Line 题解</a><a class="all-posts" href="/blog/">返回全部文章</a></nav></article><section class="comments-section" id="comments" data-document-id="669" data-blog-api="https://xht37-blog-api.pku-xht-github-io.workers.dev" data-comments-enabled="true"><h2>评论 <span data-comment-count></span></h2><ol class="comment-list" data-comment-list></ol><p class="comments-empty" hidden>暂无已公开评论。</p><p class="comments-load-status" role="status"></p><button type="button" class="comments-more" data-comments-more hidden>加载更多评论</button><form class="comment-form" data-comment-form>
