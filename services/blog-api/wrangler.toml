@@ -6,7 +6,7 @@ preview_urls = false
 
 [vars]
 ALLOWED_ORIGINS = "https://pku-xht.github.io"
-VISITS_ENABLED = "false"
+VISITS_ENABLED = "true"
 
 # Copy this file to an ignored local config and add your own D1 binding:
 # [[d1_databases]]

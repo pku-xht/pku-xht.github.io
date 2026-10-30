@@ -5898,7 +5898,7 @@
   },
   "features": {
     "comments_enabled": true,
-    "visits_enabled": false
+    "visits_enabled": true
   },
   "comment_admin": {
     "path": "/blog/comment/",

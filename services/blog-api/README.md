@@ -23,9 +23,9 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collec
 | `GET /v1/admin/articles/<ID>` | 读取正式 `main` 同一修订下的完整 Markdown/YAML、blob SHA 和修订号 |
 | `POST /v1/admin/articles/<ID>` | 提交一个文档的候选修改，成功为 `202`，等待受信工作流发布 |
 | `GET /v1/admin/articles/<ID>/publication?revision=<SHA>` | 查询保存返回的候选修订，状态为 `pending`、`success` 或 `failure` |
-| `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；目前关闭，计数为 `null` |
-| `POST /v1/visits` | 仅明确启用且已有完整基线后计数，目前拒绝 |
-| `POST /v1/admin/visits/baseline` | 未来切换时显式确认并原子导入完整独立基线 |
+| `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；省略文档 ID 时只返回全站数 |
+| `POST /v1/visits` | 明确启用且已有完整基线后，按单次加载 nonce 幂等计数 |
+| `POST /v1/admin/visits/baseline` | 显式确认并原子导入完整独立基线；不同基线禁止覆盖 |
 | `GET /admin` | 与 `/blog/comment/` 共享界面源码的备用评论管理入口 |
 
 公开评论形状：
@@ -104,8 +104,8 @@ GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响
 
 发布本轮前必须按[正式部署顺序](../../README.md#authorized-deployment-order)先应用 `0003_admin_sessions.sql`，再部署读取会话表的 Worker，最后推送生成页面。既有服务保留原 secrets 和评论，不因会话升级重新设置密码或重导评论；新服务的完整初始化仍按根 README 操作。读取现存待审数据不能保存到本仓库或作为公开测试证据。远程冒烟只可在授权窗口使用虚构留言和精确叶节点清理，命令见[远程检查](../../README.md#remote-smoke-check)。本地 SQLite 和浏览器结果不能替代 Cloudflare D1、GitHub 发布及 Pages 的实证。
 
-## Visits 仍然关闭
+## Visits
 
-前端与 Worker 开关均关闭，网页不显示计数、不发请求、后端不写访问事件，也没有导入基线。关闭 GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`；POST 返回 `404 visits_disabled`。即使将来启用，缺基线仍返回 `null` 并拒绝计数，不冒充 0。
+用户已确认 2026-10-31 正式切流，完整的 212 篇文档与独立全站基线已导入，Worker 统计已开启；网页和域名的实际发布状态见[切流记录](../../migration/domain-visits-2026-10-31.md)。GET 返回基线加增量，POST 对同一 nonce 只计一次；无文档 ID 的个人主页和索引页只增加全站 PV。刷新产生新 PV，管理和编辑页不参与计数。关闭配置仍能停用：GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`，POST 返回 `404 visits_disabled`；启用但缺基线仍返回 `null` 并拒绝计数，不冒充 0。
 
 未来基线必须包含旧站独立全站数、每个已注册公开文档的完整计数、采集时间和切换批次。全站数不能以逐文求和代替，也不能复用过时快照。离线导入器在 dry-run 和 apply 发请求前均核对本地公开文档注册表，缺失、额外或重复 ID 拒绝，不能补零；实际导入时 Worker 再独立核对 D1 的真实注册表。完整基线单事务导入，同批同内容重试无副作用，不同基线禁止覆盖；单次访问 nonce、全站增量和单文增量保持原子性。采集、实际导入和开启两个开关按已确认的切流范围执行，入口见[未来切换](../../README.md#future-visits-cutover)。隐藏内容继续留在旧站，不进入公开基线。

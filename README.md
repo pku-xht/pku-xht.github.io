@@ -51,7 +51,7 @@ The `.nojekyll` file tells GitHub to serve the static files directly.
 - `assets/`: local site artwork and icons.
 - `DESIGN.md`: implementation direction.
 
-Visits is currently disabled. The website loads no remote fonts or remote third-party scripts. Article formulas are rendered during generation with vendored KaTeX; dynamic comment formulas use its local runtime. Its scripts, CSS and fonts are served locally.
+Visits uses the site's own Worker API and a verified independent baseline. The website loads no remote fonts or remote third-party scripts. Article formulas are rendered during generation with vendored KaTeX; dynamic comment formulas use its local runtime. Its scripts, CSS and fonts are served locally.
 
 ## Blog
 
@@ -68,7 +68,7 @@ The comment workspace, shared blog styling and **30-day administrator sessions w
 - `content/blog/resources.yaml`: maintained resource paths, source URLs, sizes and hashes; files live in `blog/media/`.
 - `content/blog/comments/index.yaml` and `<ID>.yaml`: the preserved 117 previously public comments, including 43 replies. These are import and fidelity evidence, not a second runtime comment store. Do not overwrite them with moderated or new backend data.
 - `content/blog/friends.yaml`: the 20 maintained friend links, preserving the remaining entries' relative order. Current updates and removals are recorded in [migration/friends-2026-10-26.md](migration/friends-2026-10-26.md).
-- `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch, shared by the blog and personal homepage.
+- `content/blog/features.yaml`: public comment/API and Visits configuration, shared by the blog and personal homepage.
 - `blog/visits-config.js`: generated homepage Visits configuration; do not edit it separately. The builder updates only its content-hashed script URL in `index.html` when the configuration changes.
 - `tools/blog_sources.py`, `tools/build_blog.py`, `tools/render_math.cjs`: offline source loading, CommonMark/HTML/TeX preservation and static generation. Dependencies are vendored; ordinary builds need no network or installation.
 - `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
@@ -168,7 +168,7 @@ The helper without `-Reveal` only explains retrieval. Do not copy a real passwor
 
 ### Cloudflare and editor configuration
 
-Service routes, validation, frequency limits and credential handling are described in [services/blog-api/README.md](services/blog-api/README.md). Runtime comments require Cloudflare Workers + D1 and the existing `ADMIN_TOKEN`/`RATE_LIMIT_SALT` secrets. `wrangler.local.toml` contains the local binding, while committed `wrangler.toml` has no real database ID or secret. Keep `VISITS_ENABLED = "false"`.
+Service routes, validation, frequency limits and credential handling are described in [services/blog-api/README.md](services/blog-api/README.md). Runtime comments require Cloudflare Workers + D1 and the existing `ADMIN_TOKEN`/`RATE_LIMIT_SALT` secrets. `wrangler.local.toml` contains the local binding, while committed `wrangler.toml` has no real database ID or secret. Visits is enabled after the verified baseline import; preserve the existing database, origins and secrets when deploying.
 
 The online editor additionally needs a fine-grained GitHub token, restricted to `pku-xht/pku-xht.github.io`: **Contents: read and write**, **Commit statuses: read**, plus GitHub's default **Metadata: read**. Store it as the Worker secret `GITHUB_EDIT_TOKEN`; it is never sent to the browser. This is separate from the administrator password. The trusted GitHub publication workflow's own token has only `contents: write`, `statuses: write` and `pages: write`. The workflow and publisher are `.github/workflows/publish-blog-edit.yml` and `tools/publish_blog_edit.py`; candidate branches cannot supply their workflow/code for privileged execution.
 
@@ -213,13 +213,22 @@ Cleanup deletes only a leaf through the server's atomic `only_if_no_replies=true
 
 ### Future Visits cutover
 
-Visits remains disabled in both frontend and Worker: no UI, requests, baseline import or counting is enabled by this work. At the later authorized cutover, collect fresh per-document counts and the old site's **independent total**, record the capture window and import an exact complete baseline. Never infer the total by adding article counts or reuse an old archive as the fresh baseline.
+The approved 2026-10-31 cutover uses a fresh complete per-document baseline and the old site's **independent total**, with the capture window recorded privately. The backend import and enabled counting have been verified; frontend and domain publication evidence is tracked in [the cutover record](migration/domain-visits-2026-10-31.md). Never infer the total by adding article counts or reuse an old archive as a fresh baseline. The one-time import refuses a different overwrite after a baseline exists.
 
 The personal homepage has a hidden bilingual **全站访问量 / Site views** footer widget. It shares the blog's Visits client and the configuration generated from `features.yaml`; ordinary article edits do not change the homepage. The generated configuration's content hash versions its homepage script URL, so switching configuration also refreshes that asset's cache. The article publisher still rejects changes to root `index.html`.
 
 When enabled and seeded, one reading-page load adds one site PV; a document page also adds one document PV. The personal homepage sends no document ID. Refreshing counts as another view; language changes and retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Management and editor pages do not count views.
 
-The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy and has chosen Cloudflare DNS with a routed Worker. DNS access, redirect readiness, fresh baseline capture/import and actual enablement remain separate steps; current preparation is recorded in [the cutover preparation](migration/domain-visits-2026-10-31.md).
+The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy and has chosen Cloudflare DNS with a routed Worker. DNS activation, baseline import, enabled counting and actual frontend/route publication remain distinct verified steps in the cutover record.
+
+Before redirect routes are enabled, capture public article/page `Visits` markers to a new external file, then combine the exact complete document set with the independently read WordPress **total clicks** and its capture time. `tools/capture_public_visits.py` validates the public registry, uses normal TLS with no redirects, bounds concurrency and reports every failure without inventing zero. The source captures, total and final baseline stay outside this public repository. The specifically authorized private archive exception additionally requires an ignored destination and a repository with no remotes:
+
+```sh
+python -B -S -X utf8 tools/capture_public_visits.py --private-archive-output --output D:\xht37-private-archive\tmp\visits-cutover-2026-10-31\public-visits-NEW.json
+python -B -S -X utf8 tools/test_capture_public_visits.py
+```
+
+The capture is not directly importable: resolve all reported failures, verify exactly 212 unique public IDs, and construct the baseline shape accepted below. The independent site total cannot be replaced by the document sum. This original-domain capture intentionally fails after redirects are enabled and is not a daily build or ongoing analytics command.
 
 Validate a privately stored baseline offline first:
 
