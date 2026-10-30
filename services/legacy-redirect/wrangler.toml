@@ -5,7 +5,8 @@ workers_dev = false
 preview_urls = false
 
 [vars]
-REDIRECT_STATUS = "302"
+REDIRECT_STATUS = "301"
 
-# Configure zone routes only after confirming both hostnames and the DNS origin.
+# Both zone routes are active and managed in Cloudflare. Preserve them with
+# versions upload/deploy; do not run deploy/triggers deploy with no routes here.
 # Do not use a Workers Custom Domain: unmatched requests must reach the old origin.

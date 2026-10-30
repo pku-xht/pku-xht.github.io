@@ -211,17 +211,17 @@ try {
 
 Cleanup deletes only a leaf through the server's atomic `only_if_no_replies=true` condition; a real reply blocks removal and the script reports its UUID. It does not export pending content or print the password. Exact CORS, approval isolation, same-document replies and disabled Visits need actual service verification, separate from SQLite tests.
 
-### Future Visits cutover
+### Visits cutover
 
-The approved 2026-10-31 cutover uses a fresh complete per-document baseline and the old site's **independent total**, with the capture window recorded privately. The backend import and enabled counting have been verified; frontend and domain publication evidence is tracked in [the cutover record](migration/domain-visits-2026-10-31.md). Never infer the total by adding article counts or reuse an old archive as a fresh baseline. The one-time import refuses a different overwrite after a baseline exists.
+The approved 2026-10-31 cutover is complete. All 212 public document baselines and the old site's **independent total of 1,869,365 PV** were imported; the backend and published frontend now count new views. Both old hostnames permanently redirect matched public URLs to the new site. The capture window, exact Pages revision and live verification are tracked in [the cutover record](migration/domain-visits-2026-10-31.md). Never infer the total by adding article counts or reuse an old archive as a fresh baseline. The one-time import refuses a different overwrite after a baseline exists; do not reimport during routine maintenance.
 
-The personal homepage has a hidden bilingual **全站访问量 / Site views** footer widget. It shares the blog's Visits client and the configuration generated from `features.yaml`; ordinary article edits do not change the homepage. The generated configuration's content hash versions its homepage script URL, so switching configuration also refreshes that asset's cache. The article publisher still rejects changes to root `index.html`.
+The personal homepage displays the bilingual **全站访问量 / Site views** footer widget after a successful API response. It shares the blog's Visits client and the configuration generated from `features.yaml`; ordinary article edits do not change the homepage. The generated configuration's content hash versions its homepage script URL, so switching configuration also refreshes that asset's cache. The article publisher still rejects changes to root `index.html`.
 
 When enabled and seeded, one reading-page load adds one site PV; a document page also adds one document PV. The personal homepage sends no document ID. Refreshing counts as another view; language changes and retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Management and editor pages do not count views.
 
 The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy and has chosen Cloudflare DNS with a routed Worker. DNS activation, baseline import, enabled counting and actual frontend/route publication remain distinct verified steps in the cutover record.
 
-Before redirect routes are enabled, capture public article/page `Visits` markers to a new external file, then combine the exact complete document set with the independently read WordPress **total clicks** and its capture time. `tools/capture_public_visits.py` validates the public registry, uses normal TLS with no redirects, bounds concurrency and reports every failure without inventing zero. The source captures, total and final baseline stay outside this public repository. The specifically authorized private archive exception additionally requires an ignored destination and a repository with no remotes:
+The following capture/import commands document the completed one-time operation, not a recurring job. Before redirect routes were enabled, public article/page `Visits` markers were captured to a new external file and combined with the independently read WordPress **total clicks** and its capture time. `tools/capture_public_visits.py` validates the public registry, uses normal TLS with no redirects, bounds concurrency and reports every failure without inventing zero. The source captures, total and final baseline stay outside this public repository. The specifically authorized private archive exception additionally requires an ignored destination and a repository with no remotes:
 
 ```sh
 python -B -S -X utf8 tools/capture_public_visits.py --private-archive-output --output D:\xht37-private-archive\tmp\visits-cutover-2026-10-31\public-visits-NEW.json
@@ -238,7 +238,7 @@ node services/blog-api/scripts/import-baseline.mjs --input <verified-private-bas
 
 The default is a zero-network dry run. Both dry-run and application require an exact match with the local public-document registry: missing and extra document IDs are rejected before any request, without inventing zero counts. The Worker separately verifies the real D1 registry at import time; a local pass does not establish production registry consistency. Actual application additionally requires process `BLOG_ADMIN_TOKEN`, `--apply --confirm-cutover --api <Worker-origin>`, and a separately authorized enablement of both switches. The backend imports the independent site and complete document bases atomically, refuses a differing overwrite and counts each event nonce once.
 
-### Legacy-domain redirect preparation
+### Legacy-domain redirects
 
 `services/legacy-redirect/` contains the separate `xht37-legacy-redirect` Worker and its generated public allowlist. It uses Cloudflare **zone routes** over proxied origin DNS. Unmatched requests on `www` are forwarded unchanged to WordPress; unmatched requests on the newly added bare domain receive a non-cacheable 307 to the same path/query at the fixed old `www` host, preserving the method and body. Do not register a Worker Custom Domain. Worker development and preview URLs are disabled. Origin, TLS, all DNS records and private/admin passthrough must be verified before changing nameservers or enabling redirect routes. DNS management exports and mixed/private exports belong outside this public repository.
 
@@ -248,18 +248,19 @@ Generate the allowlist, check its sources and run the offline routing regression
 python -B -S -X utf8 tools/generate_legacy_redirect.py
 python -B -S -X utf8 tools/generate_legacy_redirect.py --check
 node services/legacy-redirect/test.mjs
-wrangler deploy --config services/legacy-redirect/wrangler.toml --dry-run
+wrangler versions upload --config services/legacy-redirect/wrangler.toml --dry-run
 ```
 
-The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Representative category and tag paths were verified against the old site. Only matched GET/HEAD requests redirect to the new site; other parameters, methods, private/unknown paths and ambiguous encodings continue through the old `www` host. The initial status is non-cacheable 302; switch to 301 after real cutover verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
+The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Representative category and tag paths were verified against the old site. Only matched GET/HEAD requests redirect to the new site; other parameters, methods, private/unknown paths and ambiguous encodings continue through the old `www` host. Production uses 301 with a one-hour cache lifetime after successful initial 302 verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
 
-After explicit deployment authorization, upload the script without domain routes:
+Both zone routes, `www.xht37.com/*` and `xht37.com/*`, are active and managed in Cloudflare. The checked-in configuration declares no routes. For a separately authorized update, preserve the existing routes by uploading a version and deploying that exact returned version ID:
 
 ```sh
-wrangler deploy --config services/legacy-redirect/wrangler.toml
+wrangler versions upload --config services/legacy-redirect/wrangler.toml
+wrangler versions deploy <returned-version-id>@100% --config services/legacy-redirect/wrangler.toml
 ```
 
-The checked-in configuration has no routes. At the final Visits cutover, attach the script to zone routes `www.xht37.com/*` and `xht37.com/*`. Nameserver activation first preserves WordPress at `www`; attaching the redirect routes is the separate traffic-switch step. Preserve origin certificate validation with Full (Strict), verify the edge certificate and old administration access, and collect/import the fresh baseline before enabling counting and redirects.
+Do not run ordinary `deploy` or `triggers deploy` with the route-free configuration: they can change the managed routing. Preserve Full (Strict), proxied DNS and the existing zone routes, and verify public redirects plus old administration access after a deployment. Do not configure a Workers Custom Domain or repeat the baseline import. A cached 301 can remain effective for an hour after rollback.
 
 ### Original-site import tools
 
