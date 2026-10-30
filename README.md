@@ -219,7 +219,7 @@ The personal homepage has a hidden bilingual **全站访问量 / Site views** fo
 
 When enabled and seeded, one reading-page load adds one site PV; a document page also adds one document PV. The personal homepage sends no document ID. Refreshing counts as another view; language changes and retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Management and editor pages do not count views.
 
-The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy. DNS access, redirect readiness, fresh baseline capture/import and actual enablement remain separate steps; current preparation and the unresolved DNS approach are recorded in [the cutover preparation](migration/domain-visits-2026-10-31.md).
+The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy and has chosen Cloudflare DNS with a routed Worker. DNS access, redirect readiness, fresh baseline capture/import and actual enablement remain separate steps; current preparation is recorded in [the cutover preparation](migration/domain-visits-2026-10-31.md).
 
 Validate a privately stored baseline offline first:
 
@@ -228,6 +228,20 @@ node services/blog-api/scripts/import-baseline.mjs --input <verified-private-bas
 ```
 
 The default is a zero-network dry run. Actual application additionally requires process `BLOG_ADMIN_TOKEN`, `--apply --confirm-cutover --api <Worker-origin>`, and a separately authorized enablement of both switches. The backend imports the independent site and complete document bases atomically, refuses a differing overwrite and counts each event nonce once.
+
+### Legacy-domain redirect preparation
+
+`services/legacy-redirect/` contains a separate, currently undeployed Worker and its generated public allowlist. It uses Cloudflare **zone routes** over proxied origin DNS, with unmatched requests forwarded to the existing WordPress origin; do not register a Worker Custom Domain. Worker development and preview URLs are disabled. Origin, TLS, all DNS records and private/admin passthrough must be verified before changing nameservers or enabling redirect routes. DNS management records and mixed/private exports belong outside this public repository.
+
+Generate the allowlist, check its sources and run the offline routing regression:
+
+```sh
+python -B -S -X utf8 tools/generate_legacy_redirect.py
+python -B -S -X utf8 tools/generate_legacy_redirect.py --check
+node services/legacy-redirect/test.mjs
+```
+
+The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Taxonomy path forms still require live verification. Only matched GET/HEAD requests redirect; other parameters, methods, private/unknown paths and ambiguous encodings pass through. The initial status is non-cacheable 302; switch to 301 after real cutover verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
 
 ### Original-site import tools
 
@@ -240,4 +254,4 @@ python -S -X utf8 tools/sync_public_comments.py --checked-on 2026-10-25
 python -S -X utf8 tools/sync_blog_friends.py --checked-on 2026-10-25
 ```
 
-The public source sync uses anonymous requests, registered document IDs and explicit public visibility checks. It does not log into WordPress. The Markdown importer refuses existing sources; use a separate output root to review any separately authorized future batch. Public comment importers accept only approved display fields, never backend exports or private author data. The 212-document audit found exactly the 117 preserved public comment IDs. Hidden content, old-site redirects and old-site shutdown remain outside this work.
+The public source sync uses anonymous requests, registered document IDs and explicit public visibility checks. It does not log into WordPress. The Markdown importer refuses existing sources; use a separate output root to review any separately authorized future batch. Public comment importers accept only approved display fields, never backend exports or private author data. The 212-document audit found exactly the 117 preserved public comment IDs. These import tools do not configure redirects, shut down WordPress or import private material.
