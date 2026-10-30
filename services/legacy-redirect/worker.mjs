@@ -31,7 +31,17 @@ export function destination(request) {
 export default {
   async fetch(request, env) {
     const target = destination(request);
-    if (!target) return fetch(request);
+    if (!target) {
+      const url = new URL(request.url);
+      if (url.hostname === 'xht37.com') {
+        // Fixed authority prevents open redirects; 307 preserves method and body.
+        return new Response(null, { status: 307, headers: {
+          Location: 'https://www.xht37.com' + url.pathname + url.search,
+          'Cache-Control': 'no-store'
+        } });
+      }
+      return fetch(request);
+    }
     const status = env.REDIRECT_STATUS === '301' ? 301 : 302;
     return new Response(null, { status, headers: { Location: TARGET + target, 'Cache-Control': status === 302 ? 'no-store' : 'public, max-age=3600' } });
   }

@@ -39,4 +39,20 @@ try {
   response = await worker.fetch(original, {});
   assert.equal(await response.text(), 'origin');
 } finally { globalThis.fetch = savedFetch; }
+for (const [path, method] of [
+  ['/unknown-private/?a=1%2F2', 'GET'],
+  ['/wp-login.php?redirect_to=%2Fwp-admin%2F', 'POST'],
+  ['/wp-admin/?p=1154', 'GET'],
+  ['/wp-json/?rest_route=%2Fwp%2Fv2', 'GET'],
+  ['/unknown%2Fpath?value=%252f', 'POST'],
+  ['/?p=1154&preview=true', 'GET']
+]) {
+  response = await worker.fetch(request(path, method, 'xht37.com'), {});
+  assert.equal(response.status, 307, path);
+  assert.equal(response.headers.get('location'), 'https://www.xht37.com' + path, path);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+}
+response = await worker.fetch(request('/?p=1154', 'GET', 'xht37.com'), {});
+assert.equal(response.status, 302);
+assert.equal(response.headers.get('location'), 'https://pku-xht.github.io/blog/posts/1154/');
 console.log(`OK: ${Object.keys(routes.paths).length} paths and ${Object.keys(routes.queries).length} query mappings`);

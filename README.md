@@ -231,7 +231,7 @@ The default is a zero-network dry run. Both dry-run and application require an e
 
 ### Legacy-domain redirect preparation
 
-`services/legacy-redirect/` contains a separate, currently undeployed Worker and its generated public allowlist. It uses Cloudflare **zone routes** over proxied origin DNS, with unmatched requests forwarded to the existing WordPress origin; do not register a Worker Custom Domain. Worker development and preview URLs are disabled. Origin, TLS, all DNS records and private/admin passthrough must be verified before changing nameservers or enabling redirect routes. DNS management records and mixed/private exports belong outside this public repository.
+`services/legacy-redirect/` contains the separate `xht37-legacy-redirect` Worker and its generated public allowlist. It uses Cloudflare **zone routes** over proxied origin DNS. Unmatched requests on `www` are forwarded unchanged to WordPress; unmatched requests on the newly added bare domain receive a non-cacheable 307 to the same path/query at the fixed old `www` host, preserving the method and body. Do not register a Worker Custom Domain. Worker development and preview URLs are disabled. Origin, TLS, all DNS records and private/admin passthrough must be verified before changing nameservers or enabling redirect routes. DNS management exports and mixed/private exports belong outside this public repository.
 
 Generate the allowlist, check its sources and run the offline routing regression:
 
@@ -241,7 +241,7 @@ python -B -S -X utf8 tools/generate_legacy_redirect.py --check
 node services/legacy-redirect/test.mjs
 ```
 
-The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Taxonomy path forms still require live verification. Only matched GET/HEAD requests redirect; other parameters, methods, private/unknown paths and ambiguous encodings pass through. The initial status is non-cacheable 302; switch to 301 after real cutover verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
+The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Representative category and tag paths were verified against the old site. Only matched GET/HEAD requests redirect to the new site; other parameters, methods, private/unknown paths and ambiguous encodings continue through the old `www` host. The initial status is non-cacheable 302; switch to 301 after real cutover verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
 
 ### Original-site import tools
 
