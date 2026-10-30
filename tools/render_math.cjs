@@ -11,7 +11,6 @@ const results = input.map(item => {
       throwOnError: true,
       strict: 'ignore',
       trust: false,
-      macros: {'\\or': '\\lor', '\\and': '\\land', '\\Q': '\\mathbb{Q}'},
       maxExpand: 1000
     })};
   } catch (error) {

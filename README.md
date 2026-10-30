@@ -75,7 +75,7 @@ The comment workspace, shared blog styling and **30-day administrator sessions w
 - `services/blog-api/data/unified-comments.json` and `.sql`: deterministic, public-only import assets. Their persistent batch and ID hashes prevent reruns from restoring a deleted comment or undoing moderation.
 - `migration/public-batch.json`: generated source hashes, URL mappings, counts and administrative-asset evidence. Its legacy `publication: local-only` describes a build report, not the live deployment state.
 
-The 2026-10-29 source correction uses the original Markdown read from the WordPress editor for all 211 public articles and page 215. The only maintained body patch is document 925's previously approved orphan-link removal. The immutable public-only capture is `migration/sources/native-public-2026-10-29.json`; it records raw Markdown, capture provenance, hashes and that explicit patch. See [the native-source verification](migration/native-markdown-2026-10-29.md).
+The immutable public-only capture `migration/sources/native-public-2026-10-29.json` records the WordPress editor Markdown, provenance, hashes and the approved patch to document 925. It is evidence, not the current editing source. The subsequently authorized standardization is recorded in [the standard Markdown batch](migration/standard-markdown-2026-10-30.md); [native-source verification](migration/native-markdown-2026-10-29.md) describes its historical baseline.
 
 Earlier JSON/HTML snapshots in `migration/sources/`, batch evidence and public comment YAML remain available as evidence of their respective layers. An HTML round trip does not prove original Markdown fidelity. Normal builds do not restore snapshots over maintained articles. [design/README.md](design/README.md) retains the unselected design alternatives without linking them from the public homepage.
 
@@ -83,7 +83,7 @@ Earlier JSON/HTML snapshots in `migration/sources/`, batch evidence and public c
 
 Edit the existing Markdown, for example [1154.md](content/blog/posts/1154.md). YAML includes `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and optional `summary`. Keep document identity and routes stable. Dates retain `+08:00`; categories/tags are `{id, name}` lists. A supplied summary controls the excerpt; otherwise the builder derives one.
 
-Use normal Markdown headings, paragraphs, lists, links, quotations and fenced code. `$...$` and `$$...$$` retain TeX backslashes, underscores and display formulas. Embed complex HTML when conversion would alter it. Preserve intentional Markdown hard breaks and code trailing spaces. `legacy_anchors` records verified compatibility fragments where unique heading names are insufficient. Intentional document additions/removals need both the source and `collection.yaml`; new resources also need `resources.yaml`. Do not hand-edit generated HTML.
+Use CommonMark with GFM tables and strikethrough, and standard TeX in `$...$` or `$$...$$`. Write intentional hard breaks explicitly, use standard list indentation and math commands, separate headings with blank lines, and end the file with a newline. Embed complex HTML when conversion would alter it; preserve code whitespace. `legacy_anchors` records verified compatibility fragments where unique heading names are insufficient. Intentional document additions/removals need both the source and `collection.yaml`; new resources also need `resources.yaml`. Do not hand-edit generated HTML.
 
 For online editing, append `exit` to an article URL: `/blog/posts/1154/exit/`, or `/blog/pages/215/exit/`. The editor loads that document's complete Markdown and YAML after administrator login. All 212 registered documents use this entry point; arbitrary repository paths and new documents are not accepted.
 
@@ -107,26 +107,23 @@ python -S -X utf8 tools/test_publish_blog_edit.py
 
 The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker-runtime regression additionally requires Miniflare/workerd, located through `BLOG_MINIFLARE_MODULE` (the installed Wrangler dependency's `miniflare/dist/src/index.js`). It runs the real bundled Worker against a local fictional GitHub service and temporary D1, covering runtime-specific fetch options, redirect credential isolation and session creation/restoration/revocation. An explicitly skipped bundling or runtime check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
 
-For the captured native-source baseline, an optional offline check compares every maintained body byte and the explicit maintenance patch:
+To check the registered public sources against the standard format and independently compare the authorized conversion with its Git baseline:
 
 ```sh
-python -B -S -X utf8 tools/check_native_blog.py --formal
-python -B -S -X utf8 tools/test_native_blog.py
+python -B -S -X utf8 tools/format_blog_markdown.py
+python -B -S -X utf8 tools/check_formatted_blog.py
+python -B -S -X utf8 tools/check_native_blog.py --formal --formatted
+python -B -S -X utf8 tools/test_format_blog_markdown.py
+python -B -S -X utf8 tools/test_formatted_blog.py
 ```
 
-The default native check needs only the registered public snapshot. During local acquisition, `--capture-archive <external-capture-root>` additionally checks provenance against the independent captured JSON files. This establishes correspondence with the recorded capture, not a cryptographic attestation from WordPress. Private input stays outside this repository; the adoption tool reads only the exact public collection and requires matching public editor labels, document identity, URL and raw hash.
+The formatter is read-only by default; `--write` changes registered public sources. Review changes and run independent checks before adoption. The formatted native check verifies the recorded capture and deterministic conversion; intentional later content edits require a separately reviewed baseline rather than a claim of byte equality to the capture. `--formal --source-ref 9b13223` checks the historical native baseline, and `--capture-archive <external-capture-root>` can additionally compare provenance to the independent capture. This establishes correspondence with recorded evidence, not cryptographic attestation from WordPress. Private input remains outside this public repository.
 
-`tools/adopt_native_blog.py --output <fresh-candidate-directory>` prepares a separately authorized reimport without overwriting maintained sources. `tools/check_native_blog.py --candidate <directory>` verifies it; adding `--apply` performs the guarded local adoption with staged files, backups and a recovery journal. This is a migration operation, not the normal editing or publishing path. It rechecks current hashes and attempts safe rollback on failure, but does not claim a transaction across all files. After adoption use the `--formal` check.
+`tools/adopt_native_blog.py --output <fresh-candidate-directory>` prepares a separately authorized reimport without overwriting maintained sources. `tools/check_native_blog.py --candidate <directory>` verifies it; adding `--apply` performs guarded local adoption with staged files, backups and a recovery journal. Review subsequent edits before reimport; never overwrite maintained sources blindly. This migration operation is not the normal editing or publishing path.
 
-The earlier rendered-HTML comparison remains available:
+The earlier rendered-HTML comparison remains available with `python -S -X utf8 tools/check_blog.py --original-snapshot`. It checks a different display layer and does not establish native Markdown fidelity. The renderer uses CommonMark, GFM tables and strikethrough, and math; it no longer applies Editor.md soft-break, list indentation or TeX alias compatibility. Immutable captures retain the original spelling.
 
-```sh
-python -S -X utf8 tools/check_blog.py --original-snapshot
-```
-
-Intentional subsequent edits can differ from either immutable baseline while passing the normal source check. The old HTML comparison can also report differences introduced by WordPress itself, such as changed TeX escapes, code whitespace or flattened lists; it is not the native-source acceptance test.
-
-The renderer keeps the C layout, routes and checked legacy anchors. It supports Editor.md soft line breaks, strikethrough and the verified one-space nested-list convention without rewriting source files or code blocks. Formula compatibility adapts `\*`, `\[` and `\]` only for KaTeX input and supplies common `\or`, `\and` and `\Q` aliases. Original TeX remains in `data-original-math`; original Markdown and intentional code whitespace remain in the source and capture.
+Formatting writes explicit Markdown hard breaks and standard nested lists into the maintained sources. Math uses ordinary punctuation, `\lor`, `\land` and `\mathbb{...}`; quote-contained display formulas use one physical `> $$...$$` line so quote markers stay outside TeX. It preserves code, link targets and YAML. `data-original-math` records the maintained formula spelling; the immutable capture retains the earlier WordPress spelling. Default KaTeX validation is distinct from a live GitHub/MathJax preview.
 
 ### Comment data and local API
 

@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import os
+import subprocess
 import tempfile
 from pathlib import Path
 
@@ -29,7 +30,7 @@ def independently_apply_patches(identity, raw, patches):
     return raw
 
 
-def formal_check(snapshot_path, capture_archive=None):
+def formal_check(snapshot_path, capture_archive=None, formatted=False, source_ref=None):
     records = adoption.public_documents()
     snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
     if set(snapshot) != {"version", "complete", "documents"} or snapshot.get("version") != 1 or snapshot.get("complete") is not True or not isinstance(snapshot.get("documents"), list):
@@ -65,9 +66,15 @@ def formal_check(snapshot_path, capture_archive=None):
         inventory_title = title_evidence.get("inventory_title") if isinstance(title_evidence, dict) else current_title
         if adoption.title_equivalence(identity, current_title, inventory_title, item.get("title")) != title_evidence:
             raise ValueError(f"Title evidence mismatch for {identity}")
-        if (adoption.ROOT / "content/blog" / member).read_bytes() != (prefix + body).encode("utf-8"):
+        if formatted:
+            from format_blog_markdown import format_markdown
+            body = format_markdown(body)
+        path = "content/blog/" + member
+        current = (subprocess.check_output(["git", "show", f"{source_ref}:{path}"], cwd=adoption.ROOT)
+                   if source_ref else (adoption.ROOT / path).read_bytes())
+        if current != (prefix + body).encode("utf-8"):
             raise ValueError(f"Formal source differs from snapshot for {identity}")
-    print(f"Verified {len(entries)} formal documents against public native snapshot")
+    print(f"Verified {len(entries)} {'formatted' if formatted else 'native'} documents against public native snapshot" + (f" at {source_ref}" if source_ref else ""))
 
 
 def apply_candidates(candidate, entries):
@@ -158,6 +165,8 @@ def main():
     parser.add_argument("--candidate", type=Path)
     parser.add_argument("--partial", action="store_true")
     parser.add_argument("--formal", action="store_true")
+    parser.add_argument("--formatted", action="store_true", help="compare formal bodies with deterministic formatting of verified native bodies")
+    parser.add_argument("--source-ref", help="compare against documents at a local Git revision")
     parser.add_argument("--snapshot", type=Path, default=adoption.ROOT / "migration/sources/native-public-2026-10-29.json")
     parser.add_argument("--capture-archive", type=Path, help="also compare public snapshot provenance to the local capture archive")
     parser.add_argument("--apply", action="store_true", help="apply a fully verified candidate after checking current source hashes")
@@ -165,10 +174,10 @@ def main():
     if args.formal:
         if args.candidate or args.partial or args.apply:
             parser.error("--formal cannot be combined with candidate options")
-        formal_check(args.snapshot, args.capture_archive)
+        formal_check(args.snapshot, args.capture_archive, args.formatted, args.source_ref)
         return
-    if args.capture_archive:
-        parser.error("--capture-archive requires --formal")
+    if args.capture_archive or args.formatted or args.source_ref:
+        parser.error("--capture-archive, --formatted and --source-ref require --formal")
     if not args.candidate:
         parser.error("--candidate is required unless --formal is used")
     if args.apply and args.partial:
