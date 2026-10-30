@@ -12,14 +12,17 @@
     if (!container || container.dataset.visitsInitialized === "true") return;
     container.dataset.visitsInitialized = "true";
     container.hidden = true;
-    if (container.dataset.visitsEnabled !== "true" || !container.dataset.blogApi) return;
+    const config = window.SITE_VISITS_CONFIG || {};
+    const enabled = container.dataset.visitsEnabled === undefined ? config.enabled === true : container.dataset.visitsEnabled === "true";
+    const apiBase = container.dataset.visitsEnabled === undefined ? config.api_base : container.dataset.blogApi;
+    if (!enabled || !apiBase) return;
     const documentId = container.dataset.documentId || "";
     if (documentId && !/^[1-9]\d*$/u.test(documentId)) return;
     const nonce = randomNonce();
     if (!nonce) return;
     let api;
     try {
-      const base = new URL(container.dataset.blogApi, window.location.href);
+      const base = new URL(apiBase, window.location.href);
       if (!["http:", "https:"].includes(base.protocol) || base.username || base.password || base.search || base.hash) return;
       base.pathname = base.pathname.replace(/\/+$/u, "") + "/";
       api = new URL("v1/visits", base);

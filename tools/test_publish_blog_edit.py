@@ -149,14 +149,21 @@ class PublicationTests(unittest.TestCase):
         self.write("blog/posts/7/index.html", "<p>新内容与公式。</p>\n")
         self.write("blog/posts/7/exit/index.html", "<p>文章编辑</p>\n")
         self.write("blog/editor/editor.js", '"use strict";\n')
+        self.write("blog/visits-config.js", 'window.SITE_VISITS_CONFIG = {};\n')
         self.write("migration/public-batch.json", '{"version":2}\n')
         revision = publisher.commit_build(self.root, state)
         self.assertNotEqual(revision, self.base)
         self.assertEqual(self.git("show", "-s", "--format=%P", revision), self.base)
         self.assertEqual(set(self.git("diff-tree", "--no-commit-id", "--name-only", "-r", revision).splitlines()), {
-            "content/blog/posts/7.md", "blog/posts/7/index.html", "blog/posts/7/exit/index.html", "blog/editor/editor.js", "migration/public-batch.json",
+            "content/blog/posts/7.md", "blog/posts/7/index.html", "blog/posts/7/exit/index.html", "blog/editor/editor.js", "blog/visits-config.js", "migration/public-batch.json",
         })
         self.assertEqual(self.git("status", "--porcelain"), "")
+
+    def test_generated_visits_config_path_is_exact(self):
+        source = "content/blog/posts/7.md"
+        self.assertTrue(publisher.allowed_output("blog/visits-config.js", source))
+        self.assertFalse(publisher.allowed_output("blog/visits-config.js.extra", source))
+        self.assertFalse(publisher.allowed_output("index.html", source))
 
     def test_unexpected_build_output_cannot_be_staged_or_committed(self):
         candidate = self.candidate()

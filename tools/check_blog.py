@@ -663,7 +663,12 @@ def main(argv=None):
     features = load_features(ROOT / "content/blog/features.yaml")
     friends = load_friends(ROOT / "content/blog/friends.yaml")
     check_comment_source_files(comments, ROOT / "content/blog", [source["id"] for source in sources])
-    assert not features["visits"]["enabled"], "Visits are disabled for this migration"
+    expected_visits_config = "window.SITE_VISITS_CONFIG = " + json.dumps(features["visits"], ensure_ascii=True, separators=(",", ":")) + ";\n"
+    assert (ROOT / "blog/visits-config.js").read_text(encoding="utf-8") == expected_visits_config, "homepage Visits config differs from formal configuration"
+    version = hashlib.sha256(expected_visits_config.encode("utf-8")).hexdigest()[:16]
+    homepage = (ROOT / "index.html").read_bytes()
+    references = re.findall(rb'src="/blog/visits-config\.js(?:\?[^"\s]*)?"', homepage)
+    assert references == [f'src="/blog/visits-config.js?v={version}"'.encode("ascii")] and b'<script defer '+references[0]+b'></script>' in homepage, "homepage Visits config version differs or is duplicated"
     assert report["features"] == {"comments_enabled": features["comments"]["enabled"], "visits_enabled": features["visits"]["enabled"]}, "build feature state differs from the formal configuration"
     assert report["comments"]["count"] == comments["count"] and report["comments"]["index_file"] == comments["index_file"] and report["comments"]["index_sha256"] == comments["index_sha256"]
     assert {int(key): value for key, value in report["comments"]["sources"].items()} == comments["sources"], "build comment-source report differs"
@@ -858,6 +863,8 @@ def main(argv=None):
     pages = list((ROOT / "blog").rglob("*.html"))
     expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | editor_pages | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
     assert set(pages) == expected_pages, "missing or stale generated blog HTML"
+    visit_documents = {ROOT / route(source).lstrip("/") / "index.html": str(source["id"]) for source in sources}
+    visit_pages = expected_pages - editor_pages - {comment_admin_path}
     for path in pages:
         document = Document(path.read_text(encoding="utf-8")).root
         ids = [n.attrs["id"] for n in nodes(document) if "id" in n.attrs]
@@ -870,12 +877,25 @@ def main(argv=None):
             for key in ("href", "src"):
                 if key in node.attrs:
                     check_local_url(node.attrs[key], path)
-        for node in nodes(document):
-            assert not any(key.startswith("data-visit") for key in node.attrs), (path, "disabled Visits DOM is present")
-            assert not ({"visits", "visit-count", "post-visits", "article-visits", "site-visits"} & set(node.attrs.get("class", "").split())), (path, "disabled Visits count is rendered")
+        all_nodes = list(nodes(document))
+        widgets = [node for node in all_nodes if "data-blog-visits" in node.attrs]
+        scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits.js")]
+        if features["visits"]["enabled"] and path in visit_pages:
+            assert len(widgets) == 1 and len(scripts) == 1, (path, "enabled Visits widget or script missing")
+            assert urlsplit(scripts[0].attrs.get("src", "")).path == "/blog/visits.js", (path, "Visits script path differs")
+            widget = widgets[0]
+            assert widget.attrs.get("data-visits-enabled") == "true" and widget.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "Visits configuration differs")
+            assert widget.attrs.get("data-document-id") == visit_documents.get(path, "") and "hidden" in widget.attrs, (path, "Visits document or initial visibility differs")
+            assert sum("data-site-visits" in n.attrs for n in nodes(widget)) == 1, (path, "site count missing")
+            assert sum("data-document-visits" in n.attrs for n in nodes(widget)) == (1 if path in visit_documents else 0), (path, "document count differs")
+        else:
+            assert not widgets and not scripts, (path, "disabled Visits DOM or script is present")
+            for node in all_nodes:
+                assert not any(key.startswith("data-visit") or key in ("data-site-visits", "data-document-visits", "data-document-visits-wrapper") for key in node.attrs), (path, "disabled Visits DOM is present")
+                assert not ({"visits", "visit-count", "post-visits", "article-visits", "site-visits"} & set(node.attrs.get("class", "").split())), (path, "disabled Visits count is rendered")
+        for node in all_nodes:
             if node.tag == "script":
                 assert not urlsplit(node.attrs.get("src", "")).scheme and not urlsplit(node.attrs.get("src", "")).netloc
-                assert not urlsplit(node.attrs.get("src", "")).path.endswith("/visits.js"), (path, "disabled Visits script is loaded")
             if node.tag == "link" and node.attrs.get("rel") == "stylesheet":
                 assert not urlsplit(node.attrs.get("href", "")).scheme and not urlsplit(node.attrs.get("href", "")).netloc
     for path in (ROOT / "assets/vendor/katex").glob("*.css"):

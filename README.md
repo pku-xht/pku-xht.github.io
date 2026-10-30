@@ -51,7 +51,7 @@ The `.nojekyll` file tells GitHub to serve the static files directly.
 - `assets/`: local site artwork and icons.
 - `DESIGN.md`: implementation direction.
 
-The website uses no analytics, remote fonts or remote third-party scripts. Article formulas are rendered during generation with vendored KaTeX; dynamic comment formulas use its local runtime. Its scripts, CSS and fonts are served locally.
+Visits is currently disabled. The website loads no remote fonts or remote third-party scripts. Article formulas are rendered during generation with vendored KaTeX; dynamic comment formulas use its local runtime. Its scripts, CSS and fonts are served locally.
 
 ## Blog
 
@@ -68,7 +68,8 @@ The comment workspace, shared blog styling and **30-day administrator sessions w
 - `content/blog/resources.yaml`: maintained resource paths, source URLs, sizes and hashes; files live in `blog/media/`.
 - `content/blog/comments/index.yaml` and `<ID>.yaml`: the preserved 117 previously public comments, including 43 replies. These are import and fidelity evidence, not a second runtime comment store. Do not overwrite them with moderated or new backend data.
 - `content/blog/friends.yaml`: the 20 maintained friend links, preserving the remaining entries' relative order. Current updates and removals are recorded in [migration/friends-2026-10-26.md](migration/friends-2026-10-26.md).
-- `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch.
+- `content/blog/features.yaml`: public comment/API configuration and the separately disabled Visits switch, shared by the blog and personal homepage.
+- `blog/visits-config.js`: generated homepage Visits configuration; do not edit it separately. The builder updates only its content-hashed script URL in `index.html` when the configuration changes.
 - `tools/blog_sources.py`, `tools/build_blog.py`, `tools/render_math.cjs`: offline source loading, CommonMark/HTML/TeX preservation and static generation. Dependencies are vendored; ordinary builds need no network or installation.
 - `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
 - `services/blog-api/src/admin*.mjs` and `article-editor.mjs`: shared session login, comment management, visual styles and editor assets. The builder generates `/blog/comment/`, shared `/blog/editor/` assets and an `exit/` page for every registered document.
@@ -213,6 +214,12 @@ Cleanup deletes only a leaf through the server's atomic `only_if_no_replies=true
 ### Future Visits cutover
 
 Visits remains disabled in both frontend and Worker: no UI, requests, baseline import or counting is enabled by this work. At the later authorized cutover, collect fresh per-document counts and the old site's **independent total**, record the capture window and import an exact complete baseline. Never infer the total by adding article counts or reuse an old archive as the fresh baseline.
+
+The personal homepage has a hidden bilingual **全站访问量 / Site views** footer widget. It shares the blog's Visits client and the configuration generated from `features.yaml`; ordinary article edits do not change the homepage. The generated configuration's content hash versions its homepage script URL, so switching configuration also refreshes that asset's cache. The article publisher still rejects changes to root `index.html`.
+
+When enabled and seeded, one reading-page load adds one site PV; a document page also adds one document PV. The personal homepage sends no document ID. Refreshing counts as another view; language changes and retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Management and editor pages do not count views.
+
+The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy. DNS access, redirect readiness, fresh baseline capture/import and actual enablement remain separate steps; current preparation and the unresolved DNS approach are recorded in [the cutover preparation](migration/domain-visits-2026-10-31.md).
 
 Validate a privately stored baseline offline first:
 

@@ -42,6 +42,7 @@ window.SITE_CONTENT = {
       contactLabel: "联系",
       contactHeading: "联系",
       footerNote: "个人主页",
+      siteViews: "全站访问量",
       languageLabel: "选择界面语言",
     },
     en: {
@@ -82,6 +83,7 @@ window.SITE_CONTENT = {
       contactLabel: "Contact",
       contactHeading: "Contact",
       footerNote: "Personal homepage",
+      siteViews: "Site views",
       languageLabel: "Choose display language",
     },
   },

@@ -94,9 +94,9 @@ class MarkdownSourcesTests(unittest.TestCase):
         katex_style.write_text("/* Style fixture; visual fonts are checked on the real site. */", encoding="utf-8")
         shutil.copyfile(PROJECT / "assets/vendor/katex/katex.min.js", katex_style.with_name("katex.min.js"))
         (self.project / "blog").mkdir()
-        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js"):
+        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js", "blog/visits.js"):
             (self.project / relative).write_text("", encoding="utf-8")
-        (self.project / "index.html").write_text('<main id="main">临时主页</main>', encoding="utf-8")
+        (self.project / "index.html").write_text('<main id="main">临时主页</main><script defer src="/blog/visits-config.js"></script>', encoding="utf-8")
 
     def build(self):
         original_root = build_blog.ROOT
@@ -132,6 +132,42 @@ class MarkdownSourcesTests(unittest.TestCase):
         # Closing public submissions must not lock the owner out of moderation.
         self.assertIn('data-comments-enabled="false"', (self.project / "blog/posts/7/index.html").read_text(encoding="utf-8"))
         admin.write_text(document.replace('data-admin-api="https://comments.example.test"', 'data-admin-api="https://unexpected.example"'), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+
+    def test_enabled_visits_config_and_document_ids_are_checked(self):
+        self.prepare_build()
+        homepage = self.project / "index.html"
+        self.build()
+        disabled_homepage = homepage.read_bytes()
+        disabled_version = hashlib.sha256((self.project / "blog/visits-config.js").read_bytes()).hexdigest()[:16].encode("ascii")
+        features = self.content / "features.yaml"
+        features.write_text(features.read_text(encoding="utf-8").replace("visits:\n  enabled: false\n  api_base: ''", "visits:\n  enabled: true\n  api_base: https://visits.example.test"), encoding="utf-8")
+        self.build()
+        self.check()
+        homepage = self.project / "index.html"
+        original_homepage = homepage.read_bytes()
+        enabled_version = hashlib.sha256((self.project / "blog/visits-config.js").read_bytes()).hexdigest()[:16].encode("ascii")
+        self.assertNotEqual(disabled_version, enabled_version)
+        self.assertEqual(original_homepage, disabled_homepage.replace(disabled_version, enabled_version))
+        self.build()
+        self.assertEqual(homepage.read_bytes(), original_homepage)
+        homepage.write_bytes(original_homepage.replace(b"visits-config.js?v=", b"visits-config.js?v=bad"))
+        with self.assertRaises(AssertionError):
+            self.check()
+        homepage.write_bytes(original_homepage + b'<script defer src="/blog/visits-config.js"></script>')
+        with self.assertRaises(ValueError):
+            self.build()
+        homepage.write_bytes(original_homepage)
+        article = self.project / "blog/posts/7/index.html"
+        original = article.read_text(encoding="utf-8")
+        self.assertIn('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="7"', original)
+        article.write_text(original.replace('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="7"', 'data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="8"', 1), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+        article.write_text(original, encoding="utf-8")
+        config = self.project / "blog/visits-config.js"
+        config.write_text('window.SITE_VISITS_CONFIG = {};\n', encoding="utf-8")
         with self.assertRaises(AssertionError):
             self.check()
 

@@ -337,6 +337,19 @@ def main():
     comments = load_comments(source_dir, post_ids=[post["id"] for post in documents], project_root=ROOT)
     friends = load_friends(source_dir / "friends.yaml")
     features = load_features(source_dir / "features.yaml")
+    visits_config = "window.SITE_VISITS_CONFIG = " + json.dumps(features["visits"], ensure_ascii=True, separators=(",", ":")) + ";\n"
+    visits_bytes = visits_config.encode("utf-8")
+    homepage_path = ROOT / "index.html"
+    homepage = homepage_path.read_bytes()
+    config_reference = rb'src="/blog/visits-config\.js(?:\?[^"\s]*)?"'
+    references = list(re.finditer(config_reference, homepage))
+    if len(references) != 1 or b'<script defer '+references[0].group()+b'></script>' not in homepage:
+        raise ValueError("homepage must contain exactly one Visits configuration script reference")
+    version = hashlib.sha256(visits_bytes).hexdigest()[:16].encode("ascii")
+    updated_homepage = re.sub(config_reference, b'src="/blog/visits-config.js?v=' + version + b'"', homepage)
+    (ROOT / "blog/visits-config.js").write_bytes(visits_bytes)
+    if updated_homepage != homepage:
+        homepage_path.write_bytes(updated_homepage)
     assert len(posts) == len({p["id"] for p in posts}) == batch["count"]
     assert len(pages) == len({p["id"] for p in pages})
     assert len({p["id"] for p in documents}) == len(documents)
