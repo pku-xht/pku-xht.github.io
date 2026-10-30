@@ -239,9 +239,18 @@ Generate the allowlist, check its sources and run the offline routing regression
 python -B -S -X utf8 tools/generate_legacy_redirect.py
 python -B -S -X utf8 tools/generate_legacy_redirect.py --check
 node services/legacy-redirect/test.mjs
+wrangler deploy --config services/legacy-redirect/wrangler.toml --dry-run
 ```
 
 The allowlist includes 212 public document paths, 4 nonempty categories, 91 tags and 41 resources originating on the old domain, plus 212 `p`/`page_id` query mappings. Representative category and tag paths were verified against the old site. Only matched GET/HEAD requests redirect to the new site; other parameters, methods, private/unknown paths and ambiguous encodings continue through the old `www` host. The initial status is non-cacheable 302; switch to 301 after real cutover verification. See the [module notes](services/legacy-redirect/README.md) for fragment and origin limitations. The offline checks do not prove DNS, TLS or actual Cloudflare deployment.
+
+After explicit deployment authorization, upload the script without domain routes:
+
+```sh
+wrangler deploy --config services/legacy-redirect/wrangler.toml
+```
+
+The checked-in configuration has no routes. At the final Visits cutover, attach the script to zone routes `www.xht37.com/*` and `xht37.com/*`. Nameserver activation first preserves WordPress at `www`; attaching the redirect routes is the separate traffic-switch step. Preserve origin certificate validation with Full (Strict), verify the edge certificate and old administration access, and collect/import the fresh baseline before enabling counting and redirects.
 
 ### Original-site import tools
 
