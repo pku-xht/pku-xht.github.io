@@ -227,7 +227,7 @@ Validate a privately stored baseline offline first:
 node services/blog-api/scripts/import-baseline.mjs --input <verified-private-baseline.json> --batch <cutover-batch>
 ```
 
-The default is a zero-network dry run. Actual application additionally requires process `BLOG_ADMIN_TOKEN`, `--apply --confirm-cutover --api <Worker-origin>`, and a separately authorized enablement of both switches. The backend imports the independent site and complete document bases atomically, refuses a differing overwrite and counts each event nonce once.
+The default is a zero-network dry run. Both dry-run and application require an exact match with the local public-document registry: missing and extra document IDs are rejected before any request, without inventing zero counts. The Worker separately verifies the real D1 registry at import time; a local pass does not establish production registry consistency. Actual application additionally requires process `BLOG_ADMIN_TOKEN`, `--apply --confirm-cutover --api <Worker-origin>`, and a separately authorized enablement of both switches. The backend imports the independent site and complete document bases atomically, refuses a differing overwrite and counts each event nonce once.
 
 ### Legacy-domain redirect preparation
 

@@ -475,8 +475,20 @@ test('chronological public pagination handles older imports inserted after newer
 
 test('baseline CLI defaults to an offline dry-run and --apply needs an explicit cutover flag',context=>{
   const temporary=mkdtempSync(resolve(tmpdir(),'blog-baseline-')); context.after(()=>rmSync(temporary,{recursive:true,force:true}));
-  const input=resolve(temporary,'baseline.json'); writeFileSync(input,JSON.stringify({site_base:1000,captured_at:'2026-10-25T00:00:00Z',document_bases:[{document:'11',base:10}]}));
+  const registry=JSON.parse(readFileSync(new URL('../data/public-documents.json',import.meta.url),'utf8'));
+  const baseline={site_base:1000,captured_at:'2026-10-25T00:00:00Z',document_bases:registry.documents.map(({id})=>({document:id,base:10}))};
+  const input=resolve(temporary,'baseline.json'); writeFileSync(input,JSON.stringify(baseline));
   const script=new URL('../scripts/import-baseline.mjs',import.meta.url).pathname.replace(/^\/([A-Za-z]:)/,'$1');
   const result=spawnSync(process.execPath,[script,'--input',input,'--batch','test-cutover'],{encoding:'utf8'}); assert.equal(result.status,0,result.stderr); assert.equal(JSON.parse(result.stdout).network_requests,0);
   const refused=spawnSync(process.execPath,[script,'--input',input,'--batch','test-cutover','--apply'],{encoding:'utf8'}); assert.notEqual(refused.status,0); assert.match(refused.stderr,/confirm-cutover/);
+  const extraId=String(Math.max(...registry.documents.map(({id})=>Number(id)))+1);
+  for (const [document_bases,expected] of [
+    [baseline.document_bases.slice(1), /1 missing, 0 extra/],
+    [[...baseline.document_bases,{document:extraId,base:10}], /0 missing, 1 extra/],
+    [[...baseline.document_bases.slice(1),{document:extraId,base:10}], /1 missing, 1 extra/],
+  ]) {
+    writeFileSync(input,JSON.stringify({...baseline,document_bases}));
+    const invalid=spawnSync(process.execPath,[script,'--input',input,'--batch','test-cutover'],{encoding:'utf8'});
+    assert.notEqual(invalid.status,0); assert.match(invalid.stderr,expected);
+  }
 });

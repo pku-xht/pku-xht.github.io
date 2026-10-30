@@ -13,6 +13,16 @@ for (const row of value.document_bases) {
   if (!row || Object.keys(row).sort().join(',')!=='base,document' || !/^[1-9][0-9]*$/.test(row.document) || !Number.isSafeInteger(row.base) || row.base<0 || seen.has(row.document)) throw new Error('Invalid document baseline.');
   seen.add(row.document);
 }
+const registry=JSON.parse(await readFile(new URL('../data/public-documents.json',import.meta.url),'utf8'));
+if (!registry || !Array.isArray(registry.documents) || !registry.documents.length) throw new Error('Invalid public document registry.');
+const registered=new Set();
+for (const row of registry.documents) {
+  if (!row || typeof row.id!=='string' || !/^[1-9][0-9]*$/.test(row.id) || registered.has(row.id)) throw new Error('Invalid public document registry.');
+  registered.add(row.id);
+}
+const missing=[...registered].filter(id=>!seen.has(id));
+const extra=[...seen].filter(id=>!registered.has(id));
+if (missing.length || extra.length) throw new Error(`Baseline does not match public document registry: ${missing.length} missing, ${extra.length} extra.`);
 const payload={confirm_cutover:true,batch_id:batch,...value};
 if (!args.includes('--apply')) {
   console.log(JSON.stringify({dry_run:true,batch_id:batch,documents:seen.size,site_base:value.site_base,sha256:createHash('sha256').update(JSON.stringify(payload)).digest('hex'),network_requests:0}));
