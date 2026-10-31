@@ -664,8 +664,8 @@ def main(argv=None):
     friends = load_friends(ROOT / "content/blog/friends.yaml")
     check_comment_source_files(comments, ROOT / "content/blog", [source["id"] for source in sources])
     homepage = Document((ROOT / "index.html").read_text(encoding="utf-8")).root
-    assert not any("data-blog-visits" in node.attrs or "data-site-visits" in node.attrs for node in nodes(homepage)), "personal homepage must not display or count blog Visits"
-    assert not any(node.tag == "script" and urlsplit(node.attrs.get("src", "")).path in ("/blog/visits.js", "/blog/visits-config.js") for node in nodes(homepage)), "personal homepage must not load blog Visits scripts"
+    assert not any("data-blog-visits" in node.attrs or "data-site-visits" in node.attrs or "data-visits-ranking" in node.attrs for node in nodes(homepage)), "personal homepage must not display or count blog Visits"
+    assert not any(node.tag == "script" and urlsplit(node.attrs.get("src", "")).path in ("/blog/visits.js", "/blog/visits-config.js", "/blog/visits-ranking.js") for node in nodes(homepage)), "personal homepage must not load blog Visits scripts"
     assert not (ROOT / "blog/visits-config.js").exists(), "obsolete personal homepage Visits config is present"
     assert report["features"] == {"comments_enabled": features["comments"]["enabled"], "visits_enabled": features["visits"]["enabled"]}, "build feature state differs from the formal configuration"
     assert report["comments"]["count"] == comments["count"] and report["comments"]["index_file"] == comments["index_file"] and report["comments"]["index_sha256"] == comments["index_sha256"]
@@ -878,6 +878,26 @@ def main(argv=None):
         all_nodes = list(nodes(document))
         widgets = [node for node in all_nodes if "data-blog-visits" in node.attrs]
         scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits.js")]
+        rankings = [node for node in all_nodes if "data-visits-ranking" in node.attrs]
+        ranking_scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits-ranking.js")]
+        if features["visits"]["enabled"] and path == ROOT / "blog/index.html":
+            assert len(rankings) == len(ranking_scripts) == 1, (path, "homepage ranking widget or script missing")
+            assert urlsplit(ranking_scripts[0].attrs.get("src", "")).path == "/blog/visits-ranking.js", (path, "ranking script path differs")
+            ranking = rankings[0]
+            assert ranking.tag == "details" and "open" in ranking.attrs and ranking.attrs.get("data-ranking-enabled") == "true" and ranking.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "ranking configuration differs")
+            mains = [node for node in all_nodes if node.tag == "main" and node.attrs.get("id") == "main"]
+            assert len(mains) == 1 and ranking in mains[0].children, (path, "ranking must be outside article and tag filtering")
+            summaries = [node for node in ranking.children if isinstance(node, Node) and node.tag == "summary"]
+            assert len(summaries) == 1 and canonical(summaries[0]) == "访问量排行 累计 · TOP 10", (path, "ranking title or fixed limit differs")
+            lists = [node for node in nodes(ranking) if "data-ranking-list" in node.attrs]
+            statuses = [node for node in nodes(ranking) if "data-ranking-status" in node.attrs]
+            retries = [node for node in nodes(ranking) if "data-ranking-retry" in node.attrs]
+            assert len(lists) == 1 and lists[0].tag == "ol" and "hidden" in lists[0].attrs and not lists[0].children, (path, "ranking must start empty rather than serialize cached counts")
+            assert len(statuses) == 1 and statuses[0].attrs.get("role") == "status" and canonical(statuses[0]), (path, "ranking loading status missing")
+            assert len(retries) == 1 and retries[0].tag == "button" and retries[0].attrs.get("type") == "button" and "hidden" in retries[0].attrs, (path, "ranking retry button differs")
+        else:
+            assert not rankings and not ranking_scripts, (path, "ranking must only appear on the enabled blog homepage")
+            assert not any(key.startswith("data-ranking") for node in all_nodes for key in node.attrs), (path, "ranking DOM appears outside the enabled homepage")
         if features["visits"]["enabled"] and path in visit_pages:
             assert len(widgets) == 1 and len(scripts) == 1, (path, "enabled Visits widget or script missing")
             assert urlsplit(scripts[0].attrs.get("src", "")).path == "/blog/visits.js", (path, "Visits script path differs")

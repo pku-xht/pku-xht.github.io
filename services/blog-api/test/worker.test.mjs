@@ -382,6 +382,75 @@ test('index visits increment site alone and unknown documents cannot enter the c
   assert.equal((await f.request('/v1/visits?document=999')).status,404);
 });
 
+test('ranking is disabled without any database access and unseeded rankings stay empty',async context=>{
+  const disabled=fixture(context);
+  Object.defineProperty(disabled.env,'DB',{get(){assert.fail('Disabled ranking accessed the database.');}});
+  const off=await disabled.request('/v1/visits/ranking');
+  assert.equal(off.status,200); assert.deepEqual(off.data,{enabled:false,seeded:false,items:[]});
+  const enabled=fixture(context,{VISITS_ENABLED:'true'});
+  const before=enabled.DB.writes, empty=await enabled.request('/v1/visits/ranking');
+  assert.equal(empty.status,200); assert.deepEqual(empty.data,{enabled:true,seeded:false,items:[]});
+  assert.equal(enabled.DB.writes,before);
+});
+
+test('ranking returns the cumulative top ten with numeric tie order and both public allowlists',async context=>{
+  const f=fixture(context,{VISITS_ENABLED:'true'});
+  const registered=JSON.parse(readFileSync(new URL('../data/public-documents.json',import.meta.url),'utf8')).documents;
+  const posts=registered.filter(row=>row.kind==='post').sort((a,b)=>Number(a.id)-Number(b.id));
+  const eligible=posts.slice(0,12), databasePage=posts[12];
+  const insert=f.DB.sqlite.prepare('INSERT INTO public_documents(id,kind) VALUES (?,?)');
+  for(const post of eligible) insert.run(post.id,'post');
+  insert.run(databasePage.id,'page');
+  // A page cannot enter merely by acquiring the post kind in the database.
+  f.DB.sqlite.prepare("UPDATE public_documents SET kind='post' WHERE id='215'").run();
+  const ids=f.DB.sqlite.prepare('SELECT id FROM public_documents').all();
+  const eligibleIDs=new Set(eligible.map(row=>row.id));
+  const seeded=await f.seed(f.baseline({document_bases:ids.map(({id})=>({document:id,base:eligibleIDs.has(id)?100:999999}))}));
+  assert.equal(seeded.status,200);
+  const last=eligible.at(-1).id;
+  const visit=await f.request('/v1/visits',{method:'POST',value:{nonce:randomUUID(),document:last}});
+  assert.equal(visit.data.document,101);
+  const before=f.DB.writes, events=f.DB.sqlite.prepare('SELECT count(*) AS n FROM visit_events').get().n;
+  const deltas=f.DB.sqlite.prepare('SELECT key,count FROM visit_deltas ORDER BY key').all();
+  const ranking=await f.request('/v1/visits/ranking');
+  assert.equal(ranking.status,200);
+  assert.deepEqual(ranking.data,{enabled:true,seeded:true,items:[{document:last,visits:101},...eligible.slice(0,9).map(({id})=>({document:id,visits:100}))]});
+  assert.equal(ranking.headers.get('Access-Control-Allow-Origin'),origin);
+  assert.equal(ranking.headers.get('Cache-Control'),'no-store');
+  assert.equal((await f.request('/v1/visits/ranking',{requestOrigin:null})).status,200);
+  assert.equal((await f.request('/v1/visits/ranking',{requestOrigin:'https://untrusted.example'})).status,403);
+  assert.equal(f.DB.writes,before);
+  assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM visit_events').get().n,events);
+  assert.deepEqual(f.DB.sqlite.prepare('SELECT key,count FROM visit_deltas ORDER BY key').all(),deltas);
+});
+
+test('ranking refuses an incomplete article baseline instead of returning a partial list',async context=>{
+  const f=fixture(context,{VISITS_ENABLED:'true'});
+  const post=JSON.parse(readFileSync(new URL('../data/public-documents.json',import.meta.url),'utf8')).documents.find(row=>row.kind==='post');
+  f.DB.sqlite.prepare("INSERT INTO public_documents(id,kind) VALUES (?,'post')").run(post.id);
+  const seeded=await f.seed(f.baseline({document_bases:[...f.baseline().document_bases,{document:post.id,base:100}]}));
+  assert.equal(seeded.status,200);
+  f.DB.sqlite.prepare('DELETE FROM document_baselines WHERE document=?').run(post.id);
+  const before=f.DB.writes, result=await f.request('/v1/visits/ranking');
+  assert.equal(result.status,503); assert.equal(result.data.error,'baseline_incomplete');
+  assert.equal(f.DB.writes,before);
+});
+
+test('ranking is GET-only with no client-controlled query or limit',async context=>{
+  const f=fixture(context,{VISITS_ENABLED:'true'}), before=f.DB.writes;
+  for(const method of ['POST','PUT','DELETE','HEAD']) {
+    const result=await f.request('/v1/visits/ranking',{method});
+    assert.equal(result.status,405); assert.equal(result.data.error,'method_not_allowed'); assert.equal(result.headers.get('Allow'),'GET');
+  }
+  for(const query of ['?limit=100','?document=46','?limit=10&limit=10']) {
+    const result=await f.request('/v1/visits/ranking'+query);
+    assert.equal(result.status,400); assert.equal(result.data.error,'unexpected_parameter');
+  }
+  const preflight=await f.request('/v1/visits/ranking',{method:'OPTIONS'});
+  assert.equal(preflight.status,204); assert.equal(preflight.headers.get('Access-Control-Allow-Origin'),origin);
+  assert.equal(f.DB.writes,before);
+});
+
 test('Worker admin page embeds no real credentials and renders user content via textContent',async context=>{
   const f=fixture(context), response=await f.request('/admin',{requestOrigin:null});
   assert.equal(response.status,200); assert.match(response.headers.get('Content-Security-Policy'),/frame-ancestors 'none'/);

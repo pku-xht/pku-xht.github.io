@@ -11,6 +11,7 @@ const CONTROL = /[\u0000-\u001f\u007f-\u009f]/;
 const BODY_CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/;
 const PUBLIC_FIELDS = 'id, document, nickname, body, body_html, author_url, parent_id, created_at';
 const DOCUMENTS = new Map(registry.documents.map(row => [row.id, row]));
+const RANKING_POST_IDS = JSON.stringify(registry.documents.filter(row => row.kind === 'post').map(row => row.id));
 
 class APIError extends Error {
   constructor(status, code, message) { super(message); this.status = status; this.code = code; }
@@ -272,6 +273,28 @@ async function visitStats(env, document = null) {
   if (document !== null && counts.document_total === null) fail(503, 'baseline_incomplete', 'Document baseline is unavailable.');
   return { enabled: true, seeded: true, site: counts.site_total, document: counts.document_total, document_id: document };
 }
+async function visitRanking(env) {
+  if (!visitsEnabled(env)) return { enabled: false, seeded: false, items: [] };
+  // Read completeness and ranking in one SQLite snapshot, without counters,
+  // rate-limit writes or a D1 batch transaction. Both public registries apply.
+  const result = await db(env).prepare(`SELECT
+    EXISTS (SELECT 1 FROM visit_baselines WHERE singleton = 1) AS seeded,
+    (SELECT COUNT(*) FROM public_documents p
+      JOIN json_each(?) allowed ON allowed.value = p.id
+      LEFT JOIN document_baselines b ON b.document = p.id
+      WHERE p.kind = 'post' AND b.document IS NULL) AS missing,
+    (SELECT json_group_array(json_object('document', document, 'visits', visits)) FROM (
+      SELECT p.id AS document, b.base + COALESCE(v.count, 0) AS visits
+      FROM public_documents p JOIN json_each(?) allowed ON allowed.value = p.id
+      JOIN document_baselines b ON b.document = p.id
+      LEFT JOIN visit_deltas v ON v.key = 'document:' || p.id
+      WHERE p.kind = 'post'
+      ORDER BY visits DESC, CAST(p.id AS INTEGER) ASC LIMIT 10
+    )) AS items`).bind(RANKING_POST_IDS, RANKING_POST_IDS).first();
+  if (!result.seeded) return { enabled: true, seeded: false, items: [] };
+  if (result.missing) fail(503, 'baseline_incomplete', 'Article baselines are unavailable.');
+  return { enabled: true, seeded: true, items: JSON.parse(result.items) };
+}
 async function submitVisit(request, env) {
   if (!visitsEnabled(env)) fail(404, 'visits_disabled', 'Visits are not enabled.');
   const value = await bodyJSON(request, ['nonce', 'document']);
@@ -337,6 +360,15 @@ async function route(request, env, url) {
   if (url.pathname === '/v1/visits') {
     if (request.method === 'GET') return json(await visitStats(env, docID(url.searchParams.get('document'), true)));
     if (request.method === 'POST') return submitVisit(request, env);
+  }
+  if (url.pathname === '/v1/visits/ranking') {
+    if (request.method !== 'GET') {
+      const response = json({ error: 'method_not_allowed', message: 'Use GET for the public ranking.' }, 405);
+      response.headers.set('Allow', 'GET');
+      return response;
+    }
+    if (url.searchParams.size) fail(400, 'unexpected_parameter', 'The ranking does not accept query parameters.');
+    return json(await visitRanking(env));
   }
   if (url.pathname.startsWith('/v1/admin/')) {
     if (url.pathname === '/v1/admin/login' && request.method === 'POST') return login(request, env);

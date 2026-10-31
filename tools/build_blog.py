@@ -310,6 +310,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
     math_script = '<script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script>' if comment_math else ""
     visits = features and features["visits"]["enabled"]
     visits_script = '<script defer src="/blog/visits.js?v=3"></script>' if visits else ""
+    ranking_script = '<script defer src="/blog/visits-ranking.js?v=1"></script>' if visits and route == "/blog/" else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -319,7 +320,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
 <meta property="og:title" content="{escape(title)} · 徐皓天"><meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="{'article' if has_math or route.startswith('/blog/posts/') else 'website'}"><meta property="og:url" content="https://pku-xht.github.io{route}">
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
-<link rel="stylesheet" href="/blog/blog.css?v=4">{math_css}{math_script}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}
+<link rel="stylesheet" href="/blog/blog.css?v=5">{math_css}{math_script}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}{ranking_script}
 </head><body class="blog-page">{header(active)}
 <main class="site-width" id="main">{body}</main>
 <footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
@@ -488,7 +489,8 @@ def main():
         has_comment_math = any(isinstance(node, Math) for comment in comments["by_post"][post["id"]] for node in walk(comment_trees[comment["id"]]))
         write(post["route"], page(post["title"], post["excerpt"], post["route"], body, has_math=math_count > 0 or has_comment_math, features=features, document_id=post["id"]))
         report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_file": post["source_file"], "source_sha256": post["source_sha256"], "content_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
-    body = f'<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p>{visit_counts(features)}</section>' + category_navigation() + historical_pages() + tag_cloud(used_tags, collapsed=True) + search_list(posts, all_tags=True)
+    ranking = '<details class="visits-ranking" data-visits-ranking data-ranking-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '" open><summary>访问量排行 <span class="ranking-caption">累计 · TOP 10</span></summary><ol class="ranking-list" data-ranking-list hidden></ol><p class="ranking-status" data-ranking-status role="status">正在加载排行…</p><button class="ranking-retry" type="button" data-ranking-retry hidden>重试</button></details>' if features["visits"]["enabled"] else ""
+    body = f'<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p>{visit_counts(features)}</section>' + ranking + category_navigation() + historical_pages() + tag_cloud(used_tags, collapsed=True) + search_list(posts, all_tags=True)
     write("/blog/", page("博客", "徐皓天的算法、数学、学习笔记与生活记录。", "/blog/", body, features=features))
     years = {}
     for post in posts:

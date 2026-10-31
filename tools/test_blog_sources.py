@@ -94,7 +94,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         katex_style.write_text("/* Style fixture; visual fonts are checked on the real site. */", encoding="utf-8")
         shutil.copyfile(PROJECT / "assets/vendor/katex/katex.min.js", katex_style.with_name("katex.min.js"))
         (self.project / "blog").mkdir()
-        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js", "blog/visits.js"):
+        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js", "blog/visits.js", "blog/visits-ranking.js"):
             (self.project / relative).write_text("", encoding="utf-8")
         (self.project / "index.html").write_text('<main id="main">临时主页</main>', encoding="utf-8")
 
@@ -153,12 +153,25 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.assertIn('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id=""', blog_homepage)
         self.assertRegex(blog_homepage, r'<strong\b[^>]*\bdata-site-visits>')
         self.assertNotIn('data-document-visits>', blog_homepage)
+        self.assertIn('data-visits-ranking data-ranking-enabled="true" data-blog-api="https://visits.example.test" open', blog_homepage)
+        for bad in (
+            blog_homepage.replace("累计 · TOP 10", "累计 · TOP 5", 1),
+            blog_homepage.replace('data-ranking-list hidden></ol>', 'data-ranking-list hidden><li>cached ranking</li></ol>', 1),
+        ):
+            (self.project / "blog/index.html").write_text(bad, encoding="utf-8")
+            with self.assertRaises(AssertionError):
+                self.check()
+        (self.project / "blog/index.html").write_text(blog_homepage, encoding="utf-8")
         self.build()
         self.assertEqual(homepage.read_bytes(), original_homepage)
         article = self.project / "blog/posts/7/index.html"
         original = article.read_text(encoding="utf-8")
         self.assertIn('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="7"', original)
         article.write_text(original.replace('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="7"', 'data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id="8"', 1), encoding="utf-8")
+        with self.assertRaises(AssertionError):
+            self.check()
+        article.write_text(original, encoding="utf-8")
+        article.write_text(original + '<script defer src="/blog/visits-ranking.js?v=1"></script>', encoding="utf-8")
         with self.assertRaises(AssertionError):
             self.check()
         article.write_text(original, encoding="utf-8")
@@ -173,6 +186,8 @@ class MarkdownSourcesTests(unittest.TestCase):
             '<p data-blog-visits hidden><span data-site-visits>0</span></p>',
             '<script defer src="/blog/visits.js?v=2"></script>',
             '<script defer src="/blog/visits-config.js?v=old"></script>',
+            '<details data-visits-ranking></details>',
+            '<script defer src="/blog/visits-ranking.js?v=1"></script>',
         ):
             with self.subTest(injected=injected):
                 homepage.write_text(original + injected, encoding="utf-8")

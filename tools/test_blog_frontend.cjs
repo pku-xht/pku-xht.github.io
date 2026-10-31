@@ -152,6 +152,30 @@ function visitsFixture(enabled = true) {
   const retry = el('button', { 'data-visits-retry': '', type: 'button', hidden: '' });
   return { ...env, container, site, count, retry };
 }
+function rankingFixture(enabled = true, api = 'https://ranking.example.test/') {
+  const env = environment('http://127.0.0.1:8791/blog/'); const { el } = env;
+  const section = el('details', { 'data-visits-ranking': '', 'data-ranking-enabled': String(enabled), 'data-blog-api': api, open: '' });
+  el('summary', {}, section, '访问量排行');
+  const list = el('ol', { 'data-ranking-list': '', hidden: '' }, section);
+  const status = el('p', { 'data-ranking-status': '', role: 'status' }, section, '正在加载排行…');
+  const retry = el('button', { type: 'button', 'data-ranking-retry': '', hidden: '' }, section, '重试');
+  const form = el('form', { class: 'search-form', hidden: '' });
+  const input = el('input', { id: 'blog-search', type: 'search' }, form);
+  el('button', { id: 'clear-search', type: 'button' }, form);
+  el('p', { id: 'search-count' }); el('p', { id: 'no-results', hidden: '' });
+  const cloud = el('ul', { class: 'tag-cloud' });
+  const tag = el('a', { href: '/blog/tags/104/', 'data-tag-id': '104', 'data-tag-name': '2-SAT' }, cloud, '2-SAT');
+  const posts = el('div', { class: 'post-list', 'data-tag-filter': 'all' });
+  const cards = [], titles = [];
+  for (let index = 1; index <= 12; index++) {
+    const card = el('article', { class: 'post-card', 'data-search': 'Article ' + index, 'data-tags': index % 2 ? '104' : '105' }, posts);
+    const heading = el('h2', {}, card);
+    titles.push(el('a', { href: '/blog/posts/' + index + '/' }, heading, 'Article ' + index));
+    cards.push(card);
+  }
+  return { ...env, section, list, status, retry, cards, titles, input, tag };
+}
+const rankingData = (items = Array.from({ length: 10 }, (_, index) => ({ document: String(index + 1), visits: 1000 - index }))) => ({ enabled: true, seeded: true, items });
 async function main() {
   let passed = 0;
   const check = async (name, fn) => { await fn(); passed++; console.log('PASS', name); };
@@ -305,6 +329,73 @@ async function main() {
     assert.equal(f.container.hidden, false); assert.equal(f.site.textContent, '101'); assert.equal(f.count.textContent, '9');
     assert.ok(f.calls.every((call) => call.options.credentials === 'omit'));
     f.run('blog/visits.js'); await f.win.fire('online'); await flush(); assert.equal(f.calls.length, 4);
+  });
+  await check('ranking renders ten safe links with maintained titles, without changing under search or tags', async () => {
+    const f = rankingFixture();
+    const title = '<img src=x onerror="attack()"> & maintained title';
+    f.titles[0].textContent = title;
+    f.setFetch(async () => response(rankingData()));
+    f.run('blog/visits-ranking.js'); await flush();
+    assert.equal(f.list.querySelectorAll('li').length, 10);
+    assert.equal(f.list.querySelector('.ranking-title').textContent, title);
+    assert.equal(f.list.querySelector('img'), null);
+    assert.deepEqual(f.list.querySelectorAll('a').map((link) => link.href), Array.from({ length: 10 }, (_, index) => '/blog/posts/' + (index + 1) + '/'));
+    assert.equal(f.list.querySelector('.ranking-views').textContent, '1,000');
+    const entries = f.list.textContent;
+    f.run('blog/blog.js'); f.input.value = 'absent term'; await f.input.fire('input');
+    assert.ok(f.cards.every((card) => card.hidden)); assert.equal(f.list.hidden, false); assert.equal(f.list.textContent, entries);
+    f.input.value = ''; await f.input.fire('input'); await f.tag.fire('click');
+    assert.equal(f.cards.filter((card) => !card.hidden).length, 6); assert.equal(f.list.textContent, entries);
+    assert.equal(f.calls.length, 1); assert.equal(f.calls[0].url, 'https://ranking.example.test/v1/visits/ranking');
+    assert.equal(f.calls[0].options.method, undefined); assert.equal(f.calls[0].options.credentials, 'omit'); assert.equal(f.calls[0].options.cache, 'no-store');
+  });
+  await check('malformed rankings fail as a whole without links or partial rows', async () => {
+    const badItems = [
+      [{ document: '1', visits: 100 }, { document: '999', visits: 99 }],
+      [{ document: '1', visits: 100 }, { document: '1', visits: 99 }],
+      [{ document: 'javascript:attack()', visits: 100 }],
+      [{ document: '1', visits: -1 }], [{ document: '1', visits: 1.25 }],
+      [{ document: '1', visits: NaN }], [{ document: '1', visits: Number.MAX_SAFE_INTEGER + 1 }],
+      [{ document: '1', visits: '100' }], [{ document: 1, visits: 100 }],
+      [{ document: '1', visits: 9 }, { document: '2', visits: 10 }],
+      [{ document: '2', visits: 10 }, { document: '1', visits: 10 }],
+      Array.from({ length: 11 }, (_, index) => ({ document: String(index + 1), visits: 100 - index })),
+    ];
+    for (const items of badItems) {
+      const f = rankingFixture(); f.setFetch(async () => response(rankingData(items)));
+      f.run('blog/visits-ranking.js'); await flush();
+      assert.equal(f.section.dataset.rankingState, 'error'); assert.equal(f.list.querySelectorAll('li').length, 0);
+      assert.equal(f.list.hidden, true); assert.equal(f.retry.hidden, false);
+    }
+  });
+  await check('ranking failures retry once at a time with GET only and no duplicate initialization', async () => {
+    const f = rankingFixture(); let finish;
+    f.setFetch(async () => f.calls.length === 1 ? new Promise((resolve) => { finish = resolve; }) : response(rankingData()));
+    f.run('blog/visits-ranking.js'); await flush();
+    await Promise.all([f.retry.fire('click'), f.retry.fire('click')]); f.run('blog/visits-ranking.js'); await flush();
+    assert.equal(f.calls.length, 1);
+    finish(response({}, 503)); await flush();
+    assert.equal(f.retry.hidden, false); assert.equal(f.list.hidden, true);
+    await Promise.all([f.retry.fire('click'), f.retry.fire('click')]); await flush();
+    assert.equal(f.calls.length, 2); assert.equal(f.list.querySelectorAll('li').length, 10);
+    f.run('blog/visits-ranking.js'); await f.retry.fire('click'); await flush();
+    assert.equal(f.calls.length, 2); assert.ok(f.calls.every((call) => !call.options.method || call.options.method === 'GET'));
+  });
+  await check('absent, disabled or unconfigured rankings make no requests', async () => {
+    const absent = environment(); absent.run('blog/visits-ranking.js'); await flush(); assert.equal(absent.calls.length, 0);
+    for (const f of [rankingFixture(false), rankingFixture(true, '')]) {
+      f.run('blog/visits-ranking.js'); await flush(); assert.equal(f.calls.length, 0);
+    }
+    const missing = rankingFixture(); missing.section.removeAttribute('data-blog-api');
+    missing.run('blog/visits-ranking.js'); await flush(); assert.equal(missing.calls.length, 0);
+  });
+  await check('disabled or unseeded ranking responses never display a fabricated list, while an empty seeded list is ready', async () => {
+    for (const data of [{ enabled: false, seeded: false, items: [] }, { enabled: true, seeded: false, items: [] }]) {
+      const f = rankingFixture(); f.setFetch(async () => response(data)); f.run('blog/visits-ranking.js'); await flush();
+      assert.equal(f.section.dataset.rankingState, 'error'); assert.equal(f.list.hidden, true); assert.equal(f.list.children.length, 0);
+    }
+    const f = rankingFixture(); f.setFetch(async () => response(rankingData([]))); f.run('blog/visits-ranking.js'); await flush();
+    assert.equal(f.section.dataset.rankingState, 'ready'); assert.equal(f.list.hidden, true); assert.equal(f.retry.hidden, true); assert.match(f.status.textContent, /暂无/);
   });
   await check('tag URL restore, text intersection, clear, history and modified links', async () => {
     const f = environment('http://127.0.0.1:8791/blog/?tag=104'); const { el } = f;

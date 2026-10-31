@@ -40,6 +40,18 @@ main.site-width { min-width: 0; min-height: 60vh; }
 .visit-stat { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .visit-label { color: var(--muted); font: 12px/1.5 var(--sans); }
 .visit-number { color: var(--blue); font: 600 25px/1.25 var(--sans); font-variant-numeric: tabular-nums; }
+.visits-ranking { margin: 0 0 23px; padding: 15px 0; border-block: 1px solid var(--line); }
+.visits-ranking > summary { cursor: pointer; color: var(--ink); font-size: 14px; font-weight: 600; }
+.ranking-caption { margin-left: 9px; color: var(--muted); font-size: 11px; font-weight: 400; }
+.ranking-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 11px 0 0; padding: 0; list-style: none; }
+.ranking-link { display: grid; grid-template-columns: 19px minmax(0, 1fr) max-content; align-items: baseline; gap: 9px; min-height: 42px; padding: 10px 0; color: var(--ink); font-size: 13px; line-height: 1.7; }
+.ranking-link:hover { text-decoration: none; }
+.ranking-link:hover .ranking-title { color: var(--blue); text-decoration: underline; }
+.ranking-position { color: var(--blue); font-size: 11px; font-variant-numeric: tabular-nums; }
+.ranking-title { overflow-wrap: anywhere; }
+.ranking-views { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ranking-status { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+.ranking-retry { margin-top: 9px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 3px; color: var(--blue); background: transparent; font-size: 13px; }
 .category-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 22px; margin: 0 0 19px; padding-bottom: 16px; border-bottom: 1px solid var(--line); font-size: 13px; line-height: 1.8; }
 .category-nav a { display: inline-flex; align-items: baseline; gap: 6px; min-height: 32px; padding-block: 4px; color: var(--muted); }
 .category-nav a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-decoration-color: var(--blue); text-underline-offset: 5px; }
@@ -213,6 +225,7 @@ details.tag-section { padding: 10px 0; border-block: 1px solid var(--line); }
   .page-intro p { font-size: 13px; }
   .visit-counts { gap: 12px 28px; margin-top: 18px; }
   .visit-number { font-size: 23px; }
+  .ranking-list { grid-template-columns: minmax(0, 1fr); }
   .post-card { padding: 23px 0; }
   .post-card h2 { font-size: 21px; }
   .post-excerpt { font-size: 13px; }

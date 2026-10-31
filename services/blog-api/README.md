@@ -24,6 +24,7 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collec
 | `POST /v1/admin/articles/<ID>` | 提交一个文档的候选修改，成功为 `202`，等待受信工作流发布 |
 | `GET /v1/admin/articles/<ID>/publication?revision=<SHA>` | 查询保存返回的候选修订，状态为 `pending`、`success` 或 `failure` |
 | `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；省略文档 ID 时只返回全站数 |
+| `GET /v1/visits/ranking` | 只读文章累计访问量前十，无查询参数；同量按数字 ID 升序 |
 | `POST /v1/visits` | 明确启用且已有完整基线后，按单次加载 nonce 幂等计数 |
 | `POST /v1/admin/visits/baseline` | 显式确认并原子导入完整独立基线；不同基线禁止覆盖 |
 | `GET /admin` | 与 `/blog/comment/` 共享界面源码的备用评论管理入口 |
@@ -107,5 +108,7 @@ GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响
 ## Visits
 
 2026-10-31 正式切流已完成：完整的 212 篇文档与独立全站 1,869,365 PV 基线已导入，Worker 和网页统计均已开启，旧域名公开白名单已 301 跳转；精确发布与线上核验见[切流记录](../../migration/domain-visits-2026-10-31.md)。GET 返回基线加增量，POST 对同一 nonce 只计一次；无文档 ID 的博客索引页只增加全站 PV。全站访问量显示在博客主页，个人主页、管理和编辑页不参与计数；刷新博客阅读页产生新 PV。关闭配置仍能停用：GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`，POST 返回 `404 visits_disabled`；启用但缺基线仍返回 `null` 并拒绝计数，不冒充 0。
+
+`GET /v1/visits/ranking` 返回 `{enabled,seeded,items:[{document,visits}]}`，固定最多十篇。累计值为每篇继承基线加新站增量，按值降序、数值 ID 升序排列；文章必须同时属于代码公开注册表和 D1 的 `post` 集合，不含页面或未知文档。响应仅带公开文章 ID 和次数，标题与链接由博客主页的维护内容提供。关闭或未导入基线时 `items` 为空且 `seeded:false`；已有全站基线但合格文章基线缺失时返回 `503 baseline_incomplete`，不展示不完整排行。完整性与名次来自同一次 SQLite 读快照，读取不写计数、事件、频控或其他表；关闭时不访问数据库。端点不接受查询参数，除原有 CORS 预检外仅接受 GET。
 
 原始基线包含旧站独立全站数、每个已注册公开文档的完整计数、采集时间和切换批次。全站数不能以逐文求和代替，也不能复用过时快照。离线导入器在 dry-run 和 apply 发请求前均核对本地公开文档注册表，缺失、额外或重复 ID 拒绝，不能补零；实际导入时 Worker 再独立核对 D1 的真实注册表。完整基线单事务导入，同批同内容重试无副作用，不同基线禁止覆盖；单次访问 nonce、全站增量和单文增量保持原子性。已完成操作的入口见[访问量切换](../../README.md#visits-cutover)，日常部署不得重新覆盖基线。隐藏内容继续留在旧站，不进入公开基线。
