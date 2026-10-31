@@ -663,12 +663,10 @@ def main(argv=None):
     features = load_features(ROOT / "content/blog/features.yaml")
     friends = load_friends(ROOT / "content/blog/friends.yaml")
     check_comment_source_files(comments, ROOT / "content/blog", [source["id"] for source in sources])
-    expected_visits_config = "window.SITE_VISITS_CONFIG = " + json.dumps(features["visits"], ensure_ascii=True, separators=(",", ":")) + ";\n"
-    assert (ROOT / "blog/visits-config.js").read_text(encoding="utf-8") == expected_visits_config, "homepage Visits config differs from formal configuration"
-    version = hashlib.sha256(expected_visits_config.encode("utf-8")).hexdigest()[:16]
-    homepage = (ROOT / "index.html").read_bytes()
-    references = re.findall(rb'src="/blog/visits-config\.js(?:\?[^"\s]*)?"', homepage)
-    assert references == [f'src="/blog/visits-config.js?v={version}"'.encode("ascii")] and b'<script defer '+references[0]+b'></script>' in homepage, "homepage Visits config version differs or is duplicated"
+    homepage = Document((ROOT / "index.html").read_text(encoding="utf-8")).root
+    assert not any("data-blog-visits" in node.attrs or "data-site-visits" in node.attrs for node in nodes(homepage)), "personal homepage must not display or count blog Visits"
+    assert not any(node.tag == "script" and urlsplit(node.attrs.get("src", "")).path in ("/blog/visits.js", "/blog/visits-config.js") for node in nodes(homepage)), "personal homepage must not load blog Visits scripts"
+    assert not (ROOT / "blog/visits-config.js").exists(), "obsolete personal homepage Visits config is present"
     assert report["features"] == {"comments_enabled": features["comments"]["enabled"], "visits_enabled": features["visits"]["enabled"]}, "build feature state differs from the formal configuration"
     assert report["comments"]["count"] == comments["count"] and report["comments"]["index_file"] == comments["index_file"] and report["comments"]["index_sha256"] == comments["index_sha256"]
     assert {int(key): value for key, value in report["comments"]["sources"].items()} == comments["sources"], "build comment-source report differs"

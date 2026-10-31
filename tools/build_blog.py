@@ -300,9 +300,9 @@ def page(title, description, route, body, active="博客", has_math=False, featu
     math_css = '<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">' if has_math or comment_math else ""
     math_script = '<script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script>' if comment_math else ""
     visits = features and features["visits"]["enabled"]
-    visits_script = '<script defer src="/blog/visits.js?v=1"></script>' if visits else ""
+    visits_script = '<script defer src="/blog/visits.js?v=3"></script>' if visits else ""
     visits_attrs = f' data-blog-visits data-visits-enabled="true" data-blog-api="{escape(features["visits"]["api_base"])}" data-document-id="{document_id or ""}"' if visits else ""
-    counts = f'<p class="visit-counts"{visits_attrs} hidden>本站访问 <span data-site-visits>—</span>' + ('<span data-document-visits-wrapper> · 本文访问 <span data-document-visits>—</span></span>' if document_id else '') + '</p>' if visits else ""
+    counts = f'<p class="visit-counts"{visits_attrs} hidden>全站访问量 <span data-site-visits>—</span>' + ('<span data-document-visits-wrapper> · 本文访问 <span data-document-visits>—</span></span>' if document_id else '') + '</p>' if visits else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -337,19 +337,6 @@ def main():
     comments = load_comments(source_dir, post_ids=[post["id"] for post in documents], project_root=ROOT)
     friends = load_friends(source_dir / "friends.yaml")
     features = load_features(source_dir / "features.yaml")
-    visits_config = "window.SITE_VISITS_CONFIG = " + json.dumps(features["visits"], ensure_ascii=True, separators=(",", ":")) + ";\n"
-    visits_bytes = visits_config.encode("utf-8")
-    homepage_path = ROOT / "index.html"
-    homepage = homepage_path.read_bytes()
-    config_reference = rb'src="/blog/visits-config\.js(?:\?[^"\s]*)?"'
-    references = list(re.finditer(config_reference, homepage))
-    if len(references) != 1 or b'<script defer '+references[0].group()+b'></script>' not in homepage:
-        raise ValueError("homepage must contain exactly one Visits configuration script reference")
-    version = hashlib.sha256(visits_bytes).hexdigest()[:16].encode("ascii")
-    updated_homepage = re.sub(config_reference, b'src="/blog/visits-config.js?v=' + version + b'"', homepage)
-    (ROOT / "blog/visits-config.js").write_bytes(visits_bytes)
-    if updated_homepage != homepage:
-        homepage_path.write_bytes(updated_homepage)
     assert len(posts) == len({p["id"] for p in posts}) == batch["count"]
     assert len(pages) == len({p["id"] for p in pages})
     assert len({p["id"] for p in documents}) == len(documents)

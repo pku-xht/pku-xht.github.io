@@ -106,6 +106,6 @@ GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响
 
 ## Visits
 
-2026-10-31 正式切流已完成：完整的 212 篇文档与独立全站 1,869,365 PV 基线已导入，Worker 和网页统计均已开启，旧域名公开白名单已 301 跳转；精确发布与线上核验见[切流记录](../../migration/domain-visits-2026-10-31.md)。GET 返回基线加增量，POST 对同一 nonce 只计一次；无文档 ID 的个人主页和索引页只增加全站 PV。刷新产生新 PV，管理和编辑页不参与计数。关闭配置仍能停用：GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`，POST 返回 `404 visits_disabled`；启用但缺基线仍返回 `null` 并拒绝计数，不冒充 0。
+2026-10-31 正式切流已完成：完整的 212 篇文档与独立全站 1,869,365 PV 基线已导入，Worker 和网页统计均已开启，旧域名公开白名单已 301 跳转；精确发布与线上核验见[切流记录](../../migration/domain-visits-2026-10-31.md)。GET 返回基线加增量，POST 对同一 nonce 只计一次；无文档 ID 的博客索引页只增加全站 PV。全站访问量显示在博客主页，个人主页、管理和编辑页不参与计数；刷新博客阅读页产生新 PV。关闭配置仍能停用：GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`，POST 返回 `404 visits_disabled`；启用但缺基线仍返回 `null` 并拒绝计数，不冒充 0。
 
 原始基线包含旧站独立全站数、每个已注册公开文档的完整计数、采集时间和切换批次。全站数不能以逐文求和代替，也不能复用过时快照。离线导入器在 dry-run 和 apply 发请求前均核对本地公开文档注册表，缺失、额外或重复 ID 拒绝，不能补零；实际导入时 Worker 再独立核对 D1 的真实注册表。完整基线单事务导入，同批同内容重试无副作用，不同基线禁止覆盖；单次访问 nonce、全站增量和单文增量保持原子性。已完成操作的入口见[访问量切换](../../README.md#visits-cutover)，日常部署不得重新覆盖基线。隐藏内容继续留在旧站，不进入公开基线。

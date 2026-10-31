@@ -257,16 +257,14 @@ async function main() {
   await check('visits disabled in DOM has zero network calls', async () => {
     const f = visitsFixture(false); f.run('blog/visits.js'); await flush(); assert.equal(f.calls.length, 0); assert.equal(f.container.hidden, true);
   });
-  await check('homepage Visits config stays hidden with no requests when disabled', async () => {
-    const f = environment(); const container = f.el('span', { 'data-blog-visits': '', hidden: '' });
-    f.el('span', { 'data-site-visits': '' }, container);
-    f.win.SITE_VISITS_CONFIG = { enabled: false, api_base: '' }; f.run('blog/visits.js'); await flush();
-    assert.equal(f.calls.length, 0); assert.equal(container.hidden, true);
+  await check('a personal homepage without a Visits widget has zero network calls', async () => {
+    const f = environment('http://127.0.0.1:8791/');
+    f.run('blog/visits.js'); await flush(); assert.equal(f.calls.length, 0);
   });
-  await check('homepage needs a baseline and retries site-only POST with the same nonce', async () => {
-    const f = environment(); const container = f.el('span', { 'data-blog-visits': '', hidden: '' });
+  await check('blog homepage retries site-only POST with the same nonce', async () => {
+    const f = environment('http://127.0.0.1:8791/blog/');
+    const container = f.el('p', { 'data-blog-visits': '', 'data-visits-enabled': 'true', 'data-blog-api': 'https://example.test/', 'data-document-id': '', hidden: '' });
     const site = f.el('span', { 'data-site-visits': '' }, container);
-    f.win.SITE_VISITS_CONFIG = { enabled: true, api_base: 'https://example.test/' };
     const stats = { enabled: true, seeded: true, site: 101, document: null, document_id: null };
     let posts = 0;
     f.setFetch(async (_, options) => { if (options.method !== 'POST') return response(stats); if (++posts === 1) throw new Error('lost response'); return response(stats); });
@@ -277,9 +275,10 @@ async function main() {
     assert.equal(container.hidden, false); assert.equal(site.textContent, '101');
     f.run('blog/visits.js'); await flush(); assert.equal(f.calls.length, 4);
   });
-  await check('homepage unseeded site stays hidden without POST', async () => {
-    const f = environment(); const container = f.el('span', { 'data-blog-visits': '', hidden: '' });
-    f.el('span', { 'data-site-visits': '' }, container); f.win.SITE_VISITS_CONFIG = { enabled: true, api_base: 'https://example.test/' };
+  await check('blog homepage unseeded site stays hidden without POST', async () => {
+    const f = environment('http://127.0.0.1:8791/blog/');
+    const container = f.el('p', { 'data-blog-visits': '', 'data-visits-enabled': 'true', 'data-blog-api': 'https://example.test/', 'data-document-id': '', hidden: '' });
+    f.el('span', { 'data-site-visits': '' }, container);
     f.setFetch(async () => response({ enabled: true, seeded: false, site: null }));
     f.run('blog/visits.js'); await flush(); assert.equal(f.calls.length, 1); assert.equal(container.hidden, true); assert.equal(container.dataset.visitsState, 'unseeded');
   });

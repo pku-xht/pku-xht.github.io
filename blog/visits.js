@@ -12,9 +12,8 @@
     if (!container || container.dataset.visitsInitialized === "true") return;
     container.dataset.visitsInitialized = "true";
     container.hidden = true;
-    const config = window.SITE_VISITS_CONFIG || {};
-    const enabled = container.dataset.visitsEnabled === undefined ? config.enabled === true : container.dataset.visitsEnabled === "true";
-    const apiBase = container.dataset.visitsEnabled === undefined ? config.api_base : container.dataset.blogApi;
+    const enabled = container.dataset.visitsEnabled === "true";
+    const apiBase = container.dataset.blogApi;
     if (!enabled || !apiBase) return;
     const documentId = container.dataset.documentId || "";
     if (documentId && !/^[1-9]\d*$/u.test(documentId)) return;

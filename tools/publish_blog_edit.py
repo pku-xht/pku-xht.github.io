@@ -28,7 +28,7 @@ CANDIDATE_REF = re.compile(r"refs/heads/codex/article-edit/(?P<request>" + UUID 
 SOURCE_PATH = re.compile(r"content/blog/(?P<group>posts|pages)/(?P<id>[1-9][0-9]*)\.md\Z")
 MAX_SOURCE_BYTES = 1024 * 1024
 GENERATED_PATHS = (
-    re.compile(r"blog/(?:index\.html|archive/index\.html|friends/index\.html|visits-config\.js)\Z"),
+    re.compile(r"blog/(?:index\.html|archive/index\.html|friends/index\.html)\Z"),
     re.compile(r"blog/(?:posts|pages)/[1-9][0-9]*/(?:index\.html|exit/index\.html)\Z"),
     re.compile(r"blog/categories/[1-9][0-9]*/index\.html\Z"),
     re.compile(r"blog/tags/(?:index\.html|[1-9][0-9]*/index\.html)\Z"),
