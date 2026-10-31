@@ -884,6 +884,13 @@ def main(argv=None):
             widget = widgets[0]
             assert widget.attrs.get("data-visits-enabled") == "true" and widget.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "Visits configuration differs")
             assert widget.attrs.get("data-document-id") == visit_documents.get(path, "") and "hidden" in widget.attrs, (path, "Visits document or initial visibility differs")
+            mains = [node for node in all_nodes if node.tag == "main" and node.attrs.get("id") == "main"]
+            heading_class = "article-header" if path in visit_documents else "page-intro"
+            headings = [node for main in mains for node in nodes(main) if has_class(node, heading_class)]
+            assert len(mains) == 1 and headings, (path, "Visits page heading missing")
+            heading_elements = [node for node in headings[0].children if isinstance(node, Node)]
+            assert heading_elements and heading_elements[-1] is widget and any(node.tag == "h1" for node in heading_elements[:-1]), (path, "Visits must follow the title and metadata in the opening heading")
+            assert not any(widget in list(nodes(node)) for node in all_nodes if node.tag == "footer"), (path, "Visits must not appear in the footer")
             assert sum("data-site-visits" in n.attrs for n in nodes(widget)) == 1, (path, "site count missing")
             assert sum("data-document-visits" in n.attrs for n in nodes(widget)) == (1 if path in visit_documents else 0), (path, "document count differs")
         else:

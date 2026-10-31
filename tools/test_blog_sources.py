@@ -151,7 +151,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.assertFalse((self.project / "blog/visits-config.js").exists())
         blog_homepage = (self.project / "blog/index.html").read_text(encoding="utf-8")
         self.assertIn('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id=""', blog_homepage)
-        self.assertIn('<span data-site-visits>', blog_homepage)
+        self.assertRegex(blog_homepage, r'<strong\b[^>]*\bdata-site-visits>')
         self.assertNotIn('data-document-visits>', blog_homepage)
         self.build()
         self.assertEqual(homepage.read_bytes(), original_homepage)

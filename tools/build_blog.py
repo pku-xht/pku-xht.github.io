@@ -295,14 +295,21 @@ def header(active="博客"):
     return '<a class="skip-link" href="#main">跳到正文</a><header class="site-header"><div class="site-width"><a class="identity" href="/"><img src="/assets/x-script-icon.svg" alt="" width="25" height="25"><span>徐皓天 <span class="identity-note">/ 博客</span></span></a><nav class="site-nav" aria-label="主导航">' + "".join(nav) + '</nav></div></header>'
 
 
+def visit_counts(features, document_id=None):
+    if not features or not features["visits"]["enabled"]:
+        return ""
+    attrs = f' data-blog-visits data-visits-enabled="true" data-blog-api="{escape(features["visits"]["api_base"])}" data-document-id="{document_id or ""}"'
+    site = '<span class="visit-stat"><span class="visit-label">全站访问量</span><strong class="visit-number" data-site-visits>—</strong></span>'
+    document = '<span class="visit-stat" data-document-visits-wrapper><span class="visit-label">本文访问量</span><strong class="visit-number" data-document-visits>—</strong></span>' if document_id else ""
+    return f'<div class="visit-counts"{attrs} role="group" aria-label="访问统计" hidden>{site}{document}</div>'
+
+
 def page(title, description, route, body, active="博客", has_math=False, features=None, document_id=None):
     comment_math = bool(document_id and features and features["comments"]["enabled"])
     math_css = '<link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">' if has_math or comment_math else ""
     math_script = '<script defer src="/assets/vendor/katex/katex.min.js?v=0.19.0"></script>' if comment_math else ""
     visits = features and features["visits"]["enabled"]
     visits_script = '<script defer src="/blog/visits.js?v=3"></script>' if visits else ""
-    visits_attrs = f' data-blog-visits data-visits-enabled="true" data-blog-api="{escape(features["visits"]["api_base"])}" data-document-id="{document_id or ""}"' if visits else ""
-    counts = f'<p class="visit-counts"{visits_attrs} hidden>全站访问量 <span data-site-visits>—</span>' + ('<span data-document-visits-wrapper> · 本文访问 <span data-document-visits>—</span></span>' if document_id else '') + '</p>' if visits else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -312,10 +319,10 @@ def page(title, description, route, body, active="博客", has_math=False, featu
 <meta property="og:title" content="{escape(title)} · 徐皓天"><meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="{'article' if has_math or route.startswith('/blog/posts/') else 'website'}"><meta property="og:url" content="https://pku-xht.github.io{route}">
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
-<link rel="stylesheet" href="/blog/blog.css?v=3">{math_css}{math_script}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}
+<link rel="stylesheet" href="/blog/blog.css?v=4">{math_css}{math_script}<script defer src="/blog/blog.js?v=2"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}
 </head><body class="blog-page">{header(active)}
 <main class="site-width" id="main">{body}</main>
-<footer class="site-footer"><div class="site-width">徐皓天 · xht37{counts}</div></footer>
+<footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
 </body></html>
 '''
 
@@ -475,18 +482,18 @@ def main():
             image_credit = '<span class="image-credit">插图：<a href="https://oi-wiki.org/geometry/convex-hull/" target="_blank" rel="noopener noreferrer">OI Wiki 项目组</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> / <a href="https://github.com/zTrix/sata-license">SATA</a>），原图未修改。</span>'
         source_tags = '<p class="source-tags">标签：' + "、".join(f'<a data-source-tag="{tid}" href="/blog/tags/{tid}/">{escape(tags[tid]["name"])}</a>' for tid in post.get("tags", [])) + '</p>' if post.get("tags") else ""
         credit = f'<p class="image-credit-note">{image_credit}</p>' if image_credit else ""
-        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}</header>{toc}<div class="prose">{body_html}</div>{credit}{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
+        body = f'<article class="post"><a class="back-link" href="/blog/">← 全部文章</a><header class="article-header"><h1>{escape(post["title"])}</h1>{metadata(post)}{visit_counts(features, post["id"])}</header>{toc}<div class="prose">{body_html}</div>{credit}{source_tags}<nav class="post-navigation" aria-label="相邻文章">{"".join(navigation)}</nav></article>'
         body += comments_section(post["id"], features["comments"])
         math_count = sum(isinstance(n, Math) for n in walk(root))
         has_comment_math = any(isinstance(node, Math) for comment in comments["by_post"][post["id"]] for node in walk(comment_trees[comment["id"]]))
         write(post["route"], page(post["title"], post["excerpt"], post["route"], body, has_math=math_count > 0 or has_comment_math, features=features, document_id=post["id"]))
         report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_file": post["source_file"], "source_sha256": post["source_sha256"], "content_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
-    body = '<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p></section>' + category_navigation() + historical_pages() + tag_cloud(used_tags, collapsed=True) + search_list(posts, all_tags=True)
+    body = f'<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p>{visit_counts(features)}</section>' + category_navigation() + historical_pages() + tag_cloud(used_tags, collapsed=True) + search_list(posts, all_tags=True)
     write("/blog/", page("博客", "徐皓天的算法、数学、学习笔记与生活记录。", "/blog/", body, features=features))
     years = {}
     for post in posts:
         years.setdefault(post["date"][:4], []).append(post)
-    archive = f'<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>{len(posts)} 篇文章，按发布日期排列。</p></section>' + category_navigation() + historical_pages()
+    archive = f'<section class="page-intro"><p class="eyebrow">ARCHIVE</p><h1>文章归档</h1><p>{len(posts)} 篇文章，按发布日期排列。</p>{visit_counts(features)}</section>' + category_navigation() + historical_pages()
     for year, items in years.items():
         archive += f'<section class="archive-year"><h2>{year}</h2><ul class="archive-list">' + "".join(f'<li><time datetime="{p["date"]}+08:00">{p["date"][5:10]}</time><a href="{p["route"]}">{escape(p["title"])}</a></li>' for p in items) + '</ul></section>'
     write("/blog/archive/", page("文章归档", "按发布日期排列的文章。", "/blog/archive/", archive, active="归档", features=features))
@@ -495,16 +502,16 @@ def main():
         if not items:
             continue
         route = category_route(cid)
-        body = f'<section class="page-intro"><p class="eyebrow">CATEGORY</p><h1>{escape(category["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p></section>' + category_navigation(cid) + search_list(items)
+        body = f'<section class="page-intro"><p class="eyebrow">CATEGORY</p><h1>{escape(category["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p>{visit_counts(features)}</section>' + category_navigation(cid) + search_list(items)
         write(route, page(category["name"], f'{category["name"]}分类的全部公开文章。', route, body, features=features))
         report["categories"].append({"id": cid, "name": category["name"], "path": route, "count": len(items)})
-    body = f'<section class="page-intro"><p class="eyebrow">TAGS</p><h1>标签</h1><p>{len(used_tags)} 个标签，按文章数显示。</p></section>' + tag_cloud(used_tags)
+    body = f'<section class="page-intro"><p class="eyebrow">TAGS</p><h1>标签</h1><p>{len(used_tags)} 个标签，按文章数显示。</p>{visit_counts(features)}</section>' + tag_cloud(used_tags)
     write("/blog/tags/", page("标签", "按标签浏览全部文章。", "/blog/tags/", body, active="标签", features=features))
     for tag in used_tags:
         items = [post for post in posts if tag["id"] in post.get("tags", [])]
-        body = f'<section class="page-intro"><p class="eyebrow">TAG</p><h1>{escape(tag["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p><p><a href="/blog/tags/">全部标签</a></p></section>' + search_list(items)
+        body = f'<section class="page-intro"><p class="eyebrow">TAG</p><h1>{escape(tag["name"])}</h1><p>{len(items)} 篇文章，按发布日期排列。</p><p><a href="/blog/tags/">全部标签</a></p>{visit_counts(features)}</section>' + search_list(items)
         write(tag["path"], page(tag["name"], f'{tag["name"]}标签的全部公开文章。', tag["path"], body, active="标签", features=features))
-    body = '<section class="page-intro"><p class="eyebrow">FRIENDS</p><h1>友情链接</h1></section>' + friend_list(friends)
+    body = f'<section class="page-intro"><p class="eyebrow">FRIENDS</p><h1>友情链接</h1>{visit_counts(features)}</section>' + friend_list(friends)
     write("/blog/friends/", page("友情链接", "朋友们的博客。", "/blog/friends/", body, active="友链", features=features))
     admin_result = subprocess.run(
         ["node", str(ROOT / "tools/render_comment_admin.mjs")],
