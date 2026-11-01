@@ -919,7 +919,7 @@ def main(argv=None):
         if features["visits"]["enabled"] and path == ranking_path:
             assert len(rankings) == len(ranking_scripts) == len(daily_widgets) == len(daily_scripts) == 1, (path, "ranking or daily visits widget/script missing")
             assert urlsplit(ranking_scripts[0].attrs.get("src", "")).path == "/blog/visits-ranking.js", (path, "ranking script path differs")
-            assert urlsplit(daily_scripts[0].attrs.get("src", "")).path == "/blog/visits-daily.js" and daily_scripts[0].attrs.get("src") == "/blog/visits-daily.js?v=1", (path, "daily visits script path or version differs")
+            assert urlsplit(daily_scripts[0].attrs.get("src", "")).path == "/blog/visits-daily.js" and daily_scripts[0].attrs.get("src") == "/blog/visits-daily.js?v=2", (path, "daily visits script path or version differs")
             ranking = rankings[0]
             assert ranking.tag == "section" and ranking.attrs.get("data-ranking-enabled") == "true" and ranking.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "ranking configuration differs")
             mains = [node for node in all_nodes if node.tag == "main" and node.attrs.get("id") == "main"]
@@ -930,13 +930,13 @@ def main(argv=None):
             assert daily.tag == "section" and has_class(daily, "daily-visits") and daily.attrs.get("data-daily-enabled") == "true" and daily.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "daily visits configuration differs")
             assert daily in mains[0].children and mains[0].children.index(daily) > mains[0].children.index(ranking), (path, "daily chart must follow cumulative TOP 10 outside post filtering")
             daily_headings = [node for node in nodes(daily) if node.tag == "h2"]
-            assert len(daily_headings) == 1 and canonical(daily_headings[0]) == "每日访问量", (path, "daily visits heading differs")
+            assert len(daily_headings) == 1 and canonical(daily_headings[0]) == "访问趋势", (path, "daily visits heading differs")
             range_headings = [node for node in nodes(daily) if node.tag == "div" and has_class(node, "statistics-section-heading")]
             assert len(range_headings) == 1 and daily_headings[0] in range_headings[0].children, (path, "daily heading and range selector wrapper differ")
             groups = [node for node in nodes(daily) if node.tag == "div" and node.attrs.get("role") == "group" and node.attrs.get("aria-label") == "统计时间范围"]
             assert len(groups) == 1 and has_class(groups[0], "visits-ranges"), (path, "daily range controls need an accessible group")
             range_buttons = [node for node in nodes(groups[0]) if node.tag == "button" and "data-daily-range" in node.attrs]
-            assert [(node.attrs.get("data-daily-range"), node.attrs.get("aria-pressed")) for node in range_buttons] == [("7", "false"), ("30", "true"), ("all", "false")], (path, "daily range choices or initial selection differ")
+            assert [(node.attrs.get("data-daily-range"), canonical(node), node.attrs.get("aria-pressed")) for node in range_buttons] == [("7", "近7天", "false"), ("30", "近30天", "true"), ("year", "近一年", "false"), ("all", "全部", "false")], (path, "daily range choices or initial selection differ")
             for marker, tag in (("data-daily-summary", "div"), ("data-daily-chart", "div"), ("data-daily-detail", "p"), ("data-daily-caption", "p")):
                 matches = [node for node in nodes(daily) if marker in node.attrs]
                 assert len(matches) == 1 and matches[0].tag == tag and "hidden" in matches[0].attrs, (path, marker, "must be present and initially hidden")
@@ -944,9 +944,9 @@ def main(argv=None):
             details = [node for node in nodes(daily) if "data-daily-detail" in node.attrs]
             assert details[0].attrs.get("role") == "status", (path, "daily detail needs status semantics")
             date_labels = [node for node in nodes(daily) if node.tag == "label" and "data-daily-date-control" in node.attrs]
-            assert len(date_labels) == 1 and "hidden" in date_labels[0].attrs, (path, "daily date selector must start hidden")
+            assert len(date_labels) == 1 and "hidden" in date_labels[0].attrs and canonical(date_labels[0]) == "查看时段", (path, "daily date selector label or initial visibility differs")
             date_inputs = [node for node in nodes(date_labels[0]) if node.tag == "input" and node.attrs.get("type") == "range" and "data-daily-date" in node.attrs]
-            assert len(date_inputs) == 1 and {key: date_inputs[0].attrs.get(key) for key in ("min", "max", "step", "value", "aria-label")} == {"min": "0", "max": "0", "step": "1", "value": "0", "aria-label": "选择查看日期"}, (path, "daily date selector initial bounds differ")
+            assert len(date_inputs) == 1 and {key: date_inputs[0].attrs.get(key) for key in ("min", "max", "step", "value", "aria-label")} == {"min": "0", "max": "0", "step": "1", "value": "0", "aria-label": "选择查看时段"}, (path, "daily date selector initial bounds differ")
             statuses = [node for node in nodes(daily) if "data-daily-status" in node.attrs]
             assert len(statuses) == 1 and statuses[0].tag == "p" and statuses[0].attrs.get("role") == "status" and "加载" in canonical(statuses[0]), (path, "daily loading status missing")
             retries = [node for node in nodes(daily) if "data-daily-retry" in node.attrs]

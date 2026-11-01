@@ -159,10 +159,10 @@ class MarkdownSourcesTests(unittest.TestCase):
         ranking = ranking_path.read_text(encoding="utf-8")
         self.assertIn('data-visits-ranking data-ranking-enabled="true" data-blog-api="https://visits.example.test"', ranking)
         self.assertIn('data-daily-visits data-daily-enabled="true" data-blog-api="https://visits.example.test"', ranking)
-        self.assertIn('<script defer src="/blog/visits-daily.js?v=1"></script>', ranking)
+        self.assertIn('<script defer src="/blog/visits-daily.js?v=2"></script>', ranking)
         self.assertIn('<title>访问量统计 · 徐皓天</title>', ranking)
         self.assertIn('name="description" content="博客每日访问量与文章累计访问前十。"', ranking)
-        for bad in (
+        for index, bad in enumerate((
             ranking.replace('<h1>访问量统计</h1>', '<h1>访问量排行</h1>', 1),
             ranking.replace('<title>访问量统计 · 徐皓天</title>', '<title>访问量排行 · 徐皓天</title>', 1),
             ranking.replace('name="description" content="博客每日访问量与文章累计访问前十。"', 'name="description" content="累计访问量最高的十篇文章。"', 1),
@@ -172,14 +172,22 @@ class MarkdownSourcesTests(unittest.TestCase):
             ranking.replace('<li><a href="/blog/posts/7/">临时校验</a></li>', '<li><a href="/blog/posts/7/">stale title</a></li>', 1),
             ranking.replace('data-blog-api="https://visits.example.test"', 'data-blog-api="https://wrong.example.test"', 1),
             ranking.replace('data-daily-enabled="true" data-blog-api="https://visits.example.test"', 'data-daily-enabled="true" data-blog-api="https://wrong.example.test"', 1),
-            ranking.replace('/blog/visits-daily.js?v=1', '/blog/visits-daily.js?v=2', 1),
+            ranking.replace('/blog/visits-daily.js?v=2', '/blog/visits-daily.js?v=1', 1),
+            ranking.replace('<h2>访问趋势</h2>', '<h2>访问量趋势</h2>', 1),
+            ranking.replace('data-daily-range="30"', 'data-daily-range="31"', 1),
+            ranking.replace('data-daily-range="year"', 'data-daily-range="month"', 1),
+            ranking.replace('近一年', '近12月', 1),
+            ranking.replace('查看时段', '查看日期', 1),
+            ranking.replace('aria-label="选择查看时段"', 'aria-label="选择查看日期"', 1),
             ranking.replace('data-daily-chart hidden></div>', 'data-daily-chart></div>', 1),
             ranking.replace('data-daily-status role="status">', 'data-daily-status role="note">', 1),
             ranking.replace('data-daily-date min="0" max="0"', 'data-daily-date min="0" max="1"', 1),
-        ):
-            ranking_path.write_text(bad, encoding="utf-8")
-            with self.assertRaises(AssertionError):
-                self.check()
+        )):
+            with self.subTest(mutation=index):
+                self.assertNotEqual(bad, ranking, "visit checker mutation did not change the fixture")
+                ranking_path.write_text(bad, encoding="utf-8")
+                with self.assertRaises(AssertionError):
+                    self.check()
         ranking_path.write_text(ranking, encoding="utf-8")
         self.build()
         self.assertEqual(homepage.read_bytes(), original_homepage)

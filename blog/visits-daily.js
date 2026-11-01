@@ -8,7 +8,7 @@
     const find = (name) => section.querySelector("[data-daily-" + name + "]");
     const summary = find("summary"), chart = find("chart"), detail = find("detail"), control = find("date-control"), slider = find("date"), caption = find("caption"), status = find("status"), retry = find("retry");
     const buttons = section.querySelectorAll("[data-daily-range]");
-    if (!summary || !chart || !detail || !control || !slider || !caption || !status || !retry || buttons.length !== 3) return;
+    if (!summary || !chart || !detail || !control || !slider || !caption || !status || !retry || buttons.length !== 4) return;
     let api;
     try {
       const base = new URL(section.dataset.blogApi, window.location.href);
@@ -37,8 +37,9 @@
       if (data.items.length) {
         const today = new Date(Date.parse(data.as_of) + 8 * 3600000).toISOString().slice(0, 10);
         const first = parseDate(data.first_date), end = parseDate(today);
-        const length = range === "all" ? 20000 : Number(range);
-        const start = Math.max(first, end - (length - 1) * day);
+        const date = new Date(end);
+        const windowStart = range === "year" ? Date.UTC(date.getUTCFullYear(), date.getUTCMonth() - 11, 1) : end - ((range === "all" ? 20000 : Number(range)) - 1) * day;
+        const start = Math.max(first, windowStart);
         if (data.from !== data.items[0].date || data.to !== today || data.to !== data.items[data.items.length - 1].date || parseDate(data.from) !== start || data.items.length !== (end - start) / day + 1) throw new Error("Invalid bounds");
       } else if (data.from !== null || data.to !== null) throw new Error("Invalid empty bounds");
       return data;
@@ -49,6 +50,31 @@
       if (text !== undefined) node.textContent = text;
       return node;
     }
+    function aggregate(data) {
+      const granularity = range === "year" ? "月" : range === "all" ? "年" : "日";
+      const missing = data.items.filter((item) => item.visits === null).length;
+      if (granularity === "日") return { ...data, granularity, missing };
+      const buckets = [];
+      for (const item of data.items) {
+        const key = item.date.slice(0, granularity === "月" ? 7 : 4);
+        let bucket = buckets[buckets.length - 1];
+        if (!bucket || bucket.date !== key) { bucket = { date: key, visits: null, partial: false, missingDates: [], sum: 0n }; buckets.push(bucket); }
+        if (item.visits === null) bucket.missingDates.push(item.date);
+        else { bucket.sum += BigInt(item.visits); if (bucket.sum > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error("Bucket overflow"); bucket.visits = Number(bucket.sum); }
+        bucket.partial ||= item.partial || item.visits === null;
+      }
+      if (buckets.length) {
+        const today = new Date(Date.parse(data.as_of) + 8 * 3600000).toISOString().slice(0, 10);
+        if (today.startsWith(buckets[buckets.length - 1].date)) buckets[buckets.length - 1].partial = true;
+        const firstBucket = buckets[0];
+        if (data.from !== firstBucket.date + (granularity === "月" ? "-01" : "-01-01")) {
+          firstBucket.partial = true;
+          firstBucket.started = data.from;
+          firstBucket.clipped = data.from !== data.first_date;
+        }
+      }
+      return { ...data, items: buckets, granularity, missing };
+    }
     function showDetail(index) {
       if (!current || !current.items.length) return;
       index = Math.max(0, Math.min(current.items.length - 1, index));
@@ -57,8 +83,12 @@
       const count = item.visits === null ? "暂无记录" : item.visits.toLocaleString("zh-CN") + " 次访问";
       const time = new Intl.DateTimeFormat("zh-CN", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(current.as_of));
       const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(current.as_of));
-      const note = item.partial ? (item.date === today ? "（当日数据截至北京时间 " + time + "）" : "（当日数据不完整）") : "";
-      detail.textContent = item.date + "：" + count + note;
+      const notes = [];
+      if (item.partial) notes.push(today.startsWith(item.date) ? "当" + current.granularity + "数据截至北京时间 " + time : "当" + current.granularity + "记录不完整");
+      if (item.missingDates && item.missingDates.length) notes.push("缺失日期：" + item.missingDates.join("、"));
+      if (item.started) notes.push((item.clipped ? "本段统计始于 " : "记录始于 ") + item.started);
+      const label = current.granularity === "日" ? item.date : current.granularity === "月" ? item.date.slice(0, 4) + "年" + Number(item.date.slice(5)) + "月" : item.date + "年";
+      detail.textContent = label + "：" + count + (notes.length ? "（" + notes.join("；") + "）" : "");
       slider.setAttribute("aria-valuetext", detail.textContent);
     }
     function render(data) {
@@ -72,12 +102,12 @@
       }
       let total = 0n, max = 0;
       for (const item of known) { total += BigInt(item.visits); max = Math.max(max, item.visits); }
-      const missing = items.length - known.length;
-      summary.textContent = known.length ? "区间访问量 " + total.toLocaleString("zh-CN") + " · 最高日 " + max.toLocaleString("zh-CN") + " 次" + (missing ? " · " + missing + " 天暂无记录，未计入总量" : "") : "该时间范围暂无每日访问记录。";
+      const missing = data.missing;
+      summary.textContent = known.length ? "区间已记录访问量 " + total.toLocaleString("zh-CN") + " · 最高" + data.granularity + " " + max.toLocaleString("zh-CN") + " 次" + (missing ? " · " + missing + " 天暂无记录，未计入总量" : "") : "该时间范围暂无访问记录。" + (missing ? " " + missing + " 天暂无记录。" : "");
       summary.hidden = false;
-      caption.textContent = "按北京时间统计。" + (missing ? "记录缺失的日期显示为断线，并非零访问。" : "") + (known.length && max === 0 ? "该区间已记录的访问量均为零。" : "");
+      caption.textContent = "按" + data.granularity + "统计（北京时间）。" + (range === "all" && data.from > data.first_date ? "最多展示最近 20,000 天，本次统计自 " + data.from + " 起。" : "") + (missing ? "缺失日期未计入总量；无记录的时段显示为断线，并非零访问。" : "") + (known.length && max === 0 ? "该区间已记录的访问量均为零。" : "");
       caption.hidden = false;
-      const svg = svgNode("svg", { viewBox: "0 0 760 260", role: "img", "aria-label": "每日访问量折线图；使用下方滑块查看每日详情" });
+      const svg = svgNode("svg", { viewBox: "0 0 760 260", role: "img", "aria-label": "每" + data.granularity + "访问量折线图；使用下方滑块查看每" + data.granularity + "详情" });
       const rough = (max || 1) / 4, unit = 10 ** Math.floor(Math.log10(rough));
       const step = [1, 2, 5, 10].map((value) => value * unit).find((value) => value >= rough);
       const left = 70, right = 742, top = 16, bottom = 220, scale = Math.max(4, step * 4);
@@ -97,10 +127,10 @@
       });
       finishSegment();
       svg.appendChild(svgNode("path", { d: path, class: "daily-line" }));
-      const ticks = Math.min(items.length, 5);
+      const ticks = Math.min(items.length, data.granularity === "月" ? 3 : 5);
       for (let i = 0; i < ticks; i++) {
         const index = ticks === 1 ? 0 : Math.round(i * (items.length - 1) / (ticks - 1));
-        const label = items.length <= 366 ? items[index].date.slice(5) : items[index].date.slice(0, 7);
+        const label = data.granularity === "日" ? items[index].date.slice(5) : items[index].date;
         svg.appendChild(svgNode("text", { x: xAt(index), y: 245, "text-anchor": ticks === 1 ? "middle" : i === 0 ? "start" : i === ticks - 1 ? "end" : "middle", class: "daily-axis-label" }, label));
       }
       svg.addEventListener("pointermove", (event) => {
@@ -127,7 +157,7 @@
         if (!response.ok) throw new Error("Request failed");
         const data = validate(await response.json());
         if (request !== serial) return;
-        render(data); section.dataset.dailyState = "ready";
+        render(aggregate(data)); section.dataset.dailyState = "ready";
       } catch {
         if (request !== serial) return;
         current = null; chart.replaceChildren();
@@ -140,7 +170,7 @@
     }
     for (const button of buttons) button.addEventListener("click", () => {
       const next = button.dataset.dailyRange;
-      if (!["7", "30", "all"].includes(next) || next === range) return;
+      if (!["7", "30", "year", "all"].includes(next) || next === range) return;
       range = next;
       for (const candidate of buttons) candidate.setAttribute("aria-pressed", String(candidate === button));
       load();

@@ -25,7 +25,7 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collec
 | `GET /v1/admin/articles/<ID>/publication?revision=<SHA>` | 查询保存返回的候选修订，状态为 `pending`、`success` 或 `failure` |
 | `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；省略文档 ID 时只返回全站数 |
 | `GET /v1/visits/ranking` | 只读文章累计访问量前十，无查询参数；同量按数字 ID 升序 |
-| `GET /v1/visits/daily?range=30` | 只读北京时间每日全站 PV；range 为 7、30 或 all，默认 30 |
+| `GET /v1/visits/daily?range=30` | 只读北京时间每日全站 PV；range 为 7、30、year 或 all，默认 30 |
 | `POST /v1/visits` | 明确启用且已有完整基线后，按单次加载 nonce 幂等计数 |
 | `POST /v1/admin/visits/baseline` | 显式确认并原子导入完整独立基线；不同基线禁止覆盖 |
 | `POST /v1/admin/visits/history` | 管理员确认后原子导入逐日历史；内容一致可重复，不同内容禁止覆盖 |
@@ -109,7 +109,7 @@ GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响
 
 ## Visits
 
-每日统计使用 Asia/Shanghai 日期，响应包含 `enabled`、`seeded`、`history_seeded`、`as_of`、首日与返回范围及 `items`。历史缺项保留 `visits:null`；首日、切流日、今天以及源标记的不完整日期标记 `partial:true`。切流日合并历史部分与切流后新站事件；新站每个事件只计一次，并排除响应时间之后的事件。历史未导入时返回空序列。`all` 最多返回最近 20000 天。查询不写数据库。
+每日统计使用 Asia/Shanghai 日期，响应包含 `enabled`、`seeded`、`history_seeded`、`as_of`、首日与返回范围及 `items`。`7`／`30` 按日回溯；`year` 从 11 个月前的月初到今天（包含本月的最近 12 个自然月），并裁到实际首日；`all` 最多返回最近 20000 天。接口始终返回日明细，网页将 `year` 按月、`all` 按年求和，保留未知日和不完整时段提示。历史缺项保留 `visits:null`；首日、切流日、今天以及源标记的不完整日期标记 `partial:true`。切流日合并历史部分与切流后新站事件；新站每个事件只计一次，并排除响应时间之后的事件。历史未导入时返回空序列。查询不写数据库。前后统计方式不同，基线算术对账不证明访问采集完整性或口径一致；切流后 WordPress 记录是否与新站重复仍待核实。
 
 历史导入接受 `confirm_import:true`、`batch_id` 和规范化内容 `timezone`、`captured_at`、`site_base`、`first_date`、`cutover_date`、`items`；每日连续、非空值之和等于原全站基线，且基线数值与原始时间须精确匹配。末日必须标记 partial；相同内容不受 batch ID 影响而幂等，不同内容拒绝。私有输入不得放进公开仓库。`scripts/import-history.mjs --input <仓库外规范化 JSON> --batch <id>` 默认离线检查；只有同时给出 `--apply --confirm-history --api <服务 origin>` 才发送，管理员令牌仅从 `BLOG_ADMIN_TOKEN` 环境变量读取。部署读取历史表的 Worker 前须先应用 `0004_visit_history.sql`；历史导入及部署需要单独授权。
 

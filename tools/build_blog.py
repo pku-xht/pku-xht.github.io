@@ -311,7 +311,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
     visits = features and features["visits"]["enabled"]
     visits_script = '<script defer src="/blog/visits.js?v=3"></script>' if visits else ""
     ranking_script = '<script defer src="/blog/visits-ranking.js?v=2"></script>' if visits and route == "/blog/ranking/" else ""
-    daily_script = '<script defer src="/blog/visits-daily.js?v=1"></script>' if visits and route == "/blog/ranking/" else ""
+    daily_script = '<script defer src="/blog/visits-daily.js?v=2"></script>' if visits and route == "/blog/ranking/" else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -501,9 +501,9 @@ def main():
     if features["visits"]["enabled"]:
         article_links = "".join(f'<li><a href="{post["route"]}">{escape(post["title"])}</a></li>' for post in posts)
         ranking = '<section class="visits-ranking" data-visits-ranking data-ranking-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '"><h2>累计 · TOP 10</h2><ol class="ranking-list" data-ranking-list hidden></ol><p class="ranking-status" data-ranking-status role="status">正在加载排行…</p><button class="ranking-retry" type="button" data-ranking-retry hidden>重试</button><noscript><p>请启用 JavaScript 查看实时排行。</p></noscript></section><ul data-ranking-source hidden>' + article_links + '</ul>'
-        ranges = "".join(f'<button type="button" data-daily-range="{value}" aria-pressed="{"true" if value == "30" else "false"}">{label}</button>' for value, label in [("7", "近7天"), ("30", "近30天"), ("all", "全部")])
-        daily = '<section class="daily-visits" data-daily-visits data-daily-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '"><div class="statistics-section-heading"><h2>每日访问量</h2><div class="visits-ranges" role="group" aria-label="统计时间范围">' + ranges + '</div></div><div class="daily-summary" data-daily-summary hidden></div><div class="daily-chart" data-daily-chart hidden></div><p class="daily-detail" data-daily-detail role="status" hidden></p><label class="daily-date-control" data-daily-date-control hidden>查看日期<input type="range" data-daily-date min="0" max="0" step="1" value="0" aria-label="选择查看日期"></label><p class="daily-caption" data-daily-caption hidden></p><p class="daily-status" data-daily-status role="status">正在加载每日访问量…</p><button class="ranking-retry" type="button" data-daily-retry hidden>重试</button><noscript><p>请启用 JavaScript 查看每日访问量。</p></noscript></section>'
-    body = f'<section class="page-intro"><p class="eyebrow">STATISTICS</p><h1>访问量统计</h1><p>文章累计访问前十与每日访问趋势。</p>{visit_counts(features)}</section>' + category_navigation("ranking") + ranking + daily
+        ranges = "".join(f'<button type="button" data-daily-range="{value}" aria-pressed="{"true" if value == "30" else "false"}">{label}</button>' for value, label in [("7", "近7天"), ("30", "近30天"), ("year", "近一年"), ("all", "全部")])
+        daily = '<section class="daily-visits" data-daily-visits data-daily-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '"><div class="statistics-section-heading"><h2>访问趋势</h2><div class="visits-ranges" role="group" aria-label="统计时间范围">' + ranges + '</div></div><div class="daily-summary" data-daily-summary hidden></div><div class="daily-chart" data-daily-chart hidden></div><p class="daily-detail" data-daily-detail role="status" hidden></p><label class="daily-date-control" data-daily-date-control hidden>查看时段<input type="range" data-daily-date min="0" max="0" step="1" value="0" aria-label="选择查看时段"></label><p class="daily-caption" data-daily-caption hidden></p><p class="daily-status" data-daily-status role="status">正在加载每日访问量…</p><button class="ranking-retry" type="button" data-daily-retry hidden>重试</button><noscript><p>请启用 JavaScript 查看访问趋势。</p></noscript></section>'
+    body = f'<section class="page-intro"><p class="eyebrow">STATISTICS</p><h1>访问量统计</h1><p>文章累计访问前十与访问趋势。</p><p>统计方式于 2026 年 10 月 31 日调整，前后数据暂不完全可比。</p>{visit_counts(features)}</section>' + category_navigation("ranking") + ranking + daily
     write("/blog/ranking/", page("访问量统计", "博客每日访问量与文章累计访问前十。", "/blog/ranking/", body, features=features))
     years = {}
     for post in posts:

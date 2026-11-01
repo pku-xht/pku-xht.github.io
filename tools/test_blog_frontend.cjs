@@ -179,7 +179,7 @@ function rankingFixture(enabled = true, api = 'https://ranking.example.test/') {
 function dailyFixture(enabled = true) {
   const env = rankingFixture(), { el } = env;
   const daily = el('section', { 'data-daily-visits': '', 'data-daily-enabled': String(enabled), 'data-blog-api': 'https://ranking.example.test/' });
-  const buttons = ['7', '30', 'all'].map((value) => el('button', { 'data-daily-range': value, 'aria-pressed': String(value === '30') }, daily));
+  const buttons = ['7', '30', 'year', 'all'].map((value) => el('button', { 'data-daily-range': value, 'aria-pressed': String(value === '30') }, daily));
   const summary = el('div', { 'data-daily-summary': '', hidden: '' }, daily), chart = el('div', { 'data-daily-chart': '', hidden: '' }, daily);
   const detail = el('p', { 'data-daily-detail': '', hidden: '' }, daily), control = el('label', { 'data-daily-date-control': '', hidden: '' }, daily);
   const slider = el('input', { 'data-daily-date': '', type: 'range' }, control), caption = el('p', { 'data-daily-caption': '', hidden: '' }, daily);
@@ -427,9 +427,54 @@ async function main() {
   await check('daily ranges, duplicate initialization and GET only', async () => {
     const f = dailyFixture(); f.setFetch(async () => response(dailyData())); f.run('blog/visits-daily.js'); await flush();
     assert.equal(f.daily.dataset.dailyState, 'ready'); assert.match(f.summary.textContent, /15/); assert.match(f.detail.textContent, /截至北京时间/);
-    await f.buttons[0].fire('click'); await flush(); await f.buttons[2].fire('click'); await flush(); f.run('blog/visits-daily.js');
+    await f.buttons[0].fire('click'); await flush(); await f.buttons[3].fire('click'); await flush(); f.run('blog/visits-daily.js');
     assert.deepEqual(f.calls.map((x) => new URL(x.url).searchParams.get('range')), ['30', '7', 'all']);
-    assert.equal(f.buttons[2].getAttribute('aria-pressed'), 'true'); assert.ok(f.calls.every((x) => !x.options.method && x.options.credentials === 'omit'));
+    assert.equal(f.buttons[3].getAttribute('aria-pressed'), 'true'); assert.ok(f.calls.every((x) => !x.options.method && x.options.credentials === 'omit'));
+  });
+  await check('year range aggregates twelve calendar months and preserves missing days', async () => {
+    const f = dailyFixture();
+    const items = [];
+    for (let d = Date.parse('2025-12-01T00:00:00Z'); d <= Date.parse('2026-11-02T00:00:00Z'); d += 86400000) {
+      const date = new Date(d).toISOString().slice(0, 10);
+      items.push({ date, visits: date.startsWith('2026-02') || date === '2026-01-02' ? null : 1, partial: date === '2026-11-02' });
+    }
+    f.setFetch(async (url) => response(new URL(url).searchParams.get('range') === 'year' ? { ...dailyData(items), first_date: '2024-02-01' } : dailyData()));
+    f.run('blog/visits-daily.js'); await flush(); await f.buttons[2].fire('click'); await flush();
+    assert.equal(f.daily.dataset.dailyState, 'ready'); assert.equal(f.slider.max, '11');
+    assert.match(f.summary.textContent, /区间已记录访问量 308 · 最高月 31 次 · 29 天暂无记录/);
+    assert.match(f.caption.textContent, /按月统计（北京时间）/); assert.match(f.chart.querySelector('svg').getAttribute('aria-label'), /每月/);
+    f.slider.value = '1'; await f.slider.fire('input'); assert.match(f.slider.getAttribute('aria-valuetext'), /2026年1月：30 次访问.*2026-01-02/);
+    f.slider.value = '2'; await f.slider.fire('input'); assert.match(f.detail.textContent, /2026年2月：暂无记录.*2026-02-01/);
+    f.slider.value = '11'; await f.slider.fire('input'); assert.match(f.detail.textContent, /2026年11月：2 次访问.*截至北京时间/);
+    const clipped = dailyFixture(); const shortItems = items.filter((item) => item.date >= '2026-10-15');
+    clipped.setFetch(async (url) => response(new URL(url).searchParams.get('range') === 'year' ? dailyData(shortItems) : dailyData()));
+    clipped.run('blog/visits-daily.js'); await flush(); await clipped.buttons[2].fire('click'); await flush();
+    assert.equal(clipped.daily.dataset.dailyState, 'ready'); assert.equal(clipped.slider.max, '1');
+    clipped.slider.value = '0'; await clipped.slider.fire('input'); assert.match(clipped.detail.textContent, /记录不完整.*记录始于 2026-10-15/);
+  });
+  await check('all history aggregates years with exact totals and rejects bucket overflow', async () => {
+    const f = dailyFixture(); const items = [];
+    for (let d = Date.parse('2024-12-30T00:00:00Z'); d <= Date.parse('2026-11-02T00:00:00Z'); d += 86400000) {
+      const date = new Date(d).toISOString().slice(0, 10);
+      items.push({ date, visits: date === '2025-01-01' ? null : 2, partial: date === '2026-11-02' });
+    }
+    f.setFetch(async (url) => response(new URL(url).searchParams.get('range') === 'all' ? dailyData(items) : dailyData()));
+    f.run('blog/visits-daily.js'); await flush(); await f.buttons[3].fire('click'); await flush();
+    assert.equal(f.daily.dataset.dailyState, 'ready'); assert.equal(f.slider.max, '2'); assert.match(f.caption.textContent, /按年统计/);
+    assert.match(f.summary.textContent, /区间已记录访问量 1,344 · 最高年 728 次 · 1 天暂无记录/);
+    f.slider.value = '1'; await f.slider.fire('input'); assert.match(f.slider.getAttribute('aria-valuetext'), /2025年：728 次访问.*记录不完整.*2025-01-01/);
+    const overflow = dailyFixture();
+    const dangerous = items.map((item, i) => ({ ...item, visits: i === 0 ? Number.MAX_SAFE_INTEGER : 1 }));
+    overflow.setFetch(async (url) => response(new URL(url).searchParams.get('range') === 'all' ? dailyData(dangerous) : dailyData()));
+    overflow.run('blog/visits-daily.js'); await flush(); await overflow.buttons[3].fire('click'); await flush();
+    assert.equal(overflow.daily.dataset.dailyState, 'error'); assert.equal(overflow.chart.hidden, true);
+    const clipped = dailyFixture(); const end = Date.parse('2026-11-02T00:00:00Z');
+    const longItems = Array.from({ length: 20000 }, (_, i) => ({ date: new Date(end - (19999 - i) * 86400000).toISOString().slice(0, 10), visits: 1, partial: false }));
+    clipped.setFetch(async (url) => response(new URL(url).searchParams.get('range') === 'all' ? { ...dailyData(longItems), first_date: '1960-01-01' } : dailyData()));
+    clipped.run('blog/visits-daily.js'); await flush(); await clipped.buttons[3].fire('click'); await flush();
+    assert.equal(clipped.daily.dataset.dailyState, 'ready'); assert.match(clipped.caption.textContent, /最多展示最近 20,000 天/);
+    clipped.slider.value = '0'; await clipped.slider.fire('input');
+    assert.match(clipped.detail.textContent, /记录不完整.*本段统计始于/);
   });
   await check('daily missing values break lines and slider and pointer select dates', async () => {
     const f = dailyFixture(), items = [{ date: '2026-10-31', visits: 4, partial: false }, { date: '2026-11-01', visits: null, partial: false }, { date: '2026-11-02', visits: 8, partial: true }];

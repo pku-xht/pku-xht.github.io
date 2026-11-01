@@ -64,6 +64,25 @@ test('daily reads count each event once in Shanghai, retain null gaps and exclud
   assert.equal(f.DB.writes,before); assert.equal(f.DB.sqlite.prepare('SELECT sum(count) n FROM visit_deltas').get().n,totals);
   assert.ok((await f.request('/v1/visits/daily?range=7')).data.items.length<=7);
 });
+
+test('the last year starts at the first of the oldest of twelve Shanghai calendar months',async t=>{
+  t.mock.timers.enable({apis:['Date'],now:Date.parse('2026-03-01T00:00:00.000Z')});
+  t.after(()=>t.mock.timers.reset());
+  const f=fixture(t); f.seed();
+  const captured_at='2024-12-31T20:00:00.000Z';
+  f.DB.sqlite.prepare('UPDATE visit_baselines SET captured_at=?').run(captured_at);
+  await f.upload({...manifest,captured_at,first_date:'2025-01-01',cutover_date:'2025-01-01',items:[{date:'2025-01-01',visits:1000,partial:true}]});
+  const insert=f.DB.sqlite.prepare('INSERT INTO visit_events VALUES (?,?,?)');
+  insert.run('outside',null,'2025-03-31T15:59:59.999Z');
+  insert.run('start',null,'2025-03-31T16:00:00.000Z');
+  insert.run('end',null,'2026-03-01T00:00:00.000Z');
+  const before=f.DB.writes, result=await f.request('/v1/visits/daily?range=year');
+  assert.equal(result.status,200); assert.equal(result.data.from,'2025-04-01'); assert.equal(result.data.to,'2026-03-01');
+  assert.equal(result.data.items[0].visits,1); assert.equal(result.data.items.at(-1).visits,1);
+  assert.equal(result.data.items.reduce((sum,row)=>sum+(row.visits??0),0),2);
+  assert.equal(new Set(result.data.items.map(row=>row.date.slice(0,7))).size,12);
+  assert.equal(f.DB.writes,before);
+});
 test('a database failure rolls back both import metadata and history rows',async t=>{
   const f=fixture(t); f.seed();
   f.DB.sqlite.exec("CREATE TRIGGER history_failure BEFORE INSERT ON visit_history WHEN NEW.date='2026-10-25' BEGIN SELECT RAISE(ABORT, 'injected failure'); END;");

@@ -298,8 +298,11 @@ async function visitRanking(env) {
 }
 async function visitDaily(env, range) {
   const as_of = new Date().toISOString(), today = chinaDate(as_of);
-  const interval = range === 'all' ? null : Number(range);
-  const lower = interval === null ? '' : new Date(dateNumber(today) - (interval - 1) * 86400000 - 8 * 3600000).toISOString();
+  const day = 86400000, todayN = dateNumber(today);
+  const monthStart = new Date(today.slice(0, 7) + '-01T00:00:00Z');
+  monthStart.setUTCMonth(monthStart.getUTCMonth() - 11);
+  const requestedFrom = range === 'year' ? monthStart.getTime() : todayN - ((range === 'all' ? 20000 : Number(range)) - 1) * day;
+  const lower = new Date(requestedFrom - 8 * 3600000).toISOString();
   // Bound the indexed scan, then compare instants for the exact inclusive end.
   // The next whole second also accommodates ISO timestamps without milliseconds.
   const upper = new Date(Math.floor(Date.parse(as_of) / 1000) * 1000 + 1000).toISOString();
@@ -321,9 +324,8 @@ async function visitDaily(env, range) {
   if (!historySeeded) return {...empty, seeded:true};
   const first = historySeeded ? row.first_date : chinaDate(row.captured_at);
   if (first > today) return {...empty, seeded:true, history_seeded:historySeeded, first_date:first};
-  const day = 86400000, firstN = dateNumber(first), todayN = dateNumber(today);
-  const limit = range === 'all' ? 20000 : Number(range);
-  const fromN = Math.max(firstN, todayN - (limit - 1) * day);
+  const firstN = dateNumber(first);
+  const fromN = Math.max(firstN, requestedFrom);
   const history = new Map(JSON.parse(row.history).map(item => [item.date,item]));
   const events = new Map(JSON.parse(row.events).map(item => [item.date,item.visits]));
   const items = [];
@@ -438,7 +440,7 @@ async function route(request, env, url) {
   }
   if (url.pathname === '/v1/visits/daily') {
     if (request.method !== 'GET') { const response = json({error:'method_not_allowed',message:'Use GET for daily visits.'},405); response.headers.set('Allow','GET'); return response; }
-    if ([...url.searchParams.keys()].some(key => key !== 'range') || url.searchParams.getAll('range').length > 1 || (url.searchParams.has('range') && !['7','30','all'].includes(url.searchParams.get('range')))) fail(400, 'invalid_parameter', 'Use range=7, 30 or all.');
+    if ([...url.searchParams.keys()].some(key => key !== 'range') || url.searchParams.getAll('range').length > 1 || (url.searchParams.has('range') && !['7','30','year','all'].includes(url.searchParams.get('range')))) fail(400, 'invalid_parameter', 'Use range=7, 30, year or all.');
     return json(await visitDaily(env, url.searchParams.get('range') || '30'));
   }
   if (url.pathname.startsWith('/v1/admin/')) {
