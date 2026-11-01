@@ -94,7 +94,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         katex_style.write_text("/* Style fixture; visual fonts are checked on the real site. */", encoding="utf-8")
         shutil.copyfile(PROJECT / "assets/vendor/katex/katex.min.js", katex_style.with_name("katex.min.js"))
         (self.project / "blog").mkdir()
-        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js", "blog/visits.js", "blog/visits-ranking.js"):
+        for relative in ("blog/blog.css", "blog/blog.js", "blog/interactions.js", "blog/visits.js", "blog/visits-ranking.js", "blog/visits-daily.js"):
             (self.project / relative).write_text("", encoding="utf-8")
         (self.project / "index.html").write_text('<main id="main">临时主页</main>', encoding="utf-8")
 
@@ -158,11 +158,24 @@ class MarkdownSourcesTests(unittest.TestCase):
         ranking_path = self.project / "blog/ranking/index.html"
         ranking = ranking_path.read_text(encoding="utf-8")
         self.assertIn('data-visits-ranking data-ranking-enabled="true" data-blog-api="https://visits.example.test"', ranking)
+        self.assertIn('data-daily-visits data-daily-enabled="true" data-blog-api="https://visits.example.test"', ranking)
+        self.assertIn('<script defer src="/blog/visits-daily.js?v=1"></script>', ranking)
+        self.assertIn('<title>访问量统计 · 徐皓天</title>', ranking)
+        self.assertIn('name="description" content="博客每日访问量与文章累计访问前十。"', ranking)
         for bad in (
+            ranking.replace('<h1>访问量统计</h1>', '<h1>访问量排行</h1>', 1),
+            ranking.replace('<title>访问量统计 · 徐皓天</title>', '<title>访问量排行 · 徐皓天</title>', 1),
+            ranking.replace('name="description" content="博客每日访问量与文章累计访问前十。"', 'name="description" content="累计访问量最高的十篇文章。"', 1),
             ranking.replace("累计 · TOP 10", "累计 · TOP 5", 1),
             ranking.replace('data-ranking-list hidden></ol>', 'data-ranking-list hidden><li>cached ranking</li></ol>', 1),
             ranking.replace('data-ranking-source hidden', 'data-ranking-source', 1),
             ranking.replace('<li><a href="/blog/posts/7/">临时校验</a></li>', '<li><a href="/blog/posts/7/">stale title</a></li>', 1),
+            ranking.replace('data-blog-api="https://visits.example.test"', 'data-blog-api="https://wrong.example.test"', 1),
+            ranking.replace('data-daily-enabled="true" data-blog-api="https://visits.example.test"', 'data-daily-enabled="true" data-blog-api="https://wrong.example.test"', 1),
+            ranking.replace('/blog/visits-daily.js?v=1', '/blog/visits-daily.js?v=2', 1),
+            ranking.replace('data-daily-chart hidden></div>', 'data-daily-chart></div>', 1),
+            ranking.replace('data-daily-status role="status">', 'data-daily-status role="note">', 1),
+            ranking.replace('data-daily-date min="0" max="0"', 'data-daily-date min="0" max="1"', 1),
         ):
             ranking_path.write_text(bad, encoding="utf-8")
             with self.assertRaises(AssertionError):
@@ -194,7 +207,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         for relative in ("blog/index.html", "blog/pages/8/index.html", "blog/categories/13/index.html", "blog/tags/index.html", "blog/tags/2/index.html", "blog/ranking/index.html"):
             document = check_blog.read_document(self.project / relative)
             nav = next(n for n in check_blog.nodes(document) if check_blog.has_class(n, "category-nav"))
-            self.assertEqual([check_blog.canonical(n) for n in check_blog.nodes(nav) if n.tag == "a"], ["全部文章 1", "关于我", "笔记 1", "标签", "访问量排行"])
+            self.assertEqual([check_blog.canonical(n) for n in check_blog.nodes(nav) if n.tag == "a"], ["全部文章 1", "关于我", "笔记 1", "标签", "访问量统计"])
         homepage = self.project / "blog/index.html"
         original = homepage.read_text(encoding="utf-8")
         home_tree = check_blog.Document(original).root
@@ -215,9 +228,11 @@ class MarkdownSourcesTests(unittest.TestCase):
                     self.check()
         homepage.write_text(original, encoding="utf-8")
         ranking = (self.project / "blog/ranking/index.html").read_text(encoding="utf-8")
-        self.assertIn("访问量排行暂未开放。", ranking)
+        self.assertIn("访问量统计暂未开放。", ranking)
         self.assertNotIn("data-visits-ranking", ranking)
         self.assertNotIn("/blog/visits-ranking.js", ranking)
+        self.assertNotIn("data-daily-visits", ranking)
+        self.assertNotIn("/blog/visits-daily.js", ranking)
 
     def test_personal_homepage_cannot_load_or_display_blog_visits(self):
         self.prepare_build()
@@ -231,6 +246,8 @@ class MarkdownSourcesTests(unittest.TestCase):
             '<script defer src="/blog/visits-config.js?v=old"></script>',
             '<details data-visits-ranking></details>',
             '<script defer src="/blog/visits-ranking.js?v=1"></script>',
+            '<section class="daily-visits" data-daily-visits></section>',
+            '<script defer src="/blog/visits-daily.js?v=1"></script>',
         ):
             with self.subTest(injected=injected):
                 homepage.write_text(original + injected, encoding="utf-8")

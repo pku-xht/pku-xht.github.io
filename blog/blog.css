@@ -271,3 +271,25 @@ details.tag-section { padding: 10px 0; border-block: 1px solid var(--line); }
   .code-block > pre { padding-top: 17px; }
   .site-footer { margin-top: 24px; }
 }
+
+.daily-visits { margin: 24px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.statistics-section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 20px; }
+.statistics-section-heading h2 { margin: 0; font-size: 18px; }
+.visits-ranges { display: flex; gap: 4px; }
+.visits-ranges button, [data-daily-retry] { padding: 4px 10px; border: 1px solid var(--line); border-radius: 3px; color: var(--blue); background: transparent; font: inherit; font-size: 13px; cursor: pointer; }
+.visits-ranges button[aria-pressed="true"] { color: #fff; background: var(--blue); border-color: var(--blue); }
+.daily-summary, .daily-detail, .daily-caption, [data-daily-status] { margin: 12px 0; color: var(--muted); font-size: 13px; }
+.daily-summary { color: var(--ink); font-variant-numeric: tabular-nums; }
+.daily-chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.daily-grid { stroke: var(--line); stroke-width: 1; }
+.daily-axis-label { fill: var(--muted); font-size: 11px; font-family: var(--sans); font-variant-numeric: tabular-nums; }
+.daily-line { fill: none; stroke: var(--blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.daily-date-control { display: block; color: var(--muted); font-size: 13px; }
+.daily-date-control input { display: block; width: 100%; margin: 6px 0; accent-color: var(--blue); }
+.daily-date-control[hidden] { display: none; }
+@media (max-width: 600px) {
+  .statistics-section-heading { align-items: flex-start; }
+  .daily-chart svg { min-height: 150px; }
+  .daily-axis-label { font-size: 26px; }
+  .daily-summary { line-height: 1.7; }
+}

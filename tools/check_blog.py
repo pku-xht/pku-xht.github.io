@@ -498,7 +498,7 @@ def check_blog_navigation(document, posts, pages, categories, label, current=Non
         count = sum(category["id"] in source["categories"] for source in posts)
         if count:
             expected.append((f'/blog/categories/{category["id"]}/', f'{" ".join(category["name"].split())} {count}'))
-    expected.extend((("/blog/tags/", "标签"), ("/blog/ranking/", "访问量排行")))
+    expected.extend((("/blog/tags/", "标签"), ("/blog/ranking/", "访问量统计")))
     links = [n for n in nodes(navigation[0]) if n.tag == "a"]
     assert [(n.attrs.get("href"), canonical(n)) for n in links] == expected, (label, "blog navigation order, labels or counts differ")
     assert [n.attrs.get("href") for n in links if n.attrs.get("aria-current") == "page"] == ([current] if current else []), (label, "current blog navigation destination differs")
@@ -686,8 +686,8 @@ def main(argv=None):
     friends = load_friends(ROOT / "content/blog/friends.yaml")
     check_comment_source_files(comments, ROOT / "content/blog", [source["id"] for source in sources])
     homepage = Document((ROOT / "index.html").read_text(encoding="utf-8")).root
-    assert not any("data-blog-visits" in node.attrs or "data-site-visits" in node.attrs or "data-visits-ranking" in node.attrs for node in nodes(homepage)), "personal homepage must not display or count blog Visits"
-    assert not any(node.tag == "script" and urlsplit(node.attrs.get("src", "")).path in ("/blog/visits.js", "/blog/visits-config.js", "/blog/visits-ranking.js") for node in nodes(homepage)), "personal homepage must not load blog Visits scripts"
+    assert not any("data-blog-visits" in node.attrs or "data-site-visits" in node.attrs or "data-visits-ranking" in node.attrs or "data-daily-visits" in node.attrs or any(key.startswith("data-daily-") for key in node.attrs) for node in nodes(homepage)), "personal homepage must not display or count blog Visits"
+    assert not any(node.tag == "script" and urlsplit(node.attrs.get("src", "")).path in ("/blog/visits.js", "/blog/visits-config.js", "/blog/visits-ranking.js", "/blog/visits-daily.js") for node in nodes(homepage)), "personal homepage must not load blog Visits scripts"
     assert not (ROOT / "blog/visits-config.js").exists(), "obsolete personal homepage Visits config is present"
     assert report["features"] == {"comments_enabled": features["comments"]["enabled"], "visits_enabled": features["visits"]["enabled"]}, "build feature state differs from the formal configuration"
     assert report["comments"]["count"] == comments["count"] and report["comments"]["index_file"] == comments["index_file"] and report["comments"]["index_sha256"] == comments["index_sha256"]
@@ -914,15 +914,50 @@ def main(argv=None):
         scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits.js")]
         rankings = [node for node in all_nodes if "data-visits-ranking" in node.attrs]
         ranking_scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits-ranking.js")]
+        daily_widgets = [node for node in all_nodes if "data-daily-visits" in node.attrs]
+        daily_scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits-daily.js")]
         if features["visits"]["enabled"] and path == ranking_path:
-            assert len(rankings) == len(ranking_scripts) == 1, (path, "ranking page widget or script missing")
+            assert len(rankings) == len(ranking_scripts) == len(daily_widgets) == len(daily_scripts) == 1, (path, "ranking or daily visits widget/script missing")
             assert urlsplit(ranking_scripts[0].attrs.get("src", "")).path == "/blog/visits-ranking.js", (path, "ranking script path differs")
+            assert urlsplit(daily_scripts[0].attrs.get("src", "")).path == "/blog/visits-daily.js" and daily_scripts[0].attrs.get("src") == "/blog/visits-daily.js?v=1", (path, "daily visits script path or version differs")
             ranking = rankings[0]
             assert ranking.tag == "section" and ranking.attrs.get("data-ranking-enabled") == "true" and ranking.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "ranking configuration differs")
             mains = [node for node in all_nodes if node.tag == "main" and node.attrs.get("id") == "main"]
             assert len(mains) == 1 and ranking in mains[0].children, (path, "ranking must be outside article and tag filtering")
             headings = [node for node in ranking.children if isinstance(node, Node) and node.tag == "h2"]
             assert len(headings) == 1 and canonical(headings[0]) == "累计 · TOP 10", (path, "ranking fixed limit differs")
+            daily = daily_widgets[0]
+            assert daily.tag == "section" and has_class(daily, "daily-visits") and daily.attrs.get("data-daily-enabled") == "true" and daily.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "daily visits configuration differs")
+            assert daily in mains[0].children and mains[0].children.index(daily) > mains[0].children.index(ranking), (path, "daily chart must follow cumulative TOP 10 outside post filtering")
+            daily_headings = [node for node in nodes(daily) if node.tag == "h2"]
+            assert len(daily_headings) == 1 and canonical(daily_headings[0]) == "每日访问量", (path, "daily visits heading differs")
+            range_headings = [node for node in nodes(daily) if node.tag == "div" and has_class(node, "statistics-section-heading")]
+            assert len(range_headings) == 1 and daily_headings[0] in range_headings[0].children, (path, "daily heading and range selector wrapper differ")
+            groups = [node for node in nodes(daily) if node.tag == "div" and node.attrs.get("role") == "group" and node.attrs.get("aria-label") == "统计时间范围"]
+            assert len(groups) == 1 and has_class(groups[0], "visits-ranges"), (path, "daily range controls need an accessible group")
+            range_buttons = [node for node in nodes(groups[0]) if node.tag == "button" and "data-daily-range" in node.attrs]
+            assert [(node.attrs.get("data-daily-range"), node.attrs.get("aria-pressed")) for node in range_buttons] == [("7", "false"), ("30", "true"), ("all", "false")], (path, "daily range choices or initial selection differ")
+            for marker, tag in (("data-daily-summary", "div"), ("data-daily-chart", "div"), ("data-daily-detail", "p"), ("data-daily-caption", "p")):
+                matches = [node for node in nodes(daily) if marker in node.attrs]
+                assert len(matches) == 1 and matches[0].tag == tag and "hidden" in matches[0].attrs, (path, marker, "must be present and initially hidden")
+                assert not canonical(matches[0]), (path, marker, "must not contain cached display data")
+            details = [node for node in nodes(daily) if "data-daily-detail" in node.attrs]
+            assert details[0].attrs.get("role") == "status", (path, "daily detail needs status semantics")
+            date_labels = [node for node in nodes(daily) if node.tag == "label" and "data-daily-date-control" in node.attrs]
+            assert len(date_labels) == 1 and "hidden" in date_labels[0].attrs, (path, "daily date selector must start hidden")
+            date_inputs = [node for node in nodes(date_labels[0]) if node.tag == "input" and node.attrs.get("type") == "range" and "data-daily-date" in node.attrs]
+            assert len(date_inputs) == 1 and {key: date_inputs[0].attrs.get(key) for key in ("min", "max", "step", "value", "aria-label")} == {"min": "0", "max": "0", "step": "1", "value": "0", "aria-label": "选择查看日期"}, (path, "daily date selector initial bounds differ")
+            statuses = [node for node in nodes(daily) if "data-daily-status" in node.attrs]
+            assert len(statuses) == 1 and statuses[0].tag == "p" and statuses[0].attrs.get("role") == "status" and "加载" in canonical(statuses[0]), (path, "daily loading status missing")
+            retries = [node for node in nodes(daily) if "data-daily-retry" in node.attrs]
+            assert len(retries) == 1 and retries[0].tag == "button" and retries[0].attrs.get("type") == "button" and "hidden" in retries[0].attrs and canonical(retries[0]) == "重试", (path, "daily retry button differs")
+            assert any(node.tag == "noscript" and "JavaScript" in canonical(node) for node in nodes(daily)), (path, "daily visits needs a no-script notice")
+            page_titles = [node for node in all_nodes if node.tag == "h1"]
+            assert len(page_titles) == 1 and canonical(page_titles[0]) == "访问量统计", (path, "ranking page H1 differs")
+            document_titles = [node for node in all_nodes if node.tag == "title"]
+            descriptions = [node for node in all_nodes if node.tag == "meta" and node.attrs.get("name", "").lower() == "description"]
+            assert len(document_titles) == 1 and canonical(document_titles[0]) == "访问量统计 · 徐皓天", (path, "ranking page title differs")
+            assert len(descriptions) == 1 and descriptions[0].attrs.get("content") == "博客每日访问量与文章累计访问前十。", (path, "ranking page description differs")
             source_lists = [node for node in all_nodes if "data-ranking-source" in node.attrs]
             assert len(source_lists) == 1 and source_lists[0].tag == "ul" and "hidden" in source_lists[0].attrs, (path, "ranking needs one hidden maintained article registry")
             source_links = [node for node in nodes(source_lists[0]) if node.tag == "a"]
@@ -936,6 +971,8 @@ def main(argv=None):
         else:
             assert not rankings and not ranking_scripts, (path, "ranking must only appear on the enabled ranking page")
             assert not any(key.startswith("data-ranking") for node in all_nodes for key in node.attrs), (path, "ranking DOM appears outside the enabled ranking page")
+            assert not daily_widgets and not daily_scripts, (path, "daily visits must only appear on the enabled statistics page")
+            assert not any(key.startswith("data-daily-") for node in all_nodes for key in node.attrs), (path, "daily visits DOM appears outside the enabled statistics page")
         if features["visits"]["enabled"] and path in visit_pages:
             assert len(widgets) == 1 and len(scripts) == 1, (path, "enabled Visits widget or script missing")
             assert urlsplit(scripts[0].attrs.get("src", "")).path == "/blog/visits.js", (path, "Visits script path differs")

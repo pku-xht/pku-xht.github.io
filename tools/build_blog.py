@@ -311,6 +311,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
     visits = features and features["visits"]["enabled"]
     visits_script = '<script defer src="/blog/visits.js?v=3"></script>' if visits else ""
     ranking_script = '<script defer src="/blog/visits-ranking.js?v=2"></script>' if visits and route == "/blog/ranking/" else ""
+    daily_script = '<script defer src="/blog/visits-daily.js?v=1"></script>' if visits and route == "/blog/ranking/" else ""
     return f'''<!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -320,7 +321,7 @@ def page(title, description, route, body, active="博客", has_math=False, featu
 <meta property="og:title" content="{escape(title)} · 徐皓天"><meta property="og:description" content="{escape(description)}">
 <meta property="og:type" content="{'article' if has_math or route.startswith('/blog/posts/') else 'website'}"><meta property="og:url" content="https://pku-xht.github.io{route}">
 <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
-<link rel="stylesheet" href="/blog/blog.css?v=6">{math_css}{math_script}<script defer src="/blog/blog.js?v=3"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}{ranking_script}
+<link rel="stylesheet" href="/blog/blog.css?v=7">{math_css}{math_script}<script defer src="/blog/blog.js?v=3"></script><script defer src="/blog/interactions.js?v=2"></script>{visits_script}{ranking_script}{daily_script}
 </head><body class="blog-page">{header(active)}
 <main class="site-width" id="main">{body}</main>
 <footer class="site-footer"><div class="site-width">徐皓天 · xht37</div></footer>
@@ -444,7 +445,7 @@ def main():
             if count:
                 current = ' aria-current="page"' if selected == cid else ""
                 links.append(f'<a href="{category_route(cid)}"{current}>{escape(category["name"])} <span>{count}</span></a>')
-        for key, title, route in [("tags", "标签", "/blog/tags/"), ("ranking", "访问量排行", "/blog/ranking/")]:
+        for key, title, route in [("tags", "标签", "/blog/tags/"), ("ranking", "访问量统计", "/blog/ranking/")]:
             current = ' aria-current="page"' if selected == key else ""
             links.append(f'<a href="{route}"{current}>{title}</a>')
         search = '<form class="search-form" role="search" action="/blog/" method="get" hidden><label for="blog-search">查找文章</label><input id="blog-search" name="q" type="search" aria-label="搜索标题、摘要或标签" placeholder="查找" autocomplete="off"><button id="clear-search" type="button" aria-label="清空查找" hidden>×</button></form>'
@@ -495,12 +496,15 @@ def main():
         report["posts" if post["type"] == "post" else "pages"].append({"id": post["id"], "type": post["type"], "categories": post["categories"], "tags": post.get("tags", []), "title": post["title"], "date": post["date"], "path": post["route"], "original_url": post["link"], "source_file": post["source_file"], "source_sha256": post["source_sha256"], "content_sha256": post["content_sha256"], "formulas": math_count, "code_blocks": sum(isinstance(n, Element) and n.tag == "pre" for n in walk(root)), "headings": len(headings), "images": sum(isinstance(n, Element) and n.tag == "img" for n in walk(root)), "legacy_anchors": {alias: h.attrs["id"] for h in headings for alias in h.attrs.get("_aliases", [])}})
     body = f'<section class="page-intro"><p class="eyebrow">BLOG</p><h1>文章与记录</h1><p>留下一些想明白的事。</p>{visit_counts(features)}</section>' + category_navigation() + search_list(posts, all_tags=True)
     write("/blog/", page("博客", "徐皓天的算法、数学、学习笔记与生活记录。", "/blog/", body, features=features))
-    ranking = '<p class="ranking-status">访问量排行暂未开放。</p>'
+    ranking = '<p class="ranking-status">访问量统计暂未开放。</p>'
+    daily = ""
     if features["visits"]["enabled"]:
         article_links = "".join(f'<li><a href="{post["route"]}">{escape(post["title"])}</a></li>' for post in posts)
         ranking = '<section class="visits-ranking" data-visits-ranking data-ranking-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '"><h2>累计 · TOP 10</h2><ol class="ranking-list" data-ranking-list hidden></ol><p class="ranking-status" data-ranking-status role="status">正在加载排行…</p><button class="ranking-retry" type="button" data-ranking-retry hidden>重试</button><noscript><p>请启用 JavaScript 查看实时排行。</p></noscript></section><ul data-ranking-source hidden>' + article_links + '</ul>'
-    body = f'<section class="page-intro"><p class="eyebrow">RANKING</p><h1>访问量排行</h1><p>按累计访问量排列的前十篇文章。</p>{visit_counts(features)}</section>' + category_navigation("ranking") + ranking
-    write("/blog/ranking/", page("访问量排行", "累计访问量最高的十篇文章。", "/blog/ranking/", body, features=features))
+        ranges = "".join(f'<button type="button" data-daily-range="{value}" aria-pressed="{"true" if value == "30" else "false"}">{label}</button>' for value, label in [("7", "近7天"), ("30", "近30天"), ("all", "全部")])
+        daily = '<section class="daily-visits" data-daily-visits data-daily-enabled="true" data-blog-api="' + escape(features["visits"]["api_base"]) + '"><div class="statistics-section-heading"><h2>每日访问量</h2><div class="visits-ranges" role="group" aria-label="统计时间范围">' + ranges + '</div></div><div class="daily-summary" data-daily-summary hidden></div><div class="daily-chart" data-daily-chart hidden></div><p class="daily-detail" data-daily-detail role="status" hidden></p><label class="daily-date-control" data-daily-date-control hidden>查看日期<input type="range" data-daily-date min="0" max="0" step="1" value="0" aria-label="选择查看日期"></label><p class="daily-caption" data-daily-caption hidden></p><p class="daily-status" data-daily-status role="status">正在加载每日访问量…</p><button class="ranking-retry" type="button" data-daily-retry hidden>重试</button><noscript><p>请启用 JavaScript 查看每日访问量。</p></noscript></section>'
+    body = f'<section class="page-intro"><p class="eyebrow">STATISTICS</p><h1>访问量统计</h1><p>文章累计访问前十与每日访问趋势。</p>{visit_counts(features)}</section>' + category_navigation("ranking") + ranking + daily
+    write("/blog/ranking/", page("访问量统计", "博客每日访问量与文章累计访问前十。", "/blog/ranking/", body, features=features))
     years = {}
     for post in posts:
         years.setdefault(post["date"][:4], []).append(post)

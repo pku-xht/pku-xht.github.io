@@ -2,6 +2,7 @@ import { adminPage } from './admin.mjs';
 import { articleRequest } from './articles.mjs';
 import registry from '../data/public-documents.json' with { type: 'json' };
 import { AdminSessionError, passwordMatches, createAdminSession, administratorAuthorization, revokeAdminSession } from './admin-sessions.mjs';
+import { chinaDate, dateNumber, validateHistory } from './visit-history.mjs';
 
 const PUBLIC_ORIGIN = 'https://pku-xht.github.io';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -295,6 +296,71 @@ async function visitRanking(env) {
   if (result.missing) fail(503, 'baseline_incomplete', 'Article baselines are unavailable.');
   return { enabled: true, seeded: true, items: JSON.parse(result.items) };
 }
+async function visitDaily(env, range) {
+  const as_of = new Date().toISOString(), today = chinaDate(as_of);
+  const interval = range === 'all' ? null : Number(range);
+  const lower = interval === null ? '' : new Date(dateNumber(today) - (interval - 1) * 86400000 - 8 * 3600000).toISOString();
+  // Bound the indexed scan, then compare instants for the exact inclusive end.
+  // The next whole second also accommodates ISO timestamps without milliseconds.
+  const upper = new Date(Math.floor(Date.parse(as_of) / 1000) * 1000 + 1000).toISOString();
+  const empty = { enabled: visitsEnabled(env), seeded: false, history_seeded: false, timezone: 'Asia/Shanghai', as_of, first_date: null, from: null, to: null, items: [] };
+  if (!empty.enabled) return empty;
+  // One SELECT observes baseline, history and event groups in the same snapshot.
+  const row = await db(env).prepare(`SELECT
+    (SELECT captured_at FROM visit_baselines WHERE singleton=1) AS captured_at,
+    (SELECT first_date FROM visit_history_import WHERE singleton=1) AS first_date,
+    (SELECT cutover_date FROM visit_history_import WHERE singleton=1) AS cutover_date,
+    (SELECT json_group_array(json_object('date',date,'visits',visits,'partial',partial)) FROM visit_history) AS history,
+    (SELECT json_group_array(json_object('date',day,'visits',n)) FROM (
+      SELECT date(created_at, '+8 hours') AS day, COUNT(*) AS n FROM visit_events
+      WHERE created_at >= ? AND created_at < ? AND julianday(created_at) <= julianday(?)
+      AND julianday(created_at) >= julianday((SELECT captured_at FROM visit_baselines WHERE singleton=1))
+      GROUP BY day)) AS events`).bind(lower,upper,as_of).first();
+  if (!row.captured_at) return empty;
+  const historySeeded = row.first_date !== null;
+  if (!historySeeded) return {...empty, seeded:true};
+  const first = historySeeded ? row.first_date : chinaDate(row.captured_at);
+  if (first > today) return {...empty, seeded:true, history_seeded:historySeeded, first_date:first};
+  const day = 86400000, firstN = dateNumber(first), todayN = dateNumber(today);
+  const limit = range === 'all' ? 20000 : Number(range);
+  const fromN = Math.max(firstN, todayN - (limit - 1) * day);
+  const history = new Map(JSON.parse(row.history).map(item => [item.date,item]));
+  const events = new Map(JSON.parse(row.events).map(item => [item.date,item.visits]));
+  const items = [];
+  const cutover = historySeeded ? row.cutover_date : chinaDate(row.captured_at);
+  for (let n=fromN; n<=todayN; n+=day) {
+    const date = new Date(n).toISOString().slice(0,10), old = history.get(date);
+    let visits = events.get(date) || 0;
+    if (historySeeded && date <= cutover) visits = old && old.visits !== null ? old.visits + visits : null;
+    if (visits !== null && (!Number.isSafeInteger(visits) || visits < 0)) fail(503, 'daily_count_overflow', 'Daily count cannot be represented safely.');
+    items.push({ date, visits, partial: Boolean(date === first || date === cutover || date === today || old?.partial) });
+  }
+  return {...empty, seeded:true, history_seeded:historySeeded, first_date:first, from:items[0].date, to:today, items};
+}
+async function importHistory(request, env) {
+  const value = await bodyJSON(request, ['confirm_import','batch_id','timezone','captured_at','site_base','first_date','cutover_date','items'], 1048576);
+  if (value.confirm_import !== true) fail(400, 'history_confirmation_required', 'Explicit confirm_import: true is required.');
+  if (typeof value.batch_id !== 'string' || !/^[A-Za-z0-9._-]{1,80}$/.test(value.batch_id)) fail(400, 'invalid_batch', 'Invalid history batch identifier.');
+  let canonical;
+  try { const {confirm_import, batch_id, ...content} = value; canonical = validateHistory(content); }
+  catch { fail(400, 'invalid_history', 'Invalid history manifest.'); }
+  if (canonical.first_date > chinaDate(new Date().toISOString()) || canonical.cutover_date > chinaDate(new Date().toISOString())) fail(400, 'invalid_history', 'History dates cannot be in the future.');
+  const fingerprint = await sha256(JSON.stringify(canonical)), database = db(env);
+  const current = await database.prepare(`SELECT (SELECT manifest_hash FROM visit_history_import WHERE singleton=1) AS manifest_hash,
+    EXISTS (SELECT 1 FROM visit_baselines WHERE singleton=1 AND captured_at=? AND site_base=?) AS baseline_matches`).bind(canonical.captured_at,canonical.site_base).first();
+  if (!current.baseline_matches) fail(409, 'baseline_mismatch', 'History does not match the existing baseline.');
+  if (current.manifest_hash) {
+    if (current.manifest_hash !== fingerprint) fail(409, 'history_exists', 'A different history already exists.');
+    return json({imported:false});
+  }
+  const result = await database.prepare(`INSERT INTO visit_history_import(singleton,batch_id,manifest_hash,captured_at,site_base,first_date,cutover_date,payload)
+    SELECT 1,?,?,?,?,?,?,? WHERE EXISTS (SELECT 1 FROM visit_baselines WHERE singleton=1 AND captured_at=? AND site_base=?)
+    ON CONFLICT(singleton) DO NOTHING RETURNING singleton`).bind(value.batch_id,fingerprint,canonical.captured_at,canonical.site_base,canonical.first_date,canonical.cutover_date,JSON.stringify(canonical.items),canonical.captured_at,canonical.site_base).all();
+  const actual = await database.prepare('SELECT manifest_hash FROM visit_history_import WHERE singleton=1').first();
+  if (!actual) fail(409, 'baseline_mismatch', 'History does not match the existing baseline.');
+  if (actual.manifest_hash !== fingerprint) fail(409, 'history_exists', 'A different history already exists.');
+  return json({imported:Boolean(result.results.length)});
+}
 async function submitVisit(request, env) {
   if (!visitsEnabled(env)) fail(404, 'visits_disabled', 'Visits are not enabled.');
   const value = await bodyJSON(request, ['nonce', 'document']);
@@ -370,6 +436,11 @@ async function route(request, env, url) {
     if (url.searchParams.size) fail(400, 'unexpected_parameter', 'The ranking does not accept query parameters.');
     return json(await visitRanking(env));
   }
+  if (url.pathname === '/v1/visits/daily') {
+    if (request.method !== 'GET') { const response = json({error:'method_not_allowed',message:'Use GET for daily visits.'},405); response.headers.set('Allow','GET'); return response; }
+    if ([...url.searchParams.keys()].some(key => key !== 'range') || url.searchParams.getAll('range').length > 1 || (url.searchParams.has('range') && !['7','30','all'].includes(url.searchParams.get('range')))) fail(400, 'invalid_parameter', 'Use range=7, 30 or all.');
+    return json(await visitDaily(env, url.searchParams.get('range') || '30'));
+  }
   if (url.pathname.startsWith('/v1/admin/')) {
     if (url.pathname === '/v1/admin/login' && request.method === 'POST') return login(request, env);
     const authorization = await authorized(request, env);
@@ -388,6 +459,7 @@ async function route(request, env, url) {
       return moderate(request, env, moderation[1], condition.length ? 'delete_leaf' : 'delete');
     }
     if (url.pathname === '/v1/admin/visits/baseline' && request.method === 'POST') return importBaseline(request, env);
+    if (url.pathname === '/v1/admin/visits/history' && request.method === 'POST') return importHistory(request, env);
   }
   fail(404, 'not_found', 'Endpoint not found.');
 }

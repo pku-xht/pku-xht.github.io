@@ -80,6 +80,7 @@ class Element {
     for (let node = this; node; node = node.parentNode) for (const handler of node.listeners.get(type) || []) await handler(event);
     return event;
   }
+  getBoundingClientRect() { return { left: 0, width: 760 }; }
   focus() { this.ownerDocument.activeElement = this; }
   setCustomValidity(text) { this.validationMessage = text; }
   reportValidity() { return !this.validationMessage; }
@@ -87,6 +88,7 @@ class Element {
 function environment(href = 'http://127.0.0.1:8791/blog/posts/1154/') {
   const doc = new Element('document'); doc.ownerDocument = doc; doc.readyState = 'complete';
   doc.createElement = (tag) => new Element(tag, doc);
+  doc.createElementNS = (_, tag) => new Element(tag, doc);
   doc.createTextNode = (value) => { const node = new Element('#text', doc); node.nodeType = 3; node.nodeValue = String(value); node.textContent = value; return node; };
   doc.getElementById = (id) => doc.querySelector('#' + id);
   const windowEvents = new Map(); let random = 0;
@@ -172,6 +174,20 @@ function rankingFixture(enabled = true, api = 'https://ranking.example.test/') {
     titles.push(el('a', { href: '/blog/posts/' + index + '/' }, row, 'Article ' + index));
   }
   return { ...env, section, list, status, retry, registry, titles, form, input };
+}
+
+function dailyFixture(enabled = true) {
+  const env = rankingFixture(), { el } = env;
+  const daily = el('section', { 'data-daily-visits': '', 'data-daily-enabled': String(enabled), 'data-blog-api': 'https://ranking.example.test/' });
+  const buttons = ['7', '30', 'all'].map((value) => el('button', { 'data-daily-range': value, 'aria-pressed': String(value === '30') }, daily));
+  const summary = el('div', { 'data-daily-summary': '', hidden: '' }, daily), chart = el('div', { 'data-daily-chart': '', hidden: '' }, daily);
+  const detail = el('p', { 'data-daily-detail': '', hidden: '' }, daily), control = el('label', { 'data-daily-date-control': '', hidden: '' }, daily);
+  const slider = el('input', { 'data-daily-date': '', type: 'range' }, control), caption = el('p', { 'data-daily-caption': '', hidden: '' }, daily);
+  const status = el('p', { 'data-daily-status': '' }, daily), retry = el('button', { 'data-daily-retry': '', hidden: '' }, daily);
+  return { ...env, daily, buttons, summary, chart, detail, control, slider, caption, dailyStatus: status, dailyRetry: retry };
+}
+function dailyData(items = [{ date: '2026-11-01', visits: 12, partial: false }, { date: '2026-11-02', visits: 3, partial: true }]) {
+  return { enabled: true, seeded: true, history_seeded: true, timezone: 'Asia/Shanghai', as_of: '2026-11-02T04:00:00Z', first_date: items[0]?.date ?? null, from: items[0]?.date ?? null, to: items.at(-1)?.date ?? null, items };
 }
 function searchFixture(href = 'http://127.0.0.1:8791/blog/', withCards = true) {
   const env = environment(href); const { el } = env;
@@ -406,6 +422,41 @@ async function main() {
     }
     const f = rankingFixture(); f.setFetch(async () => response(rankingData([]))); f.run('blog/visits-ranking.js'); await flush();
     assert.equal(f.section.dataset.rankingState, 'ready'); assert.equal(f.list.hidden, true); assert.equal(f.retry.hidden, true); assert.match(f.status.textContent, /暂无/);
+  });
+
+  await check('daily ranges, duplicate initialization and GET only', async () => {
+    const f = dailyFixture(); f.setFetch(async () => response(dailyData())); f.run('blog/visits-daily.js'); await flush();
+    assert.equal(f.daily.dataset.dailyState, 'ready'); assert.match(f.summary.textContent, /15/); assert.match(f.detail.textContent, /截至北京时间/);
+    await f.buttons[0].fire('click'); await flush(); await f.buttons[2].fire('click'); await flush(); f.run('blog/visits-daily.js');
+    assert.deepEqual(f.calls.map((x) => new URL(x.url).searchParams.get('range')), ['30', '7', 'all']);
+    assert.equal(f.buttons[2].getAttribute('aria-pressed'), 'true'); assert.ok(f.calls.every((x) => !x.options.method && x.options.credentials === 'omit'));
+  });
+  await check('daily missing values break lines and slider and pointer select dates', async () => {
+    const f = dailyFixture(), items = [{ date: '2026-10-31', visits: 4, partial: false }, { date: '2026-11-01', visits: null, partial: false }, { date: '2026-11-02', visits: 8, partial: true }];
+    f.setFetch(async () => response(dailyData(items))); f.run('blog/visits-daily.js'); await flush();
+    assert.equal((f.chart.querySelector('path').getAttribute('d').match(/ M/g) || []).length, 2); assert.match(f.summary.textContent, /未计入总量/);
+    f.slider.value = '1'; await f.slider.fire('input'); assert.match(f.detail.textContent, /2026-11-01：暂无记录/);
+    await f.chart.querySelector('svg').fire('pointermove', { clientX: 742 }); assert.match(f.detail.textContent, /2026-11-02：8/);
+  });
+  await check('daily single zero and all-missing days remain inspectable', async () => {
+    for (const visits of [0, null]) { const f = dailyFixture(); f.setFetch(async () => response(dailyData([{ date: '2026-11-02', visits, partial: true }]))); f.run('blog/visits-daily.js'); await flush(); assert.equal(f.chart.hidden, false); assert.equal(f.control.hidden, false); assert.match(f.detail.textContent, visits === null ? /暂无记录/ : /0 次访问/); }
+  });
+  await check('daily invalid data fails atomically', async () => {
+    const bad = [[{ date: '2026-02-30', visits: 1, partial: false }], [{ date: '2026-11-01', visits: -1, partial: false }], [{ date: '2026-11-01', visits: Number.MAX_SAFE_INTEGER + 1, partial: false }], [{ date: '2026-11-01', visits: 1, partial: false }, { date: '2026-11-01', visits: 1, partial: false }], [{ date: '2026-11-01', visits: 1, partial: false }, { date: '2026-11-03', visits: 1, partial: false }], Array.from({ length: 20001 }, () => ({ date: '2026-11-01', visits: 1, partial: false }))];
+    for (const items of bad) { const f = dailyFixture(); f.setFetch(async () => response(dailyData(items))); f.run('blog/visits-daily.js'); await flush(); assert.equal(f.daily.dataset.dailyState, 'error'); assert.equal(f.chart.hidden, true); assert.equal(f.chart.children.length, 0); assert.equal(f.dailyRetry.hidden, false); }
+    for (const extra of [{first_date:null},{first_date:'2026-11-03'},{to:'2026-11-03'},{as_of:'2026-10-31T04:00:00Z'}]) {
+      const f=dailyFixture(); f.setFetch(async()=>response({...dailyData(),...extra})); f.run('blog/visits-daily.js'); await flush(); assert.equal(f.daily.dataset.dailyState,'error'); assert.equal(f.chart.hidden,true);
+    }
+  });
+  await check('daily retry recovers and stale responses are ignored', async () => {
+    const f = dailyFixture(); let finish; f.setFetch(async () => f.calls.length === 1 ? new Promise((resolve) => { finish = resolve; }) : f.calls.length === 2 ? response({}, 503) : response(dailyData()));
+    f.run('blog/visits-daily.js'); await flush(); await f.buttons[0].fire('click'); await flush(); assert.equal(f.daily.dataset.dailyState, 'error');
+    finish(response(dailyData([{ date: '2026-11-01', visits: 999, partial: false }]))); await flush(); assert.equal(f.daily.dataset.dailyState, 'error');
+    await f.dailyRetry.fire('click'); await flush(); assert.equal(f.daily.dataset.dailyState, 'ready'); assert.doesNotMatch(f.summary.textContent, /999/);
+  });
+  await check('disabled daily makes no request and ranking stays independent', async () => {
+    const disabled = dailyFixture(false); disabled.run('blog/visits-daily.js'); await flush(); assert.equal(disabled.calls.length, 0);
+    const f = dailyFixture(); f.setFetch(async (url) => response(url.includes('/ranking') ? rankingData() : dailyData())); f.run('blog/visits-ranking.js'); await flush(); const ranking = f.list.textContent; f.run('blog/visits-daily.js'); await flush(); assert.equal(f.list.textContent, ranking); assert.equal(f.list.querySelectorAll('li').length, 10); assert.equal(f.calls.length, 2);
   });
   await check('search restores q, filters locally, updates the address and clears without losing unrelated parameters', async () => {
     const f = searchFixture('http://127.0.0.1:8791/blog/?q=Mo&view=all');

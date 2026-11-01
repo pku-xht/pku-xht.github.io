@@ -25,8 +25,10 @@ Cloudflare Worker + D1；运行时代码无 npm 依赖。注册范围是 `collec
 | `GET /v1/admin/articles/<ID>/publication?revision=<SHA>` | 查询保存返回的候选修订，状态为 `pending`、`success` 或 `failure` |
 | `GET /v1/visits?document=1154` | 返回统计开关及基线加增量；省略文档 ID 时只返回全站数 |
 | `GET /v1/visits/ranking` | 只读文章累计访问量前十，无查询参数；同量按数字 ID 升序 |
+| `GET /v1/visits/daily?range=30` | 只读北京时间每日全站 PV；range 为 7、30 或 all，默认 30 |
 | `POST /v1/visits` | 明确启用且已有完整基线后，按单次加载 nonce 幂等计数 |
 | `POST /v1/admin/visits/baseline` | 显式确认并原子导入完整独立基线；不同基线禁止覆盖 |
+| `POST /v1/admin/visits/history` | 管理员确认后原子导入逐日历史；内容一致可重复，不同内容禁止覆盖 |
 | `GET /admin` | 与 `/blog/comment/` 共享界面源码的备用评论管理入口 |
 
 公开评论形状：
@@ -106,6 +108,10 @@ GitHub 子请求使用 Workers 支持的 `redirect: manual`，任何非成功响
 发布本轮前必须按[正式部署顺序](../../README.md#authorized-deployment-order)先应用 `0003_admin_sessions.sql`，再部署读取会话表的 Worker，最后推送生成页面。既有服务保留原 secrets 和评论，不因会话升级重新设置密码或重导评论；新服务的完整初始化仍按根 README 操作。读取现存待审数据不能保存到本仓库或作为公开测试证据。远程冒烟只可在授权窗口使用虚构留言和精确叶节点清理，命令见[远程检查](../../README.md#remote-smoke-check)。本地 SQLite 和浏览器结果不能替代 Cloudflare D1、GitHub 发布及 Pages 的实证。
 
 ## Visits
+
+每日统计使用 Asia/Shanghai 日期，响应包含 `enabled`、`seeded`、`history_seeded`、`as_of`、首日与返回范围及 `items`。历史缺项保留 `visits:null`；首日、切流日、今天以及源标记的不完整日期标记 `partial:true`。切流日合并历史部分与切流后新站事件；新站每个事件只计一次，并排除响应时间之后的事件。历史未导入时返回空序列。`all` 最多返回最近 20000 天。查询不写数据库。
+
+历史导入接受 `confirm_import:true`、`batch_id` 和规范化内容 `timezone`、`captured_at`、`site_base`、`first_date`、`cutover_date`、`items`；每日连续、非空值之和等于原全站基线，且基线数值与原始时间须精确匹配。末日必须标记 partial；相同内容不受 batch ID 影响而幂等，不同内容拒绝。私有输入不得放进公开仓库。`scripts/import-history.mjs --input <仓库外规范化 JSON> --batch <id>` 默认离线检查；只有同时给出 `--apply --confirm-history --api <服务 origin>` 才发送，管理员令牌仅从 `BLOG_ADMIN_TOKEN` 环境变量读取。部署读取历史表的 Worker 前须先应用 `0004_visit_history.sql`；历史导入及部署需要单独授权。
 
 2026-10-31 正式切流已完成：完整的 212 篇文档与独立全站 1,869,365 PV 基线已导入，Worker 和网页统计均已开启，旧域名公开白名单已 301 跳转；精确发布与线上核验见[切流记录](../../migration/domain-visits-2026-10-31.md)。GET 返回基线加增量，POST 对同一 nonce 只计一次；无文档 ID 的博客索引页只增加全站 PV。全站访问量显示在博客主页，个人主页、管理和编辑页不参与计数；刷新博客阅读页产生新 PV。关闭配置仍能停用：GET 返回 `{enabled:false,seeded:false,site:null,document:null,document_id:...}`，POST 返回 `404 visits_disabled`；启用但缺基线仍返回 `null` 并拒绝计数，不冒充 0。
 
