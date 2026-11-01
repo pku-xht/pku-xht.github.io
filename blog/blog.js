@@ -5,16 +5,32 @@
     const form = document.querySelector(".search-form");
     const input = document.getElementById("blog-search");
     const cards = Array.from(document.querySelectorAll(".post-card[data-search]"));
-    if (!form || !input || cards.length === 0) return;
+    if (!form || !input) return;
+    form.hidden = false;
+    input.value = new URL(window.location.href).searchParams.get("q") || "";
+    if (cards.length === 0) {
+      const clear = document.getElementById("clear-search");
+      const update = () => { if (clear) clear.hidden = !input.value; };
+      input.addEventListener("input", update);
+      if (clear) clear.addEventListener("click", () => { input.value = ""; update(); input.focus(); });
+      update();
+      return;
+    }
 
     const count = document.getElementById("search-count");
     const noResults = document.getElementById("no-results");
     const clearButton = document.getElementById("clear-search");
     const normalize = (text) => text.normalize("NFKC").toLocaleLowerCase("zh-CN");
     const searchable = cards.map((card) => normalize(card.dataset.search || ""));
-    const tagFilterEnabled = Boolean(document.querySelector('.post-list[data-tag-filter="all"]'));
+    const tagList = document.querySelector('.post-list[data-tag-filter="all"]');
+    const tagFilterEnabled = Boolean(tagList);
     const tagLinks = Array.from(document.querySelectorAll(".tag-cloud a[data-tag-id]"));
     const tagNames = new Map(tagLinks.map((link) => [link.dataset.tagId, link.dataset.tagName || link.textContent.trim()]));
+    try {
+      for (const [id, name] of Object.entries(JSON.parse(tagList?.dataset.tagNames || "{}"))) {
+        if (/^[1-9]\d*$/u.test(id) && typeof name === "string") tagNames.set(id, name);
+      }
+    } catch { /* Static tag-page links still work if optional names are unavailable. */ }
     const cardTags = cards.map((card) => new Set((card.dataset.tags || "").trim().split(/\s+/u).filter(Boolean)));
     const activeFilter = document.querySelector(".active-tag-filter");
     const activeLabel = document.querySelector("[data-active-tag]");
@@ -46,7 +62,10 @@
       const tagName = tagNames.get(activeTag) || activeTag;
       if (count) count.textContent = (activeTag ? `标签「${tagName}」：` : "") + (terms.length ? `找到 ${visible} 篇文章` : `共 ${visible} 篇文章`);
       if (noResults) noResults.hidden = visible !== 0;
-      if (clearButton) clearButton.disabled = input.value.length === 0;
+      if (clearButton) {
+        clearButton.disabled = input.value.length === 0;
+        clearButton.hidden = input.value.length === 0;
+      }
       if (tagFilterEnabled) {
         if (activeFilter) activeFilter.hidden = !activeTag;
         if (activeLabel) activeLabel.textContent = activeTag ? `标签：${tagName}` : "";
@@ -60,15 +79,23 @@
     function clearSearch(event) {
       event.preventDefault();
       input.value = "";
-      filterPosts();
+      updateSearch();
       input.focus();
     }
 
-    input.addEventListener("input", filterPosts);
-    input.addEventListener("search", filterPosts);
+    function updateSearch() {
+      const next = new URL(window.location.href);
+      if (input.value) next.searchParams.set("q", input.value);
+      else next.searchParams.delete("q");
+      if (next.href !== window.location.href) window.history.replaceState(null, "", next);
+      filterPosts();
+    }
+
+    input.addEventListener("input", updateSearch);
+    input.addEventListener("search", updateSearch);
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      filterPosts();
+      updateSearch();
     });
     const clearButtons = new Set(document.querySelectorAll("[data-clear-search]"));
     if (clearButton) clearButtons.add(clearButton);
@@ -91,12 +118,12 @@
         filterPosts();
         input.focus();
       }));
-      window.addEventListener("popstate", () => {
-        activeTag = readTag();
-        filterPosts();
-      });
     }
-    form.hidden = false;
+    window.addEventListener("popstate", () => {
+      input.value = new URL(window.location.href).searchParams.get("q") || "";
+      activeTag = readTag();
+      filterPosts();
+    });
     filterPosts();
   }
 

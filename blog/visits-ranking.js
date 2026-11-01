@@ -21,7 +21,7 @@
 
     // Use maintained titles and routes from this page, including online edits.
     const articles = new Map();
-    for (const link of document.querySelectorAll(".post-card h2 a")) {
+    for (const link of document.querySelectorAll("[data-ranking-source] a")) {
       const match = /^\/blog\/posts\/([1-9][0-9]*)\/$/u.exec(link.getAttribute("href") || "");
       const title = link.textContent.trim();
       if (match && title) articles.set(match[1], { title, path: match[0] });

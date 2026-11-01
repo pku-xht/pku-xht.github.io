@@ -153,15 +153,21 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.assertIn('data-visits-enabled="true" data-blog-api="https://visits.example.test" data-document-id=""', blog_homepage)
         self.assertRegex(blog_homepage, r'<strong\b[^>]*\bdata-site-visits>')
         self.assertNotIn('data-document-visits>', blog_homepage)
-        self.assertIn('data-visits-ranking data-ranking-enabled="true" data-blog-api="https://visits.example.test" open', blog_homepage)
+        self.assertNotIn('data-visits-ranking', blog_homepage)
+        self.assertNotIn('/blog/visits-ranking.js', blog_homepage)
+        ranking_path = self.project / "blog/ranking/index.html"
+        ranking = ranking_path.read_text(encoding="utf-8")
+        self.assertIn('data-visits-ranking data-ranking-enabled="true" data-blog-api="https://visits.example.test"', ranking)
         for bad in (
-            blog_homepage.replace("累计 · TOP 10", "累计 · TOP 5", 1),
-            blog_homepage.replace('data-ranking-list hidden></ol>', 'data-ranking-list hidden><li>cached ranking</li></ol>', 1),
+            ranking.replace("累计 · TOP 10", "累计 · TOP 5", 1),
+            ranking.replace('data-ranking-list hidden></ol>', 'data-ranking-list hidden><li>cached ranking</li></ol>', 1),
+            ranking.replace('data-ranking-source hidden', 'data-ranking-source', 1),
+            ranking.replace('<li><a href="/blog/posts/7/">临时校验</a></li>', '<li><a href="/blog/posts/7/">stale title</a></li>', 1),
         ):
-            (self.project / "blog/index.html").write_text(bad, encoding="utf-8")
+            ranking_path.write_text(bad, encoding="utf-8")
             with self.assertRaises(AssertionError):
                 self.check()
-        (self.project / "blog/index.html").write_text(blog_homepage, encoding="utf-8")
+        ranking_path.write_text(ranking, encoding="utf-8")
         self.build()
         self.assertEqual(homepage.read_bytes(), original_homepage)
         article = self.project / "blog/posts/7/index.html"
@@ -175,6 +181,43 @@ class MarkdownSourcesTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.check()
         article.write_text(original, encoding="utf-8")
+
+    def test_browsing_navigation_shares_one_search_toolbar_and_preserves_order(self):
+        page = self.content / "pages/8.md"
+        metadata = FRONTMATTER.replace("id: 7", "id: 8", 1).replace("type: post", "type: page").replace('title: "临时校验"', 'title: "关于我"').replace("slug: temporary", "slug: temporary-page").replace('https://www.xht37.com/temporary/', 'https://www.xht37.com/temporary-page/')
+        metadata = metadata[:metadata.index("categories:")] + "categories: []\ntags: []\n---\n\n"
+        page.write_text(metadata + "页面正文。\n", encoding="utf-8")
+        self.collection.write_text(COLLECTION.replace("pages: []", "pages:\n  - pages/8.md"), encoding="utf-8")
+        self.prepare_build()
+        self.build()
+        self.check()
+        for relative in ("blog/index.html", "blog/pages/8/index.html", "blog/categories/13/index.html", "blog/tags/index.html", "blog/tags/2/index.html", "blog/ranking/index.html"):
+            document = check_blog.read_document(self.project / relative)
+            nav = next(n for n in check_blog.nodes(document) if check_blog.has_class(n, "category-nav"))
+            self.assertEqual([check_blog.canonical(n) for n in check_blog.nodes(nav) if n.tag == "a"], ["全部文章 1", "关于我", "笔记 1", "标签", "访问量排行"])
+        homepage = self.project / "blog/index.html"
+        original = homepage.read_text(encoding="utf-8")
+        home_tree = check_blog.Document(original).root
+        tag_list = next(n for n in check_blog.nodes(home_tree) if check_blog.has_class(n, "post-list"))
+        self.assertEqual(json.loads(tag_list.attrs["data-tag-names"]), {"2": "C++"})
+        # Test semantically meaningful changes rather than pixel-level CSS choices.
+        for before, after in (
+            ('action="/blog/"', 'action="/blog/tags/"'),
+            ('name="q"', 'name="unrecognized"'),
+            ('href="/blog/pages/8/">关于我', 'href="/blog/pages/9/">关于我'),
+            ('>全部文章 <span>1</span>', '>全部文章 <span>2</span>'),
+            ('&quot;2&quot;: &quot;C++&quot;', '&quot;2&quot;: &quot;stale tag name&quot;'),
+        ):
+            with self.subTest(before=before):
+                self.assertIn(before, original)
+                homepage.write_text(original.replace(before, after, 1), encoding="utf-8")
+                with self.assertRaises(AssertionError):
+                    self.check()
+        homepage.write_text(original, encoding="utf-8")
+        ranking = (self.project / "blog/ranking/index.html").read_text(encoding="utf-8")
+        self.assertIn("访问量排行暂未开放。", ranking)
+        self.assertNotIn("data-visits-ranking", ranking)
+        self.assertNotIn("/blog/visits-ranking.js", ranking)
 
     def test_personal_homepage_cannot_load_or_display_blog_visits(self):
         self.prepare_build()

@@ -483,10 +483,32 @@ def check_article_comments(document, source, comments, features, paths, by_id, m
     comment_preorder(comments)
     return sum(len(original_formulas(Document(comment["content"]["rendered"]).root)) for comment in comments)
 
-def check_history_links(document, sources, label):
-    areas = [n for n in nodes(document) if has_class(n, "blog-pages-list")]
-    links = [n.attrs.get("href") for area in areas for n in nodes(area) if n.tag == "a"]
-    assert_routes(links, [route(p) for p in sources], label)
+def check_blog_navigation(document, posts, pages, categories, label, current=None):
+    """Keep the public browsing destinations and search in one ordered toolbar."""
+    toolbars = [n for n in nodes(document) if has_class(n, "blog-toolbar")]
+    assert len(toolbars) == 1, (label, "missing or duplicate blog toolbar")
+    toolbar = toolbars[0]
+    navigation = [n for n in toolbar.children if isinstance(n, Node) and n.tag == "nav" and has_class(n, "category-nav")]
+    search = [n for n in toolbar.children if isinstance(n, Node) and n.tag == "form" and has_class(n, "search-form")]
+    assert len(navigation) == len(search) == 1, (label, "navigation and search must share one toolbar")
+    assert toolbar.children.index(navigation[0]) < toolbar.children.index(search[0]), (label, "search must follow navigation")
+    expected = [("/blog/", f"全部文章 {len(posts)}")]
+    expected.extend((route(source), " ".join(source["title"].split())) for source in pages)
+    for category in categories:
+        count = sum(category["id"] in source["categories"] for source in posts)
+        if count:
+            expected.append((f'/blog/categories/{category["id"]}/', f'{" ".join(category["name"].split())} {count}'))
+    expected.extend((("/blog/tags/", "标签"), ("/blog/ranking/", "访问量排行")))
+    links = [n for n in nodes(navigation[0]) if n.tag == "a"]
+    assert [(n.attrs.get("href"), canonical(n)) for n in links] == expected, (label, "blog navigation order, labels or counts differ")
+    assert [n.attrs.get("href") for n in links if n.attrs.get("aria-current") == "page"] == ([current] if current else []), (label, "current blog navigation destination differs")
+    form = search[0]
+    assert form.attrs.get("role") == "search" and form.attrs.get("action") == "/blog/" and form.attrs.get("method", "get").lower() == "get", (label, "search must support the shared blog query route")
+    fields = [n for n in nodes(form) if n.tag == "input" and n.attrs.get("id") == "blog-search"]
+    assert len(fields) == 1 and fields[0].attrs.get("type") == "search" and fields[0].attrs.get("name") == "q", (label, "blog search field differs")
+    assert fields[0].attrs.get("aria-label") or any(n.tag == "label" and n.attrs.get("for") == "blog-search" and canonical(n) for n in nodes(form)), (label, "search field needs an accessible label")
+    clears = [n for n in nodes(form) if n.tag == "button" and n.attrs.get("id") == "clear-search"]
+    assert len(clears) == 1 and clears[0].attrs.get("type") == "button" and (clears[0].attrs.get("aria-label") or canonical(clears[0])), (label, "search clear action is missing")
 
 
 def check_archive(document, sources):
@@ -811,11 +833,16 @@ def main(argv=None):
         assert hashlib.sha256(data).hexdigest() == item["sha256"], (item["original_url"], "media hash differs")
     home = read_document(ROOT / "blog/index.html")
     check_cards(home, posts, "blog index", tags)
-    check_history_links(home, historical_pages, "blog historical-page index")
-    check_tag_cloud(home, tags, posts, "homepage tag cloud", folded=True)
+    assert not any("data-tag-id" in n.attrs or "data-visits-ranking" in n.attrs or has_class(n, "blog-pages-list") for n in nodes(home)), "homepage sections must be accessed through the shared navigation"
+    tag_lists = [n for n in nodes(home) if has_class(n, "post-list") and n.attrs.get("data-tag-filter") == "all"]
+    assert len(tag_lists) == 1, "homepage needs one complete tag-filtered article collection"
+    try:
+        tag_names = json.loads(tag_lists[0].attrs.get("data-tag-names", ""))
+    except json.JSONDecodeError as error:
+        raise AssertionError("homepage tag names must be a valid maintained mapping") from error
+    assert tag_names == {str(identifier): tags[identifier]["name"] for post in posts for identifier in post["tags"]}, "homepage tag-filter names differ from the used public tags"
     archive = read_document(ROOT / "blog/archive/index.html")
     check_archive(archive, posts)
-    check_history_links(archive, historical_pages, "archive historical-page index")
     nonempty_categories = {c["id"] for c in batch["categories"] if any(c["id"] in p["categories"] for p in posts)}
     assert all(c["count"] == sum(c["id"] in p["categories"] for p in posts) for c in batch["categories"]), "source category count disagrees with public scope"
     assert len(report["categories"]) == len({c["id"] for c in report["categories"]}) == len(nonempty_categories)
@@ -858,9 +885,14 @@ def main(argv=None):
     check_comment_admin(report, features["comments"])
     editor_pages = check_article_editors(report, sources, features["comments"])
     comment_admin_path = ROOT / "blog/comment/index.html"
+    ranking_path = ROOT / "blog/ranking/index.html"
     pages = list((ROOT / "blog").rglob("*.html"))
-    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | editor_pages | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
+    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, ranking_path, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | editor_pages | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
     assert set(pages) == expected_pages, "missing or stale generated blog HTML"
+    navigation_pages = {ROOT / "blog/index.html": "/blog/", ROOT / "blog/archive/index.html": None, tag_index: "/blog/tags/", ranking_path: "/blog/ranking/", friends_path: None}
+    navigation_pages.update({path: "/" + path.parent.relative_to(ROOT).as_posix() + "/" for path in expected_category_files})
+    navigation_pages.update({path: "/blog/tags/" for path in expected_tag_files})
+    navigation_pages.update({ROOT / route(p).lstrip("/") / "index.html": route(p) for p in historical_pages})
     visit_documents = {ROOT / route(source).lstrip("/") / "index.html": str(source["id"]) for source in sources}
     visit_pages = expected_pages - editor_pages - {comment_admin_path}
     for path in pages:
@@ -876,19 +908,25 @@ def main(argv=None):
                 if key in node.attrs:
                     check_local_url(node.attrs[key], path)
         all_nodes = list(nodes(document))
+        if path in navigation_pages:
+            check_blog_navigation(document, posts, historical_pages, batch["categories"], str(path), navigation_pages[path])
         widgets = [node for node in all_nodes if "data-blog-visits" in node.attrs]
         scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits.js")]
         rankings = [node for node in all_nodes if "data-visits-ranking" in node.attrs]
         ranking_scripts = [node for node in all_nodes if node.tag == "script" and urlsplit(node.attrs.get("src", "")).path.endswith("/visits-ranking.js")]
-        if features["visits"]["enabled"] and path == ROOT / "blog/index.html":
-            assert len(rankings) == len(ranking_scripts) == 1, (path, "homepage ranking widget or script missing")
+        if features["visits"]["enabled"] and path == ranking_path:
+            assert len(rankings) == len(ranking_scripts) == 1, (path, "ranking page widget or script missing")
             assert urlsplit(ranking_scripts[0].attrs.get("src", "")).path == "/blog/visits-ranking.js", (path, "ranking script path differs")
             ranking = rankings[0]
-            assert ranking.tag == "details" and "open" in ranking.attrs and ranking.attrs.get("data-ranking-enabled") == "true" and ranking.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "ranking configuration differs")
+            assert ranking.tag == "section" and ranking.attrs.get("data-ranking-enabled") == "true" and ranking.attrs.get("data-blog-api") == features["visits"]["api_base"], (path, "ranking configuration differs")
             mains = [node for node in all_nodes if node.tag == "main" and node.attrs.get("id") == "main"]
             assert len(mains) == 1 and ranking in mains[0].children, (path, "ranking must be outside article and tag filtering")
-            summaries = [node for node in ranking.children if isinstance(node, Node) and node.tag == "summary"]
-            assert len(summaries) == 1 and canonical(summaries[0]) == "访问量排行 累计 · TOP 10", (path, "ranking title or fixed limit differs")
+            headings = [node for node in ranking.children if isinstance(node, Node) and node.tag == "h2"]
+            assert len(headings) == 1 and canonical(headings[0]) == "累计 · TOP 10", (path, "ranking fixed limit differs")
+            source_lists = [node for node in all_nodes if "data-ranking-source" in node.attrs]
+            assert len(source_lists) == 1 and source_lists[0].tag == "ul" and "hidden" in source_lists[0].attrs, (path, "ranking needs one hidden maintained article registry")
+            source_links = [node for node in nodes(source_lists[0]) if node.tag == "a"]
+            assert [(node.attrs.get("href"), canonical(node)) for node in source_links] == [(route(source), " ".join(source["title"].split())) for source in posts], (path, "ranking article registry differs from maintained sources")
             lists = [node for node in nodes(ranking) if "data-ranking-list" in node.attrs]
             statuses = [node for node in nodes(ranking) if "data-ranking-status" in node.attrs]
             retries = [node for node in nodes(ranking) if "data-ranking-retry" in node.attrs]
@@ -896,8 +934,8 @@ def main(argv=None):
             assert len(statuses) == 1 and statuses[0].attrs.get("role") == "status" and canonical(statuses[0]), (path, "ranking loading status missing")
             assert len(retries) == 1 and retries[0].tag == "button" and retries[0].attrs.get("type") == "button" and "hidden" in retries[0].attrs, (path, "ranking retry button differs")
         else:
-            assert not rankings and not ranking_scripts, (path, "ranking must only appear on the enabled blog homepage")
-            assert not any(key.startswith("data-ranking") for node in all_nodes for key in node.attrs), (path, "ranking DOM appears outside the enabled homepage")
+            assert not rankings and not ranking_scripts, (path, "ranking must only appear on the enabled ranking page")
+            assert not any(key.startswith("data-ranking") for node in all_nodes for key in node.attrs), (path, "ranking DOM appears outside the enabled ranking page")
         if features["visits"]["enabled"] and path in visit_pages:
             assert len(widgets) == 1 and len(scripts) == 1, (path, "enabled Visits widget or script missing")
             assert urlsplit(scripts[0].attrs.get("src", "")).path == "/blog/visits.js", (path, "Visits script path differs")

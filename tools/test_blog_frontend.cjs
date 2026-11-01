@@ -92,7 +92,10 @@ function environment(href = 'http://127.0.0.1:8791/blog/posts/1154/') {
   const windowEvents = new Map(); let random = 0;
   const win = { location: { href }, setTimeout, clearTimeout, isSecureContext: true, crypto: { randomUUID: () => '00000000-0000-4000-8000-' + String(++random).padStart(12, '0') },
     addEventListener(type, fn) { if (!windowEvents.has(type)) windowEvents.set(type, []); windowEvents.get(type).push(fn); },
-    history: { pushState(_, __, url) { win.location.href = String(url); } },
+    history: {
+      pushState(_, __, url) { win.location.href = String(url); },
+      replaceState(_, __, url) { win.location.href = String(url); },
+    },
     async fire(type) { for (const fn of windowEvents.get(type) || []) await fn(); } };
   const calls = []; let handleFetch = async () => { throw new Error('Unexpected fetch'); };
   // A tiny inert HTML fixture parser supplies browser-owned parsing; sanitizer
@@ -153,27 +156,34 @@ function visitsFixture(enabled = true) {
   return { ...env, container, site, count, retry };
 }
 function rankingFixture(enabled = true, api = 'https://ranking.example.test/') {
-  const env = environment('http://127.0.0.1:8791/blog/'); const { el } = env;
-  const section = el('details', { 'data-visits-ranking': '', 'data-ranking-enabled': String(enabled), 'data-blog-api': api, open: '' });
-  el('summary', {}, section, '访问量排行');
+  const env = environment('http://127.0.0.1:8791/blog/ranking/'); const { el } = env;
+  const section = el('section', { 'data-visits-ranking': '', 'data-ranking-enabled': String(enabled), 'data-blog-api': api });
+  el('h2', {}, section, '累计 · TOP 10');
   const list = el('ol', { 'data-ranking-list': '', hidden: '' }, section);
   const status = el('p', { 'data-ranking-status': '', role: 'status' }, section, '正在加载排行…');
   const retry = el('button', { type: 'button', 'data-ranking-retry': '', hidden: '' }, section, '重试');
-  const form = el('form', { class: 'search-form', hidden: '' });
-  const input = el('input', { id: 'blog-search', type: 'search' }, form);
+  const form = el('form', { class: 'search-form', action: '/blog/', method: 'get', hidden: '' });
+  const input = el('input', { id: 'blog-search', name: 'q', type: 'search' }, form);
   el('button', { id: 'clear-search', type: 'button' }, form);
-  el('p', { id: 'search-count' }); el('p', { id: 'no-results', hidden: '' });
-  const cloud = el('ul', { class: 'tag-cloud' });
-  const tag = el('a', { href: '/blog/tags/104/', 'data-tag-id': '104', 'data-tag-name': '2-SAT' }, cloud, '2-SAT');
-  const posts = el('div', { class: 'post-list', 'data-tag-filter': 'all' });
-  const cards = [], titles = [];
+  const registry = el('ul', { 'data-ranking-source': '', hidden: '' });
+  const titles = [];
   for (let index = 1; index <= 12; index++) {
-    const card = el('article', { class: 'post-card', 'data-search': 'Article ' + index, 'data-tags': index % 2 ? '104' : '105' }, posts);
-    const heading = el('h2', {}, card);
-    titles.push(el('a', { href: '/blog/posts/' + index + '/' }, heading, 'Article ' + index));
-    cards.push(card);
+    const row = el('li', {}, registry);
+    titles.push(el('a', { href: '/blog/posts/' + index + '/' }, row, 'Article ' + index));
   }
-  return { ...env, section, list, status, retry, cards, titles, input, tag };
+  return { ...env, section, list, status, retry, registry, titles, form, input };
+}
+function searchFixture(href = 'http://127.0.0.1:8791/blog/', withCards = true) {
+  const env = environment(href); const { el } = env;
+  const form = el('form', { class: 'search-form', action: '/blog/', method: 'get', hidden: '' });
+  const input = el('input', { id: 'blog-search', name: 'q', type: 'search' }, form);
+  const clear = el('button', { id: 'clear-search', type: 'button' }, form);
+  if (!withCards) return { ...env, form, input, clear };
+  const count = el('p', { id: 'search-count' });
+  const noResults = el('p', { id: 'no-results', hidden: '' });
+  const list = el('div', { class: 'post-list' });
+  const cards = ['first Mo', 'second tree', 'third Mo'].map((text) => el('article', { class: 'post-card', 'data-search': text }, list));
+  return { ...env, form, input, clear, count, noResults, list, cards };
 }
 const rankingData = (items = Array.from({ length: 10 }, (_, index) => ({ document: String(index + 1), visits: 1000 - index }))) => ({ enabled: true, seeded: true, items });
 async function main() {
@@ -330,7 +340,7 @@ async function main() {
     assert.ok(f.calls.every((call) => call.options.credentials === 'omit'));
     f.run('blog/visits.js'); await f.win.fire('online'); await flush(); assert.equal(f.calls.length, 4);
   });
-  await check('ranking renders ten safe links with maintained titles, without changing under search or tags', async () => {
+  await check('standalone ranking renders ten safe links from its maintained registry, independently of search', async () => {
     const f = rankingFixture();
     const title = '<img src=x onerror="attack()"> & maintained title';
     f.titles[0].textContent = title;
@@ -343,9 +353,9 @@ async function main() {
     assert.equal(f.list.querySelector('.ranking-views').textContent, '1,000');
     const entries = f.list.textContent;
     f.run('blog/blog.js'); f.input.value = 'absent term'; await f.input.fire('input');
-    assert.ok(f.cards.every((card) => card.hidden)); assert.equal(f.list.hidden, false); assert.equal(f.list.textContent, entries);
-    f.input.value = ''; await f.input.fire('input'); await f.tag.fire('click');
-    assert.equal(f.cards.filter((card) => !card.hidden).length, 6); assert.equal(f.list.textContent, entries);
+    assert.equal(f.doc.querySelectorAll('.post-card').length, 0);
+    assert.equal(f.form.hidden, false); assert.equal((await f.form.fire('submit')).defaultPrevented, false);
+    assert.equal(f.list.hidden, false); assert.equal(f.list.textContent, entries);
     assert.equal(f.calls.length, 1); assert.equal(f.calls[0].url, 'https://ranking.example.test/v1/visits/ranking');
     assert.equal(f.calls[0].options.method, undefined); assert.equal(f.calls[0].options.credentials, 'omit'); assert.equal(f.calls[0].options.cache, 'no-store');
   });
@@ -397,6 +407,58 @@ async function main() {
     const f = rankingFixture(); f.setFetch(async () => response(rankingData([]))); f.run('blog/visits-ranking.js'); await flush();
     assert.equal(f.section.dataset.rankingState, 'ready'); assert.equal(f.list.hidden, true); assert.equal(f.retry.hidden, true); assert.match(f.status.textContent, /暂无/);
   });
+  await check('search restores q, filters locally, updates the address and clears without losing unrelated parameters', async () => {
+    const f = searchFixture('http://127.0.0.1:8791/blog/?q=Mo&view=all');
+    f.run('blog/blog.js');
+    assert.equal(f.input.value, 'Mo'); assert.equal(f.form.hidden, false);
+    assert.deepEqual(f.cards.map((node) => node.hidden), [false, true, false]);
+    assert.match(f.count.textContent, /2/); assert.equal(f.clear.disabled, false);
+    f.input.value = 'tree'; await f.input.fire('input');
+    assert.deepEqual(f.cards.map((node) => node.hidden), [true, false, true]);
+    assert.equal(new URL(f.win.location.href).searchParams.get('q'), 'tree');
+    assert.equal(new URL(f.win.location.href).searchParams.get('view'), 'all');
+    assert.equal((await f.form.fire('submit')).defaultPrevented, true);
+    f.input.value = 'absent'; await f.input.fire('input'); assert.equal(f.noResults.hidden, false);
+    await f.clear.fire('click');
+    assert.equal(f.input.value, ''); assert.equal(f.doc.activeElement, f.input); assert.equal(f.clear.disabled, true);
+    assert.equal(new URL(f.win.location.href).searchParams.has('q'), false);
+    assert.equal(new URL(f.win.location.href).searchParams.get('view'), 'all');
+    assert.deepEqual(f.cards.map((node) => node.hidden), [false, false, false]); assert.equal(f.noResults.hidden, true);
+    assert.equal(f.calls.length, 0);
+  });
+  await check('search history restores both q and an empty query on list pages', async () => {
+    const f = searchFixture('http://127.0.0.1:8791/blog/?q=Mo'); f.run('blog/blog.js');
+    f.win.location.href = 'http://127.0.0.1:8791/blog/?q=tree'; await f.win.fire('popstate');
+    assert.equal(f.input.value, 'tree'); assert.deepEqual(f.cards.map((node) => node.hidden), [true, false, true]);
+    f.win.location.href = 'http://127.0.0.1:8791/blog/'; await f.win.fire('popstate');
+    assert.equal(f.input.value, ''); assert.deepEqual(f.cards.map((node) => node.hidden), [false, false, false]);
+  });
+  await check('pages without an article list expose native GET search rather than filtering unrelated content', async () => {
+    const f = searchFixture('http://127.0.0.1:8791/blog/tags/', false); f.run('blog/blog.js');
+    assert.equal(f.form.hidden, false); assert.equal(f.form.getAttribute('action'), '/blog/');
+    assert.equal(f.form.getAttribute('method'), 'get'); assert.equal(f.input.getAttribute('name'), 'q');
+    f.input.value = '网络流'; await f.input.fire('input');
+    assert.equal((await f.form.fire('submit')).defaultPrevented, false);
+    assert.equal(f.win.location.href, 'http://127.0.0.1:8791/blog/tags/'); assert.equal(f.calls.length, 0);
+  });
+  await check('legacy tag URLs retain readable names without a visible homepage tag cloud', async () => {
+    const f = searchFixture('http://127.0.0.1:8791/blog/?tag=104'); const { el } = f;
+    f.list.setAttribute('data-tag-filter', 'all');
+    f.list.setAttribute('data-tag-names', JSON.stringify({ '104': '2-SAT', '105': '网络流' }));
+    f.cards[0].setAttribute('data-tags', '104'); f.cards[1].setAttribute('data-tags', '105'); f.cards[2].setAttribute('data-tags', '104 105');
+    const active = el('p', { class: 'active-tag-filter', hidden: '' });
+    const label = el('span', { 'data-active-tag': '' }, active);
+    const clearTag = el('button', { 'data-clear-tag': '', type: 'button' }, active);
+    f.run('blog/blog.js');
+    assert.equal(f.doc.querySelector('.tag-cloud'), null);
+    assert.deepEqual(f.cards.map((node) => node.hidden), [false, true, false]);
+    assert.equal(active.hidden, false); assert.equal(label.textContent, '标签：2-SAT');
+    assert.match(f.count.textContent, /标签「2-SAT」/);
+    f.win.location.href = 'http://127.0.0.1:8791/blog/?tag=105&q=tree'; await f.win.fire('popstate');
+    assert.equal(label.textContent, '标签：网络流'); assert.deepEqual(f.cards.map((node) => node.hidden), [true, false, true]);
+    await clearTag.fire('click'); assert.equal(active.hidden, true); assert.equal(f.input.value, 'tree');
+    assert.equal(new URL(f.win.location.href).searchParams.has('tag'), false);
+  });
   await check('tag URL restore, text intersection, clear, history and modified links', async () => {
     const f = environment('http://127.0.0.1:8791/blog/?tag=104'); const { el } = f;
     const cloud = el('ul', { class: 'tag-cloud' });
@@ -414,7 +476,7 @@ async function main() {
     input.value = 'Mo'; await input.fire('input'); assert.deepEqual(cards.map((node) => node.hidden), [false, true, true]);
     await tag105.fire('click'); assert.match(f.win.location.href, /tag=105/); assert.deepEqual(cards.map((node) => node.hidden), [true, true, false]);
     await clearTag.fire('click'); assert.equal(input.value, 'Mo'); assert.deepEqual(cards.map((node) => node.hidden), [false, true, false]); assert.equal(active.hidden, true);
-    f.win.location.href = 'http://127.0.0.1:8791/blog/?tag=104'; await f.win.fire('popstate'); assert.deepEqual(cards.map((node) => node.hidden), [false, true, true]);
+    f.win.location.href = 'http://127.0.0.1:8791/blog/?tag=104&q=Mo'; await f.win.fire('popstate'); assert.equal(input.value, 'Mo'); assert.deepEqual(cards.map((node) => node.hidden), [false, true, true]);
     const modified = await tag104.fire('click', { ctrlKey: true }); assert.equal(modified.defaultPrevented, false); assert.equal(tag104.href, '/blog/tags/104/'); assert.match(count.textContent, /1/);
   });
   console.log(JSON.stringify({ passed, failed: 0, environment: 'Node VM with isolated DOM and mocked HTTP; no network' }));
