@@ -9,7 +9,7 @@ The approved personal mark is a calligraphic capital X in the site's blue (`#2b5
 1. A small name heading with its alternate-language name alongside, followed by identity, advisor, and a brief biography.
 2. Publications, then education, internships, teaching, and awards. Each heading sits above its records. Desktop dates align on the right; mobile dates follow the record text.
 3. Each publication shows its title, authors, and an inline row for venue, acceptance status, paper, and code. Typography uses 15px body text, 17px section headings, 13px secondary text, and 12px dates. Sections use 14px vertical padding and records use 10px total separation. At mobile widths the name is 28px and record details stack naturally.
-4. A simple Contact heading followed directly by email and GitHub links on one compact line. The personal GitHub link appears only here, at the end of the page.
+4. A simple Contact heading followed directly by email and GitHub links and a WeChat ID on one compact line, wrapping naturally on narrow screens. The personal GitHub link appears only here, at the end of the page.
 
 Within ordinary records, keep the leading institution or course name at 15px / 600. All following descriptions, separators, resource links, report text, and author excerpts use 13px / 400, with the owner's name emphasized at 600 without changing its size. Resource links inherit their row's type size: 13px in ordinary records and 12px in publication metadata. Dates remain a separate 12px auxiliary layer. All content shares the global font stack.
 
@@ -39,7 +39,7 @@ The first release uses personal information confirmed by the owner. Optional sec
 - Publication metadata lives in `.publication-meta`, retaining `.record-period`, `.record-description`, and `.record-links` selectors.
 - `[data-work-list]` renders verified `SITE_CONTENT.work` entries; hide `[data-work-section]` and `[data-work-nav]` when empty.
 - `[data-interest-list]` renders verified `SITE_CONTENT.interests`; hide `[data-interest-section]` and `[data-interest-nav]` when empty.
-- `[data-contact-list]` renders `SITE_CONTENT.contacts`; only allow safe `https:`, `http:`, and `mailto:` URLs.
+- `[data-contact-list]` renders `SITE_CONTENT.contacts` as links for safe `https:`, `http:`, and `mailto:` URLs, or as plain text without a URL.
 - `[data-year]` shows the current year.
 - `.reveal` marks below-the-fold elements for an optional, accessible entrance animation.
 

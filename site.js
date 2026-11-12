@@ -310,13 +310,15 @@
         if (!entry || typeof entry !== "object") return;
         const url = safeURL(entry.url);
         const label = localized(entry.label);
-        if (!url || !label) return;
-        const link = prepareLink(node("a", "contact-link"), url);
-        link.appendChild(node("span", "contact-link-label", label));
-        const arrow = node("span", "contact-link-arrow", "↗");
-        arrow.setAttribute("aria-hidden", "true");
-        link.appendChild(arrow);
-        fragment.appendChild(link);
+        if (!label) return;
+        const contact = url ? prepareLink(node("a", "contact-link"), url) : node("span", "contact-link");
+        contact.appendChild(node("span", "contact-link-label", label));
+        if (url) {
+          const arrow = node("span", "contact-link-arrow", "↗");
+          arrow.setAttribute("aria-hidden", "true");
+          contact.appendChild(arrow);
+        }
+        fragment.appendChild(contact);
       });
       list.replaceChildren(fragment);
     });

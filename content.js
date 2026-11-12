@@ -191,5 +191,6 @@ window.SITE_CONTENT = {
   contacts: [
     { label: "Email: xht@stu.pku.edu.cn", url: "mailto:xht@stu.pku.edu.cn" },
     { label: "GitHub: pku-xht", url: "https://github.com/pku-xht" },
+    { label: { zh: "微信: pku-xht", en: "WeChat: pku-xht" } },
   ],
 };
