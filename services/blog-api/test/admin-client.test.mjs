@@ -40,8 +40,8 @@ class Element {
   set innerHTML(_) { throw Error('HTML injection attempted'); }
 }
 function fixture({ base = api, enabled = true, foreignFrame = false, respond = () => list(),
-  loginRespond = () => ({ authenticated: true, token: sessionToken, expires_at: expiresAt(), article_editing: true }),
-  sessionRespond = () => ({ authenticated: true, expires_at: expiresAt(), article_editing: true }),
+  loginRespond = () => ({ authenticated: true, token: sessionToken, expires_at: expiresAt() }),
+  sessionRespond = () => ({ authenticated: true, expires_at: expiresAt() }),
   logoutRespond = () => ({ logged_out: true }), confirm = () => true, script = ADMIN_SCRIPT,
   passwordManager = true, declinePassword = false, storage = new Map(), blockedStorage = false } = {}) {
   const ids = ['login-form', 'management', 'username', 'token', 'status', 'document-filter', 'search',

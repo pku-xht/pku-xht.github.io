@@ -262,54 +262,8 @@ def assert_routes(actual, expected, label):
     assert len(actual) == len(set(actual)), (label, "duplicate entries")
 
 
-def check_article_editors(report, sources, feature):
-    metadata = report["article_editor"]
-    assert metadata["api_base"] == feature["api_base"]
-    assert metadata["script"] == "/blog/editor/editor.js" and metadata["style"] == "/blog/editor/editor.css"
-    expected_routes = [{"document": str(source["id"]), "path": route(source) + "exit/"} for source in sources]
-    assert metadata["routes"] == expected_routes, "editor routes must cover every registered article and page"
-    directory = ROOT / "blog/editor"
-    shared = {directory / "editor.js", directory / "editor.css"}
-    assert set(directory.iterdir()) == shared, "missing or stale editor assets"
-    page_files = {ROOT / row["path"].lstrip("/") / "index.html" for row in expected_routes}
-    source_files = {ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs", ROOT / "services/blog-api/src/admin-session-client.mjs", ROOT / "services/blog-api/src/admin-style.mjs"}
-    for key, files in (("source_sha256", source_files), ("asset_sha256", shared | page_files)):
-        expected = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in files}
-        assert metadata[key] == expected, (key, "article editors need rebuilding from shared sources")
-    endpoint = urlsplit(feature["api_base"])
-    origin = f"{endpoint.scheme}://{endpoint.netloc}" if endpoint.netloc else "'none'"
-    for source in sources:
-        path = ROOT / route(source).lstrip("/") / "exit/index.html"
-        document = read_document(path)
-        elements = list(nodes(document))
-        body = [node for node in elements if node.tag == "body"]
-        assert len(body) == 1 and body[0].attrs.get("data-editor-api") == feature["api_base"] and body[0].attrs.get("data-document-id") == str(source["id"]), (source["id"], "editor endpoint or document changed")
-        metas = {node.attrs.get("name"): node.attrs.get("content", "") for node in elements if node.tag == "meta"}
-        assert "noindex" in metas.get("robots", "").split(",") and metas.get("referrer") == "no-referrer"
-        policies = [node.attrs.get("content", "") for node in elements if node.tag == "meta" and node.attrs.get("http-equiv", "").lower() == "content-security-policy"]
-        assert len(policies) == 1
-        policy = {parts[0]: parts[1:] for value in policies[0].split(";") if (parts := value.split())}
-        assert policy == {"default-src": ["'none'"], "script-src": ["'self'"], "style-src": ["'self'"], "connect-src": [origin], "base-uri": ["'none'"], "form-action": ["'none'"]}, (source["id"], "editor CSP must be local and fixed")
-        by_id = {node.attrs["id"]: node for node in elements if "id" in node.attrs}
-        assert {"login-form", "username", "token", "load", "editor", "source", "save", "reload", "logout", "revision", "details", "message"} <= set(by_id)
-        assert by_id["login-form"].tag == "form" and by_id["load"].attrs.get("type") == "submit"
-        assert by_id["username"].attrs.get("autocomplete") == "username" and by_id["username"].attrs.get("value") == "admin"
-        assert by_id["token"].attrs.get("type") == "password" and by_id["token"].attrs.get("autocomplete") == "current-password" and not by_id["token"].attrs.get("value")
-        assert by_id["source"].tag == "textarea" and not content(by_id["source"]).strip() and "hidden" in by_id["editor"].attrs, (source["id"], "editor must not serialize saved source or private drafts")
-        assert "disabled" in by_id["token"].attrs and "disabled" in by_id["load"].attrs
-        assert any(node.tag == "a" and node.attrs.get("href") == route(source) for node in elements), "editor needs a return link"
-        scripts = [node for node in elements if node.tag == "script"]
-        styles = [node for node in elements if node.tag == "link" and node.attrs.get("rel") == "stylesheet"]
-        assert len(scripts) == len(styles) == 1 and scripts[0].attrs.get("src") == "/blog/editor/editor.js?v=2" and not content(scripts[0]).strip()
-        assert styles[0].attrs.get("href") == "/blog/editor/editor.css?v=2"
-        assert not any(node.tag == "iframe" or any(key.lower().startswith("on") for key in node.attrs) for node in elements), "editor must use its local script, without frames or inline handlers"
-    client = (directory / "editor.js").read_text(encoding="utf-8")
-    check_admin_session_client(client)
-    return page_files
-
-
 def check_admin_session_client(client):
-    """Keep both generated clients on the one reviewed session transport."""
+    """Keep comment management on the reviewed session transport."""
     helper_file = ROOT / "services/blog-api/src/admin-session-client.mjs"
     helper_source = helper_file.read_text(encoding="utf-8")
     helper = helper_source.split("export const ADMIN_SESSION_HELPERS = String.raw`", 1)[1].rsplit("`;", 1)[0]
@@ -861,7 +815,7 @@ def main(argv=None):
         if items:
             assert any(n.tag == "a" and n.attrs.get("href") == expected_route for n in nodes(home)), (category_id, "nonempty category missing from blog index")
     for directory, values in (("posts", posts), ("pages", historical_pages)):
-        expected_files = {ROOT / route(p).lstrip("/") / filename for p in values for filename in ("index.html", "exit/index.html")}
+        expected_files = {ROOT / route(p).lstrip("/") / "index.html" for p in values}
         assert set((ROOT / "blog" / directory).rglob("*.html")) == expected_files, (directory, "missing or stale content pages")
     assert set((ROOT / "blog/categories").rglob("*.html")) == expected_category_files, "missing or stale category pages"
     used_tags = {identifier for source in posts for identifier in source["tags"]}
@@ -883,18 +837,19 @@ def main(argv=None):
     check_friends_page(read_document(friends_path), friends)
     assert report["friends"] == {"path": "/blog/friends/", "count": len(friends), "source_file": "content/blog/friends.yaml"}, "friend-link report differs"
     check_comment_admin(report, features["comments"])
-    editor_pages = check_article_editors(report, sources, features["comments"])
+    assert "article_editor" not in report, "retired article editor metadata remains"
+    assert not (ROOT / "blog/editor").exists(), "retired article editor assets remain"
     comment_admin_path = ROOT / "blog/comment/index.html"
     ranking_path = ROOT / "blog/ranking/index.html"
     pages = list((ROOT / "blog").rglob("*.html"))
-    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, ranking_path, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | editor_pages | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
+    expected_pages = {ROOT / "blog/index.html", ROOT / "blog/archive/index.html", tag_index, ranking_path, friends_path, comment_admin_path} | expected_category_files | expected_tag_files | {ROOT / route(p).lstrip("/") / "index.html" for p in sources}
     assert set(pages) == expected_pages, "missing or stale generated blog HTML"
     navigation_pages = {ROOT / "blog/index.html": "/blog/", ROOT / "blog/archive/index.html": None, tag_index: "/blog/tags/", ranking_path: "/blog/ranking/", friends_path: None}
     navigation_pages.update({path: "/" + path.parent.relative_to(ROOT).as_posix() + "/" for path in expected_category_files})
     navigation_pages.update({path: "/blog/tags/" for path in expected_tag_files})
     navigation_pages.update({ROOT / route(p).lstrip("/") / "index.html": route(p) for p in historical_pages})
     visit_documents = {ROOT / route(source).lstrip("/") / "index.html": str(source["id"]) for source in sources}
-    visit_pages = expected_pages - editor_pages - {comment_admin_path}
+    visit_pages = expected_pages - {comment_admin_path}
     for path in pages:
         document = Document(path.read_text(encoding="utf-8")).root
         ids = [n.attrs["id"] for n in nodes(document) if "id" in n.attrs]

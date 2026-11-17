@@ -55,11 +55,9 @@ Visits uses the site's own Worker API and a verified independent baseline. The w
 
 ## Blog
 
-The blog keeps the selected **C · personal blog** design, stable article URLs, four categories and 91 tag pages. Its 211 articles and page `215` form one public collection. Page `215` uses the same reading and editing interface as the articles; it does not replace the separately maintained homepage. Readers see one set of articles and comments. The navigation's single **旧站 ↗** link is the only source-site entrance; source notes, migration badges and separate historical sections are removed.
+The blog keeps the selected **C · personal blog** design, stable article URLs, four categories and 91 tag pages. Its 211 articles and page `215` form one public collection, with the same reading layout. The personal homepage is maintained separately. The navigation's **旧站 ↗** link leads to the source site.
 
-The unified interface, comment backend and online editor were **deployed on 2026-10-26**. A real save, automatic build/Pages publication, stale-version rejection and exact source restoration have been verified. Chrome now loads the live comments and Worker API after a local Windows proxy repair; administrator login with Chrome autofill and session restoration have also been verified in the following release. Current evidence is recorded in [migration/unified-blog-2026-10-25.md](migration/unified-blog-2026-10-25.md); earlier releases remain in [migration/README.md](migration/README.md). Hidden content remains outside this public repository and outside the current scope.
-
-The comment workspace, shared blog styling and **30-day administrator sessions were deployed on 2026-10-26**, together with the approved friend-link maintenance. Production login, session restoration/revocation, all-comment management and Chrome access are verified in [migration/admin-workspace-2026-10-26.md](migration/admin-workspace-2026-10-26.md).
+The unified comment backend, moderation workspace and 30-day administrator sessions were deployed on 2026-10-26. See the [migration index](migration/README.md) for release and verification records.
 
 ### Sources and generation
 
@@ -73,7 +71,7 @@ The comment workspace, shared blog styling and **30-day administrator sessions w
 - `blog/blog.css`, `blog/blog.js`, `blog/interactions.js`: the selected layout, search, code copying and unified API-backed discussion. Articles remain readable without JavaScript; comments need JavaScript and the backend. No static comment fallback can reveal a comment after it is rejected or deleted.
 - `blog/visits-ranking.js`: top-ten article ranking on `/blog/ranking/`, read from the Visits API and matched to that page's generated public article title/link registry.
 - `blog/visits-daily.js`: responsive PV trend chart on the same statistics page, with daily 7/30-day, monthly last-year and yearly full-history ranges and keyboard-accessible period details.
-- `services/blog-api/src/admin*.mjs` and `article-editor.mjs`: shared session login, comment management, visual styles and editor assets. The builder generates `/blog/comment/`, shared `/blog/editor/` assets and an `exit/` page for every registered document.
+- `services/blog-api/src/admin*.mjs`: session login, comment management and visual styles for the generated `/blog/comment/` page and the Worker's `/admin` route.
 - `services/blog-api/data/unified-comments.json` and `.sql`: deterministic, public-only import assets. Their persistent batch and ID hashes prevent reruns from restoring a deleted comment or undoing moderation.
 - `migration/public-batch.json`: generated source hashes, URL mappings, counts and administrative-asset evidence. Its legacy `publication: local-only` describes a build report, not the live deployment state.
 
@@ -83,13 +81,11 @@ Earlier JSON/HTML snapshots in `migration/sources/`, batch evidence and public c
 
 ### Editing an article
 
-Edit the existing Markdown, for example [1154.md](content/blog/posts/1154.md). YAML includes `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and optional `summary`. Keep document identity and routes stable. Dates retain `+08:00`; categories/tags are `{id, name}` lists. A supplied summary controls the excerpt; otherwise the builder derives one.
+Edit the existing Markdown locally, for example [1154.md](content/blog/posts/1154.md). YAML includes `id`, `type`, `title`, `date`, `modified`, `slug`, `original_url`, `categories`, `tags`, and optional `summary`. Keep document identity and routes stable. Dates retain `+08:00`; categories/tags are `{id, name}` lists. A supplied summary controls the excerpt; otherwise the builder derives one.
 
 Use CommonMark with GFM tables and strikethrough, and standard TeX in `$...$` or `$$...$$`. Write intentional hard breaks explicitly, use standard list indentation and math commands, separate headings with blank lines, and end the file with a newline. Embed complex HTML when conversion would alter it; preserve code whitespace. `legacy_anchors` records verified compatibility fragments where unique heading names are insufficient. Intentional document additions/removals need both the source and `collection.yaml`; new resources also need `resources.yaml`. Do not hand-edit generated HTML.
 
-For online editing, append `exit` to an article URL: `/blog/posts/1154/exit/`, or `/blog/pages/215/exit/`. The editor loads that document's complete Markdown and YAML after administrator login. All 212 registered documents use this entry point; arbitrary repository paths and new documents are not accepted.
-
-**保存并更新网站** submits one candidate on `codex/article-edit/<UUID>`. The trusted workflow from `main` validates the edit, builds/checks the site and creates one main-branch commit containing the source and generated pages. It explicitly requests a Pages build and verifies that revision before reporting success. A pending submission is not publication; a failed build or a changed source version does not silently overwrite the published article. Reuse the save request ID on an uncertain retry. Public repository branches are public too, so the editor is only for material approved for public display.
+Build and check the blog after editing, then commit the Markdown and affected generated files together. Use the [deployment procedure](#authorized-deployment-order) when authorized to publish.
 
 ### Build and check
 
@@ -104,10 +100,9 @@ python -S -X utf8 tools/test_blog_sources.py
 python -S -X utf8 tools/test_blog_comments.py
 node tools/test_blog_frontend.cjs
 node --test services/blog-api/test/*.test.mjs
-python -S -X utf8 tools/test_publish_blog_edit.py
 ```
 
-The backend suite uses real SQLite through `node:sqlite`; it does not prove a Cloudflare deployment. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker-runtime regression additionally requires Miniflare/workerd, located through `BLOG_MINIFLARE_MODULE` (the installed Wrangler dependency's `miniflare/dist/src/index.js`). It runs the real bundled Worker against a local fictional GitHub service and temporary D1, covering runtime-specific fetch options, redirect credential isolation and session creation/restoration/revocation. An explicitly skipped bundling or runtime check is not a pass. The publication tests are local and must not be described as a real GitHub/Pages edit.
+The backend suite uses real SQLite through `node:sqlite`. The management bundling regression requires esbuild, optionally located through `BLOG_ESBUILD_MODULE`. The Worker runtime regression uses Miniflare/workerd and temporary D1 to check session creation, restoration and revocation. Set `BLOG_MINIFLARE_MODULE` to the installed Wrangler dependency's `miniflare/dist/src/index.js` if needed. Record skipped checks and verify production separately.
 
 To check the registered public sources against the standard format and independently compare the authorized conversion with its Git baseline:
 
@@ -149,15 +144,15 @@ For a local API, supply fictional local `ADMIN_TOKEN` and `RATE_LIMIT_SALT` in t
 node services/blog-api/scripts/dev.mjs --port 8787
 ```
 
-The bridge binds only `127.0.0.1`, applies schema/registered public comments and keeps SQLite outside this public repository, by default in the OS temporary directory. Use `--database <outside-repository-path>` to select another private location. Visits is forced off. Its administrator page is `http://127.0.0.1:8787/admin`; the static preview remains on port 8791. Without a configured GitHub editing secret the editor reports unavailable rather than pretending to save.
+The bridge binds only `127.0.0.1`, applies schema/registered public comments and keeps SQLite outside this public repository, by default in the OS temporary directory. Use `--database <outside-repository-path>` to select another private location. Visits is forced off. Its administrator page is `http://127.0.0.1:8787/admin`; the static preview remains on port 8791.
 
 ### Administrator password
 
-Comment management stays at `/blog/comment/`; document editing uses its `exit/` address. Both use account `admin` and the **same existing password value** (`ADMIN_TOKEN`). Standard `username`/`current-password` form fields and a successful-login credential request let Chrome offer to save/autofill it. Browser settings and password-manager policy decide whether a prompt appears. The browser manages any saved password; this site never writes the password into cookies, localStorage, sessionStorage or URLs.
+Comment management at `/blog/comment/` uses account `admin` and password `ADMIN_TOKEN`. Standard `username` and `current-password` fields let Chrome offer to save and autofill the password according to browser settings. The browser manages saved passwords. The site keeps them out of cookies, localStorage, sessionStorage and URLs.
 
-A successful password login exchanges it for a random, revocable session with a **30-day absolute expiry**. The same-origin comment and editor pages share only this session token and expiry in localStorage; reopening or refreshing a page validates the session before loading administrative data. The expiry does not slide on use. D1 stores only a token HMAC keyed by the current `ADMIN_TOKEN`, plus creation/expiry times. The raw password and raw session token do not enter D1.
+A successful login creates a random, revocable session that expires 30 days after creation. Same-origin comment management tabs share only the token and expiry in localStorage. Reopening or refreshing the page validates the session before loading comments. D1 stores the token HMAC keyed by `ADMIN_TOKEN`, plus creation and expiry times.
 
-Leaving a page clears its in-memory state while retaining the saved session. Explicit logout clears local access and requests server revocation, with other open pages responding to the storage change. A network failure is reported as a local logout with remote revocation unconfirmed. Expiry or a logout in another tab clears comment data but preserves an editor's unsaved text in memory; signing in again retains that draft and its original base SHA for conflict checking. Drafts are never persisted in browser storage. A browser that denies localStorage can still use the current page, but cannot keep the session across visits.
+Leaving the page clears its in-memory state and retains the saved session. Explicit logout clears local access, synchronizes other open management tabs and requests server revocation. A network failure is reported as a local logout with remote revocation unconfirmed. Expiry also clears comment data. With localStorage disabled, the session lasts for the current page only.
 
 The encrypted Windows backup is outside the repository at `%USERPROFILE%\.config\xht37-blog-api\admin-token.dpapi`. To reveal it privately in your own terminal:
 
@@ -165,13 +160,11 @@ The encrypted Windows backup is outside the repository at `%USERPROFILE%\.config
 pwsh -NoProfile -File services/blog-api/scripts/admin-token.ps1 -Reveal
 ```
 
-The helper without `-Reveal` only explains retrieval. Do not copy a real password, pending comment, credential/session file or database export into this repository, including ignored directories. The shared admin/editor pages have fixed API configuration, restrictive CSP, no referrer, `noindex` and an external-frame login guard.
+The helper without `-Reveal` only explains retrieval. Do not copy a real password, pending comment, credential/session file or database export into this repository, including ignored directories. Comment management pages have fixed API configuration, restrictive CSP, no referrer, `noindex` and an external-frame login guard.
 
-### Cloudflare and editor configuration
+### Cloudflare configuration
 
 Service routes, validation, frequency limits and credential handling are described in [services/blog-api/README.md](services/blog-api/README.md). Runtime comments require Cloudflare Workers + D1 and the existing `ADMIN_TOKEN`/`RATE_LIMIT_SALT` secrets. `wrangler.local.toml` contains the local binding, while committed `wrangler.toml` has no real database ID or secret. Visits is enabled after the verified baseline import; preserve the existing database, origins and secrets when deploying.
-
-The online editor additionally needs a fine-grained GitHub token, restricted to `pku-xht/pku-xht.github.io`: **Contents: read and write**, **Commit statuses: read**, plus GitHub's default **Metadata: read**. Store it as the Worker secret `GITHUB_EDIT_TOKEN`; it is never sent to the browser. This is separate from the administrator password. The trusted GitHub publication workflow's own token has only `contents: write`, `statuses: write` and `pages: write`. The workflow and publisher are `.github/workflows/publish-blog-edit.yml` and `tools/publish_blog_edit.py`; candidate branches cannot supply their workflow/code for privileged execution.
 
 Wrangler authentication uses the previously approved account/user read, Worker script write and D1 write scopes, plus offline refresh. Only when reconnecting is necessary:
 
@@ -183,19 +176,16 @@ Use the machine's actual HTTP/HTTPS proxy when its CLI cannot reach the OAuth en
 
 ### Authorized deployment order
 
-These commands are a deployment procedure, not evidence that this local change is deployed. Run only with authorization covering the release. Apply additive schema before deploying code that reads it. The 30-day-session upgrade requires `0003_admin_sessions.sql` before the new Worker, followed by the generated pages. Existing deployments retain their secrets and imported comments; they do not need a new GitHub secret or another import solely for this upgrade. The complete setup procedure is:
+Run only with authorization covering the release. Apply pending D1 migrations before deploying code that uses them. Preserve existing deployments' secrets and imported comments. For a new service, register the public documents, import the public comments and set `ADMIN_TOKEN` and `RATE_LIMIT_SALT` through Wrangler's interactive secret prompt or private stdin, then deploy the Worker. Use the registration and import commands for initialization or an authorized data update.
 
 ```sh
 wrangler d1 migrations apply <database-name> --remote --config services/blog-api/wrangler.local.toml
 wrangler d1 execute <database-name> --remote --config services/blog-api/wrangler.local.toml --file services/blog-api/data/register-public.sql
 wrangler d1 execute <database-name> --remote --config services/blog-api/wrangler.local.toml --file services/blog-api/data/unified-comments.sql
-wrangler secret put GITHUB_EDIT_TOKEN --config services/blog-api/wrangler.local.toml
 wrangler deploy --config services/blog-api/wrangler.local.toml
 ```
 
-Enter the GitHub secret interactively or through a private stdin pipe; never put its value in command arguments or repository files. Preserve the existing `ADMIN_TOKEN` and `RATE_LIMIT_SALT`. If setting up a new service, create those two Worker secrets separately through the same secret input mechanism.
-
-Read back public-import counts, hashes and foreign-key checks without exporting pending data; verify the actual Worker, CORS and unified public/admin behavior. Then push the checked static site and trusted workflow to `main` under the same release authorization, verify the matching Pages revision and assets, and finally test the authorized online-save flow. Do not report local tests, a candidate commit, or a main commit as a successful Pages publication.
+After any public import, read back its counts, hashes and foreign-key checks without exporting pending data. Verify live Worker behavior and CORS for public and admin requests. Push the checked static site to `main` under the release authorization, then verify the matching Pages revision and assets.
 
 ### Remote smoke check
 
@@ -228,7 +218,7 @@ The source is D1: immutable daily history through the original cutover capture p
 
 Daily history and the four trend ranges were deployed on **2026-11-02**, including additive migration `0004`, the existing-baseline-bound import and the verified Pages content revision `11b5b5b`. Existing cumulative baselines, events and comments were preserved; collection coverage remains subject to the limitation above. The daily statistics batch records the production version, import checks and browser evidence.
 
-When enabled and seeded, one blog reading-page load adds one site PV; a document page also adds one document PV. Blog index pages send no document ID. Refreshing counts as another view; retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Management and editor pages do not count views. The inherited baseline remains unchanged when moving the display; do not reimport it or subtract previously counted visits.
+When enabled and seeded, one blog reading-page load adds one site PV; a document page also adds one document PV. Blog index pages send no document ID. Refreshing counts as another view; retries within the same load do not. These are page views, not unique visitors. Disabled configuration sends no API requests; missing baselines or failed requests keep the counter hidden rather than showing a false zero. Comment management pages do not count views. The inherited baseline remains unchanged when moving the display; do not reimport it or subtract previously counted visits.
 
 The requested domain mapping is `xht37.com/` and `www.xht37.com/` to `https://pku-xht.github.io/blog/`, with public document links redirected to their corresponding routes and WordPress administration/private pages retained. The user accepts a small cutover counting discrepancy and has chosen Cloudflare DNS with a routed Worker. DNS activation, baseline import, enabled counting and actual frontend/route publication remain distinct verified steps in the cutover record.
 

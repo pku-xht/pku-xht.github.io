@@ -77,12 +77,10 @@ class MarkdownSourcesTests(unittest.TestCase):
         shutil.copyfile(PROJECT / "tools/render_math.cjs", tools / "render_math.cjs")
         shutil.copyfile(PROJECT / "tools/vendor/katex/katex.cjs", tools / "vendor/katex/katex.cjs")
         shutil.copyfile(PROJECT / "tools/render_comment_admin.mjs", tools / "render_comment_admin.mjs")
-        shutil.copyfile(PROJECT / "tools/render_article_editor.mjs", tools / "render_article_editor.mjs")
         admin_sources = self.project / "services/blog-api/src"
         admin_sources.mkdir(parents=True)
         for source in (PROJECT / "services/blog-api/src").glob("admin*.mjs"):
             shutil.copyfile(source, admin_sources / source.name)
-        shutil.copyfile(PROJECT / "services/blog-api/src/article-editor.mjs", admin_sources / "article-editor.mjs")
         # No migration/sources directory exists: none of the original JSON can be a build input.
         (self.project / "migration").mkdir()
         for relative in ("assets/favicon.svg", "assets/x-script-icon.svg"):
@@ -297,26 +295,25 @@ class MarkdownSourcesTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             self.check()
 
-    def test_each_document_editor_uses_fixed_api_and_has_no_embedded_source(self):
+    def test_retired_editor_is_not_generated_and_stale_assets_fail_validation(self):
         self.prepare_build()
         self.build()
         self.check()
         editor = self.project / "blog/posts/7/exit/index.html"
-        document = editor.read_text(encoding="utf-8")
-        self.assertIn('data-document-id="7"', document)
-        self.assertIn('autocomplete="current-password"', document)
-        self.assertIn('name="username"', document)
-        self.assertNotIn("源哨兵 alpha", document)
-        self.assertIn('<textarea id="source"', document)
-        editor.write_text(document.replace('</textarea>', 'tampered draft</textarea>'), encoding="utf-8")
+        self.assertFalse(editor.exists())
+        editor.parent.mkdir()
+        editor.write_text("<p>Retired editor</p>", encoding="utf-8")
         with self.assertRaises(AssertionError):
             self.check()
-        self.build()
         editor.unlink()
-        with self.assertRaises((AssertionError, FileNotFoundError)):
+        editor.parent.rmdir()
+        stale_assets = self.project / "blog/editor"
+        stale_assets.mkdir()
+        (stale_assets / "editor.js").write_text("// Retired editor", encoding="utf-8")
+        with self.assertRaises(AssertionError):
             self.check()
 
-    def test_independent_page_has_the_same_editor_and_no_origin_badge(self):
+    def test_independent_page_uses_normal_reading_interface(self):
         page = self.content / "pages/8.md"
         metadata = FRONTMATTER.replace("id: 7", "id: 8", 1).replace("type: post", "type: page").replace('title: "临时校验"', 'title: "临时页面"').replace("slug: temporary", "slug: temporary-page").replace('https://www.xht37.com/temporary/', 'https://www.xht37.com/temporary-page/')
         metadata = metadata[:metadata.index("categories:")] + "categories: []\ntags: []\n---\n\n"
@@ -329,7 +326,7 @@ class MarkdownSourcesTests(unittest.TestCase):
         self.assertNotIn("历史", document)
         self.assertNotIn("本文迁自", document)
         self.assertIn("这是一篇独立页面。", document)
-        self.assertTrue((self.project / "blog/pages/8/exit/index.html").is_file())
+        self.assertFalse((self.project / "blog/pages/8/exit/index.html").exists())
 
     def test_only_the_authorized_orphan_link_removal_passes_original_comparison(self):
         removed_url = "https://www.xht37.com/zroi-19-csp-s-模拟赛十联测-day1-题解/#lwptoc2"

@@ -52,9 +52,9 @@ test('the password is sent only to login; local persistence contains a revocable
   assert.equal(f.calls[0].url, base + '/v1/admin/login');
   assert.deepEqual(JSON.parse(f.storage.get(key)), { token, expires_at: expiry });
   assert.equal(f.writes.length, 1); assert.ok(!f.writes[0].value.includes(password));
-  await f.auth.request('/v1/admin/articles/46', 'POST', { source: 'public source', sha: 'a'.repeat(40), request_id: 'fictional' });
+  await f.auth.request('/v1/admin/comments/wp-46/approve', 'POST');
   assert.equal(f.calls[1].options.headers.Authorization, 'Bearer ' + token);
-  assert.ok(!f.calls[1].options.body.includes(password));
+  assert.equal(f.calls[1].options.body, undefined);
   for (const { url, options } of f.calls) {
     assert.ok(!url.includes(password) && !url.includes(token));
     assert.equal(options.credentials, 'omit'); assert.equal(options.redirect, 'error'); assert.equal(options.cache, 'no-store');
@@ -63,7 +63,7 @@ test('the password is sent only to login; local persistence contains a revocable
   assert.equal(f.timers.size, 0, 'Every request releases its bounded timeout');
 });
 
-test('all page types restore the same session without sending or saving the password again', async () => {
+test('a new page restores the same session without sending or saving the password again', async () => {
   const storage = new Map(), first = fixture({ storage }); await first.auth.login(password);
   first.auth.clearMemory();
   assert.equal(storage.has(key), true); assert.equal(first.auth.hasSession(), false);

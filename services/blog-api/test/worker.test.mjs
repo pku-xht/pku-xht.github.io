@@ -76,10 +76,11 @@ test('pending stays private, admin authorization gates moderation, approved XSS 
 });
 
 test('administrator login creates an opaque 30-day session and D1 stores only its keyed hash',async context=>{
-  const f=fixture(context,{GITHUB_EDIT_TOKEN:'fictional-edit-token-12345678901234567890'});
+  const f=fixture(context);
   const now=Date.parse('2026-10-26T12:00:00.000Z'); context.mock.method(Date,'now',()=>now);
   const login=await f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
-  assert.equal(login.status,200); assert.equal(login.data.authenticated,true); assert.equal(login.data.article_editing,true);
+  assert.equal(login.status,200); assert.equal(login.data.authenticated,true);
+  assert.deepEqual(Object.keys(login.data).sort(),['authenticated','expires_at','token']);
   assert.match(login.data.token,/^bs_[a-f0-9]{64}$/);
   assert.equal(login.data.expires_at,'2026-11-25T12:00:00.000Z');
   assert.equal(login.headers.get('Cache-Control'),'no-store'); assert.equal(login.headers.get('Set-Cookie'),null);
@@ -89,7 +90,7 @@ test('administrator login creates an opaque 30-day session and D1 stores only it
   assert.ok(!JSON.stringify(row).includes(login.data.token)); assert.ok(!JSON.stringify(row).includes(token));
   const Authorization='Bearer '+login.data.token;
   const restored=await f.request('/v1/admin/session',{Authorization});
-  assert.deepEqual(restored.data,{authenticated:true,article_editing:true,expires_at:login.data.expires_at});
+  assert.deepEqual(restored.data,{authenticated:true,expires_at:login.data.expires_at});
   assert.equal((await f.request('/v1/admin/comments',{Authorization})).status,200);
   const otherFixture=fixture(context); const otherLogin=await otherFixture.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
   assert.notEqual(otherLogin.data.token,login.data.token);
@@ -113,19 +114,21 @@ test('session expiry is absolute at 30 days, restores do not extend it and passw
   assert.equal(fresh.status,200); assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,1);
 });
 
-test('logout revokes the current shared session, does not revoke another device and gates every edit/moderation route',async context=>{
+test('logout revokes the current session without signing out another device',async context=>{
   const f=fixture(context);
   const login=async()=>f.request('/v1/admin/login',{method:'POST',value:{username:'admin',password:token}});
   const first=(await login()).data, second=(await login()).data;
   const Authorization='Bearer '+first.token;
-  assert.equal((await f.request('/v1/admin/articles/46',{Authorization})).status,503,'valid sessions reach the separately unconfigured editor');
+  assert.equal((await f.request('/v1/admin/comments',{Authorization})).status,200);
   const logout=await f.request('/v1/admin/session',{method:'DELETE',Authorization});
   assert.equal(logout.status,200); assert.deepEqual(logout.data,{logged_out:true});
-  for(const [path,method] of [['/v1/admin/comments','GET'],['/v1/admin/session','GET'],['/v1/admin/articles/46','GET'],['/v1/admin/articles/46','POST'],['/v1/admin/comments/wp-1/approve','POST'],['/v1/admin/comments/wp-1','DELETE'],['/v1/admin/visits/baseline','POST']]) {
+  for(const [path,method] of [['/v1/admin/comments','GET'],['/v1/admin/session','GET'],['/v1/admin/comments/wp-1/approve','POST'],['/v1/admin/comments/wp-1/reject','POST'],['/v1/admin/comments/wp-1','DELETE'],['/v1/admin/visits/baseline','POST'],['/v1/admin/visits/history','POST']]) {
     assert.equal((await f.request(path,{method,Authorization})).status,401,path);
   }
   assert.equal((await f.request('/v1/admin/session',{Authorization:'Bearer '+second.token})).status,200);
-  assert.equal((await f.request('/v1/admin/session',{admin:true})).status,200,'existing CLI password bearer stays supported');
+  const cli=await f.request('/v1/admin/session',{admin:true});
+  assert.equal(cli.status,200,'existing CLI password bearer stays supported');
+  assert.deepEqual(cli.data,{authenticated:true});
   assert.equal(f.DB.sqlite.prepare('SELECT count(*) AS n FROM admin_sessions').get().n,1);
 });
 

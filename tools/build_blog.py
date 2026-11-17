@@ -553,39 +553,6 @@ def main():
             for path in sorted(admin_directory.iterdir()) if path.is_file()
         },
     }
-    editor_result = subprocess.run(
-        ["node", str(ROOT / "tools/render_article_editor.mjs")],
-        input=json.dumps({"api_base": features["comments"]["api_base"], "documents": [{"id": post["id"], "path": post["route"], "title": post["title"]} for post in documents]}),
-        text=True, encoding="utf-8", capture_output=True, check=True,
-    )
-    editor_assets = json.loads(editor_result.stdout)
-    if set(editor_assets) != {"pages", "script", "style"} or not all(isinstance(editor_assets[key], str) and editor_assets[key] for key in ("script", "style")):
-        raise ValueError("Article editor renderer returned invalid assets")
-    expected_editor_routes = {str(post["id"]): post["route"] + "exit/" for post in documents}
-    if {row["document"]: row["path"] for row in editor_assets["pages"]} != expected_editor_routes or len(editor_assets["pages"]) != len(documents):
-        raise ValueError("Article editor routes differ from registered documents")
-    editor_paths = []
-    for row in editor_assets["pages"]:
-        if set(row) != {"document", "path", "html"} or not isinstance(row["html"], str):
-            raise ValueError("Article editor page is invalid")
-        write(row["path"], row["html"])
-        editor_paths.append(ROOT / row["path"].lstrip("/") / "index.html")
-    editor_directory = ROOT / "blog/editor"
-    editor_directory.mkdir(parents=True, exist_ok=True)
-    for filename, key in (("editor.js", "script"), ("editor.css", "style")):
-        path = editor_directory / filename
-        with path.open("w", encoding="utf-8", newline="\n") as handle:
-            handle.write(editor_assets[key])
-        editor_paths.append(path)
-    report["article_editor"] = {
-        "api_base": features["comments"]["api_base"], "script": "/blog/editor/editor.js", "style": "/blog/editor/editor.css",
-        "routes": [{"document": str(post["id"]), "path": expected_editor_routes[str(post["id"])]} for post in documents],
-        "source_sha256": {
-            path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
-            for path in [ROOT / "tools/render_article_editor.mjs", ROOT / "services/blog-api/src/article-editor.mjs", ROOT / "services/blog-api/src/admin-auth.mjs", ROOT / "services/blog-api/src/admin-session-client.mjs", ROOT / "services/blog-api/src/admin-style.mjs"]
-        },
-        "asset_sha256": {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() for path in editor_paths},
-    }
     report["totals"] = {key: sum(p[key] for p in report["posts"] + report["pages"]) for key in ["formulas", "code_blocks", "headings", "images"]}
     (ROOT / "migration/public-batch.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"posts": len(posts), "pages": len(pages), "categories": len(report["categories"]), "unique_formulas": len(formulas), **report["totals"]}, ensure_ascii=False))

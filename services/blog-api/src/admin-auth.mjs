@@ -1,4 +1,4 @@
-/** Shared password-manager-friendly login markup and raw browser helpers. */
+/** Login markup and password manager support for comment administration. */
 import { ADMIN_SESSION_HELPERS } from './admin-session-client.mjs';
 export function adminLoginForm() {
   return `<form id="login-form" class="login-panel" method="post" autocomplete="on">
@@ -6,11 +6,11 @@ export function adminLoginForm() {
 <label for="username">账号 <input id="username" name="username" type="text" value="admin" autocomplete="username" readonly disabled></label>
 <label for="token">管理员密码 <input id="token" name="password" type="password" autocomplete="current-password" required spellcheck="false" disabled></label>
 <button id="load" class="primary" type="submit" disabled>登录</button>
-<p class="form-note">在此浏览器保持登录 30 天，评论管理与文章编辑通用。你也可以随时退出登录。</p>
+<p class="form-note">在此浏览器保持登录 30 天。你也可以随时退出登录。</p>
 </form>`;
 }
 
-// Embed this source string inside each client's own scope. Serializing a
+// Embed this source string inside the client's own scope. Serializing a
 // function after bundling can capture helpers introduced by the bundler.
 export const ADMIN_AUTH_HELPERS = ADMIN_SESSION_HELPERS + String.raw`
   function isDirectAdminPage() {

@@ -4,13 +4,8 @@ import { createRequire } from 'node:module';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readFile } from 'node:fs/promises';
 
-// This suite uses the real Workers runtime with a local outbound-service mock.
-// Neither GitHub nor Cloudflare APIs receive requests or real credentials.
+// Run the bundled Worker with temporary D1 and a local outbound-service mock.
 const ADMIN = 'fictional-admin-password-for-local-workers-runtime-12345';
-const GITHUB = 'fictional-github-token-for-local-workers-runtime-12345';
-const HEAD = 'a'.repeat(40), BLOB = 'b'.repeat(40);
-const SOURCE_PATH = 'content/blog/posts/1154.md';
-const SOURCE = '---\nid: 1154\ntype: post\n---\n\nLocal runtime article.\n';
 let dependencies;
 
 // Split the checked-in SQLite migrations without splitting trigger bodies or
@@ -78,22 +73,23 @@ async function runtime(context) {
   return dependencies;
 }
 
-async function fixture(context, reply, { sessions = false, visits = false } = {}) {
+async function fixture(context, { visits = false } = {}) {
   const loaded = await runtime(context);
   if (!loaded) return null;
   const { miniflare, script } = loaded;
   const calls = [];
   const options = {
     modules: true, script, compatibilityDate: '2026-10-25', cf: false,
-    bindings: { ADMIN_TOKEN: ADMIN, GITHUB_EDIT_TOKEN: GITHUB, RATE_LIMIT_SALT: 'fictional-runtime-address-salt-12345678901234567890', VISITS_ENABLED: visits ? 'true' : 'false' },
-    ...(sessions ? { d1Databases: ['DB'], d1Persist: false } : {}),
+    bindings: {
+      ADMIN_TOKEN: ADMIN,
+      GITHUB_EDIT_TOKEN: 'fictional-retired-editor-token-for-local-workers-runtime-12345',
+      RATE_LIMIT_SALT: 'fictional-runtime-address-salt-12345678901234567890',
+      VISITS_ENABLED: visits ? 'true' : 'false',
+    },
+    d1Databases: ['DB'], d1Persist: false,
     outboundService(request) {
-      calls.push({ url: request.url, authorization: request.headers.get('Authorization') });
-      const result = reply(request);
-      return new miniflare.Response(JSON.stringify(result.body ?? {}), {
-        status: result.status ?? 200,
-        headers: { 'Content-Type': 'application/json', ...result.headers },
-      });
+      calls.push(request.url);
+      return new miniflare.Response(null, { status: 502 });
     },
   };
   // Wrangler 4.152 bundles Miniflare's new API and an explicit V4 adapter;
@@ -102,16 +98,13 @@ async function fixture(context, reply, { sessions = false, visits = false } = {}
     ? miniflare.convertV4MiniflareOptions(options) : options;
   const mf = new miniflare.Miniflare(configured);
   context.after(() => mf.dispose());
-  let database;
-  if (sessions) {
-    database = await mf.getD1Database('DB');
-    for (const migration of ['0001_initial.sql', '0002_unified_comments.sql', '0003_admin_sessions.sql', '0004_visit_history.sql']) {
-      // D1.exec() treats newlines as query boundaries; send complete statements.
-      const sql = await readFile(new URL('../migrations/' + migration, import.meta.url), 'utf8');
-      for (const statement of migrationStatements(sql)) await database.prepare(statement).run();
-    }
-    await database.prepare("INSERT INTO public_documents(id, kind) VALUES ('1154', 'post')").run();
+  const database = await mf.getD1Database('DB');
+  for (const migration of ['0001_initial.sql', '0002_unified_comments.sql', '0003_admin_sessions.sql', '0004_visit_history.sql']) {
+    // D1.exec() treats newlines as query boundaries; send complete statements.
+    const sql = await readFile(new URL('../migrations/' + migration, import.meta.url), 'utf8');
+    for (const statement of migrationStatements(sql)) await database.prepare(statement).run();
   }
+  await database.prepare("INSERT INTO public_documents(id, kind) VALUES ('1154', 'post')").run();
   return {
     calls, database,
     request(path, { method = 'GET', password, value } = {}) {
@@ -124,64 +117,36 @@ async function fixture(context, reply, { sessions = false, visits = false } = {}
         ...(value ? { body: JSON.stringify(value) } : {}),
       });
     },
-    get(password = ADMIN) {
-      return mf.dispatchFetch('https://worker.example.test/v1/admin/articles/1154', {
-        headers: { Authorization: 'Bearer ' + password, Origin: 'https://pku-xht.github.io' },
-      });
-    },
   };
 }
 
-test('the real Workers runtime can read an article through its fixed authenticated GitHub transport', async context => {
-  const f = await fixture(context, request => {
-    const path = new URL(request.url).pathname;
-    if (path === '/repos/pku-xht/pku-xht.github.io/git/ref/heads/main') {
-      return { body: { object: { type: 'commit', sha: HEAD } } };
+test('retired editor endpoints return 404 without outbound requests even with the old GitHub binding', async context => {
+  const f = await fixture(context);
+  if (!f) return;
+  const login = await f.request('/v1/admin/login', { method: 'POST', value: { username: 'admin', password: ADMIN } });
+  assert.equal(login.status, 200);
+  const session = await login.json();
+  const article = '/v1/admin/articles/1154';
+  for (const password of [ADMIN, session.token]) {
+    for (const [path, method, value] of [
+      [article, 'GET'],
+      [article, 'POST', {
+        source: '---\nid: 1154\ntype: post\n---\n\nLocal runtime article.\n',
+        sha: 'a'.repeat(40),
+        request_id: '12345678-1234-4234-8234-123456789abc',
+      }],
+      [article + '/publication?revision=' + 'b'.repeat(40), 'GET'],
+    ]) {
+      const response = await f.request(path, { method, password, value });
+      assert.equal(response.status, 404, method + ' ' + path);
+      assert.equal((await response.json()).error, 'not_found');
     }
-    if (path === '/repos/pku-xht/pku-xht.github.io/contents/' + SOURCE_PATH) {
-      return { body: { type: 'file', path: SOURCE_PATH, encoding: 'base64',
-        content: Buffer.from(SOURCE).toString('base64'), size: Buffer.byteLength(SOURCE), sha: BLOB } };
-    }
-    return { status: 404 };
-  });
-  if (!f) return;
-  const response = await f.get();
-  assert.equal(response.status, 200, await response.clone().text());
-  const data = await response.json();
-  assert.equal(data.document, '1154');
-  assert.equal(data.source, SOURCE);
-  assert.equal(data.sha, BLOB);
-  assert.equal(data.revision, HEAD);
-  assert.equal(f.calls.length, 2);
-  assert.ok(f.calls.every(call => call.authorization === 'Bearer ' + GITHUB));
-  assert.ok(f.calls.every(call => new URL(call.url).origin === 'https://api.github.com'));
-  assert.equal(new URL(f.calls[1].url).searchParams.get('ref'), HEAD);
-  assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://pku-xht.github.io');
-  assert.ok(!JSON.stringify(data).includes(GITHUB));
-});
-
-test('the real Workers runtime rejects a GitHub redirect without forwarding its credential', async context => {
-  const f = await fixture(context, () => ({ status: 302, headers: { Location: 'https://unexpected.example.test/collect' } }));
-  if (!f) return;
-  const response = await f.get();
-  assert.equal(response.status, 502);
-  const data = await response.json();
-  assert.equal(data.error, 'github_unavailable');
-  assert.equal(f.calls.length, 1, 'a redirected request must never reach another origin');
-  assert.equal(new URL(f.calls[0].url).origin, 'https://api.github.com');
-  assert.ok(!JSON.stringify(data).includes(GITHUB));
-});
-
-test('the real Workers runtime rejects a wrong administrator password before any GitHub call', async context => {
-  const f = await fixture(context, () => ({ status: 500 }));
-  if (!f) return;
-  const response = await f.get('fictional-wrong-admin-password');
-  assert.equal(response.status, 401);
-  assert.equal(f.calls.length, 0);
+  }
+  assert.deepEqual(f.calls, []);
 });
 
 test('the real Workers runtime issues, restores and revokes a 30-day D1 session without storing its plaintext', async context => {
-  const f = await fixture(context, () => ({ status: 500 }), { sessions: true });
+  const f = await fixture(context);
   if (!f) return;
   const wrong = await f.request('/v1/admin/login', { method: 'POST', value: { username: 'admin', password: 'fictional-wrong-password' } });
   assert.equal(wrong.status, 401);
@@ -189,7 +154,8 @@ test('the real Workers runtime issues, restores and revokes a 30-day D1 session 
   assert.equal(login.status, 200, await login.clone().text());
   const session = await login.json();
   assert.match(session.token, /^bs_[a-f0-9]{64}$/);
-  assert.equal(session.authenticated, true); assert.equal(session.article_editing, true);
+  assert.equal(session.authenticated, true);
+  assert.deepEqual(Object.keys(session).sort(), ['authenticated', 'expires_at', 'token']);
   assert.equal(login.headers.get('Cache-Control'), 'no-store');
   assert.equal(login.headers.get('Set-Cookie'), null);
   const stored = await f.database.prepare('SELECT token_hash, created_at, expires_at FROM admin_sessions').first();
@@ -200,7 +166,7 @@ test('the real Workers runtime issues, restores and revokes a 30-day D1 session 
   assert.ok(!JSON.stringify(stored).includes(ADMIN));
   const restored = await f.request('/v1/admin/session', { password: session.token });
   assert.equal(restored.status, 200);
-  assert.deepEqual(await restored.json(), { authenticated: true, article_editing: true, expires_at: session.expires_at });
+  assert.deepEqual(await restored.json(), { authenticated: true, expires_at: session.expires_at });
   const comments = await f.request('/v1/admin/comments?status=all', { password: session.token });
   assert.equal(comments.status, 200);
   const data = await comments.json();
@@ -215,7 +181,7 @@ test('the real Workers runtime issues, restores and revokes a 30-day D1 session 
 });
 
 test('the real Workers runtime atomically imports daily history and reads Shanghai PV without changing cumulative counters', async context => {
-  const f = await fixture(context, () => ({ status: 500 }), { sessions: true, visits: true });
+  const f = await fixture(context, { visits: true });
   if (!f) return;
   const capture = '2020-10-25T16:30:00.000Z';
   const manifest = {

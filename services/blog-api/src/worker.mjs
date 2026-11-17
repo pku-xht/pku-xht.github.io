@@ -1,5 +1,4 @@
 import { adminPage } from './admin.mjs';
-import { articleRequest } from './articles.mjs';
 import registry from '../data/public-documents.json' with { type: 'json' };
 import { AdminSessionError, passwordMatches, createAdminSession, administratorAuthorization, revokeAdminSession } from './admin-sessions.mjs';
 import { chinaDate, dateNumber, validateHistory } from './visit-history.mjs';
@@ -179,7 +178,7 @@ async function login(request, env) {
   const matches = await passwordMatches(value.password, password);
   if (value.username !== 'admin' || !matches) fail(401, 'unauthorized', 'Administrator authorization is required.');
   const session = await createAdminSession(db(env), password);
-  return json({ authenticated: true, ...session, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32 });
+  return json({ authenticated: true, ...session });
 }
 async function submitComment(request, env) {
   const value = await bodyJSON(request, ['document', 'nickname', 'body', 'parent_id', 'request_id', 'website']);
@@ -446,12 +445,11 @@ async function route(request, env, url) {
   if (url.pathname.startsWith('/v1/admin/')) {
     if (url.pathname === '/v1/admin/login' && request.method === 'POST') return login(request, env);
     const authorization = await authorized(request, env);
-    if (url.pathname === '/v1/admin/session' && request.method === 'GET') return json({ authenticated: true, article_editing: typeof env.GITHUB_EDIT_TOKEN === 'string' && env.GITHUB_EDIT_TOKEN.length >= 32, ...(authorization.kind === 'session' ? { expires_at: authorization.expires_at } : {}) });
+    if (url.pathname === '/v1/admin/session' && request.method === 'GET') return json({ authenticated: true, ...(authorization.kind === 'session' ? { expires_at: authorization.expires_at } : {}) });
     if (url.pathname === '/v1/admin/session' && request.method === 'DELETE') {
       await revokeAdminSession(authorization, env.DB);
       return json({ logged_out: true });
     }
-    if (url.pathname.startsWith('/v1/admin/articles/')) return articleRequest(request, env, url);
     if (url.pathname === '/v1/admin/comments' && request.method === 'GET') return listComments(url, env, true);
     const moderation = /^\/v1\/admin\/comments\/([^/]+)(?:\/(approve|reject))?$/.exec(url.pathname);
     if (moderation && request.method === 'POST' && moderation[2]) return moderate(request, env, moderation[1], moderation[2]);
